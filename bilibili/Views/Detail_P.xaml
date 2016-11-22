@@ -1,0 +1,220 @@
+﻿<Page
+    x:Class="bilibili.Views.Detail_P"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:controls="using:bilibili.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="replystyle" TargetType="ListViewItem">
+            <Setter Property="Margin" Value="0,2,0,2"/>
+        </Style>
+    </Page.Resources>
+    <Grid Background="{ThemeResource bili_PageBackground}">
+        <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+        <controls:MessagePopup x:Name="messagepop" VerticalAlignment="Top"/>
+        <Pivot x:Name="pivot" SelectionChanged="Pivot_SelectionChanged" Grid.Row="1">
+            <PivotItem Header="详情" Margin="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                        <StackPanel Margin="8,0,8,0">
+                            <TextBlock x:Name="title" FontSize="24" TextWrapping="Wrap" Text="标题"/>
+                            <Button>
+                                <Button.Background>
+                                    <SolidColorBrush Opacity="0"/>
+                                </Button.Background>
+                                <Image x:Name="pic" Width="320" Height="200" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="3" Source="ms-appx:///Assets//SplashScreen.scale-200.png"/>
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="保存封面" Click="Save_Click"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                            <StackPanel Orientation="Horizontal">
+                                <HyperlinkButton Style="{StaticResource HyperlinkButtonStyle1}" x:Name="up" Click="up_Click"/>
+                                <TextBlock Text="发表于" Foreground="{ThemeResource bili_Fontcolor_Second}" Margin="2,0,2,0"/>
+                                <TextBlock x:Name="time"/>
+                            </StackPanel>
+                            <TextBlock x:Name="count" TextWrapping="WrapWholeWords"/>
+                            <StackPanel Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="摘要" FontSize="20" Margin="8,0,0,0"/>
+                                </StackPanel>
+                                <TextBlock x:Name="desc" MaxLines="3" TextWrapping="Wrap" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                <HyperlinkButton x:Name="more" HorizontalAlignment="Right" Click="MoreDesc_Click" Style="{StaticResource HyperlinkButtonStyle1}">展开</HyperlinkButton>
+                            </StackPanel>
+                            <StackPanel Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="标签" FontSize="20" Margin="8,0,0,0"/>
+                                </StackPanel>
+                                <GridView x:Name="list_tags" Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
+                                    <GridView.ItemContainerTransitions>
+                                        <TransitionCollection>
+                                            <EntranceThemeTransition/>
+                                        </TransitionCollection>
+                                    </GridView.ItemContainerTransitions>
+                                    <GridView.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridView.ItemTemplate>
+                                    <GridView.ItemContainerStyle>
+                                        <Style TargetType="GridViewItem">
+                                            <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        </Style>
+                                    </GridView.ItemContainerStyle>
+                                    <GridView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <controls:WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </GridView.ItemsPanel>
+                                </GridView>
+                            </StackPanel>
+                            <StackPanel Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="播放！" FontSize="20" Margin="8,0,0,0"/>
+                                </StackPanel>
+                                <ListView x:Name="ReadyList" Visibility="Collapsed" Tapped="ReadyList_Tapped" IsMultiSelectCheckBoxEnabled="True">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Part}"/>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <CommandBar Grid.Row="1" HorizontalContentAlignment="Right">
+                        <AppBarButton x:Name="btn_ok" Icon="Accept" Label="确定" Click="btn_ok_Click" Visibility="Collapsed"/>
+                        <AppBarButton x:Name="btn_all" Icon="SelectAll" Label="全选" Click="btn_all_Click" Visibility="Collapsed"/>
+                        <AppBarButton x:Name="btn_cal" Icon="Cancel" Label="取消" Click="btn_cal_Click" Visibility="Collapsed"/>
+                        <AppBarButton x:Name="btn_down" Icon="Download" Label="下载" Click="download_Click"/>
+                        <AppBarButton x:Name="btn_share" Icon="ReShare" Label="分享">
+                            <AppBarButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Tag="0" Click="Share_Click">复制链接</MenuFlyoutItem>
+                                    <MenuFlyoutItem Tag="1" Click="Share_Click">其他方式</MenuFlyoutItem>
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarButton x:Name="btn_addfav" Icon="Add" Label="收藏" Click="addfav_Click"/>
+                        <AppBarButton x:Name="btn_like" Icon="Like" Label="投币">
+                            <AppBarButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="投1个硬币" Tag="1" Click="coin_Click"/>
+                                    <MenuFlyoutItem Text="投2个硬币" Tag="2" Click="coin_Click"/>
+                                    <MenuFlyoutItem Text="算了，不投了"/>
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                    </CommandBar>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="评论" Margin="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <ListView x:Name="listview" 
+                              ContainerContentChanging="listview_ContainerContentChanging" 
+                              ItemContainerStyle="{StaticResource replystyle}" 
+                              Template="{StaticResource myControlTemplete}" 
+                              SelectionMode="None">
+                        <ListView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition/>
+                            </TransitionCollection>
+                        </ListView.ItemContainerTransitions>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <Image Height="60" Width="60" Source="{Binding Avatar}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE19f;" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Like}" VerticalAlignment="Center" Margin="2,0,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Margin="8,0,8,0">
+                                        <HyperlinkButton Content="{Binding Uname}" Style="{StaticResource HyperlinkButtonStyle1}"/>
+                                        <TextBlock Text="{Binding Time}" FontSize="14" Foreground="Gray"/>
+                                        <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                                        <ListView 
+                                            ItemsSource="{Binding Res}" 
+                                            ItemContainerStyle="{StaticResource replystyle}"
+                                            SelectionMode="None">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="auto"/>
+                                                            <ColumnDefinition Width="auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Rectangle Width="4" Fill="LightGray" Height="60" VerticalAlignment="Top" Margin="0,0,8,0"/>
+                                                        <StackPanel Grid.Column="1">
+                                                            <Image Height="60" Width="60" Source="{Binding Avatar}" VerticalAlignment="Top"/>
+                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE19f;" VerticalAlignment="Center"/>
+                                                                <TextBlock Text="{Binding Like}" VerticalAlignment="Center" Margin="2,0,0,0"/>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="2" Margin="8,0,8,0">
+                                                            <HyperlinkButton Content="{Binding Uname}" Style="{StaticResource HyperlinkButtonStyle1}"/>
+                                                            <TextBlock Text="{Binding Time}" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <CommandBar Grid.Row="1">
+                        <AppBarButton Label="添加评论" Icon="Add" Click="Button_Click"/>
+                    </CommandBar>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="相关视频">
+                <ListView x:Name="list_relates" Style="{StaticResource ListViewStyle}" IsItemClickEnabled="True" ItemClick="list_relates_ItemClick" ItemContainerStyle="{StaticResource listcontainerstyle}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding Cover}"/>
+                                <TextBlock Grid.Column="1" Margin="4,0,0,0" Text="{Binding Title}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>

@@ -1,0 +1,245 @@
+﻿<Page
+    x:Class="bilibili.Views.Video"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:controls="using:bilibili.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Name="page">
+    <Page.Resources>
+        <local:SecToString x:Key="cvt"/>
+        <local:PositionCVT x:Key="cvt2"/>
+    </Page.Resources>
+    <SplitView x:Name="ham" FlowDirection="RightToLeft" OpenPaneLength="300" DisplayMode="Overlay" PaneBackground="{x:Null}">
+        <SplitView.Pane>
+            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                <StackPanel FlowDirection="LeftToRight" Padding="20">
+                    <StackPanel.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.8"/>
+                    </StackPanel.Background>
+                    <TextBlock FontWeight="Light" Text="更多选项" FontSize="20" Foreground="White"/>
+                    <TextBlock Text="屏蔽弹幕" Foreground="{ThemeResource bili_Theme}" Margin="0,8,0,8"/>
+                    <CheckBox IsChecked="True">
+                        <CheckBox.Content>
+                            <TextBlock Text="底端弹幕" Foreground="White"/>
+                        </CheckBox.Content>
+                    </CheckBox>
+                    <CheckBox IsChecked="True">
+                        <CheckBox.Content>
+                            <TextBlock Text="滚动弹幕" Foreground="White"/>
+                        </CheckBox.Content>
+                    </CheckBox>
+                    <CheckBox Foreground="White" IsChecked="True">
+                        <CheckBox.Content>
+                            <TextBlock Text="顶部弹幕" Foreground="White"/>
+                        </CheckBox.Content>
+                    </CheckBox>
+                    <TextBlock Text="屏蔽关键字" Foreground="White" Margin="0,8,0,4"/>
+                    <TextBox/>
+                    <TextBlock Text="弹幕速度" Foreground="{ThemeResource bili_Theme}" Margin="0,8,0,0"/>
+                    <Slider x:Name="sli_speed" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="自定义弹幕颜色" Foreground="{ThemeResource bili_Theme}"/>
+                        <Rectangle x:Name="rec" Width="40" Height="40" HorizontalAlignment="Right" Grid.Column="1" Fill="White"/>
+                    </Grid>
+                    <TextBlock Text="弹幕间距" Foreground="{ThemeResource bili_Theme}"/>
+                    <Slider Maximum="3" x:Name="sli_space" ValueChanged="sli_space_ValueChanged"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="r" Text="{Binding ElementName=sli_r,Path=Value}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                        <TextBlock x:Name="g" Text="{Binding ElementName=sli_g,Path=Value}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                        <TextBlock x:Name="b" Text="{Binding ElementName=sli_b,Path=Value}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                        <Slider x:Name="sli_r" Grid.Row="0" Grid.Column="1" Maximum="255" VerticalAlignment="Center" Value="255" ValueChanged="rgb_ValueChanged"/>
+                        <Slider x:Name="sli_g" Grid.Row="1" Grid.Column="1" Maximum="255" VerticalAlignment="Center" Value="255" ValueChanged="rgb_ValueChanged"/>
+                        <Slider x:Name="sli_b" Grid.Row="2" Grid.Column="1" Maximum="255" VerticalAlignment="Center" Value="255" ValueChanged="rgb_ValueChanged"/>
+                        <TextBlock Text="R" Grid.Row="0" Grid.Column="2" Margin="4,0,0,0" Foreground="White"/>
+                        <TextBlock Text="G" Grid.Row="1" Grid.Column="2" Margin="4,0,0,0" Foreground="White"/>
+                        <TextBlock Text="B" Grid.Row="2" Grid.Column="2" Margin="4,0,0,0" Foreground="White"/>
+                    </Grid>
+                    <StackPanel>
+                        <TextBlock Text="视频信息" Foreground="{ThemeResource bili_Theme}"/>
+                        <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <Grid FlowDirection="LeftToRight">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.Background>
+                    <SolidColorBrush Color="Black" x:Name="color"/>
+                </Grid.Background>
+                <StackPanel x:Name="loading" Grid.RowSpan="3" Canvas.ZIndex="100" VerticalAlignment="Center" Visibility="Collapsed"  Width="80" HorizontalAlignment="Center">
+                    <controls:VideoLoading/>
+                    <Grid>
+                        <TextBlock x:Name="txt_load" HorizontalAlignment="Center" FontSize="22" Foreground="Black"/>
+                        <TextBlock Text="{Binding Text,ElementName=txt_load}" HorizontalAlignment="Center" FontSize="22" Foreground="White"/>
+                    </Grid>
+                </StackPanel>
+                <Border x:Name="border" Grid.RowSpan="3" Canvas.ZIndex="99" Tapped="border_Tapped" DoubleTapped="border_DoubleTapped" ManipulationMode="TranslateX,TranslateY" Background="Black" Opacity="0" ManipulationDelta="border_ManipulationDelta" ManipulationCompleted="border_ManipulationCompleted"/>
+                    <controls:MessagePopup Grid.RowSpan="3" x:Name="messagepop" Canvas.ZIndex="80" Width="120" Foreground="White" Height="40"/>
+                <controls:Danmaku x:Name="danmaku" Grid.RowSpan="3" Canvas.ZIndex="80"/>
+                <Grid x:Name="grid_top" Canvas.ZIndex="100">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.8"/>
+                    </Grid.Background>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Margin="0,4,0,0" Click="back_Click" Background="{x:Null}">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Back" Foreground="White"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Margin="0,4,0,0" Grid.Column="1" Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Setting" Foreground="White"/>
+                            </Button.Content>
+                        </Button>
+                        <TextBlock x:Name="txt_title" Grid.Column="2" VerticalAlignment="Center" Foreground="{ThemeResource bili_Theme}"/>
+                        <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Orientation="Horizontal">
+                            <TextBlock x:Name="txt_web" Foreground="White"/>
+                            <TextBlock x:Name="txt_bat" Margin="8,0,8,0" Foreground="White"/>
+                            <TextBlock x:Name="txt_now" Foreground="White"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" Margin="12,4,12,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox x:Name="cb_Color" VerticalAlignment="Center" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Color}" BorderBrush="{x:Null}" Background="{x:Null}" SelectedIndex="0" ToolTipService.ToolTip="弹幕颜色">
+                                    <ComboBoxItem Foreground="White" Tag="16777215" Content="白色"/>
+                                    <ComboBoxItem Foreground="Red" Tag="16711680" Content="红色"/>
+                                    <ComboBoxItem Foreground="Yellow" Tag="16776960" Content="黄色"/>
+                                    <ComboBoxItem Foreground="Lime" Tag="65280" Content="绿色"/>
+                                    <ComboBoxItem Foreground="#FF4FAFFF" Tag="52479" Content="淡蓝"/>
+                                    <ComboBoxItem Foreground="#FF7BFF6E" Tag="3394662" Content="浅绿"/>
+                                    <ComboBoxItem Foreground="Blue" Tag="255" Content="深蓝"/>
+                                    <ComboBoxItem Foreground="#FF5D00FF" Tag="6684774" Content="紫色"/>
+                                    <ComboBoxItem  Foreground="#FFFF00F3" Tag="16711935" Content="粉色"/>
+                                </ComboBox>
+                                <ComboBox x:Name="cb_SendMode" SelectedIndex="0" Margin="2,0,0,0" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕模式">
+                                    <ComboBoxItem>滚动</ComboBoxItem>
+                                    <ComboBoxItem>顶端</ComboBoxItem>
+                                    <ComboBoxItem>底端</ComboBoxItem>
+                                </ComboBox>
+                            </StackPanel>
+                            <TextBox x:Name="txt_mydanmu" Grid.Column="1" VerticalAlignment="Center" Background="{x:Null}" PlaceholderText="蓄势待发的弹幕君..." BorderThickness="0.5" BorderBrush="White"/>
+                            <Button x:Name="send" Grid.Column="3" Width="60" Height="28" Click="send_Click" Background="{x:Null}" ToolTipService.ToolTip="发送弹幕">
+                                <Button.Content>
+                                    <SymbolIcon Symbol="Send" Foreground="White"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid x:Name="grid_center" Grid.Row="1" Canvas.ZIndex="100">
+                    <Button x:Name="left" VerticalAlignment="Center" Width="52" Height="52" Background="Black" HorizontalAlignment="Left" Tag="0" Click="SwitchP_Click" ToolTipService.ToolTip="上一分段">
+                        <Button.Content>
+                            <SymbolIcon Symbol="Previous" Foreground="White"/>
+                        </Button.Content>
+                    </Button>
+                    <Button x:Name="right" VerticalAlignment="Center" Width="52" Height="52" Background="Black" HorizontalAlignment="Right" Tag="1" Click="SwitchP_Click" ToolTipService.ToolTip="下一分段">
+                        <Button.Content>
+                            <SymbolIcon Symbol="Next" Foreground="White"/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+                <TextBlock Foreground="White" x:Name="status" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8" Canvas.ZIndex="100"/>
+                <MediaElement AudioCategory="BackgroundCapableMedia"
+                              Visibility="Collapsed" 
+                              Grid.RowSpan="3" 
+                              x:Name="media" AutoPlay="True" 
+                              MediaOpened="media_MediaOpened" 
+                              Canvas.ZIndex="60" 
+                              DownloadProgressChanged="media_DownloadProgressChanged" 
+                              MediaEnded="media_MediaEnded" 
+                              BufferingProgressChanged="media_BufferingProgressChanged"/>
+                <Grid x:Name="grid_bottom" Height="60" Grid.Row="2" VerticalAlignment="Bottom" Canvas.ZIndex="100">
+                    <Grid.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.8"/>
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="12">
+                        <TextBlock x:Name="txt_current" Text="{Binding ElementName=media,Path=Position,Converter={StaticResource cvt}}" Foreground="White"/>
+                        <TextBlock x:Name="txt_total" Foreground="White"/>
+                    </StackPanel>
+                    <Grid Grid.Column="1">
+                        <Slider Margin="0,8,0,0" x:Name="sli_main" Value="{Binding ElementName=media,Path=Position,Mode=TwoWay,Converter={StaticResource cvt2}}" Style="{StaticResource SliderStyle1}" Canvas.ZIndex="62" ThumbToolTipValueConverter="{StaticResource cvt}"/>
+                        <ProgressBar x:Name="pro_down" Foreground="Pink" Canvas.ZIndex="61"/>
+                    </Grid>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="42">
+                        <AppBarButton x:Name="pause" Icon="Pause" Click="AppBarButton_Click" Foreground="White" ToolTipService.ToolTip="播放/暂停"/>
+                        <AppBarButton Click="DanmuSwitch_Click" VerticalAlignment="Center" Foreground="White" Icon="Comment" ToolTipService.ToolTip="弹幕开关"/>
+                        <AppBarButton x:Name="vol" Icon="Volume" Foreground="White" ToolTipService.ToolTip="音量调节">
+                            <AppBarButton.Flyout>
+                                <Flyout>
+                                    <Slider x:Name="sli_vol" Width="200" Maximum="10" Value="10" ValueChanged="sli_vol_ValueChanged"/>
+                                </Flyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarButton x:Name="light" Foreground="White" ToolTipService.ToolTip="亮度调节">
+                            <AppBarButton.Icon>
+                                <FontIcon Glyph="&#xE706;"/>
+                            </AppBarButton.Icon>
+                            <AppBarButton.Flyout>
+                                <Flyout>
+                                    <Slider x:Name="sli_light" Width="200" Maximum="1" SmallChange="0.01" StepFrequency="0.01" Minimum="0.3" ValueChanged="sli_light_ValueChanged"/>
+                                </Flyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarButton x:Name="full" Icon="FullScreen" Foreground="White">
+                            <AppBarButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Tag="0" Click="full_Click">保持比例</MenuFlyoutItem>
+                                    <MenuFlyoutItem Tag="1" Click="full_Click">拉伸占满</MenuFlyoutItem>
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </SplitView.Content>
+    </SplitView>
+</Page>

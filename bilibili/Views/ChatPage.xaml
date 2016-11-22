@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="bilibili.Views.ChatPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource bili_PageBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="48"/>
+        </Grid.RowDefinitions>
+        <StackPanel Background="{ThemeResource bili_Theme}" Orientation="Horizontal">
+            <AppBarButton Icon="Back"/>
+            <TextBlock Text=" 123" VerticalAlignment="Center"/>
+        </StackPanel>
+        <ListView x:Name="chatlist" Grid.Row="1">
+            
+        </ListView>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="txt" Grid.Column="1"/>
+            <AppBarButton Icon="Send" Grid.Column="2" Click="Send_Click"/>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,124 @@
+﻿<Page
+    x:Class="bilibili.Views.Message"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource bili_PageBackground}">
+        <Grid Height="48" Background="{ThemeResource bili_Theme}" VerticalAlignment="Top"/>
+        <Pivot x:Name="mainpivot" SelectionChanged="mainpivot_SelectionChanged">
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h0" Text="回复我的" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <ListView x:Name="ls_chat" IsItemClickEnabled="True" ItemClick="ls_chat_ItemClick" Style="{StaticResource ListViewStyle}">
+                    <ListView.Transitions>
+                        <TransitionCollection>
+                            <EntranceThemeTransition/>
+                        </TransitionCollection>
+                    </ListView.Transitions>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Margin" Value="12,6,12,6"/>
+                            <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                            <Setter Property="Padding" Value="12"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse Width="48" Height="48">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding Face}"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding Name}" Foreground="{ThemeResource bili_Theme}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Foreground="{ThemeResource bili_Fontcolor_Second}" Text="{Binding Time}" FontSize="12"/>
+                                    <TextBlock Text="{Binding Content}" MaxLines="3" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock Text="{Binding Title}" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h1" Text="我的私信" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <ListView x:Name="ls_wiss" Style="{StaticResource ListViewStyle}">
+                    <ListView.Transitions>
+                        <TransitionCollection>
+                            <EntranceThemeTransition/>
+                        </TransitionCollection>
+                    </ListView.Transitions>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Margin" Value="12,6,12,6"/>
+                            <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                            <Setter Property="Padding" Value="12"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse Width="48" Height="48">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding Face}"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding Room}" Foreground="{ThemeResource bili_Theme}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Foreground="{ThemeResource bili_Fontcolor_Second}" Text="{Binding Time}" FontSize="12"/>
+                                    <TextBlock Text="{Binding LastMsg}" MaxLines="3" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h2" Text="系统通知" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <ListView x:Name="ls_noti" Style="{StaticResource ListViewStyle}">
+                    <ListView.Transitions>
+                        <TransitionCollection>
+                            <EntranceThemeTransition/>
+                        </TransitionCollection>
+                    </ListView.Transitions>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Margin" Value="12,6,12,6"/>
+                            <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                            <Setter Property="Padding" Value="12"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Title}" Foreground="{ThemeResource bili_Theme}"/>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Second}" Text="{Binding Time}" FontSize="12"/>
+                                <TextBlock Text="{Binding Content}" TextWrapping="WrapWholeWords"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h3" Text="赞和@我" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+            </PivotItem>
+
+        </Pivot>
+    </Grid>
+</Page>

@@ -1,0 +1,164 @@
+﻿<Page
+    x:Class="bilibili.Views.Friends"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource bili_PageBackground}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="narrow">
+                    <VisualState.Setters>
+                        <Setter Target="header.Orientation" Value="Vertical"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="wide">
+                    <VisualState.Setters>
+                        <Setter Target="header.Orientation" Value="Horizontal"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Rectangle Fill="{ThemeResource bili_Theme}" Height="48" VerticalAlignment="Top"/>
+        <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
+            <PivotItem Margin="0">
+                <PivotItem.Header>
+                    <TextBlock x:Name="h0" Text="基本属性" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                    <StackPanel>
+                        <StackPanel x:Name="header">
+                            <StackPanel>
+                                <Image x:Name="toutu" Stretch="Uniform" Height="120" HorizontalAlignment="Left"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse Height="80" Width="80" Stroke="Gray" StrokeThickness="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="12,-40,0,0">
+                                        <Ellipse.Fill>
+                                            <ImageBrush x:Name="Face"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <StackPanel Margin="8,0,0,0">
+                                        <TextBlock x:Name="userName" FontSize="26" Text="用户名" FontWeight="Light"/>
+                                        <TextBlock x:Name="sign" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Margin="12" Grid.Column="1" VerticalAlignment="Bottom">
+                                <TextBlock x:Name="birth" Text="生日："/>
+                                <TextBlock x:Name="regdate" Text="注册日期："/>
+                                <TextBlock x:Name="sex" Text="性别："/>
+                                <TextBlock x:Name="addr" Text="地址："/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="4">
+                            <Image x:Name="level" Width="40"/>
+                            <TextBlock x:Name="exp_current" Margin="4,0,4,0"/>
+                            <ProgressBar x:Name="bar" Width="160" Foreground="{ThemeResource bili_Theme}"/>
+                            <TextBlock x:Name="exp_total" Margin="4,0,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="8,0,0,0">
+                            <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
+                            <TextBlock x:Name="con" Text="追番" FontSize="20" Margin="8,0,0,0"/>
+                        </StackPanel>
+                        <GridView x:Name="conlist" Margin="0,8,0,0" Style="{StaticResource GridViewStyle1}" Tapped="conlist_Tapped">
+                            <GridView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Width="128" Height="224">
+                                        <Image Source="{Binding Cover}" Width="128"/>
+                                        <TextBlock Text="{Binding Title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
+                                        <TextBlock Text="{Binding New}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="13"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="Margin" Value="4"/>
+                                    <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                            <GridView.Template>
+                                <ControlTemplate>
+                                    <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ItemsPresenter/>
+                                            <HyperlinkButton Style="{StaticResource HyperlinkButtonStyle1}" Content="查看全部→" Click="Button_Click" Margin="4"/>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </GridView.Template>
+                        </GridView>
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h1" Text="投稿视频" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <ListView x:Name="list_videos" IsItemClickEnabled="True" ItemContainerStyle="{StaticResource listcontainerstyle}" ItemClick="list_videos_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding Pic}" Width="100"/>
+                                <Grid Grid.Column="1" Padding="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding Title}" Foreground="{ThemeResource bili_Theme}" TextWrapping="WrapWholeWords" FontSize="14"/>
+                                    <Grid Grid.Row="1" VerticalAlignment="Bottom">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="播放:" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                            <TextBlock Text="{Binding Play}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                                            <TextBlock Text="弹幕:" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                            <TextBlock Text="{Binding Comment}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h2" Text="TA的关注" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <ListView x:Name="list_concern" IsItemClickEnabled="True" ItemContainerStyle="{StaticResource listcontainerstyle}" ItemClick="list_concern_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Face}" Width="80" Height="80"/>
+                                <TextBlock Text="{Binding Uname}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Template>
+                        <ControlTemplate>
+                            <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ListView.Template>
+                </ListView>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>

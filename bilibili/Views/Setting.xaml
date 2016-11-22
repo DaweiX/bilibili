@@ -1,0 +1,111 @@
+﻿<Page
+    x:Class="bilibili.Views.Setting"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid Background="{ThemeResource bili_PageBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Height="48" Background="{ThemeResource bili_Theme}" VerticalAlignment="Top"/>
+        <Pivot SelectionChanged="Pivot_SelectionChanged">
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h0" Text="外观" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <StackPanel>
+                    <ToggleSwitch x:Name="night" Toggled="night_Toggled" Header="夜间模式"/>
+                    <ToggleSwitch x:Name="top" Toggled="top_Toggled" Header="隐藏状态栏"/>
+                    <ComboBox x:Name="cb_Theme" Width="150" Header="主题色选择" IsEnabled="False" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Theme}" SelectionChanged="cb_Theme_SelectionChanged">
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="#DF85A0" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#DF85A0" Text="少女粉"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem >
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="#F70D0D" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#F70D0D" Text="姨妈红"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="#F9EF23" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#F9EF23" Text="咸蛋黄"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem >
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="#71F923" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#71F923" Text="早苗绿"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem >
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="#18BDFB" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#18BDFB" Text="胖次蓝"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="#FFB92CBF" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#B92CBF" Text="基佬紫"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Visibility="Collapsed">
+                        <TextBlock x:Name="cache" Text="清理缓存" VerticalAlignment="Center"/>
+                        <Button Content="清理" Width="60" Margin="100,0,0,0" Click="ClearCache_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h1" Text="弹幕" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <StackPanel>
+                    <Slider x:Name="sli_speed" Header="弹幕速度" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
+                    <Slider Maximum="3" x:Name="sli_space" Header="弹幕间距" ValueChanged="sli_space_ValueChanged"/>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h2" Text="下载" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <StackPanel>
+                    <ToggleSwitch x:Name="downstyle" Toggled="downstyle_Toggled" Header="允许使用流量下载"/>
+                    <ToggleSwitch x:Name="danmaku" Toggled="danmaku_Toggled" Header="下载视频同时下载弹幕" IsOn="True"/>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h3" Text="通知" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <StackPanel>
+                    <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="推送通知" IsEnabled="False"/>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h4" Text="关于" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <StackPanel>
+                    <HyperlinkButton Style="{StaticResource HyperlinkButtonStyle1}" Click="about_Click" Margin="0,12,0,12">关于</HyperlinkButton>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h5" Text="播放" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <StackPanel>
+                    <ToggleSwitch x:Name="direct" Header="点击剧集直接播放" Toggled="direct_Toggled"/>
+                </StackPanel>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>

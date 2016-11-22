@@ -1,0 +1,52 @@
+﻿<Page
+    x:Class="bilibili.Views.PartViews.Game"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views.PartViews"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource bili_PageBackground}">
+        <Grid Height="48" Background="{ThemeResource bili_Theme}" VerticalAlignment="Top"/>
+        <Pivot SelectionChanged="Pivot_SelectionChanged">
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h0" Text="精彩推荐" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <!--精彩推荐http://api.bilibili.com/x/web-show/res/loc?jsonp=jsonp&pf=0&id=70-->
+                <GridView x:Name="gv_hot" Tag="4" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h1" Text="单机联机" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <GridView x:Name="gv_common" Tag="17" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h2" Text="网游·电竞" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <GridView x:Name="gv_online" Tag="65" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h3" Text="音游" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <GridView x:Name="gv_musicgame" Tag="136" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h4" Text="Mugen" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <GridView x:Name="gv_mugen" Tag="19" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock x:Name="h5" Text="GMV" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                </PivotItem.Header>
+                <GridView x:Name="gv_gmv" Tag="121" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>

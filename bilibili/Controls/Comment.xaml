@@ -1,0 +1,146 @@
+﻿<UserControl
+    x:Class="bilibili.Controls.Comment"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="600"
+    d:DesignWidth="400">
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Stretch">
+            <Grid>
+                <HyperlinkButton Content="番剧" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="1" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="13" ShowsScrollingPlaceholders="True" x:Name="gridview1" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="动画" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="2" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="1" ShowsScrollingPlaceholders="True" x:Name="gridview2" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="生活" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="3" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="160" ShowsScrollingPlaceholders="True" x:Name="gridview3" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="电影" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="4" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="23" ShowsScrollingPlaceholders="True" x:Name="gridview4" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="娱乐" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="5" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="71" ShowsScrollingPlaceholders="True" x:Name="gridview5" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="鬼畜" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="6" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="119" ShowsScrollingPlaceholders="True" x:Name="gridview6" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="科技" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="7" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="36" ShowsScrollingPlaceholders="True" x:Name="gridview7" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="游戏" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="8" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="4" ShowsScrollingPlaceholders="True" x:Name="gridview8" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="音乐" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="9" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="3" ShowsScrollingPlaceholders="True" x:Name="gridview9" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="舞蹈" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="10" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="20" ShowsScrollingPlaceholders="True" x:Name="gridview10" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="时尚" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="11" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="155" ShowsScrollingPlaceholders="True" x:Name="gridview11" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="广告" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="12" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="166" ShowsScrollingPlaceholders="True" x:Name="gridview12" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+            <Grid>
+                <HyperlinkButton Content="电视剧" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="13" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tag="11" ShowsScrollingPlaceholders="True" x:Name="gridview13" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

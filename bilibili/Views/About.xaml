@@ -1,0 +1,38 @@
+﻿<Page
+    x:Class="bilibili.Views.About"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Name="page">
+
+    <Grid Background="Black">
+        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+            <StackPanel>
+                <StackPanel HorizontalAlignment="Center" x:Name="stk1">
+                    <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩客户端一号机 1st edition version 1.49</TextBlock>
+                    <HyperlinkButton Style="{StaticResource HyperlinkButtonStyle1}" HorizontalAlignment="Center">联系我</HyperlinkButton>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">企划</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原画</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">演出</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">摄影师</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0">DaweiX</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">特别鸣谢</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">Fiddler</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,4,0,0">BUAA-Mobile</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,4,0,0">BiliBili UWP</TextBlock>
+                </StackPanel>
+                <RelativePanel x:Name="stk2" Height="{Binding ElementName=page,Path=ActualHeight}">
+                    <TextBlock Foreground="White" Margin="0,0,8,12" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">©2016 DaweiX</TextBlock>
+                </RelativePanel>
+            </StackPanel>
+            </ScrollViewer>
+    </Grid>
+</Page>

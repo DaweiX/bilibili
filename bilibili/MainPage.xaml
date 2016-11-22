@@ -1,0 +1,135 @@
+﻿<Page
+    x:Class="bilibili.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:bilibili.Controls"
+    mc:Ignorable="d"
+    SizeChanged="Page_SizeChanged"
+>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ham.DisplayMode" Value="Overlay"/>
+                        <Setter Target="leftedge.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Middle">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="grid_top" Background="{ThemeResource bili_Theme}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ToggleButton Height="48" Width="48" Background="{ThemeResource bili_Theme}"
+                            FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="20" IsThreeState="False"
+                            x:Name="hambtn" Style="{StaticResource hamButtonStyle}" Foreground="White"/>
+            <AppBarButton Icon="Back" Grid.Column="1" Foreground="White" Height="48" x:Name="back" Visibility="Collapsed" Click="back_Click"/>
+            <TextBlock x:Name="txt_head" Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="White" FontWeight="Light"/>
+            <AutoSuggestBox x:Name="SearchBox" Grid.Column="3" HorizontalAlignment="Right" Width="220" VerticalAlignment="Center" Margin="0,0,8,0"                          
+                                QueryIcon="Find" PlaceholderText="请输入搜索内容" QuerySubmitted="SearchBox_QuerySubmitted"/>
+        </Grid>
+        <Border x:Name="leftedge" Grid.RowSpan="2" Background="Pink" Canvas.ZIndex="100" HorizontalAlignment="Left" Width="20" Opacity="0" ManipulationMode="TranslateX" ManipulationCompleted="Border_ManipulationCompleted" Visibility="Collapsed"/>
+        <SplitView x:Name="ham" DisplayMode="CompactInline" IsPaneOpen="{Binding ElementName=hambtn,Path=IsChecked,Mode=TwoWay}"
+                   OpenPaneLength="160" HorizontalAlignment="Stretch" Grid.Row="1">
+            <SplitView.Pane>
+                <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel x:Name="stk" Orientation="Horizontal" Tapped="face_Tapped" Height="48" Background="{ThemeResource bili_Theme}">
+                            <Ellipse x:Name="face" Width="40" Height="40" Margin="4,0,0,0">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="ms-appx:///Assets//Images//NoAvatar.png"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <StackPanel Margin="12,8,0,0">
+                                <TextBlock Text="尚未登录" x:Name="uname" Foreground="White"/>
+                                <TextBlock x:Name="rank" FontSize="12" Foreground="LightGray"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <ListBox Grid.Row="1" Style="{StaticResource ham}" Tapped="MainList_Tapped" x:Name="MainList">
+                            <ListBoxItem Tag="index" Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE20a;" FontSize="16" VerticalAlignment="Center"/>
+                                    <TextBlock Margin="24,0,0,0" Text="精彩推荐" FontSize="16" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Tag="history">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE2ad;" FontSize="16" VerticalAlignment="Center"/>
+                                    <TextBlock Margin="24,0,0,0" Text="播放历史" FontSize="16" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Tag="message">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE119;" FontSize="16" VerticalAlignment="Center"/>
+                                    <TextBlock Margin="24,0,0,0" Text="我的消息" FontSize="16" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Tag="me">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE208;" FontSize="16" VerticalAlignment="Center"/>
+                                    <TextBlock Margin="24,0,0,0" Text="我的收藏" FontSize="16" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Tag="download">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE118;" FontSize="16" VerticalAlignment="Center"/>
+                                    <TextBlock Margin="24,0,0,0" Text="离线管理" FontSize="16" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Tag="night">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon x:Name="fonticon" FontFamily="Segoe MDL2 Assets" Glyph="&#xE708;" FontSize="16"/>
+                                    <TextBlock x:Name="txt" Margin="24,0,0,0" Text="夜间模式" FontSize="16" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                        </ListBox>
+                        <ListBox x:Name="Sets" Grid.Row="2" Style="{StaticResource ham}" SelectionChanged="Sets_SelectionChanged" Padding="0,0,0,8">
+                            <ListBoxItem Tag="sets">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="16" VerticalAlignment="Center"/>
+                                    <TextBlock Margin="24,0,0,0" Text="设置" FontSize="16" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                        </ListBox>
+                    </Grid>
+                </ScrollViewer>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Grid>
+                    <Frame x:Name="mainframe" Navigated="mainframe_Navigated">
+                        <Frame.ContentTransitions>
+                            <TransitionCollection>
+                                <NavigationThemeTransition/>
+                            </TransitionCollection>
+                        </Frame.ContentTransitions>
+                    </Frame>
+                    <controls:MessagePopup x:Name="messagepop" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,60" Width="120"/>
+                </Grid>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+</Page>
