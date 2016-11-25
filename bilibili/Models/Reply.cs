@@ -40,4 +40,29 @@ namespace bilibili.Models
         public string Uname { get; set; }
         public string Fid { get; set; }
     }
+
+    public class UpForSearch
+    {
+        private string archives = string.Empty;
+        private string fans = string.Empty;
+        public string Archives
+        {
+            get { return archives; }
+            set { archives = value; }
+        }
+        public string Cover { get; set; }
+        public string Param { get; set; }
+        public string Title { get; set; }
+        public string Fans
+        {
+            get
+            {
+                return "投稿:" + archives + "\t粉丝:" + fans;
+            }
+            set
+            {
+                fans = value;
+            }
+        }
+    }
 }

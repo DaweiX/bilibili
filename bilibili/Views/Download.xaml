@@ -9,18 +9,14 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource bili_PageBackground}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <ScrollViewer>
-            <StackPanel Margin="8">
+        <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+            <StackPanel Margin="8,0,8,56">
                 <controls:MessagePopup x:Name="messagepop"/>
                 <StackPanel Orientation="Horizontal">
                     <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
                     <TextBlock Text="正在下载" FontSize="20" Margin="8,0,0,0"/>
                 </StackPanel>
-                <ListView x:Name="list_now" Margin="12">
+                <ListView x:Name="list_now">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid Padding="8">
@@ -64,7 +60,7 @@
                 </ListView>
             </StackPanel>
         </ScrollViewer>
-        <CommandBar Grid.Row="1">
+        <CommandBar Style="{StaticResource CommandbarStyle}">
             <AppBarButton x:Name="high" Label="高优先级" Icon="Upload" Click="high_Click"/>
             <AppBarButton x:Name="del" Label="删除" Icon="Delete" Click="del_Click"/>
             <AppBarButton x:Name="pause" Label="暂停" Icon="Pause" Click="pause_Click"/>

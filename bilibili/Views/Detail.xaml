@@ -31,12 +31,8 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
         <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
-            <StackPanel Margin="8,8,12,8">
+            <StackPanel Margin="8,8,12,56">
                 <TextBlock x:Name="title" FontSize="24" TextWrapping="Wrap" Text="标题"/>
                 <Grid x:Name="grid">
                     <Grid.ColumnDefinitions>
@@ -156,7 +152,7 @@
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
-        <CommandBar Grid.Row="1" HorizontalContentAlignment="Right">
+        <CommandBar Style="{StaticResource CommandbarStyle}">
             <AppBarButton Icon="ReShare" Label="分享">
                 <AppBarButton.Flyout>
                     <MenuFlyout>

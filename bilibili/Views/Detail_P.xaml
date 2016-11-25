@@ -22,12 +22,8 @@
         <Pivot x:Name="pivot" SelectionChanged="Pivot_SelectionChanged" Grid.Row="1">
             <PivotItem Header="详情" Margin="0">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
                     <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
-                        <StackPanel Margin="8,0,8,0">
+                        <StackPanel Margin="8,0,8,56">
                             <TextBlock x:Name="title" FontSize="24" TextWrapping="Wrap" Text="标题"/>
                             <Button>
                                 <Button.Background>
@@ -100,7 +96,7 @@
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
-                    <CommandBar Grid.Row="1" HorizontalContentAlignment="Right">
+                    <CommandBar Style="{StaticResource CommandbarStyle}">
                         <AppBarButton x:Name="btn_ok" Icon="Accept" Label="确定" Click="btn_ok_Click" Visibility="Collapsed"/>
                         <AppBarButton x:Name="btn_all" Icon="SelectAll" Label="全选" Click="btn_all_Click" Visibility="Collapsed"/>
                         <AppBarButton x:Name="btn_cal" Icon="Cancel" Label="取消" Click="btn_cal_Click" Visibility="Collapsed"/>
@@ -128,11 +124,7 @@
             </PivotItem>
             <PivotItem Header="评论" Margin="0">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <ListView x:Name="listview" 
+                    <ListView x:Name="listview"
                               ContainerContentChanging="listview_ContainerContentChanging" 
                               ItemContainerStyle="{StaticResource replystyle}" 
                               Template="{StaticResource myControlTemplete}" 
@@ -194,7 +186,7 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <CommandBar Grid.Row="1">
+                    <CommandBar Style="{StaticResource CommandbarStyle}">
                         <AppBarButton Label="添加评论" Icon="Add" Click="Button_Click"/>
                     </CommandBar>
                 </Grid>

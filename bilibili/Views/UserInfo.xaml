@@ -16,6 +16,7 @@
                         <TextBlock x:Name="userName" FontSize="26" Text="用户名" FontWeight="Light"/>
                         <TextBlock x:Name="sign" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
                         <TextBlock x:Name="coins" Text="硬币："/>
+                        <HyperlinkButton x:Name="coin" Content="硬币记录" Style="{StaticResource HyperlinkButtonStyle1}" Click="coin_Click"/>
                         <HyperlinkButton x:Name="logout" Content="退出登录" Style="{StaticResource HyperlinkButtonStyle1}" Click="logout_Click"/>
                     </StackPanel>
                 </StackPanel>
@@ -28,41 +29,13 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
-                        <TextBlock x:Name="fav" Text="收藏" FontSize="20" Margin="8,0,0,0"/>
+                        <HyperlinkButton x:Name="fav" Content="收藏" Style="{StaticResource HyperlinkButtonStyle2}" Click="fav_Click" FontSize="20" Margin="8,0,0,0"/>
                     </StackPanel>
-                    <ComboBox x:Name="cb_folder" Margin="0,8,0,0" MinWidth="160" SelectionChanged="cb_folder_SelectionChanged">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                    <TextBlock VerticalAlignment="Center" x:Name="txt_count" Margin="0,4,0,0"/>
-                    <GridView x:Name="favlist" Style="{StaticResource GridViewStyle1}" IsItemClickEnabled="True" ItemClick="favlist_ItemClick" Margin="0,8,0,8">
-                        <GridView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Width="160" Background="{x:Null}">
-                                    <Image Source="{Binding Pic}" Width="160" Height="96"/>
-                                    <TextBlock Text="{Binding Title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="收藏于：" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
-                                        <TextBlock Text="{Binding Creat}" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords" FontSize="12"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                        <GridView.ItemContainerStyle>
-                            <Style TargetType="GridViewItem">
-                                <Setter Property="Margin" Value="4"/>
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                <Setter Property="VerticalAlignment" Value="Center"/>
-                            </Style>
-                        </GridView.ItemContainerStyle>
-                    </GridView>
+
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
-                    <HyperlinkButton Content="追番" Style="{StaticResource HyperlinkButtonStyle1}" Click="Button_Click" FontSize="20" Margin="8,0,0,0"/>
+                    <HyperlinkButton Content="追番" Style="{StaticResource HyperlinkButtonStyle2}" Click="Button_Click" FontSize="20" Margin="8,0,0,0"/>
                 </StackPanel>
                 <GridView x:Name="conlist" Margin="0,8,0,0" Style="{StaticResource GridViewStyle1}" Tapped="conlist_Tapped">
                     <GridView.ItemTemplate>

@@ -9,57 +9,69 @@
     SizeChanged="Page_SizeChanged">
     <Page.Resources>
         <CollectionViewSource x:Key="cvs" x:Name="cvsData" IsSourceGrouped="True"/>
-        <local:NumToWeekdays x:Key="cvt"/>
         <local:BoolToForeground x:Key="cvt2"/>
-        <local:BoolToText x:Key="cvt3"/>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Border x:Name="width"/>
-        <GridView x:Name="listview" Style="{StaticResource GridViewStyle}" ItemsSource="{Binding Source={StaticResource cvs}}" Tapped="listview_Tapped">
-            <GridView.ItemContainerTransitions>
-                <TransitionCollection>
-                    <EntranceThemeTransition/>
-                </TransitionCollection>
-            </GridView.ItemContainerTransitions>
-            <GridView.GroupStyle>
-                <GroupStyle>
-                    <GroupStyle.HeaderTemplate>
+        <SemanticZoom>
+            <SemanticZoom.ZoomedOutView>
+                <ListView ItemsSource="{Binding Source={StaticResource cvs},Path=CollectionGroups}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock FontSize="24" Text="{Binding Key,Converter={StaticResource cvt}}"/>
+                            <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource bili_Fontcolor_Main}" Text="{Binding Group.Key}"/>
                         </DataTemplate>
-                    </GroupStyle.HeaderTemplate>
-                    <GroupStyle.HeaderContainerStyle>
-                        <Style TargetType="GridViewHeaderItem">
-                            <Setter Property="Height" Value="52"/>
-                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                            <Setter Property="Margin" Value="4"/>
                         </Style>
-                    </GroupStyle.HeaderContainerStyle>
-                </GroupStyle>
-            </GridView.GroupStyle>
-            <GridView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Width="{Binding Width,ElementName=width}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Image x:Name="img" Source="{Binding Cover}" Width="80" Height="80"/>
-                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                            <TextBlock FontSize="16" Text="{Binding Title}" TextWrapping="Wrap" Foreground="{Binding IsNew,Converter={StaticResource cvt2}}"/>
-                            <TextBlock Text="{Binding LastUpdate}" TextWrapping="Wrap" Foreground="Gray"/>
-                            <TextBlock Text="{Binding IsFinish,Converter={StaticResource cvt3}}" TextWrapping="Wrap" Foreground="Gray"/>
-                        </StackPanel>
-                        <TextBlock Text="{Binding Count}" Grid.Column="2"/>
-                    </Grid>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-            <GridView.ItemContainerStyle>
-                <Style TargetType="GridViewItem">
-                    <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
-                    <Setter Property="Margin" Value="8,4,8,4"/>
-                </Style>
-            </GridView.ItemContainerStyle>
-        </GridView>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </SemanticZoom.ZoomedOutView>
+            <SemanticZoom.ZoomedInView>
+                <GridView x:Name="listview" ItemsSource="{Binding Source={StaticResource cvs}}" Tapped="listview_Tapped" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <GridView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock FontSize="24" Text="{Binding Key}"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                            <GroupStyle.HeaderContainerStyle>
+                                <Style TargetType="GridViewHeaderItem">
+                                    <Setter Property="Height" Value="52"/>
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                </Style>
+                            </GroupStyle.HeaderContainerStyle>
+                        </GroupStyle>
+                    </GridView.GroupStyle>
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="{Binding Width,ElementName=width}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Image x:Name="img" Source="{Binding Cover}" Width="80" Height="80"/>
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                    <TextBlock FontSize="16" Text="{Binding Title}" TextWrapping="Wrap" Foreground="{Binding IsNew,Converter={StaticResource cvt2}}"/>
+                                    <TextBlock Text="{Binding LastUpdate}" TextWrapping="Wrap" Foreground="Gray"/>
+                                    <TextBlock Text="{Binding IsFinish}" TextWrapping="Wrap" Foreground="Gray"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Count}" Grid.Column="2"/>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                            <Setter Property="Margin" Value="8,4,8,4"/>
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                </GridView>
+            </SemanticZoom.ZoomedInView>
+        </SemanticZoom>
     </Grid>
 </Page>

@@ -131,4 +131,10 @@ namespace bilibili.Models
         public string Mid { get; set; }
         public string Cover { get; set; }
     }
+    class CoinHs
+    {
+        public string Delta { get; set; }
+        public string Reason { get; set; }
+        public string Time { get; set; }
+    }
 }

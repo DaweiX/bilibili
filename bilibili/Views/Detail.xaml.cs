@@ -56,7 +56,7 @@ namespace bilibili.Views
             desc.Text = aa.Brief;
             count.Text = "播放：" + aa.View + "\t" + "收藏：" + aa.Fav + "\t" + "弹幕：" + aa.Danmaku + "\t" + "硬币：" + aa.Coins;
             time.Text = aa.Time;
-            staff.Text = aa.Staff;
+            staff.Text = aa.Staff ?? string.Empty;
             if (aa.IsConcerned == "1")
             {
                 addfav.Icon = new SymbolIcon(Symbol.UnFavorite);

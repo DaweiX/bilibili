@@ -269,11 +269,14 @@ namespace bilibili
                 case "Download":
                     txt_head.Text = "离线管理";
                     break;
+                case "FavCollection":
+                    txt_head.Text = "我的收藏";
+                    break;
                 case "Bangumi":
                     txt_head.Text = "番剧分类";
                     break;
                 case "Timeline":
-                    txt_head.Text = "放松表";
+                    txt_head.Text = "放送表";
                     break;
                 case "MyConcerns":
                     txt_head.Text = "订阅番剧";
@@ -358,7 +361,7 @@ namespace bilibili
                         {
                             if (ApiHelper.IsLogin())
                             {
-                                mainframe.Navigate(typeof(Views.UserInfo));
+                                mainframe.Navigate(typeof(Views.FavCollection));
                             }
                             else
                             {
@@ -419,10 +422,15 @@ namespace bilibili
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape || DisplayInformation.AutoRotationPreferences == DisplayOrientations.LandscapeFlipped) 
-            {
-                back.Visibility = Visibility.Visible;
-            }
+            //if (DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape || DisplayInformation.AutoRotationPreferences == DisplayOrientations.LandscapeFlipped) 
+            //{
+            //    back.Visibility = Visibility.Visible;
+            //}
+        }
+
+        private void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            
         }
     }
 }

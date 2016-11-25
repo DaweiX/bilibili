@@ -123,6 +123,9 @@
     <Compile Include="Dialogs\AddFav.xaml.cs">
       <DependentUpon>AddFav.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\CoinHistory.xaml.cs">
+      <DependentUpon>CoinHistory.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SendReply.xaml.cs">
       <DependentUpon>SendReply.xaml</DependentUpon>
     </Compile>
@@ -173,6 +176,9 @@
     </Compile>
     <Compile Include="Views\Download.xaml.cs">
       <DependentUpon>Download.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FavCollection.xaml.cs">
+      <DependentUpon>FavCollection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Friends.xaml.cs">
       <DependentUpon>Friends.xaml</DependentUpon>
@@ -323,6 +329,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\CoinHistory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\SendReply.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -360,6 +370,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Download.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FavCollection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -68,37 +68,18 @@ namespace bilibili.Views
                 {
                     conlist.Items.Add(item);
                 }
-                foreach (var item in myFolder)
-                {
-                    cb_folder.Items.Add(item);
-                }
-                cb_folder.SelectedIndex = 0;
                 int count = 0;
                 foreach (var item in myFolder)
                 {
                     count += int.Parse(item.Count);
                 }
                 if (count == 0)
-                    fav.Text += "（暂无收藏）";
+                    fav.Content += "（暂无收藏）";
             }
             catch
             {
                 
             }
-        }
-
-        private async void cb_folder_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Folder folder = cb_folder.SelectedItem as Folder;
-            txt_count.Text = folder.Count.ToString() + " / " + folder.MCount.ToString() + "\t创建时间:" + folder.Ctime;
-            string fid = folder.Fid;
-            //待加：增量加载
-            favlist.ItemsSource = await ContentServ.GetFavAsync(fid, 1, 20);
-        }
-
-        private void favlist_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Models.Content).Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         private async void logout_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -135,6 +116,20 @@ namespace bilibili.Views
             {
                 Frame.Navigate(typeof(Detail), (item as Concern).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
             }
+        }
+
+        private async void coin_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (ApiHelper.IsLogin())
+            {
+                Dialogs.CoinHistory ch = new Dialogs.CoinHistory();
+                await ch.ShowAsync();
+            }
+        }
+
+        private void fav_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(FavCollection), null, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
         }
     }
 }

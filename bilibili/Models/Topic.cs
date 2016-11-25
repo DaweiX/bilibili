@@ -12,6 +12,15 @@ namespace bilibili.Models
         public string Url { get; set; }
         public string Pic { get; set; }
     }
+
+    class Event
+    {
+        public string Title { get; set; }
+        public string Link { get; set; }
+        public string Cover { get; set; }
+        public string Status { get; set; }
+    }
+
     class KeyWord
     {
         public string Keyword { get; set; }

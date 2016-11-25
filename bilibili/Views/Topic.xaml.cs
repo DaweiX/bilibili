@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -19,15 +21,40 @@ namespace bilibili.Views
         public Topic()
         {
             this.InitializeComponent();
-            load();
         }
 
-        private async void load()
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            List<Models.Topic> topic = await ContentServ.GetTopicListAsync(1);
-            foreach (var item in topic)
+            bool para = bool.Parse(e.Parameter.ToString());
+            if (para)
             {
-                list_topic.Items.Add(item);
+                load(true);
+            }
+            else
+            {
+                load(false);
+            }
+        }
+
+        private async void load(bool isTopic)
+        {
+            if (isTopic == true)
+            {
+                list_topic.Visibility = Visibility.Visible;
+                List<Models.Topic> topic = await ContentServ.GetTopicListAsync(1);
+                foreach (var item in topic)
+                {
+                    list_topic.Items.Add(item);
+                }
+            }
+            if(isTopic == false)
+            {
+                list_event.Visibility = Visibility.Visible;
+                List<Models.Event> events = await ContentServ.GetEventListAsync(1);
+                foreach (var item in events)
+                {
+                    list_event.Items.Add(item);
+                }
             }
         }
 
@@ -46,7 +73,15 @@ namespace bilibili.Views
 
         private void list_topic_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Frame.Navigate(typeof(MyWeb), (list_topic.SelectedItem as Models.Topic).Url);
+            try
+            {
+                Frame.Navigate(typeof(MyWeb), (list_topic.SelectedItem as Models.Topic).Url);
+            }
+            catch
+            {
+                var a = list_event.SelectedItem as Models.Event;
+                Frame.Navigate(typeof(MyWeb), a.Link);
+            }
         }
 
         bool isLoading = false;
@@ -54,29 +89,53 @@ namespace bilibili.Views
         {
             GridView gridview = sender as GridView;
             var scroll = Load.FindChildOfType<ScrollViewer>(gridview);
-            var text = Load.FindChildOfType<TextBlock>(gridview);
             scroll.ViewChanged += async (s, a) =>
             {
                 if ((scroll.VerticalOffset >= scroll.ScrollableHeight - 50 || scroll.ScrollableHeight == 0) && !isLoading)
                 {
-                    text.Visibility = Visibility.Visible;
                     int count0 = gridview.Items.Count;
                     int page = gridview.Items.Count / 20 + 1;
                     isLoading = true;
-                    List<Models.Topic> temps = await ContentServ.GetTopicListAsync(page);
-                    if (temps.Count == 0)
+                    if (gridview.Tag.ToString() == "0")
                     {
-                        text.Text = "装填完毕！";
-                        return;
+                        var temps = await ContentServ.GetTopicListAsync(page);
+                        if (temps.Count == 0)
+                        {
+                            return;
+                        }
+                        foreach (var item in temps)
+                        {
+                            gridview.Items.Add(item);
+                        }
+                        isLoading = false;
                     }
-                    text.Visibility = Visibility.Collapsed;
-                    foreach (var item in temps)
+                    else
                     {
-                        gridview.Items.Add(item);
-                    }
-                    isLoading = false;
+                        var temps = await ContentServ.GetEventListAsync(page);
+                        if (temps.Count == 0)
+                        {
+                            return;
+                        }
+                        foreach (var item in temps)
+                        {
+                            gridview.Items.Add(item);
+                        }
+                        isLoading = false;
+                    }                  
                 }
             };
+        }
+    }
+    public class StatusToText : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value == null) return "{ThemeResource bili_Fontcolor_Main}";
+            return int.Parse(value.ToString()) == 0 ? "#e273a9" : "{ThemeResource bili_Fontcolor_Main}";
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
         }
     }
 }

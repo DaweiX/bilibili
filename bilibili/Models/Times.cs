@@ -8,6 +8,8 @@ namespace bilibili.Models
 {
     class Times
     {
+        private int _weekday;
+        private int _isFinish;
         /// <summary>
         /// 封面
         /// </summary>
@@ -27,11 +29,39 @@ namespace bilibili.Models
         /// <summary>
         /// 是否完结
         /// </summary>
-        public int IsFinish { get; set; }
+        public string IsFinish
+        {
+            get
+            {
+                return _isFinish == 0 ? "未完结" : "已完结";
+            }
+            set { _isFinish = int.Parse(value); }
+        }
         /// <summary>
         /// 星期X
         /// </summary>
-        public int Weekday { get; set; }
+        public string Weekday
+        {
+            get
+            {
+                switch (_weekday)
+                {
+                    case -1: return "其他";
+                    case 1: return "星期一";
+                    case 2: return "星期二";
+                    case 3: return "星期三";
+                    case 4: return "星期四";
+                    case 5: return "星期五";
+                    case 6: return "星期六";
+                    case 0: return "星期日";
+                    default: return "未知";
+                }
+            }
+            set
+            {
+                _weekday = int.Parse(value);
+            }
+        }
         /// <summary>
         /// ID
         /// </summary>
