@@ -1,0 +1,44 @@
+﻿<Page
+    x:Class="bilibili.Views.FavCollection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <CommandBar VerticalAlignment="Bottom" Opacity="0.5"/>
+        <StackPanel>
+            <ComboBox x:Name="cb_folder" Margin="0,8,0,0" MinWidth="160" SelectionChanged="cb_folder_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock VerticalAlignment="Center" x:Name="txt_count" Margin="0,4,0,0"/>
+            <GridView x:Name="favlist" Style="{StaticResource GridViewStyle1}" IsItemClickEnabled="True" ItemClick="favlist_ItemClick" Margin="0,8,0,8">
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Width="160" Background="{x:Null}">
+                            <Image Source="{Binding Pic}" Width="160" Height="96"/>
+                            <TextBlock Text="{Binding Title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="收藏于：" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                <TextBlock Text="{Binding Creat}" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords" FontSize="12"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+                <GridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="Margin" Value="4"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                </GridView.ItemContainerStyle>
+            </GridView>
+        </StackPanel>
+    </Grid>
+</Page>

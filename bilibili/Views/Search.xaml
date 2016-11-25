@@ -52,12 +52,21 @@
                 <ListView x:Name="list_up" Style="{StaticResource ListViewStyle}" Tag="up" Tapped="listTapped">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Pic}" Width="100"/>
-                                <TextBlock Text="{Binding Title}"/>
-                                <TextBlock Text="{Binding Author}"/>
-                                <TextBlock Text="{Binding TypeName}"/>
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="60" Height="60">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding Cover}"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <StackPanel Grid.Column="1" Margin="4,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock VerticalAlignment="Bottom" Text="{Binding Title}" TextWrapping="Wrap"/>
+                                    <TextBlock VerticalAlignment="Top" Text="{Binding Fans}" FontSize="14"/>
+                                </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

@@ -6,6 +6,14 @@
         <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
         <Setter Property="Margin" Value="8,3,8,3"/>
     </Style>
+    <Style TargetType="CommandBar" x:Key="CommandbarStyle">
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="Gray" Opacity="0.4"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="ListViewStyle" TargetType="ListView">
         <Setter Property="Template">
             <Setter.Value>
@@ -172,6 +180,45 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="HyperlinkButtonStyle2" TargetType="HyperlinkButton">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="HyperlinkButton">
+                    <Grid x:Name="RootGrid">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource bili_Fontcolor_Main}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Gray"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource bili_Fontcolor_Main}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="ContentPresenter">
+                            <TextBlock Text="{TemplateBinding Content}"/>
+                        </ContentPresenter>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="GridViewStyle1" TargetType="GridView">
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled"/>

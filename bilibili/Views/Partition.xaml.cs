@@ -197,7 +197,7 @@ namespace bilibili.Views
                             break;
                         case 3:
                             {
-                                //直播
+                                
                             }
                             break;
                         case 4:
@@ -228,9 +228,10 @@ namespace bilibili.Views
             }
         }
 
-        async Task loadfriends()
+        async Task<bool> loadfriends()
         {
             list_friends.ItemsSource = await ContentServ.GetFriendsAsync(UserHelper.mid);
+            return true;
         }
 
         //番剧推荐
@@ -326,7 +327,17 @@ namespace bilibili.Views
 
         private void Topic_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            Frame.Navigate(typeof(Topic), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Button btn = sender as Button;
+            if (btn.Tag.ToString() == "0")
+            {
+                Frame.Navigate(typeof(Topic), true, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                return;
+            }
+            if (btn.Tag.ToString() == "1")
+            {
+                Frame.Navigate(typeof(Topic), false, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                return;
+            }
         }
 
         private void gridview_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
@@ -337,6 +348,16 @@ namespace bilibili.Views
             {
                 Frame.Navigate(typeof(Detail_P), item.Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
             }
+        }
+
+        private void scollviewer2_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+
+        }
+
+        private void list_live_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+
         }
     }
 

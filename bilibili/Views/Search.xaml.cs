@@ -26,7 +26,7 @@ namespace bilibili.Views
     /// </summary>
     public sealed partial class Search : Page
     {
-        string keyword = "";
+        string keyword = string.Empty;
         public Search()
         {
             this.InitializeComponent();
@@ -56,6 +56,13 @@ namespace bilibili.Views
                         Frame.Navigate(typeof(Detail), sid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
                     }
                     break;
+                case 2:
+                    {
+                        var item = listview.SelectedItem as UpForSearch;
+                        string mid = item.Param;
+                        Frame.Navigate(typeof(Friends), mid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                    }
+                    break;
             }
         }
 
@@ -67,13 +74,13 @@ namespace bilibili.Views
             {
                 case "video":
                     {
-                        if (list_videos.Items.Count == 0)
+                        if (list_videos.Items.Count == 0 && !isLoading)
                         {
                             List<SearchResult> list_rs = new List<SearchResult>();
                             list_rs = await ContentServ.GetSearchResultAsync(keyword, 1);
                             if (list_rs == null)
                             {
-                                messagepop.Show("没有搜索结果，请更换关键字重新搜索~");
+                                return;
                             }
                             else if (list_rs != null && list_rs.Count > 0)
                             {
@@ -86,13 +93,13 @@ namespace bilibili.Views
                     }break;
                 case "fanju":
                     {
-                        if (list_fanju.Items.Count == 0)
+                        if (list_fanju.Items.Count == 0 && !isLoading) 
                         {
                             List<SearchResult_Bangumi> list_rs = new List<SearchResult_Bangumi>();
                             list_rs = await ContentServ.GetBangumisAsync(keyword, 1);
                             if (list_rs == null)
                             {
-                                messagepop.Show("没有搜索结果，请更换关键字重新搜索~");
+                                return;
                             }
                             else if (list_rs != null && list_rs.Count > 0)
                             {
@@ -106,22 +113,22 @@ namespace bilibili.Views
                     break;
                 case "up":
                     {
-                        //if (list_up.Items.Count == 0)
-                        //{
-                        //    List<Friend> list_rs = new List<Friend>();
-                        //    list_rs = await ContentServ.GetUpsAsync(keyword, 1);
-                        //    if (list_rs == null)
-                        //    {
-                        //        messagepop.Show("没有搜索结果，请更换关键字重新搜索~");
-                        //    }
-                        //    else if (list_rs != null && list_rs.Count > 0)
-                        //    {
-                        //        foreach (var item in list_rs)
-                        //        {
-                        //            list_fanju.Items.Add(item);
-                        //        }
-                        //    }
-                        //}
+                        if (list_up.Items.Count == 0 && !isLoading)
+                        {
+                            List<UpForSearch> list = new List<UpForSearch>();
+                            list = await ContentServ.GetUpsAsync(keyword, 1);
+                            if (list == null)
+                            {
+                                return;
+                            }
+                            else if (list_up != null && list.Count > 0)
+                            {
+                                foreach (var item in list)
+                                {
+                                    list_up.Items.Add(item);
+                                }
+                            }
+                        }
                     }
                     break;
             }
@@ -176,7 +183,18 @@ namespace bilibili.Views
                             }
                         case "up":
                             {
-
+                                List<UpForSearch> uplist = await ContentServ.GetUpsAsync(keyword, page);
+                                if (uplist.Count == 0)
+                                {
+                                    text.Text = "装填完毕！";
+                                    return;
+                                }
+                                text.Visibility = Visibility.Collapsed;
+                                foreach (var item in uplist)
+                                {
+                                    listview.Items.Add(item);
+                                }
+                                isLoading = false;
                                 break;
                             }
                     }

@@ -12,7 +12,7 @@
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="bili_Theme" Color="#e273a9"/>
                     <SolidColorBrush x:Key="bili_PageBackground" Color="#f0f0f0"/>
-                    <SolidColorBrush x:Key="bili_ControlBackground" Color="White"/>
+                    <SolidColorBrush x:Key="bili_ControlBackground" Color="LightGray"/>
                     <SolidColorBrush x:Key="bili_ListBackground" Color="White"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Main" Color="Black"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Second" Color="Gray"/>
@@ -20,7 +20,7 @@
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="bili_Theme" Color="#e273a9"/>
                     <SolidColorBrush x:Key="bili_PageBackground" Color="Black"/>
-                    <SolidColorBrush x:Key="bili_ControlBackground" Color="Gray"/>
+                    <SolidColorBrush x:Key="bili_ControlBackground" Color="DarkGray"/>
                     <SolidColorBrush x:Key="bili_ListBackground" Color="#363636"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Main" Color="White"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Second" Color="LightGray"/>

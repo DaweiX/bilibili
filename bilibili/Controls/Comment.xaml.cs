@@ -58,6 +58,7 @@ namespace bilibili.Controls
         /// <returns></returns>
         private async Task LoadItems(GridView gridview, int tid, int page)
         {
+            //int count=
             List<Content> a = await ContentServ.GetContentAsync(tid, page, 6);
             if (a != null)
             {

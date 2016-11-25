@@ -12,7 +12,7 @@
         <ScrollViewer VerticalScrollBarVisibility="Hidden">
             <StackPanel>
                 <StackPanel HorizontalAlignment="Center" x:Name="stk1">
-                    <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩客户端一号机 1st edition version 1.49</TextBlock>
+                    <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩客户端一号机 1st edition version 1.50</TextBlock>
                     <HyperlinkButton Style="{StaticResource HyperlinkButtonStyle1}" HorizontalAlignment="Center">联系我</HyperlinkButton>
                     <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
                     <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
@@ -27,7 +27,7 @@
                     <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">特别鸣谢</TextBlock>
                     <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">Fiddler</TextBlock>
                     <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,4,0,0">BUAA-Mobile</TextBlock>
-                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,4,0,0">BiliBili UWP</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,4,0,0">BiliBili UWP (弹幕)</TextBlock>
                 </StackPanel>
                 <RelativePanel x:Name="stk2" Height="{Binding ElementName=page,Path=ActualHeight}">
                     <TextBlock Foreground="White" Margin="0,0,8,12" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">©2016 DaweiX</TextBlock>
