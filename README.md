@@ -35,4 +35,11 @@
 * [https://github.com/xiaoyaocz/BILIBILI-UWP](cycz：Bilibili-UWP)：程序界面及基本弹幕实现  
 * [www.telerik.com/fiddler](Fiddler)：请求APi获取  
 * [Bilibili API-wiki](https://github.com/Qixingchen/MD-BiliBili/wiki/API:-%E6%A6%82%E8%A7%88): 非官方Api文档  
-* MicroSoft MSDN（C#、UWP）
+* MicroSoft MSDN（C#、UWP）  
+  
+###备注：  
+* 运行时系统版本要求：  
++ 最低：10586；推荐：14393及以上  
+* 开发最低要求：  
+`Windows™ 10 SDK Version 14393`，`Visual Studio 2015`
+*如遇到问题或想要与我交流，我的邮箱：`DaweiX@outlook.com`
