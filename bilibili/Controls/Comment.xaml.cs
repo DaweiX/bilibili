@@ -87,5 +87,23 @@ namespace bilibili.Controls
             HyperlinkButton btn = sender as HyperlinkButton;
             Navi(btn.Content.ToString());
         }
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double i = this.ActualWidth;
+            if (i > 800)
+            {
+                i = 6;
+            }
+            else if (i > 600)
+            {
+                i = 4;
+            }
+            else
+            {
+                i = 3;
+            }
+            width.Width = this.ActualWidth / i;
+        }
     }
 }

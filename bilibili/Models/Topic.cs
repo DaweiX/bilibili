@@ -23,7 +23,24 @@ namespace bilibili.Models
 
     class KeyWord
     {
+        private string _status;
         public string Keyword { get; set; }
-        public string Status { get; set; }
+        public string Status
+        {
+            get
+            {
+                switch (_status)
+                {
+                    case "up": return "↑";
+                    case "down": return "↓";
+                    case "keep": return "→";
+                    default: return "";
+                }
+            }
+            set
+            {
+                _status = value;
+            }
+        }
     }
 }

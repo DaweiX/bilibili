@@ -602,7 +602,7 @@ namespace bilibili.Http
         {
             VideoURL URL = new VideoURL { Acceptformat = new List<string>(), Acceptquality = new List<int>() };
             JsonObject json = new JsonObject();
-            string url = string.Format("http://interface.bilibili.com/playurl?_device=uwp&cid={0}&quality=2&otype=xml&appkey={1}&_buvid=D57C3D63-7920-41FA-910D-AB6CBD5365F830799infoc&_hwid=0100d4c50200c2a6&platform=uwp_mobile&type=mp4&access_key={2}&mid={3}&ts={4}", cid, ApiHelper.appkey, ApiHelper.accesskey, UserHelper.mid, ApiHelper.GetLinuxTS().ToString());
+            string url = string.Format("http://interface.bilibili.com/playurl?_device=uwp&cid={0}&quality={1}&otype=xml&appkey={2}&_buvid=D57C3D63-7920-41FA-910D-AB6CBD5365F830799infoc&_hwid=0100d4c50200c2a6&platform=uwp_mobile&type=mp4&access_key={3}&mid={4}&ts={5}", cid, quality.ToString(), ApiHelper.appkey, ApiHelper.accesskey, UserHelper.mid, ApiHelper.GetLinuxTS().ToString());
             url += ApiHelper.GetSign(url);
             XmlDocument doc = await XmlDocument.LoadFromUriAsync(new Uri(url));
             URL.Url = doc.GetElementsByTagName("url")[0].InnerText;
@@ -739,8 +739,69 @@ namespace bilibili.Http
                 }
             }
             return banList;
-
         }
+
+        /// <summary>
+        /// 获取番剧最近更新
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<List<LastUpdate>> GetLastUpdateAsync()
+        {
+            List<LastUpdate> list = new List<LastUpdate>();
+            string url = "http://bangumi.bilibili.com/api/app_index_page_v2";
+            try
+            {
+                JsonObject json = await BaseService.GetJson(url);
+                if (json.ContainsKey("result"))
+                {
+                    json = JsonObject.Parse(json["result"].ToString());
+                    if (json.ContainsKey("latestUpdate"))
+                    {
+                        json = JsonObject.Parse(json["latestUpdate"].ToString());
+                        if (json.ContainsKey("list"))
+                        {
+                            JsonArray array = json["list"].GetArray();
+                            foreach (var item in array)
+                            {
+                                LastUpdate last = new LastUpdate();
+                                json = JsonObject.Parse(item.ToString());
+                                if (json.ContainsKey("cover"))
+                                {
+                                    last.Cover = json["cover"].GetString();
+                                }
+                                if (json.ContainsKey("title"))
+                                {
+                                    last.Title = json["title"].GetString();
+                                }
+                                if (json.ContainsKey("watchingCount"))
+                                {
+                                    last.Watch = json["watchingCount"].GetString();
+                                }
+                                if (json.ContainsKey("newest_ep_index"))
+                                {
+                                    last.Index = json["newest_ep_index"].GetString();
+                                }
+                                if (json.ContainsKey("season_id"))
+                                {
+                                    last.Sid = json["season_id"].GetString();
+                                }
+                                if (json.ContainsKey("last_time"))
+                                {
+                                    last.Time = StringDeal.LinuxToData(json["last_time"].GetString());
+                                }
+                                list.Add(last);
+                            }
+                        }
+                    }
+                }
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// 获取话题
         /// </summary>
@@ -1164,11 +1225,10 @@ namespace bilibili.Http
                         if (temp.ContainsKey("desc"))
                             hot.Desc = temp["desc"].GetString();
                         if (temp.ContainsKey("title"))
-                            hot.Title = StringDeal.delQuotationmarks(temp["title"].ToString());
+                            hot.Title = temp["title"].GetString();
                         if (temp.ContainsKey("link"))
                         {
-                            string link = StringDeal.delQuotationmarks(temp["link"].ToString());
-                            hot.Sid = link.Substring(link.LastIndexOf('/') + 1);
+                            hot.Link = temp["link"].GetString();
                         }
                         hots.Add(hot);
                     }

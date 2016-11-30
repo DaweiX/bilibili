@@ -42,6 +42,10 @@ namespace bilibili.Views
             {
                 direct.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_isdirect"));
             }
+            if (SettingHelper.ContainsKey("_quality"))
+            {
+                quality.SelectedIndex = Convert.ToInt32(SettingHelper.GetValue("_quality").ToString()) - 1;
+            }
         }
 
         private void night_Toggled(object sender, RoutedEventArgs e)
@@ -188,6 +192,16 @@ namespace bilibili.Views
                 temp.Foreground = new SolidColorBrush(Colors.LightGray);
             }
             txt.Foreground = new SolidColorBrush(Colors.White);
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void quality_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SettingHelper.SetValue("_quality", (quality.SelectedItem as ComboBoxItem).Tag.ToString());
         }
     }
 }

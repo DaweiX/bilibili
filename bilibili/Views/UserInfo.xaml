@@ -26,12 +26,19 @@
                     <ProgressBar x:Name="bar" Width="160" Foreground="{ThemeResource bili_Theme}"/>
                     <TextBlock x:Name="exp_total" Margin="4,0,0,0"/>
                 </StackPanel>
-                <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
+                    <HyperlinkButton Content="关注" Style="{StaticResource HyperlinkButtonStyle2}" Click="Button_Click" FontSize="20" Margin="8,0,0,0"/>
+                    <TextBlock x:Name="txt_atten"/>
+                    <HyperlinkButton Content="粉丝" Style="{StaticResource HyperlinkButtonStyle2}" Click="Button_Click" FontSize="20" Margin="16,0,0,0"/>
+                    <TextBlock x:Name="txt_fans"/>
+                </StackPanel>
+                <StackPanel Margin="0,8,0,8">
                     <StackPanel Orientation="Horizontal">
                         <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
                         <HyperlinkButton x:Name="fav" Content="收藏" Style="{StaticResource HyperlinkButtonStyle2}" Click="fav_Click" FontSize="20" Margin="8,0,0,0"/>
                     </StackPanel>
-
+                    <!--收藏夹视图-->
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>

@@ -42,7 +42,7 @@ namespace bilibili.Views
         string aid = string.Empty;
         DispatcherTimer timer = new DispatcherTimer();
         List<VideoInfo> infos = new List<VideoInfo>();
-        bool isShowDanmu = true;
+        bool isShowDanmu = false;
         List<DanmuModel> DanmuPool;
         bool isInited = false;
         int Index = 0;
@@ -79,6 +79,9 @@ namespace bilibili.Views
             CoreWindow.GetForCurrentThread().KeyDown += Video_KeyDown;
         }
 
+        /// <summary>
+        /// 常用键位操作（PC）
+        /// </summary>
         private void Video_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
             args.Handled = true;
@@ -89,12 +92,12 @@ namespace bilibili.Views
                         if (media.CurrentState == MediaElementState.Playing)
                         {
                             media.Pause();
-                            pause.Icon = new SymbolIcon { Symbol = Symbol.Play };
+                            icon.Symbol = Symbol.Play;
                         }
                         else if (media.CurrentState == MediaElementState.Paused)
                         {
                             media.Play();
-                            pause.Icon = new SymbolIcon { Symbol = Symbol.Pause };
+                            icon.Symbol = Symbol.Pause;
                         }
                     }break;
                 case VirtualKey.Left:
@@ -203,7 +206,7 @@ namespace bilibili.Views
                 var stream = await file.OpenAsync(FileAccessMode.Read);
                 media.SetSource(stream, file.ContentType);
                 status.Text += "完毕";
-                await Task.Delay(1000);
+                await Task.Delay(500);
                 return;
             }
             Index = Convert.ToInt32(infos[0].Cid) + 1;
@@ -224,7 +227,12 @@ namespace bilibili.Views
             cid = infos[index].Cid;
             aid = infos[0].Title;
             status.Text = "获取视频地址...";
-            URL = await ContentServ.GetVedioURL(cid, 3, VideoFormat.mp4);
+            int quality = 2;
+            if (SettingHelper.ContainsKey("_quality"))
+            {
+                quality = int.Parse(SettingHelper.GetValue("_quality").ToString());
+            }
+            URL = await ContentServ.GetVedioURL(cid, quality, VideoFormat.mp4);
             string url = URL.Url;
             status.Text += (URL == null) ? "失败" : "完毕";
             if (URL == null) return;
@@ -262,12 +270,12 @@ namespace bilibili.Views
             if (media.CurrentState == MediaElementState.Playing)
             {
                 media.Pause();
-                pause.Icon = new SymbolIcon { Symbol = Symbol.Play };
+                icon.Symbol = Symbol.Play;
             }
             else if (media.CurrentState == MediaElementState.Paused)
             {
                 media.Play();
-                pause.Icon = new SymbolIcon { Symbol = Symbol.Pause };
+                icon.Symbol = Symbol.Pause;
             }
         }
 
@@ -514,7 +522,7 @@ namespace bilibili.Views
             {
                 isX = true;
                 media.Pause();
-                pause.Icon = new SymbolIcon { Symbol = Symbol.Play };
+                icon.Symbol = Symbol.Play;
                 double actual = X / this.ActualWidth;
                 sli_main.Value += actual * 150;
                 TimeSpan time = new TimeSpan(0, 0, (int)sli_main.Value);
@@ -544,7 +552,7 @@ namespace bilibili.Views
             if (isX)
             {
                 media.Play();
-                pause.Icon = new SymbolIcon { Symbol = Symbol.Pause };
+                icon.Symbol = Symbol.Pause;
             }
         }
 
@@ -585,12 +593,12 @@ namespace bilibili.Views
             if (media.CurrentState == MediaElementState.Playing)
             {
                 media.Pause();
-                pause.Icon = new SymbolIcon { Symbol = Symbol.Play };
+                icon.Symbol = Symbol.Play;
             }
             else if (media.CurrentState == MediaElementState.Paused)
             {
                 media.Play();
-                pause.Icon = new SymbolIcon { Symbol = Symbol.Pause };
+                icon.Symbol = Symbol.Pause;
             }
         }
 

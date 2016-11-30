@@ -124,10 +124,10 @@
                             </Button.Content>
                         </Button>
                         <TextBlock x:Name="txt_title" Grid.Column="2" VerticalAlignment="Center" Foreground="{ThemeResource bili_Theme}"/>
-                        <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Orientation="Horizontal">
-                            <TextBlock x:Name="txt_web" Foreground="White"/>
-                            <TextBlock x:Name="txt_bat" Margin="8,0,8,0" Foreground="White"/>
-                            <TextBlock x:Name="txt_now" Foreground="White"/>
+                        <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0">
+                            <TextBlock x:Name="txt_web" Foreground="White" FontSize="12"/>
+                            <TextBlock x:Name="txt_bat" Foreground="White" FontSize="12"/>
+                            <TextBlock x:Name="txt_now" Foreground="White" FontSize="12"/>
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Row="1" Margin="12,4,12,4">
@@ -210,33 +210,47 @@
                         <ProgressBar x:Name="pro_down" Foreground="Pink" Canvas.ZIndex="61"/>
                     </Grid>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="42">
-                        <AppBarButton x:Name="pause" Icon="Pause" Click="AppBarButton_Click" Foreground="White" ToolTipService.ToolTip="播放/暂停"/>
-                        <AppBarButton Click="DanmuSwitch_Click" VerticalAlignment="Center" Foreground="White" Icon="Comment" ToolTipService.ToolTip="弹幕开关"/>
-                        <AppBarButton x:Name="vol" Icon="Volume" Foreground="White" ToolTipService.ToolTip="音量调节">
-                            <AppBarButton.Flyout>
+                        <Button x:Name="pause" Click="AppBarButton_Click" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="播放/暂停">
+                            <Button.Content>
+                                <SymbolIcon x:Name="icon" Symbol="Pause"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Click="DanmuSwitch_Click" Background="{x:Null}" VerticalAlignment="Center" Foreground="White" ToolTipService.ToolTip="弹幕开关" Margin="4,0,4,0">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Comment"/>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="vol" Foreground="White" Background="{x:Null}" ToolTipService.ToolTip="音量调节">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Volume"/>
+                            </Button.Content>
+                            <Button.Flyout>
                                 <Flyout>
                                     <Slider x:Name="sli_vol" Width="200" Maximum="10" Value="10" ValueChanged="sli_vol_ValueChanged"/>
                                 </Flyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
-                        <AppBarButton x:Name="light" Foreground="White" ToolTipService.ToolTip="亮度调节">
-                            <AppBarButton.Icon>
+                            </Button.Flyout>
+                        </Button>
+                        <Button x:Name="light" Margin="4,0,4,0" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="亮度调节">
+                            <Button.Content>
                                 <FontIcon Glyph="&#xE706;"/>
-                            </AppBarButton.Icon>
-                            <AppBarButton.Flyout>
+                            </Button.Content>
+                            <Button.Flyout>
                                 <Flyout>
                                     <Slider x:Name="sli_light" Width="200" Maximum="1" SmallChange="0.01" StepFrequency="0.01" Minimum="0.3" ValueChanged="sli_light_ValueChanged"/>
                                 </Flyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
-                        <AppBarButton x:Name="full" Icon="FullScreen" Foreground="White">
-                            <AppBarButton.Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <Button x:Name="full" Background="{x:Null}" Foreground="White">
+                            <Button.Content>
+                                <SymbolIcon Symbol="FullScreen"/>
+                            </Button.Content>
+                            <Button.Flyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem Tag="0" Click="full_Click">保持比例</MenuFlyoutItem>
                                     <MenuFlyoutItem Tag="1" Click="full_Click">拉伸占满</MenuFlyoutItem>
                                 </MenuFlyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
+                            </Button.Flyout>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </Grid>

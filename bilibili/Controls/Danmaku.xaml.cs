@@ -174,8 +174,8 @@ namespace bilibili.Controls
             }
             else
             {
-                txt2.FontSize = fontsize - 2;
-                txt1.FontSize = fontsize - 2;
+                txt2.FontSize = fontsize - 4;
+                txt1.FontSize = fontsize - 4;
             }
             txt1.Text = txt2.Text = model.Message;
             grid.Children.Add(txt2);
@@ -197,10 +197,9 @@ namespace bilibili.Controls
 
         public void ClearDanmu()
         {
-            this.Visibility = Visibility.Collapsed;
             grid_0.Children.Clear();
-            grid_1.Children.Clear();
-            this.Visibility = Visibility.Visible;
+            top.Children.Clear();
+            bottom.Children.Clear();
         }
 
         public class DanmuModel

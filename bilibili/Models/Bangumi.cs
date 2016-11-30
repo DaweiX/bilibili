@@ -68,7 +68,7 @@ namespace bilibili.Models
         public string Cursor { get; set; }
         public string Cover { get; set; }
         public string Desc { get; set; }
-        public string Sid { get; set; }
+        public string Link { get; set; }
         public string Title { get; set; }
     }
     class History

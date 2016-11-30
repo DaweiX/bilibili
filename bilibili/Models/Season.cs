@@ -59,4 +59,23 @@ namespace bilibili.Models
         public string Actor { get; set; }
         public string Role { get; set; }
     }
+    class LastUpdate
+    {
+        private string _index;
+        private string _watch;
+        public string Cover { get; set; }
+        public string Index
+        {
+            get { return "更新到第" + _index + "话"; }
+            set { _index = value; }
+        }
+        public string Title { get; set; }
+        public string Watch
+        {
+            get { return _watch + "人在看"; }
+            set { _watch = value; }
+        }
+        public string Sid { get; set; }
+        public string Time { get; set; }
+    }
 }

@@ -104,6 +104,11 @@
                 </PivotItem.Header>
                 <StackPanel>
                     <ToggleSwitch x:Name="direct" Header="点击剧集直接播放" Toggled="direct_Toggled"/>
+                    <ComboBox x:Name="quality" Header="默认清晰度选择" SelectionChanged="quality_SelectionChanged">
+                        <ComboBoxItem Tag="1">流畅</ComboBoxItem>
+                        <ComboBoxItem Tag="2">清晰</ComboBoxItem>
+                        <ComboBoxItem Tag="3">高清</ComboBoxItem>
+                    </ComboBox>
                 </StackPanel>
             </PivotItem>
         </Pivot>

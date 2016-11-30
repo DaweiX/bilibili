@@ -244,6 +244,9 @@ namespace bilibili
                     (mainframe.Content as Views.Setting).ChangeDark += ChangeDarkMode;
                     (mainframe.Content as Views.Setting).ChangeTheme += ChangeTheme;
                     break;
+                case "Detail":
+                    txt_head.Text = "番剧详情";
+                    break;
                 case "Detail_P":
                     (mainframe.Content as Views.Detail_P).pageNavi += DetailPNavi;
                     break;
@@ -255,7 +258,7 @@ namespace bilibili
                     txt_head.Text = "我的信息";
                     break;
                 case "Partition":
-                    txt_head.Text = "";
+                    txt_head.Text = "首页";
                     break;
                 case "MyWeb":
                     txt_head.Text = "浏览网页";

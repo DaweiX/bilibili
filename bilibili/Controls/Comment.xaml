@@ -7,9 +7,37 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="600"
-    d:DesignWidth="400">
-
+    d:DesignWidth="400"
+    SizeChanged="UserControl_SizeChanged">
+    <UserControl.Resources>
+        <DataTemplate x:Key="gv_itemtemplete">
+            <Grid Width="{Binding Width,ElementName=width}" Background="{ThemeResource bili_ListBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Image Source="{Binding Pic}"/>
+                <TextBlock Text="{Binding Title}" Grid.Row="1" Margin="4,2,0,0" TextWrapping="WrapWholeWords" MaxLines="2" FontSize="13" VerticalAlignment="Bottom"/>
+                <Grid Grid.Row="2" Padding="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                        <Image Source="ms-appx:///Assets//Icons//play.png" Height="10"/>
+                        <TextBlock Text="{Binding Play}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                        <Image Source="ms-appx:///Assets//Icons//comment.png" Height="10"/>
+                        <TextBlock Text="{Binding Comment}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
+        <Border x:Name="width"/>
         <StackPanel HorizontalAlignment="Stretch">
             <Grid>
                 <HyperlinkButton Content="番剧" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>

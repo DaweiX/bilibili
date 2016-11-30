@@ -183,6 +183,10 @@ namespace bilibili.Views
                                     await addcomment(cursor);
                                 }
                                 header_bangumi.init(await ContentServ.GetFilpItems());
+                                if (list_lastupdate.Items.Count == 0)
+                                {
+                                    list_lastupdate.ItemsSource = await ContentServ.GetLastUpdateAsync();
+                                }
                                 header_bangumi.navi += Header_bangumi_navi;
                             }
                             break;
@@ -253,16 +257,39 @@ namespace bilibili.Views
             Button btn = sender as Button;
             switch (btn.Tag.ToString())
             {
-                case "1": Frame.Navigate(typeof(MyConcerns), null, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());break;
-                case "2": Frame.Navigate(typeof(Timeline), null, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo()); break;
-                case "3": Frame.Navigate(typeof(Bangumi), null, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo()); break;
+                case "1": Frame.Navigate(typeof(MyConcerns), null, new SlideNavigationTransitionInfo());break;
+                case "2": Frame.Navigate(typeof(Timeline), null, new SlideNavigationTransitionInfo()); break;
+                case "3": Frame.Navigate(typeof(Bangumi), null, new SlideNavigationTransitionInfo()); break;
             }
         }
 
         private void list_commandbangumi_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             HotBangumi hot = list_commandbangumi.SelectedItem as HotBangumi;
-            Frame.Navigate(typeof(Views.Detail), hot.Sid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            string para = string.Empty;
+            string url = hot.Link;
+            if (Regex.IsMatch(url, @"anime/"))
+            {
+                para = Regex.Match(url, @"(?<=anime/)\d*").Value;
+                this.Frame.Navigate(typeof(Detail), para);
+                return;
+            }
+            if (Regex.IsMatch(url, @"bangumi/i/"))
+            {
+                para = Regex.Match(url, @"(?<=bangumi/i/)\d*").Value;
+                this.Frame.Navigate(typeof(Detail), para);
+                return;
+            }
+            if ((Regex.IsMatch(url, @"/video/av")))
+            {
+                para = Regex.Match(url, @"(?<=/video/av)\d*").Value;
+                Frame.Navigate(typeof(Detail_P), para);
+                return;
+            }
+            else
+            {
+                Frame.Navigate(typeof(MyWeb), url,new DrillInNavigationTransitionInfo());
+            }
         }
 
         private void scollviewer_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
@@ -290,15 +317,16 @@ namespace bilibili.Views
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (this.ActualWidth < 640)
+            double i = ActualWidth;
+            if (i > 800)
             {
-                width.Width = double.NaN;
+                i = 4;
             }
             else
             {
-                int i = Convert.ToInt32(this.ActualWidth / 400);
-                width.Width = (this.ActualWidth / i) - 8 * i - 8;
+                i = 1;
             }
+            width.Width = (this.ActualWidth - 12 * i) / i;
         }
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -359,23 +387,14 @@ namespace bilibili.Views
         {
 
         }
-    }
 
-    public class MyConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        private void list_lastupdate_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            switch(value.ToString())
+            var a = list_lastupdate.SelectedItem as LastUpdate;
+            if (a != null)
             {
-                case "up":return "↑";
-                case "down":return "↓";
-                case "keep":return "→";
-                default:return "";
+                Frame.Navigate(typeof(Detail), a.Sid, new SlideNavigationTransitionInfo());
             }
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return null;
         }
     }
 
