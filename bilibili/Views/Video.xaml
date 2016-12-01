@@ -21,17 +21,17 @@
                     </StackPanel.Background>
                     <TextBlock FontWeight="Light" Text="更多选项" FontSize="20" Foreground="White"/>
                     <TextBlock Text="屏蔽弹幕" Foreground="{ThemeResource bili_Theme}" Margin="0,8,0,8"/>
-                    <CheckBox IsChecked="True">
+                    <CheckBox Tag="b" IsChecked="True" Click="CheckBox_Click">
                         <CheckBox.Content>
                             <TextBlock Text="底端弹幕" Foreground="White"/>
                         </CheckBox.Content>
                     </CheckBox>
-                    <CheckBox IsChecked="True">
+                    <CheckBox Tag="g" IsChecked="True" Click="CheckBox_Click">
                         <CheckBox.Content>
                             <TextBlock Text="滚动弹幕" Foreground="White"/>
                         </CheckBox.Content>
                     </CheckBox>
-                    <CheckBox Foreground="White" IsChecked="True">
+                    <CheckBox Tag="t" IsChecked="True" Click="CheckBox_Click">
                         <CheckBox.Content>
                             <TextBlock Text="顶部弹幕" Foreground="White"/>
                         </CheckBox.Content>
@@ -40,37 +40,8 @@
                     <TextBox/>
                     <TextBlock Text="弹幕速度" Foreground="{ThemeResource bili_Theme}" Margin="0,8,0,0"/>
                     <Slider x:Name="sli_speed" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="自定义弹幕颜色" Foreground="{ThemeResource bili_Theme}"/>
-                        <Rectangle x:Name="rec" Width="40" Height="40" HorizontalAlignment="Right" Grid.Column="1" Fill="White"/>
-                    </Grid>
                     <TextBlock Text="弹幕间距" Foreground="{ThemeResource bili_Theme}"/>
                     <Slider Maximum="3" x:Name="sli_space" ValueChanged="sli_space_ValueChanged"/>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="r" Text="{Binding ElementName=sli_r,Path=Value}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Foreground="White"></TextBlock>
-                        <TextBlock x:Name="g" Text="{Binding ElementName=sli_g,Path=Value}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="White"></TextBlock>
-                        <TextBlock x:Name="b" Text="{Binding ElementName=sli_b,Path=Value}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Foreground="White"></TextBlock>
-                        <Slider x:Name="sli_r" Grid.Row="0" Grid.Column="1" Maximum="255" VerticalAlignment="Center" Value="255" ValueChanged="rgb_ValueChanged"/>
-                        <Slider x:Name="sli_g" Grid.Row="1" Grid.Column="1" Maximum="255" VerticalAlignment="Center" Value="255" ValueChanged="rgb_ValueChanged"/>
-                        <Slider x:Name="sli_b" Grid.Row="2" Grid.Column="1" Maximum="255" VerticalAlignment="Center" Value="255" ValueChanged="rgb_ValueChanged"/>
-                        <TextBlock Text="R" Grid.Row="0" Grid.Column="2" Margin="4,0,0,0" Foreground="White"/>
-                        <TextBlock Text="G" Grid.Row="1" Grid.Column="2" Margin="4,0,0,0" Foreground="White"/>
-                        <TextBlock Text="B" Grid.Row="2" Grid.Column="2" Margin="4,0,0,0" Foreground="White"/>
-                    </Grid>
                     <StackPanel>
                         <TextBlock Text="视频信息" Foreground="{ThemeResource bili_Theme}"/>
                         <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White"/>
@@ -110,7 +81,6 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Button Margin="0,4,0,0" Click="back_Click" Background="{x:Null}">
@@ -118,15 +88,13 @@
                                 <SymbolIcon Symbol="Back" Foreground="White"/>
                             </Button.Content>
                         </Button>
-                        <Button Margin="0,4,0,0" Grid.Column="1" Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项">
-                            <Button.Content>
-                                <SymbolIcon Symbol="Setting" Foreground="White"/>
-                            </Button.Content>
-                        </Button>
-                        <TextBlock x:Name="txt_title" Grid.Column="2" VerticalAlignment="Center" Foreground="{ThemeResource bili_Theme}"/>
-                        <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0">
+                        <TextBlock x:Name="txt_title" Grid.Column="1" VerticalAlignment="Center" Foreground="{ThemeResource bili_Theme}"/>
+                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Orientation="Horizontal">
+                            <!--<ComboBox x:Name="quality" Background="{x:Null}">
+                                <ComboBoxItem>流畅</ComboBoxItem>
+                            </ComboBox>-->
                             <TextBlock x:Name="txt_web" Foreground="White" FontSize="12"/>
-                            <TextBlock x:Name="txt_bat" Foreground="White" FontSize="12"/>
+                            <TextBlock x:Name="txt_bat" Foreground="White" Margin="4,0,4,0" FontSize="12"/>
                             <TextBlock x:Name="txt_now" Foreground="White" FontSize="12"/>
                         </StackPanel>
                     </Grid>
@@ -144,17 +112,45 @@
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Orientation="Horizontal">
-                                <ComboBox x:Name="cb_Color" VerticalAlignment="Center" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Color}" BorderBrush="{x:Null}" Background="{x:Null}" SelectedIndex="0" ToolTipService.ToolTip="弹幕颜色">
-                                    <ComboBoxItem Foreground="White" Tag="16777215" Content="白色"/>
-                                    <ComboBoxItem Foreground="Red" Tag="16711680" Content="红色"/>
-                                    <ComboBoxItem Foreground="Yellow" Tag="16776960" Content="黄色"/>
-                                    <ComboBoxItem Foreground="Lime" Tag="65280" Content="绿色"/>
-                                    <ComboBoxItem Foreground="#FF4FAFFF" Tag="52479" Content="淡蓝"/>
-                                    <ComboBoxItem Foreground="#FF7BFF6E" Tag="3394662" Content="浅绿"/>
-                                    <ComboBoxItem Foreground="Blue" Tag="255" Content="深蓝"/>
-                                    <ComboBoxItem Foreground="#FF5D00FF" Tag="6684774" Content="紫色"/>
-                                    <ComboBoxItem  Foreground="#FFFF00F3" Tag="16711935" Content="粉色"/>
-                                </ComboBox>
+                                <Button Background="{x:Null}">
+                                    <Button.Content>
+                                        <Ellipse x:Name="rec" Width="24" Height="24" HorizontalAlignment="Right" Grid.Column="1" Fill="White"/>
+                                    </Button.Content>
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <Flyout.FlyoutPresenterStyle>
+                                                <Style TargetType="FlyoutPresenter">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Flyout.FlyoutPresenterStyle>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock x:Name="r" Text="{Binding ElementName=sli_r,Path=Value}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                                <TextBlock x:Name="g" Text="{Binding ElementName=sli_g,Path=Value}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                                <TextBlock x:Name="b" Text="{Binding ElementName=sli_b,Path=Value}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Foreground="White"></TextBlock>
+                                                <Slider x:Name="sli_r" Grid.Row="0" Grid.Column="1" Maximum="255" VerticalAlignment="Center" Value="255" ValueChanged="rgb_ValueChanged"/>
+                                                <Slider x:Name="sli_g" Grid.Row="1" Grid.Column="1" Maximum="255" VerticalAlignment="Center" Value="255" ValueChanged="rgb_ValueChanged"/>
+                                                <Slider x:Name="sli_b" Grid.Row="2" Grid.Column="1" Maximum="255" VerticalAlignment="Center" Value="255" ValueChanged="rgb_ValueChanged"/>
+                                                <TextBlock Text="R" Grid.Row="0" Grid.Column="2" Margin="4,0,0,0" Foreground="White" VerticalAlignment="Center"/>
+                                                <TextBlock Text="G" Grid.Row="1" Grid.Column="2" Margin="4,0,0,0" Foreground="White" VerticalAlignment="Center"/>
+                                                <TextBlock Text="B" Grid.Row="2" Grid.Column="2" Margin="4,0,0,0" Foreground="White" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
                                 <ComboBox x:Name="cb_SendMode" SelectedIndex="0" Margin="2,0,0,0" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕模式">
                                     <ComboBoxItem>滚动</ComboBoxItem>
                                     <ComboBoxItem>顶端</ComboBoxItem>
@@ -220,7 +216,12 @@
                                 <SymbolIcon Symbol="Comment"/>
                             </Button.Content>
                         </Button>
-                        <Button x:Name="vol" Foreground="White" Background="{x:Null}" ToolTipService.ToolTip="音量调节">
+                        <Button Grid.Column="1" Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Setting" Foreground="White"/>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="vol" Foreground="White" Background="{x:Null}" Margin="4,0,4,0" ToolTipService.ToolTip="音量调节">
                             <Button.Content>
                                 <SymbolIcon Symbol="Volume"/>
                             </Button.Content>
@@ -230,7 +231,7 @@
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
-                        <Button x:Name="light" Margin="4,0,4,0" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="亮度调节">
+                        <Button x:Name="light" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="亮度调节">
                             <Button.Content>
                                 <FontIcon Glyph="&#xE706;"/>
                             </Button.Content>
@@ -240,7 +241,7 @@
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
-                        <Button x:Name="full" Background="{x:Null}" Foreground="White">
+                        <Button x:Name="full" Margin="4,0,4,0" Background="{x:Null}" Foreground="White">
                             <Button.Content>
                                 <SymbolIcon Symbol="FullScreen"/>
                             </Button.Content>

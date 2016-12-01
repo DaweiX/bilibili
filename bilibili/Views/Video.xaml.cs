@@ -360,8 +360,10 @@ namespace bilibili.Views
                 {
                     SendMode = 5;
                 }
-                string Args = "mid=" + UserHelper.mid + "&msg=" + txt_mydanmu.Text + "&type=json" + "&pool=0&playTime=" + media.Position.TotalSeconds.ToString() + "&cid=" + cid + "&fontsize=25&mode=" + SendMode.ToString() + "&rnd=" + new Random().Next(1000, 9999).ToString() + "&color=" + ((ComboBoxItem)cb_Color.SelectedItem).Tag;
-                string code = await BaseService.SendPostAsync(url, Args);
+                int a = 255 << 24 | byte.Parse(r.Text) << 16 | byte.Parse(g.Text) << 8 | byte.Parse(b.Text);
+                string color = a.ToString();
+                string Args = "mid=" + UserHelper.mid + "&msg=" + txt_mydanmu.Text + "&type=json" + "&pool=0&playTime=" + media.Position.TotalSeconds.ToString() + "&cid=" + cid + "&fontsize=25&mode=" + SendMode.ToString() + "&rnd=" + new Random().Next(1000, 9999).ToString() + "&color=" + color;
+                string code = await BaseService.SendPostAsync(url, Args, "http://api.bilibili.com");
                 JsonObject json = JsonObject.Parse(code);
                 if (json.ContainsKey("code"))
                 {
@@ -369,18 +371,21 @@ namespace bilibili.Views
                     {
                         switch (SendMode)
                         {
-                            case 1: danmaku.AddBasic(new DanmuModel { Message = txt_mydanmu.Text, Color = ((ComboBoxItem)cb_Color.SelectedItem).Tag.ToString(), Size = "25" }, true); break;
-                            case 4: danmaku.AddTop(new DanmuModel { Message = txt_mydanmu.Text, Color = ((ComboBoxItem)cb_Color.SelectedItem).Tag.ToString(), Size = "25", Mode = "4" }, true); break;
-                            case 5: danmaku.AddTop(new DanmuModel { Message = txt_mydanmu.Text, Color = ((ComboBoxItem)cb_Color.SelectedItem).Tag.ToString(), Size = "25", Mode = "5" }, true); break;
+                            case 1: danmaku.AddBasic(new DanmuModel { Message = txt_mydanmu.Text, Color = color, Size = "25" }, true); break;
+                            case 4: danmaku.AddTop(new DanmuModel { Message = txt_mydanmu.Text, Color = color, Size = "25", Mode = "5" }, true); break;
+                            case 5: danmaku.AddTop(new DanmuModel { Message = txt_mydanmu.Text, Color = color, Size = "25", Mode = "4" }, true); break;
                         }
                         return;
                     }
                 }
-                messagepop.Show("发送失败");
             }
-            catch
+            catch(Exception e)
             {
-                messagepop.Show("发送失败");
+                messagepop.Show("发送失败" + e.Message);
+            }
+            finally
+            {
+                txt_mydanmu.Text = string.Empty;
             }
         }
 
@@ -518,7 +523,7 @@ namespace bilibili.Views
             e.Handled = true;
             double Y = e.Delta.Translation.Y;
             double X = e.Delta.Translation.X;
-            if (Math.Abs(X) > Math.Abs(Y)) 
+            if (Math.Abs(X) > (Math.Abs(Y) + 20))  
             {
                 isX = true;
                 media.Pause();
@@ -559,7 +564,6 @@ namespace bilibili.Views
         private void send_Click(object sender, RoutedEventArgs e)
         {
             SendDanmu();
-            txt_mydanmu.Text = string.Empty;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -627,6 +631,20 @@ namespace bilibili.Views
         {
             SettingHelper.SetValue("_speed", sli_speed.Value);
             if (danmaku != null) danmaku.ChangeSpeed(15 - (int)sli_speed.Value);
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (danmaku != null)
+            {
+                CheckBox cb = sender as CheckBox;
+                switch (cb.Tag.ToString())
+                {
+                    case "g": danmaku.ClearGun((bool)cb.IsChecked); break;
+                    case "t": danmaku.ClearTop((bool)cb.IsChecked); break;
+                    case "b": danmaku.ClearBottom((bool)cb.IsChecked); break;
+                }
+            }
         }
     }
     public sealed class SecToString : IValueConverter

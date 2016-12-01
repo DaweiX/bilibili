@@ -51,7 +51,7 @@ namespace bilibili.Http
                     return await response.Content.ReadAsStringAsync();
                 }
             }
-           catch
+           catch(Exception E)
             {
                 return string.Empty;
             }

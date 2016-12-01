@@ -202,6 +202,21 @@ namespace bilibili.Controls
             bottom.Children.Clear();
         }
 
+        public void ClearGun(bool isvisual)
+        {
+            grid_0.Visibility = isvisual ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public void ClearBottom(bool isvisual)
+        {
+            bottom.Visibility = isvisual ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public void ClearTop(bool isvisual)
+        {
+            top.Visibility = isvisual ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         public class DanmuModel
         {
             public string aid { get; set; }

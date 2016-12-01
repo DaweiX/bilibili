@@ -12,7 +12,7 @@
         <ScrollViewer VerticalScrollBarVisibility="Hidden">
             <StackPanel>
                 <StackPanel HorizontalAlignment="Center" x:Name="stk1">
-                    <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩客户端一号机 1st edition version 1.50</TextBlock>
+                    <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩客户端一号机 1st edition version 1.52</TextBlock>
                     <HyperlinkButton Style="{StaticResource HyperlinkButtonStyle1}" HorizontalAlignment="Center">联系我</HyperlinkButton>
                     <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
                     <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
