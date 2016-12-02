@@ -42,6 +42,7 @@ namespace bilibili.Views
         {
             this.InitializeComponent();
             this.DataContext = this;
+            this.NavigationCacheMode = NavigationCacheMode.Disabled;
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {

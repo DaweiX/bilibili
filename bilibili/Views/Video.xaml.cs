@@ -49,6 +49,7 @@ namespace bilibili.Views
         public Video()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Disabled;
             isInited = true;
             this.DataContext = this;
             timer.Interval = TimeSpan.FromSeconds(1);
@@ -163,6 +164,9 @@ namespace bilibili.Views
         {
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.None;
             ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            media.Stop();
+            media.Source = null;
+            GC.Collect();
             timer.Stop();
             displayRq.RequestRelease();     //撤销常亮请求  
         }
@@ -424,7 +428,7 @@ namespace bilibili.Views
             }
             else
             {
-                if (Index + 2 == infos.Count)
+                if (Index <= infos.Count - 1)
                 {
                     status.Text = "本选集已播放完毕，即将进入下一选集…";
                     left.Visibility = Visibility.Visible;
@@ -523,7 +527,7 @@ namespace bilibili.Views
             e.Handled = true;
             double Y = e.Delta.Translation.Y;
             double X = e.Delta.Translation.X;
-            if (Math.Abs(X) > (Math.Abs(Y) + 20))  
+            if (Math.Abs(X) > (Math.Abs(Y) + 5))
             {
                 isX = true;
                 media.Pause();
@@ -543,7 +547,7 @@ namespace bilibili.Views
                 }
                 messagepop.Show(posttime);
             }
-            else
+            else if ((Math.Abs(Y) > (Math.Abs(X) + 5))) 
             {
                 isX = false;
                 sli_light.Value -= 0.01 * (int)(Y / 10);

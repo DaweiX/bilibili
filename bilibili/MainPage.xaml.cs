@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Media;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Navigation;
 using Windows.Graphics.Display;
+using System.Collections.Generic;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -431,9 +432,39 @@ namespace bilibili
             //}
         }
 
-        private void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private async void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            
+            if (string.IsNullOrWhiteSpace(SearchBox.Text))
+            {
+                SearchBox.ItemsSource = null;
+                return;
+            }
+            string url = "http://api.bilibili.com/suggest?_device=wp&appkey=" + ApiHelper.appkey + "&bangumi_acc_num=0&bangumi_num=0&build=429001&func=suggest&main_ver=v3&mobi_app=win&special_acc_num=0&special_num=0&suggest_type=accurate&term=" + SearchBox.Text + "&topic_acc_num=0&topic_num=0&upuser_acc_num=0&upuser_num=0&_hwid=0100d4c50200c2a6&platform=uwp_mobile";
+            url += ApiHelper.GetSign(url);
+            JsonObject json = await BaseService.GetJson(url);
+            try
+            {
+                if (json.ContainsKey("tag"))
+                {
+                    List<string> list = new List<string>();
+                    json = JsonObject.Parse(json["tag"].ToString());
+                    int i = 0;
+                    do
+                    {
+                        i++;
+                    } while (json.ContainsKey(i.ToString()));
+                    for (int j = 0; j < i; j++)
+                    {
+                        JsonObject json2 = JsonObject.Parse(json[j.ToString()].ToString());
+                        if (json2.ContainsKey("value"))
+                        {
+                            list.Add(json2["value"].GetString());
+                        }
+                    }
+                    SearchBox.ItemsSource = list;
+                }
+            }
+            catch { }
         }
     }
 }
