@@ -13,6 +13,32 @@
         <Border x:Name="width"/>
         <StackPanel HorizontalAlignment="Stretch">
             <Grid>
+                <HyperlinkButton Content="直播" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Tag="1" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
+                    <Grid>
+                        <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="12" Foreground="White"/>
+                    </Grid>
+                </HyperlinkButton>
+            </Grid>
+            <GridView HorizontalAlignment="Center" Tapped="gridview0_Tapped" ShowsScrollingPlaceholders="True" x:Name="gridview0" Style="{StaticResource GridViewStyle1}">
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Width="{Binding Width,ElementName=width}">
+                            <Grid>
+                                <Image Source="{Binding Cover}"/>
+                                <Grid VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4">
+                                    <Rectangle RadiusX="5" RadiusY="5" Fill="Black" Opacity="0.6"/>
+                                    <TextBlock Text="{Binding Online}" FontSize="12" Foreground="White"/>
+                                </Grid>
+                            </Grid>
+                            <TextBlock Text="{Binding Name}" FontSize="12" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="3" TextTrimming="WordEllipsis" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                            <TextBlock Text="{Binding Title}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Main}" FontWeight="Light"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+            <Grid>
                 <HyperlinkButton Content="番剧" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="1" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>

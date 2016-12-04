@@ -34,6 +34,12 @@ namespace bilibili.Views
             }
             comment.Navi += Comment_Navi;
             comment.Info += Comment_Info;
+            comment.live += Comment_live;
+        }
+
+        private void Comment_live(string tid)
+        {
+            Frame.Navigate(typeof(Live), tid);
         }
 
         private void Comment_Info(string aid)
@@ -45,19 +51,19 @@ namespace bilibili.Views
         {
             switch (content)
             {
-                case "番剧": Frame.Navigate(typeof(PartViews.Bangumi), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "动画": Frame.Navigate(typeof(PartViews.Cartoon), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "生活": Frame.Navigate(typeof(PartViews.Life), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "电影": Frame.Navigate(typeof(PartViews.Movies), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "娱乐": Frame.Navigate(typeof(PartViews.Entertain), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "鬼畜": Frame.Navigate(typeof(PartViews.Guichu), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "电视剧": Frame.Navigate(typeof(PartViews.Soap), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "广告": Frame.Navigate(typeof(PartViews.Ad), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "舞蹈": Frame.Navigate(typeof(PartViews.Dance), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "游戏": Frame.Navigate(typeof(PartViews.Game), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "科技": Frame.Navigate(typeof(PartViews.Tech), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "时尚": Frame.Navigate(typeof(PartViews.Fashion), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case "音乐": Frame.Navigate(typeof(PartViews.Music), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
+                case "番剧": Frame.Navigate(typeof(PartViews.Bangumi), null, new DrillInNavigationTransitionInfo()); break;
+                case "动画": Frame.Navigate(typeof(PartViews.Cartoon), null, new DrillInNavigationTransitionInfo()); break;
+                case "生活": Frame.Navigate(typeof(PartViews.Life), null, new DrillInNavigationTransitionInfo()); break;
+                case "电影": Frame.Navigate(typeof(PartViews.Movies), null, new DrillInNavigationTransitionInfo()); break;
+                case "娱乐": Frame.Navigate(typeof(PartViews.Entertain), null, new DrillInNavigationTransitionInfo()); break;
+                case "鬼畜": Frame.Navigate(typeof(PartViews.Guichu), null, new DrillInNavigationTransitionInfo()); break;
+                case "电视剧": Frame.Navigate(typeof(PartViews.Soap), null, new DrillInNavigationTransitionInfo()); break;
+                case "广告": Frame.Navigate(typeof(PartViews.Ad), null, new DrillInNavigationTransitionInfo()); break;
+                case "舞蹈": Frame.Navigate(typeof(PartViews.Dance), null, new DrillInNavigationTransitionInfo()); break;
+                case "游戏": Frame.Navigate(typeof(PartViews.Game), null, new DrillInNavigationTransitionInfo()); break;
+                case "科技": Frame.Navigate(typeof(PartViews.Tech), null, new DrillInNavigationTransitionInfo()); break;
+                case "时尚": Frame.Navigate(typeof(PartViews.Fashion), null, new DrillInNavigationTransitionInfo()); break;
+                case "音乐": Frame.Navigate(typeof(PartViews.Music), null, new DrillInNavigationTransitionInfo()); break;
             }
         }
 
@@ -124,19 +130,19 @@ namespace bilibili.Views
             string content = btn.Content.ToString();
             switch(btn.Content.ToString())
             {
-                case ">番剧": Frame.Navigate(typeof(PartViews.Bangumi), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());break;
-                case ">动画": Frame.Navigate(typeof(PartViews.Cartoon), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">生活": Frame.Navigate(typeof(PartViews.Life), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">电影": Frame.Navigate(typeof(PartViews.Movies), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">娱乐": Frame.Navigate(typeof(PartViews.Entertain), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">鬼畜": Frame.Navigate(typeof(PartViews.Guichu), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">电视剧": Frame.Navigate(typeof(PartViews.Soap), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">广告": Frame.Navigate(typeof(PartViews.Ad), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">舞蹈": Frame.Navigate(typeof(PartViews.Dance), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">游戏": Frame.Navigate(typeof(PartViews.Game), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">科技": Frame.Navigate(typeof(PartViews.Tech), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">时尚": Frame.Navigate(typeof(PartViews.Fashion), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
-                case ">音乐": Frame.Navigate(typeof(PartViews.Music), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()); break;
+                case ">番剧": Frame.Navigate(typeof(PartViews.Bangumi), null, new DrillInNavigationTransitionInfo());break;
+                case ">动画": Frame.Navigate(typeof(PartViews.Cartoon), null, new DrillInNavigationTransitionInfo()); break;
+                case ">生活": Frame.Navigate(typeof(PartViews.Life), null, new DrillInNavigationTransitionInfo()); break;
+                case ">电影": Frame.Navigate(typeof(PartViews.Movies), null, new DrillInNavigationTransitionInfo()); break;
+                case ">娱乐": Frame.Navigate(typeof(PartViews.Entertain), null, new DrillInNavigationTransitionInfo()); break;
+                case ">鬼畜": Frame.Navigate(typeof(PartViews.Guichu), null, new DrillInNavigationTransitionInfo()); break;
+                case ">电视剧": Frame.Navigate(typeof(PartViews.Soap), null, new DrillInNavigationTransitionInfo()); break;
+                case ">广告": Frame.Navigate(typeof(PartViews.Ad), null, new DrillInNavigationTransitionInfo()); break;
+                case ">舞蹈": Frame.Navigate(typeof(PartViews.Dance), null, new DrillInNavigationTransitionInfo()); break;
+                case ">游戏": Frame.Navigate(typeof(PartViews.Game), null, new DrillInNavigationTransitionInfo()); break;
+                case ">科技": Frame.Navigate(typeof(PartViews.Tech), null, new DrillInNavigationTransitionInfo()); break;
+                case ">时尚": Frame.Navigate(typeof(PartViews.Fashion), null, new DrillInNavigationTransitionInfo()); break;
+                case ">音乐": Frame.Navigate(typeof(PartViews.Music), null, new DrillInNavigationTransitionInfo()); break;
             }
         }
 
@@ -201,7 +207,7 @@ namespace bilibili.Views
                             break;
                         case 3:
                             {
-                                
+                                //list_live
                             }
                             break;
                         case 4:

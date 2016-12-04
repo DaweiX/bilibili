@@ -121,8 +121,13 @@ namespace bilibili.Models
     }
     class Live
     {
+        private string online;
         public string AcQuality { get; set; }
-        public string Online { get; set; }
+        public string Online
+        {
+            get { return online + "人在线"; }
+            set { online = value; }
+        }
         public string PlayUrl { get; set; }
         public string RoomId { get; set; }
         public string Title { get; set; }

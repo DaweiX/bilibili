@@ -568,6 +568,7 @@ namespace bilibili.Views
         private void send_Click(object sender, RoutedEventArgs e)
         {
             SendDanmu();
+            grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = grid_bottom.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

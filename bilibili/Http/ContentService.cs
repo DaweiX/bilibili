@@ -353,6 +353,76 @@ namespace bilibili.Http
         }
    
         /// <summary>
+        /// 获取直播（头部）
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<List<Live>> GetCommentLiveAsync()
+        {
+            List<Live> list = new List<Live>();
+            string url = "http://live.bilibili.com/AppIndex/home?_device=wp&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=411005&platform=android&scale=xxhdpi&rnd=" + new Random().Next(1000, 3000).ToString();
+            url += ApiHelper.GetSign(url);
+            try
+            {
+                JsonObject json = await BaseService.GetJson(url);
+                if (json.ContainsKey("data"))
+                {
+                    json = JsonObject.Parse(json["data"].ToString());
+                    if (json.ContainsKey("recommend_data"))
+                    {
+                        json = JsonObject.Parse(json["recommend_data"].ToString());
+                        if (json.ContainsKey("lives"))
+                        {
+                            JsonArray array = json["lives"].GetArray();
+                            foreach (var item in array)
+                            {
+                                Live live = new Live();
+                                json = item.GetObject();
+                                if (json.ContainsKey("title"))
+                                {
+                                    live.Title = json["title"].GetString();
+                                }
+                                if (json.ContainsKey("playurl"))
+                                {
+                                    live.PlayUrl = json["playurl"].GetString();
+                                }
+                                if (json.ContainsKey("online"))
+                                {
+                                    live.Online = json["online"].ToString();
+                                }
+                                if (json.ContainsKey("cover"))
+                                {
+                                    JsonObject json2 = json["cover"].GetObject();
+                                    if (json2.ContainsKey("src"))
+                                    {
+                                        live.Cover = json2["src"].GetString();
+                                    }
+                                }
+                                if (json.ContainsKey("owner"))
+                                {
+                                    JsonObject json2 = json["owner"].GetObject();
+                                    if (json2.ContainsKey("face"))
+                                    {
+                                        live.Face = json2["face"].GetString();
+                                    }
+                                    if (json2.ContainsKey("name"))
+                                    {
+                                        live.Name = json2["name"].GetString();
+                                    }
+                                }
+                                list.Add(live);
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            return list;
+        }
+
+        /// <summary>
         /// 获取搜索结果_番剧
         /// </summary>
         /// <param name="url"></param>

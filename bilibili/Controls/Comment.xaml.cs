@@ -16,6 +16,7 @@ namespace bilibili.Controls
         public delegate void MyHandler(string tid);
         public event MyHandler Navi;
         public event MyHandler Info;
+        public event MyHandler live;
         public Comment()
         {
             this.InitializeComponent();
@@ -23,6 +24,8 @@ namespace bilibili.Controls
 
         public async void init()
         {
+            //直播
+            await LoadLive();
             //番剧
             await LoadItems(gridview1, 13, 1);
             //动画
@@ -50,6 +53,12 @@ namespace bilibili.Controls
             //电视剧
             await LoadItems(gridview13, 11, 1);
         }
+
+        private async Task LoadLive()
+        {
+            gridview0.ItemsSource = await ContentServ.GetCommentLiveAsync();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -104,6 +113,15 @@ namespace bilibili.Controls
                 i = 3;
             }
             width.Width = this.ActualWidth / i;
+        }
+
+        private void gridview0_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var a = gridview0.SelectedItem as Live;
+            if (a != null)
+            {
+                live(a.PlayUrl);
+            }
         }
     }
 }

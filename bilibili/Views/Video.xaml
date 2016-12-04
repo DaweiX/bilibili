@@ -152,13 +152,22 @@
                                     </Button.Flyout>
                                 </Button>
                                 <ComboBox x:Name="cb_SendMode" SelectedIndex="0" Margin="2,0,0,0" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕模式">
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
                                     <ComboBoxItem>滚动</ComboBoxItem>
                                     <ComboBoxItem>顶端</ComboBoxItem>
                                     <ComboBoxItem>底端</ComboBoxItem>
                                 </ComboBox>
                             </StackPanel>
                             <TextBox x:Name="txt_mydanmu" Grid.Column="1" VerticalAlignment="Center" Background="{x:Null}" PlaceholderText="蓄势待发的弹幕君..." BorderThickness="0.5" BorderBrush="White"/>
-                            <Button x:Name="send" Grid.Column="3" Width="60" Height="28" Click="send_Click" Background="{x:Null}" ToolTipService.ToolTip="发送弹幕">
+                            <Button x:Name="send" Grid.Column="3" Width="60" Click="send_Click" Background="{x:Null}" ToolTipService.ToolTip="发送弹幕">
                                 <Button.Content>
                                     <SymbolIcon Symbol="Send" Foreground="White"/>
                                 </Button.Content>
@@ -227,6 +236,15 @@
                             </Button.Content>
                             <Button.Flyout>
                                 <Flyout>
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
                                     <Slider x:Name="sli_vol" Width="200" Maximum="10" Value="10" ValueChanged="sli_vol_ValueChanged"/>
                                 </Flyout>
                             </Button.Flyout>
@@ -237,6 +255,15 @@
                             </Button.Content>
                             <Button.Flyout>
                                 <Flyout>
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
                                     <Slider x:Name="sli_light" Width="200" Maximum="1" SmallChange="0.01" StepFrequency="0.01" Minimum="0.3" ValueChanged="sli_light_ValueChanged"/>
                                 </Flyout>
                             </Button.Flyout>
@@ -247,8 +274,17 @@
                             </Button.Content>
                             <Button.Flyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Tag="0" Click="full_Click">保持比例</MenuFlyoutItem>
-                                    <MenuFlyoutItem Tag="1" Click="full_Click">拉伸占满</MenuFlyoutItem>
+                                    <MenuFlyout.MenuFlyoutPresenterStyle>
+                                        <Style TargetType="MenuFlyoutPresenter">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </MenuFlyout.MenuFlyoutPresenterStyle>
+                                    <MenuFlyoutItem Tag="0" Click="full_Click" Foreground="White">保持比例</MenuFlyoutItem>
+                                    <MenuFlyoutItem Tag="1" Click="full_Click" Foreground="White">拉伸占满</MenuFlyoutItem>
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>
