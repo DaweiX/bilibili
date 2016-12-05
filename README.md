@@ -3,6 +3,7 @@
 ###摘要：  
 哔哩哔哩动画的第三方客户端，同时兼容`Windows™ 10桌面版`、`Windows™ 10 Mobile`、`XBOX`、`Surface Hub`与`Hololens`.本应用
 主要出于学习、交流目的而开发，没有应用商店发行版.  
+
 ###主要功能：  
 * 视频分类查询、播放  
 * 番剧订阅、播放  
@@ -23,17 +24,19 @@
 * 后台推送  
 * 切换主题  
 * 排行榜  
-* 视频清晰度选择  
-* 进度跳转  
+* 视频清晰度选择  （施工中）
+* 上一次进度跳转  
 * 屏蔽弹幕  
-* 自定义下载路径  
-* 黑科技  
+* 自定义下载路径  （施工中）
+* 黑科技  
   
 ###引用及参考：  
 * [https://github.com/xiaoyaocz/BILIBILI-UWP](cycz：Bilibili-UWP)：程序界面及基本弹幕实现  
 * [www.telerik.com/fiddler](Fiddler)：请求APi获取  
 * [Bilibili API-wiki](https://github.com/Qixingchen/MD-BiliBili/wiki/API:-%E6%A6%82%E8%A7%88): 非官方Api文档  
 * MicroSoft MSDN（C#、UWP）  
+
+
   
 ###备注：  
 * 运行时系统版本要求：  
