@@ -41,6 +41,9 @@ namespace bilibili.Views
         string cid = string.Empty;
         string aid = string.Empty;
         DispatcherTimer timer = new DispatcherTimer();
+        int R_1, R_2;
+        bool? isRepeat = null;
+        DispatcherTimer timer_repeat = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         List<VideoInfo> infos = new List<VideoInfo>();
         bool isShowDanmu = false;
         List<DanmuModel> DanmuPool;
@@ -55,6 +58,7 @@ namespace bilibili.Views
             timer.Interval = TimeSpan.FromSeconds(1);
             timer_danmaku.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick;
+            timer_repeat.Tick += Timer_repeat_Tick;
             timer_danmaku.Tick += Timer_danmaku_Tick;
             timer.Start();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Landscape; //横向屏幕
@@ -78,6 +82,14 @@ namespace bilibili.Views
             }
             displayRq.RequestActive();      //保持屏幕常亮
             CoreWindow.GetForCurrentThread().KeyDown += Video_KeyDown;
+        }
+
+        private void Timer_repeat_Tick(object sender, object e)
+        {
+            if ((int)media.Position.TotalMilliseconds >= R_2)
+            {
+                media.Position = TimeSpan.FromMilliseconds(R_1);
+            }
         }
 
         /// <summary>
@@ -649,6 +661,29 @@ namespace bilibili.Views
                     case "t": danmaku.ClearTop((bool)cb.IsChecked); break;
                     case "b": danmaku.ClearBottom((bool)cb.IsChecked); break;
                 }
+            }
+        }
+        private void Repeat_Click(object sender, RoutedEventArgs e)
+        {
+            switch(isRepeat)
+            {
+                case null:
+                    R_1 = (int)media.Position.TotalMilliseconds;
+                    isRepeat = true;
+                    symbol.Symbol = Symbol.ZoomIn;
+                    break;
+                case true:
+                    R_2 = (int)media.Position.TotalMilliseconds;
+                    media.Position = TimeSpan.FromMilliseconds(R_1);
+                    isRepeat = false;
+                    timer_repeat.Start();
+                    symbol.Symbol = Symbol.ZoomOut;
+                    break;
+                case false:
+                    isRepeat = null;
+                    timer_repeat.Stop();
+                    symbol.Symbol = Symbol.RepeatAll;
+                    break;
             }
         }
     }

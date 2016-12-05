@@ -20,7 +20,6 @@
                         <SolidColorBrush Color="Black" Opacity="0.8"/>
                     </StackPanel.Background>
                     <TextBlock FontWeight="Light" Text="更多选项" FontSize="20" Foreground="White"/>
-                    <TextBlock Text="屏蔽弹幕" Foreground="{ThemeResource bili_Theme}" Margin="0,8,0,8"/>
                     <CheckBox Tag="b" IsChecked="True" Click="CheckBox_Click">
                         <CheckBox.Content>
                             <TextBlock Text="底端弹幕" Foreground="White"/>
@@ -159,6 +158,7 @@
                                                     <SolidColorBrush Color="Black" Opacity="0.6"/>
                                                 </Setter.Value>
                                             </Setter>
+                                            <Setter Property="Foreground" Value="White"/>
                                         </Style>
                                     </ComboBox.ItemContainerStyle>
                                     <ComboBoxItem>滚动</ComboBoxItem>
@@ -225,15 +225,15 @@
                                 <SymbolIcon Symbol="Comment"/>
                             </Button.Content>
                         </Button>
-                        <Button Grid.Column="1" Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项">
+                        <Button Background="{x:Null}" ToolTipService.ToolTip="锚点循环" Click="Repeat_Click">
+                            <Button.Content>
+                                <SymbolIcon x:Name="symbol" Symbol="RepeatAll" Foreground="White"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Background="{x:Null}" ToolTipService.ToolTip="播放器设定">
                             <Button.Content>
                                 <SymbolIcon Symbol="Setting" Foreground="White"/>
                             </Button.Content>
-                        </Button>
-                        <Button x:Name="vol" Foreground="White" Background="{x:Null}" Margin="4,0,4,0" ToolTipService.ToolTip="音量调节">
-                            <Button.Content>
-                                <SymbolIcon Symbol="Volume"/>
-                            </Button.Content>
                             <Button.Flyout>
                                 <Flyout>
                                     <Flyout.FlyoutPresenterStyle>
@@ -245,48 +245,73 @@
                                             </Setter>
                                         </Style>
                                     </Flyout.FlyoutPresenterStyle>
-                                    <Slider x:Name="sli_vol" Width="200" Maximum="10" Value="10" ValueChanged="sli_vol_ValueChanged"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="vol" Foreground="White" Background="{x:Null}" ToolTipService.ToolTip="音量调节">
+                                            <Button.Content>
+                                                <SymbolIcon Symbol="Volume"/>
+                                            </Button.Content>
+                                            <Button.Flyout>
+                                                <Flyout>
+                                                    <Flyout.FlyoutPresenterStyle>
+                                                        <Style TargetType="FlyoutPresenter">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </Flyout.FlyoutPresenterStyle>
+                                                    <Slider x:Name="sli_vol" Width="200" Maximum="10" Value="10" ValueChanged="sli_vol_ValueChanged"/>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                        <Button x:Name="light" Background="{x:Null}" Margin="4,0,4,0" Foreground="White" ToolTipService.ToolTip="亮度调节">
+                                            <Button.Content>
+                                                <FontIcon Glyph="&#xE706;"/>
+                                            </Button.Content>
+                                            <Button.Flyout>
+                                                <Flyout>
+                                                    <Flyout.FlyoutPresenterStyle>
+                                                        <Style TargetType="FlyoutPresenter">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </Flyout.FlyoutPresenterStyle>
+                                                    <Slider x:Name="sli_light" Width="200" Maximum="1" SmallChange="0.01" StepFrequency="0.01" Minimum="0.3" ValueChanged="sli_light_ValueChanged"/>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                        <Button x:Name="full" Margin="4,0,4,0" Background="{x:Null}" Foreground="White">
+                                            <Button.Content>
+                                                <SymbolIcon Symbol="FullScreen"/>
+                                            </Button.Content>
+                                            <Button.Flyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyout.MenuFlyoutPresenterStyle>
+                                                        <Style TargetType="MenuFlyoutPresenter">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </MenuFlyout.MenuFlyoutPresenterStyle>
+                                                    <MenuFlyoutItem Tag="0" Click="full_Click" Foreground="White">保持比例</MenuFlyoutItem>
+                                                    <MenuFlyoutItem Tag="1" Click="full_Click" Foreground="White">拉伸占满</MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                    </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
-                        <Button x:Name="light" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="亮度调节">
+                        <Button Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项">
                             <Button.Content>
-                                <FontIcon Glyph="&#xE706;"/>
+                                <SymbolIcon Symbol="More" Foreground="White"/>
                             </Button.Content>
-                            <Button.Flyout>
-                                <Flyout>
-                                    <Flyout.FlyoutPresenterStyle>
-                                        <Style TargetType="FlyoutPresenter">
-                                            <Setter Property="Background">
-                                                <Setter.Value>
-                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </Flyout.FlyoutPresenterStyle>
-                                    <Slider x:Name="sli_light" Width="200" Maximum="1" SmallChange="0.01" StepFrequency="0.01" Minimum="0.3" ValueChanged="sli_light_ValueChanged"/>
-                                </Flyout>
-                            </Button.Flyout>
-                        </Button>
-                        <Button x:Name="full" Margin="4,0,4,0" Background="{x:Null}" Foreground="White">
-                            <Button.Content>
-                                <SymbolIcon Symbol="FullScreen"/>
-                            </Button.Content>
-                            <Button.Flyout>
-                                <MenuFlyout>
-                                    <MenuFlyout.MenuFlyoutPresenterStyle>
-                                        <Style TargetType="MenuFlyoutPresenter">
-                                            <Setter Property="Background">
-                                                <Setter.Value>
-                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </MenuFlyout.MenuFlyoutPresenterStyle>
-                                    <MenuFlyoutItem Tag="0" Click="full_Click" Foreground="White">保持比例</MenuFlyoutItem>
-                                    <MenuFlyoutItem Tag="1" Click="full_Click" Foreground="White">拉伸占满</MenuFlyoutItem>
-                                </MenuFlyout>
-                            </Button.Flyout>
                         </Button>
                     </StackPanel>
                 </Grid>
