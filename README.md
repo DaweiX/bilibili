@@ -3,6 +3,7 @@
 ###摘要：  
 哔哩哔哩动画的第三方客户端，同时兼容`Windows™ 10桌面版`、`Windows™ 10 Mobile`、`XBOX`、`Surface Hub`与`Hololens`.本应用
 主要出于学习、交流目的而开发，没有应用商店发行版.  
+
 ###主要功能：  
 * 视频分类查询、播放  
 * 番剧订阅、播放  
@@ -23,21 +24,30 @@
 * 后台推送  
 * 切换主题  
 * 排行榜  
-* 视频清晰度选择  
-* 进度跳转  
+* 视频清晰度选择  （施工中）
+* 上一次进度跳转  
 * 屏蔽弹幕  
-* 自定义下载路径  
-* 黑科技  
+* 自定义下载路径  （施工中）
+* 黑科技  
   
 ###引用及参考：  
 * [https://github.com/xiaoyaocz/BILIBILI-UWP](cycz：Bilibili-UWP)：程序界面及基本弹幕实现  
 * [www.telerik.com/fiddler](Fiddler)：请求APi获取  
 * [Bilibili API-wiki](https://github.com/Qixingchen/MD-BiliBili/wiki/API:-%E6%A6%82%E8%A7%88): 非官方Api文档  
 * MicroSoft MSDN（C#、UWP）  
+
+####注：  
+应用商店里现有的两个客户端版本分别为  
+* 哔哩哔哩动画 For Win10（作者：暗影吉他手）  
+* BiliBili UWP （作者：逍遥橙子）  
+本应用的程序界面向二者均有一定程度的借鉴同时，向后者倾斜以提升非移动端使用体验  
+在应用稳定性、视频观看的资源占用方面，本应用力求减少bug，提升性能.从网络资源获取到程序界面均没有使用第三方库或控件（将要引入的软解库除外）。  
+在此向上述两个应用商店发行版表示感谢.  
   
 ###备注：  
 * 运行时系统版本要求：  
-+ 最低：10586；推荐：14393及以上  
+  最低：10586；推荐：14393及以上  
 * 开发最低要求：  
 `Windows™ 10 SDK Version 14393`，`Visual Studio 2015`
-*如遇到问题或想要与我交流，我的邮箱：`DaweiX@outlook.com`
+* 如遇到问题或想要与我交流，我的邮箱：`DaweiX@outlook.com`
+* 本应用从2016.8开始开发，今后将一直持续更新，欢迎Join.
