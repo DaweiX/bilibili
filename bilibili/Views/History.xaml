@@ -8,44 +8,42 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource bili_PageBackground}">
-        <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="8">
-                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                    <TextBlock x:Name="con" Text="播放历史" FontSize="20" Margin="8,0,0,0"/>
-                </StackPanel>
-                <ListView x:Name="conlist" Tapped="conlist_Tapped" ContainerContentChanging="conlist_ContainerContentChanging" ItemContainerStyle="{StaticResource listcontainerstyle}">
-                    <ListView.Template>
-                        <ControlTemplate TargetType="ItemsControl">
-                            <ScrollViewer>
-                                <StackPanel>
-                                    <ItemsPresenter/>
-                                    <TextBlock Text="加载中..." Foreground="Gray" HorizontalAlignment="Center" Margin="0,8,0,4"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="8">
+            <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="con" Text="播放历史" FontSize="20" Margin="8,0,0,0"/>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <ListView Grid.Row="1" x:Name="hslist" 
+                  Tapped="hslist_Tapped"
+                  ContainerContentChanging="hslist_ContainerContentChanging"
+                  ItemContainerStyle="{StaticResource listcontainerstyle}"
+                  Template="{StaticResource myControlTemplete}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{Binding Pic}" Width="100"/>
+                            <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                                <TextBlock Text="{Binding Title}" FontWeight="Light" TextWrapping="WrapWholeWords"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="上次播放" Foreground="Gray"/>
+                                    <TextBlock Text="{Binding Time}" Foreground="Gray"/>
                                 </StackPanel>
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </ListView.Template>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Image Source="{Binding Pic}" Width="100"/>
-                                <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                    <TextBlock Text="{Binding Title}" FontWeight="Light" TextWrapping="WrapWholeWords"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="上次播放" Foreground="Gray"/>
-                                        <TextBlock Text="{Binding Time}" Foreground="Gray"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
-        </ScrollViewer>
-
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <CommandBar Style="{StaticResource CommandbarStyle}">
+                <AppBarButton x:Name="clear" Label="清空" Icon="Delete" Click="clear_Click"/>
+            </CommandBar>
+        </Grid>
     </Grid>
 </Page>

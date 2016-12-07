@@ -11,11 +11,6 @@
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Border x:Name="width"/>
         <GridView x:Name="gridview" Tapped="gridview_Tapped" HorizontalAlignment="Center">
-            <GridView.Transitions>
-                <TransitionCollection>
-                    <EntranceThemeTransition/>
-                </TransitionCollection>
-            </GridView.Transitions>
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="{Binding ElementName=width,Path=Width}" Height="{Binding ElementName=width,Path=Width}">

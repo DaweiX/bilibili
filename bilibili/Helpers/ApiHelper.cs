@@ -158,7 +158,10 @@ namespace bilibili.Helpers
             HttpResponseMessage message = new HttpResponseMessage();
             if (SettingHelper.GetValue("_accesskey").ToString().Length > 2)
             {
-                message = await new HttpClient().GetAsync(new Uri("http://api.bilibili.com/login/sso?&access_key=" + SettingHelper.GetValue("_accesskey").ToString() + "&appkey=" + appkey + "&platform=wp"));
+                //http://api.bilibili.com/login/sso?&access_key=c0ca6415ce6d8bcb7bda0ea9bc9a2419&appkey=422fd9d7289a1dd9&platform=wp
+                string url = "http://api.bilibili.com/login/sso?gourl=http%3A%2F%2Fwww.bilibili.com&access_key=" + accesskey + "&appkey=" + appkey + "&platform=android&scale=xhdpi";
+                url += GetSign(url);
+                message = await new HttpClient().GetAsync(new Uri(url));
                 accesskey = SettingHelper.GetValue("_accesskey").ToString();
             }
             else

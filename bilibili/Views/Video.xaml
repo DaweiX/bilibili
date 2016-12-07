@@ -82,7 +82,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Margin="0,4,0,0" Click="back_Click" Background="{x:Null}">
+                        <Button VerticalAlignment="Stretch" Click="back_Click" Background="{x:Null}">
                             <Button.Content>
                                 <SymbolIcon Symbol="Back" Foreground="White"/>
                             </Button.Content>
@@ -220,17 +220,17 @@
                                 <SymbolIcon x:Name="icon" Symbol="Pause"/>
                             </Button.Content>
                         </Button>
-                        <Button Click="DanmuSwitch_Click" Background="{x:Null}" VerticalAlignment="Center" Foreground="White" ToolTipService.ToolTip="弹幕开关" Margin="4,0,4,0">
+                        <Button VerticalAlignment="Stretch" Click="DanmuSwitch_Click" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕开关" Margin="4,0,4,0">
                             <Button.Content>
                                 <SymbolIcon Symbol="Comment"/>
                             </Button.Content>
                         </Button>
-                        <Button Background="{x:Null}" ToolTipService.ToolTip="锚点循环" Click="Repeat_Click">
+                        <Button VerticalAlignment="Stretch" Background="{x:Null}" ToolTipService.ToolTip="锚点循环" Click="Repeat_Click">
                             <Button.Content>
                                 <SymbolIcon x:Name="symbol" Symbol="RepeatAll" Foreground="White"/>
                             </Button.Content>
                         </Button>
-                        <Button Background="{x:Null}" ToolTipService.ToolTip="播放器设定">
+                        <Button VerticalAlignment="Stretch" Background="{x:Null}" ToolTipService.ToolTip="播放器设定">
                             <Button.Content>
                                 <SymbolIcon Symbol="Setting" Foreground="White"/>
                             </Button.Content>
@@ -308,7 +308,7 @@
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
-                        <Button Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项">
+                        <Button VerticalAlignment="Stretch" Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项">
                             <Button.Content>
                                 <SymbolIcon Symbol="More" Foreground="White"/>
                             </Button.Content>

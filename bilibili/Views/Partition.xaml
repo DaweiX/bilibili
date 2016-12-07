@@ -170,17 +170,36 @@
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Source="{Binding Face}" Height="100" Width="100"/>
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="{Binding Uname}"/>
+                                <Ellipse Width="60" Height="60">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding Face}"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <StackPanel Grid.Column="1" Margin="4,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock VerticalAlignment="Bottom" Text="{Binding Uname}" TextWrapping="Wrap"/>
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="4"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.Style>
+                        <Style TargetType="ListView">
+                            <Setter Property="ItemsPanel">
+                                <Setter.Value>
+                                    <ItemsPanelTemplate>
+                                        <ItemsWrapGrid  Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.Style>
                 </ListView>
             </PivotItem>
             <PivotItem>
@@ -205,12 +224,12 @@
                         <RowDefinition Height="160"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <AutoSuggestBox x:Name="SearchBox" VerticalAlignment="Center" Margin="8,20,8,0"                          
+                    <AutoSuggestBox x:Name="SearchBox" VerticalAlignment="Center" Margin="8,20,8,0" Pivot.SlideInAnimationGroup="GroupOne"                      
                                 QueryIcon="Find" PlaceholderText="搜索视频、番剧、AV号或UP主" QuerySubmitted="SearchBox_QuerySubmitted"/>
                     <GridView x:Name="list_hottags" Margin="8" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
                         <GridView.ItemContainerTransitions>
                             <TransitionCollection>
-                                <EntranceThemeTransition/>
+                                <AddDeleteThemeTransition/>
                             </TransitionCollection>
                         </GridView.ItemContainerTransitions>
                         <GridView.ItemContainerStyle>

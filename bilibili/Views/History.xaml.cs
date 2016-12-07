@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.Data.Json;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -34,30 +35,26 @@ namespace bilibili.Views
             string url = "http://api.bilibili.com/x/v2/history?_device=wp&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=427000&platform=android&pn=" + p.ToString() + "&ps=20";
             url += ApiHelper.GetSign(url);
             List<Models.History> hs = await ContentServ.GetHistoryAsync(url);
-            conlist.ItemsSource = hs;
+            foreach (var item in hs)
+            {
+                hslist.Items.Add(item);
+            }
         }
 
-        private void conlist_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private void hslist_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
-            Models.History item = conlist.SelectedItem as Models.History;
-            if (item != null) 
-                Frame.Navigate(typeof(Detail_P), item.Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-        }
-
-        private void conlist_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            var scroll = Load.FindChildOfType<ScrollViewer>(conlist);
-            var text = Load.FindChildOfType<TextBlock>(conlist);
+            var scroll = Load.FindChildOfType<ScrollViewer>(hslist);
+            var text = Load.FindChildOfType<TextBlock>(hslist);
             scroll.ViewChanged += async (s, a) =>
             {
                 if (scroll.VerticalOffset == scroll.ScrollableHeight)// && NextLoading)
                 {
-                    int count0 = conlist.Items.Count;
+                    int count0 = hslist.Items.Count;
                     //滑动到底部了    
                     text.Visibility = Visibility.Visible;
                     page++;
                     await load(page);
-                    if (conlist.Items.Count == count0)
+                    if (hslist.Items.Count == count0)
                     {
                         text.Text = "评论装填完毕！";
                         return;
@@ -65,6 +62,31 @@ namespace bilibili.Views
                     text.Visibility = Visibility.Collapsed;
                 }
             };
+        }
+
+        private void hslist_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            Models.History item = hslist.SelectedItem as Models.History;
+            if (item != null)
+            {
+                Frame.Navigate(typeof(Detail_P), item.Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            }
+        }
+
+        private async void clear_Click(object sender, RoutedEventArgs e)
+        {
+            //http://api.bilibili.com/x/v2/history/clear?_device=android&access_key=c0ca6415ce6d8bcb7bda0ea9bc9a2419&appkey=c1b107428d337928&build=421000&mobi_app=android&platform=android&sign=fe59b1a3abe6d935094e757a8a718424
+            string url = "http://api.bilibili.com/x/v2/history/clear?_device=android&access_key=" + ApiHelper.accesskey + "&appkey=c1b107428d337928&build=421000&mobi_app=android&platform=android";
+            url += ApiHelper.GetSign(url);
+            //B站真有趣，清除历史记录好好的GET不用非让用POST……
+            JsonObject json = JsonObject.Parse(await BaseService.SendPostAsync(url, ""));
+            if (json.ContainsKey("code"))
+            {
+                if (json["code"].ToString() == "0")
+                {
+                    hslist.Items.Clear();
+                }
+            }
         }
     }
 }
