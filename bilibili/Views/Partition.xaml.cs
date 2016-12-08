@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.Data.Json;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -66,62 +67,6 @@ namespace bilibili.Views
                 case "音乐": Frame.Navigate(typeof(PartViews.Music), null, new DrillInNavigationTransitionInfo()); break;
             }
         }
-
-        //async void loadItems()
-        //{
-        //    //番剧
-        //    var a = await ContentServ.GetContentAsync(13, 1, 6);
-        //    if (a != null)
-        //        gridview1.ItemsSource = a;
-        //    //动画
-        //    a = await ContentServ.GetContentAsync(1, 1, 6);
-        //    if (a != null)
-        //        gridview2.ItemsSource = a;
-        //    //生活
-        //    a = await ContentServ.GetContentAsync(160, 1, 6);
-        //    if (a != null)
-        //        gridview3.ItemsSource = a;
-        //    //电影
-        //    a = await ContentServ.GetContentAsync(23, 1, 6);
-        //    if (a != null)
-        //        gridview4.ItemsSource = a;
-        //    //娱乐
-        //    a = await ContentServ.GetContentAsync(71, 1, 6);
-        //    if (a != null)
-        //        gridview5.ItemsSource = a;
-        //    //鬼畜
-        //    a = await ContentServ.GetContentAsync(119, 1, 6);
-        //    if (a != null)
-        //        gridview6.ItemsSource = a;
-        //    //科技
-        //    a = await ContentServ.GetContentAsync(36, 1, 6);
-        //    if (a != null)
-        //        gridview7.ItemsSource = a;
-        //    //游戏
-        //    a = await ContentServ.GetContentAsync(4, 1, 6);
-        //    if (a != null)
-        //        gridview8.ItemsSource = a;
-        //    //音乐
-        //    a = await ContentServ.GetContentAsync(3, 1, 6);
-        //    if (a != null)
-        //        gridview9.ItemsSource = a;
-        //    //舞蹈
-        //    a = await ContentServ.GetContentAsync(20, 1, 6);
-        //    if (a != null)
-        //        gridview10.ItemsSource = a;
-        //    //时尚
-        //    a = await ContentServ.GetContentAsync(155, 1, 6);
-        //    if (a != null)
-        //        gridview11.ItemsSource = a;
-        //    //广告
-        //    a = await ContentServ.GetContentAsync(166, 1, 6);
-        //    if (a != null)
-        //        gridview12.ItemsSource = a;
-        //    //电视剧
-        //    a = await ContentServ.GetContentAsync(11, 1, 6);
-        //    if (a != null)
-        //        gridview13.ItemsSource = a;
-        //}
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
@@ -324,15 +269,23 @@ namespace bilibili.Views
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double i = ActualWidth;
-            if (i > 800)
+            if (i > 1600)
             {
-                i = 4;
+                i = i / 480;
+            }
+            else if (i > 1200)
+            {
+                i = 3;
+            }
+            else if (i > 600)
+            {
+                i = 2;
             }
             else
             {
                 i = 1;
             }
-            width.Width = (this.ActualWidth - 12 * i) / i;
+            width.Width = this.ActualWidth / i - 12;
         }
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -401,6 +354,41 @@ namespace bilibili.Views
             {
                 Frame.Navigate(typeof(Detail), a.Sid, new SlideNavigationTransitionInfo());
             }
+        }
+
+        private async void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (string.IsNullOrWhiteSpace(SearchBox.Text))
+            {
+                SearchBox.ItemsSource = null;
+                return;
+            }
+            string url = "http://api.bilibili.com/suggest?_device=wp&appkey=" + ApiHelper.appkey + "&bangumi_acc_num=0&bangumi_num=0&build=429001&func=suggest&main_ver=v3&mobi_app=win&special_acc_num=0&special_num=0&suggest_type=accurate&term=" + SearchBox.Text + "&topic_acc_num=0&topic_num=0&upuser_acc_num=0&upuser_num=0&_hwid=0100d4c50200c2a6&platform=uwp_mobile";
+            url += ApiHelper.GetSign(url);
+            JsonObject json = await BaseService.GetJson(url);
+            try
+            {
+                if (json.ContainsKey("tag"))
+                {
+                    List<string> list = new List<string>();
+                    json = JsonObject.Parse(json["tag"].ToString());
+                    int i = 0;
+                    do
+                    {
+                        i++;
+                    } while (json.ContainsKey(i.ToString()));
+                    for (int j = 0; j < i; j++)
+                    {
+                        JsonObject json2 = JsonObject.Parse(json[j.ToString()].ToString());
+                        if (json2.ContainsKey("value"))
+                        {
+                            list.Add(json2["value"].GetString());
+                        }
+                    }
+                    SearchBox.ItemsSource = list;
+                }
+            }
+            catch { }
         }
     }
 

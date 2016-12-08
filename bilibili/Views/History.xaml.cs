@@ -39,6 +39,11 @@ namespace bilibili.Views
             {
                 hslist.Items.Add(item);
             }
+            if (hs.Count < 20)
+            {
+                var text = Load.FindChildOfType<TextBlock>(hslist);
+                text.Text = "没有更多历史项";
+            }
         }
 
         private void hslist_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -56,7 +61,7 @@ namespace bilibili.Views
                     await load(page);
                     if (hslist.Items.Count == count0)
                     {
-                        text.Text = "评论装填完毕！";
+                        text.Text = "没有更多历史项！";
                         return;
                     }
                     text.Visibility = Visibility.Collapsed;
@@ -78,7 +83,7 @@ namespace bilibili.Views
             //http://api.bilibili.com/x/v2/history/clear?_device=android&access_key=c0ca6415ce6d8bcb7bda0ea9bc9a2419&appkey=c1b107428d337928&build=421000&mobi_app=android&platform=android&sign=fe59b1a3abe6d935094e757a8a718424
             string url = "http://api.bilibili.com/x/v2/history/clear?_device=android&access_key=" + ApiHelper.accesskey + "&appkey=c1b107428d337928&build=421000&mobi_app=android&platform=android";
             url += ApiHelper.GetSign(url);
-            //B站真有趣，清除历史记录好好的GET不用非让用POST……
+            //B站真有趣，清除历史记录好好的GET不用非用POST……
             JsonObject json = JsonObject.Parse(await BaseService.SendPostAsync(url, ""));
             if (json.ContainsKey("code"))
             {

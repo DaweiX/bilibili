@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using bilibili.Http;
-using bilibili.Methods;
-using bilibili.Models;
+using bilibili.Helpers;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -38,20 +27,7 @@ namespace bilibili.Views
         async Task Load(int page)
         {
             string url = "http://bangumi.bilibili.com/api/get_season_by_tag_v2?_device=android&appkey=85eb6835b0a1034e&build=424000&indexType=0&page=" + page.ToString() + "&pagesize=40&platform=wp&tag_id=" + id + "&ts=1474645896189&sign=";
-            string t = "_device=android&appkey=85eb6835b0a1034e&build=424000&indexType=0&page=" + page.ToString() + "&pagesize=40&platform=wp&tag_id=" + id + "&ts=1474645896189";
-            string[] argss = t.Split('&');
-            List<string> list = argss.ToList();
-            list.Sort();
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (string s in list)
-            {
-                stringBuilder.Append(stringBuilder.Length > 0 ? "&" : string.Empty);
-                stringBuilder.Append(s);
-            }
-            string a = stringBuilder.ToString();
-            string b = "2ad42749773c441109bdc0191257a664";
-            string c = Secret.GetMD5(a + b);
-            url += c;
+            url += ApiHelper.GetSign(url);
             List<Models.Bangumi> list_rs = new List<Models.Bangumi>();
             list_rs = await ContentServ.GetBansByTagAsync(url);
             if (list_rs != null && list_rs.Count > 0)
@@ -93,13 +69,35 @@ namespace bilibili.Views
                     await Load(page);
                     if (listview.Items.Count == count0)
                     {
-                        text.Text = "视频装填完毕！";
+                        text.Text = "番剧装填完毕！";
                         return;
                     }
                     listview.ContainerContentChanging += listview_ContainerContentChanging;
                     text.Visibility = Visibility.Collapsed;
                 }
             };
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double i = ActualWidth;
+            if (i > 1600)
+            {
+                i = i / 480;
+            }
+            else if (i > 1200)
+            {
+                i = 3;
+            }
+            else if (i > 800)
+            {
+                i = 2;
+            }
+            else
+            {
+                i = 1;
+            }
+            width.Width = this.ActualWidth / i - 12;
         }
     }
 }

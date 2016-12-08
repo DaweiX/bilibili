@@ -8,33 +8,32 @@ namespace bilibili.Models
 {
     class Bangumi
     {
-        /// <summary>
-        /// 封面
-        /// </summary>
+        private string count;
+        private bool isfinish;
         public string Cover { get; set; }
-        /// <summary>
-        /// 标题
-        /// </summary>
         public string Title { get; set; }
-        /// <summary>
-        /// 发行时间
-        /// </summary>
         public string Time { get; set; }
-        /// <summary>
-        /// 总集数
-        /// </summary>
-        public string Count { get; set; }
-        /// <summary>
-        /// 是否完结
-        /// </summary>
-        public bool IsFinish { get; set; }
-        /// <summary>
-        /// ID
-        /// </summary>
+        public string Count
+        {
+            get
+            {
+                if (isfinish)
+                {
+                    return count + "话全";
+                }
+                else
+                {
+                    return "更新到第" + count + "话";
+                }
+            }
+            set { count = value; }
+        }
+        public bool IsFinish
+        {
+            get { return isfinish; }
+            set { isfinish = value; }
+        }
         public string ID { get; set; }
-        /// <summary>
-        /// 摘要
-        /// </summary>
         public string Brief { get; set; }
         public string New { get; set; }
     }

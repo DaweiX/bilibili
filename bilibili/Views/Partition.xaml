@@ -185,7 +185,7 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
+                        <Style TargetType="ListViewItem">
                             <Setter Property="Margin" Value="4"/>
                         </Style>
                     </ListView.ItemContainerStyle>
@@ -224,9 +224,9 @@
                         <RowDefinition Height="160"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <AutoSuggestBox x:Name="SearchBox" VerticalAlignment="Center" Margin="8,20,8,0" Pivot.SlideInAnimationGroup="GroupOne"                      
-                                QueryIcon="Find" PlaceholderText="搜索视频、番剧、AV号或UP主" QuerySubmitted="SearchBox_QuerySubmitted"/>
-                    <GridView x:Name="list_hottags" Margin="8" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
+                    <AutoSuggestBox x:Name="SearchBox" VerticalAlignment="Center" Margin="8,20,8,0" Pivot.SlideInAnimationGroup="GroupThree"                      
+                                QueryIcon="Find" PlaceholderText="搜索视频、番剧、AV号或UP主" QuerySubmitted="SearchBox_QuerySubmitted" TextChanged="SearchBox_TextChanged"/>
+                    <GridView x:Name="list_hottags" Margin="8" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" Pivot.SlideInAnimationGroup="GroupTwo" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
                         <GridView.ItemContainerTransitions>
                             <TransitionCollection>
                                 <AddDeleteThemeTransition/>
@@ -252,7 +252,7 @@
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
                     </GridView>
-                    <StackPanel Grid.Row="2">
+                    <StackPanel Grid.Row="2" Pivot.SlideInAnimationGroup="GroupOne">
                         <Button Tapped="Random_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">运气不错</Button>
                         <Button HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">排行榜</Button>
                         <Button Tag="0" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">话题中心</Button>

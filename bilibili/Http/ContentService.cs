@@ -794,7 +794,7 @@ namespace bilibili.Http
                         if (temp.ContainsKey("is_finish"))
                             ban.IsFinish = StringDeal.delQuotationmarks(temp["is_finish"].ToString()) == "1" ? true : false;
                         if (temp.ContainsKey("brief"))
-                            ban.Brief = StringDeal.delQuotationmarks(temp["brief"].ToString());
+                            ban.Brief = temp["brief"].GetString();
                         if (temp.ContainsKey("season_id"))
                             ban.ID = StringDeal.delQuotationmarks(temp["season_id"].ToString());
                         if (temp.ContainsKey("total_count"))
