@@ -32,4 +32,35 @@ namespace bilibili.Methods
             return null;
         }
     }
+    class WidthFit
+    {
+        public static double GetWidth(double width, int max, int min, int offset = 12)
+        {
+            if (offset < 0 || offset > 24)
+            {
+                offset = 12;
+            }
+            double w = 1;
+            int column = 1;
+            int maxcolumn = (int)width / min;
+            double i2 = width / min;
+            for (int i = 1; i <= maxcolumn; i++)
+            {
+                if (Math.Abs(i - i2) < 1) 
+                {
+                    column = (int)Math.Truncate(i2) == 0 ? 1 : (int)Math.Truncate(i2);
+                }
+            }
+            w = width / column;
+            w -= offset;
+            //double rate = w * (double)column / width;
+            //if (rate < 0.99)
+            //{
+            //    column++;
+            //    w = width / column;
+            //    w -= offset;
+            //}
+            return w;
+        }
+    }
 }

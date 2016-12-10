@@ -30,7 +30,7 @@ namespace bilibili.Views
         {
             if (SettingHelper.ContainsKey("_nighttheme"))
             {
-                night.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_nighttheme").ToString());
+                night.IsOn = SettingHelper.GetValue("_nighttheme").ToString() == "light" ? false : true;
             }
             if (SettingHelper.ContainsKey("_downloadcost"))
                 downstyle.IsOn = SettingHelper.GetValue("_downloadcost").ToString() == "wifionly" ? false : true;
@@ -75,7 +75,7 @@ namespace bilibili.Views
 
         private void about_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(Views.About), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(About), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         private async void top_Toggled(object sender, RoutedEventArgs e)

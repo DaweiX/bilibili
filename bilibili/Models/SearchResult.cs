@@ -51,10 +51,26 @@ namespace bilibili.Models
     }
     class SearchResult_Bangumi
     {
+        private string isFinish;
+        private string count;
         public string Cover { get; set; }
         public string Title { get; set; }
-        public string IsFinish { get; set; }
+        public string Evaluate { get; set; }
+        public string IsFinish
+        {
+            get { return isFinish; }
+            set { isFinish = value; }
+        }
         public string ID { get; set; }
-        public string Count { get; set; }
+        public string Count
+        {
+            get
+            {
+                if (isFinish == "1") return count + "话全";
+                else if (isFinish == "0") return "连载到第" + count + "话";
+                else return "共" + count + "话";
+            }
+            set { count = value; }
+        }
     }
 }

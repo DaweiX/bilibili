@@ -102,7 +102,7 @@
                 <PivotItem.Header>
                     <TextBlock x:Name="h1" Text="投稿视频" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <ListView x:Name="list_videos" IsItemClickEnabled="True" ItemContainerStyle="{StaticResource listcontainerstyle}" ItemClick="list_videos_ItemClick">
+                <ListView x:Name="list_videos" IsItemClickEnabled="True" Style="{StaticResource ListViewStyle}" ItemContainerStyle="{StaticResource listcontainerstyle}" ItemClick="list_videos_ItemClick">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -141,7 +141,7 @@
                 <PivotItem.Header>
                     <TextBlock x:Name="h2" Text="TA的关注" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <ListView x:Name="list_concern" IsItemClickEnabled="True" ItemContainerStyle="{StaticResource listcontainerstyle}" ItemClick="list_concern_ItemClick">
+                <ListView x:Name="list_concern" IsItemClickEnabled="True" ItemContainerStyle="{StaticResource listcontainerstyle}" Style="{StaticResource ListViewStyle}" ItemClick="list_concern_ItemClick">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

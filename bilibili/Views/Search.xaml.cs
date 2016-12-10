@@ -17,6 +17,8 @@ using bilibili.Http;
 using bilibili.Methods;
 using bilibili.Models;
 using bilibili.Helpers;
+using System.Threading.Tasks;
+using System.Collections;
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
@@ -40,30 +42,35 @@ namespace bilibili.Views
 
         private void listTapped(object sender, TappedRoutedEventArgs e)
         {
-            ListView listview = sender as ListView;
-            switch (pivot.SelectedIndex)
+            GridView listview = sender as GridView;
+            try
             {
-                case 0:
-                    {
-                        var item = listview.SelectedItem as SearchResult;
-                        string aid = item.Aid;
-                        Frame.Navigate(typeof(Detail_P), aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-                    }break;
-                case 1:
-                    {
-                        var item = listview.SelectedItem as SearchResult_Bangumi;
-                        string sid = item.ID;
-                        Frame.Navigate(typeof(Detail), sid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-                    }
-                    break;
-                case 2:
-                    {
-                        var item = listview.SelectedItem as UpForSearch;
-                        string mid = item.Param;
-                        Frame.Navigate(typeof(Friends), mid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-                    }
-                    break;
+                switch (pivot.SelectedIndex)
+                {
+                    case 0:
+                        {
+                            var item = listview.SelectedItem as SearchResult;
+                            string aid = item.Aid;
+                            Frame.Navigate(typeof(Detail_P), aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                        }
+                        break;
+                    case 1:
+                        {
+                            var item = listview.SelectedItem as SearchResult_Bangumi;
+                            string sid = item.ID;
+                            Frame.Navigate(typeof(Detail), sid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                        }
+                        break;
+                    case 2:
+                        {
+                            var item = listview.SelectedItem as UpForSearch;
+                            string mid = item.Param;
+                            Frame.Navigate(typeof(Friends), mid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                        }
+                        break;
+                }
             }
+            catch { }
         }
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -74,69 +81,85 @@ namespace bilibili.Views
             {
                 case "video":
                     {
-                        if (list_videos.Items.Count == 0 && !isLoading)
-                        {
-                            List<SearchResult> list_rs = new List<SearchResult>();
-                            list_rs = await ContentServ.GetSearchResultAsync(keyword, 1);
-                            if (list_rs == null)
-                            {
-                                return;
-                            }
-                            else if (list_rs != null && list_rs.Count > 0)
-                            {
-                                foreach (var item in list_rs)
-                                {
-                                    list_videos.Items.Add(item);
-                                }
-                            }
-                        }
+                        await LoadItem(list_videos, SearchType.Videos);
                     }break;
                 case "fanju":
                     {
-                        if (list_fanju.Items.Count == 0 && !isLoading) 
-                        {
-                            List<SearchResult_Bangumi> list_rs = new List<SearchResult_Bangumi>();
-                            list_rs = await ContentServ.GetBangumisAsync(keyword, 1);
-                            if (list_rs == null)
-                            {
-                                return;
-                            }
-                            else if (list_rs != null && list_rs.Count > 0)
-                            {
-                                foreach (var item in list_rs)
-                                {
-                                    list_fanju.Items.Add(item);
-                                }
-                            }
-                        }
+                        await LoadItem(list_fanju, SearchType.Animes);
                     }
                     break;
                 case "up":
                     {
-                        if (list_up.Items.Count == 0 && !isLoading)
-                        {
-                            List<UpForSearch> list = new List<UpForSearch>();
-                            list = await ContentServ.GetUpsAsync(keyword, 1);
-                            if (list == null)
-                            {
-                                return;
-                            }
-                            else if (list_up != null && list.Count > 0)
-                            {
-                                foreach (var item in list)
-                                {
-                                    list_up.Items.Add(item);
-                                }
-                            }
-                        }
+                        await LoadItem(list_up, SearchType.Ups);
                     }
                     break;
             }
         }
+
+        enum SearchType
+        {
+            Videos,
+            Animes,
+            Ups
+        }
+
+        async Task LoadItem(GridView list, SearchType type)
+        {
+            try
+            {
+                if (list.Items.Count == 0 && !isLoading)
+                {
+                    ArrayList items = new ArrayList();
+                    switch (type)
+                    {
+                        case SearchType.Videos:
+                            var t1 = await ContentServ.GetSearchResultAsync(keyword, 1);
+                            foreach (var item in t1)
+                            {
+                                items.Add(item);
+                            }
+                            break;
+                        case SearchType.Animes:
+                            var t2 = await ContentServ.GetBangumisAsync(keyword, 1);
+                            foreach (var item in t2)
+                            {
+                                items.Add(item);
+                            }
+                            break;
+                        case SearchType.Ups:
+                            var t3 = await ContentServ.GetUpsAsync(keyword, 1);
+                            foreach (var item in t3)
+                            {
+                                items.Add(item);
+                            }
+                            break;
+                    }
+                    if (items == null)
+                    {
+                        return;
+                    }
+                    else if (list != null && items.Count > 0)
+                    {
+                        foreach (var item in items)
+                        {
+                            list.Items.Add(item);
+                        }
+                    }
+                    if (items.Count < 20)
+                    {
+                        var text = Load.FindChildOfType<TextBlock>(list);
+                        text.Text = "装填完毕！";
+                    }
+                }
+                return;
+            }
+            catch { }
+        }
+
         bool isLoading = false;
         private void list_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
-            ListView listview = sender as ListView;
+            GridView listview = sender as GridView;
             var scroll = Load.FindChildOfType<ScrollViewer>(listview);
             var text = Load.FindChildOfType<TextBlock>(listview);
             scroll.ViewChanged += async (s, a) =>
@@ -152,7 +175,7 @@ namespace bilibili.Views
                         case "videos":
                             {
                                 var temps = await ContentServ.GetSearchResultAsync(keyword, page);
-                                if (temps.Count == 0)
+                                if (temps.Count < 20) 
                                 {
                                     text.Text = "装填完毕！";
                                     return;
@@ -168,7 +191,7 @@ namespace bilibili.Views
                         case "bangumi":
                             {
                                 var temps = await ContentServ.GetBangumisAsync(keyword, page);
-                                if (temps.Count == 0)
+                                if (temps.Count < 20)
                                 {
                                     text.Text = "装填完毕！";
                                     return;
@@ -184,7 +207,7 @@ namespace bilibili.Views
                         case "up":
                             {
                                 List<UpForSearch> uplist = await ContentServ.GetUpsAsync(keyword, page);
-                                if (uplist.Count == 0)
+                                if (uplist.Count < 20)
                                 {
                                     text.Text = "装填完毕！";
                                     return;
@@ -200,6 +223,31 @@ namespace bilibili.Views
                     }
                 }
             };
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double i = ActualWidth;
+            //if (i > 1200)
+            //{
+            //    i /= 2;
+            //}
+            //else if (i > 750)
+            //{
+            //    i = 3;
+            //}
+            //else if (i > 500)
+            //{
+            //    i = 2;
+            //}
+            //else
+            //{
+            //    i = 1;
+            //}
+            //i /= 300;
+            //i = i == 0 ? 1 : i;
+            //width.Width = ActualWidth / (int)i - 20;
+            width.Width = WidthFit.GetWidth(i, 400, 280, 24);
         }
     }
 }

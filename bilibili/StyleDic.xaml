@@ -218,7 +218,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <Style x:Key="GridViewStyle1" TargetType="GridView">
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled"/>
@@ -707,30 +706,6 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver" />
-                                <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0"
-                                 To="0.5"
-                                 Storyboard.TargetProperty="Opacity"
-                                 Storyboard.TargetName="Root" />
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalTrackRect"
-                                               Storyboard.TargetProperty="Stroke">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalTrackRect"
-                                               Storyboard.TargetProperty="Stroke">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalPanningThumb"
-                                               Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalPanningThumb"
-                                               Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledChromeHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="ScrollingIndicatorStates">
                                 <VisualState x:Name="TouchIndicator">
@@ -870,7 +845,7 @@
                             <Border x:Name="HorizontalPanningThumb"
                   VerticalAlignment="Bottom"
                   HorizontalAlignment="Left"
-                  Background="{ThemeResource SystemControlForegroundChromeDisabledLowBrush}"
+                  Background="{ThemeResource bili_Theme}"
                   BorderThickness="0"
                   Height="2"
                   MinWidth="32"
@@ -938,7 +913,7 @@
                             <Border x:Name="VerticalPanningThumb"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Right"
-                  Background="{ThemeResource SystemControlForegroundChromeDisabledLowBrush}"
+                  Background="{ThemeResource bili_Theme}"
                   BorderThickness="0"
                   Width="2"
                   MinHeight="32"
@@ -949,6 +924,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-
 </ResourceDictionary>

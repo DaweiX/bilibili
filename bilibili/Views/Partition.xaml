@@ -105,7 +105,8 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <controls:MyFlipControl x:Name="header_bangumi" Height="120"/>
+                        <Border x:Name="height"/>
+                        <controls:MyFlipControl x:Name="header_bangumi" Height="{Binding Height,ElementName=height}"/>
                         <Grid Height="48" Grid.Row="1" Margin="4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -227,20 +228,9 @@
                     <AutoSuggestBox x:Name="SearchBox" VerticalAlignment="Center" Margin="8,20,8,0" Pivot.SlideInAnimationGroup="GroupThree"                      
                                 QueryIcon="Find" PlaceholderText="搜索视频、番剧、AV号或UP主" QuerySubmitted="SearchBox_QuerySubmitted" TextChanged="SearchBox_TextChanged"/>
                     <GridView x:Name="list_hottags" Margin="8" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" Pivot.SlideInAnimationGroup="GroupTwo" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
-                        <GridView.ItemContainerTransitions>
-                            <TransitionCollection>
-                                <AddDeleteThemeTransition/>
-                            </TransitionCollection>
-                        </GridView.ItemContainerTransitions>
-                        <GridView.ItemContainerStyle>
-                            <Style TargetType="GridViewItem">
-                                <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
-                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                            </Style>
-                        </GridView.ItemContainerStyle>
                         <GridView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" BorderThickness="1" BorderBrush="LightGray" Padding="2">
                                     <TextBlock Text="{Binding Keyword}"/>
                                     <TextBlock Text="{Binding Status}" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                                 </StackPanel>

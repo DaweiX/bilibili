@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    >
+    SizeChanged="UserControl_SizeChanged">
     <UserControl.Resources>
         <DataTemplate x:Key="myDT">
             <Image Source="{Binding Img}" Stretch="UniformToFill"/>

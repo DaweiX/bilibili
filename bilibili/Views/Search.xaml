@@ -6,15 +6,17 @@
     xmlns:controls="using:bilibili.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    SizeChanged="Page_SizeChanged">
     <Grid Background="{ThemeResource bili_PageBackground}">
         <controls:MessagePopup x:Name="messagepop" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,160"/>
+        <Border x:Name="width"/>
         <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
             <PivotItem Header="视频" Tag="video">
-                <ListView x:Name="list_videos" Style="{StaticResource ListViewStyle}" Tag="videos" Tapped="listTapped" ItemContainerStyle="{StaticResource listcontainerstyle}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
-                    <ListView.ItemTemplate>
+                <GridView x:Name="list_videos" Style="{StaticResource GridViewStyle}" Tag="videos" Tapped="listTapped" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
+                    <GridView.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid Width="{Binding Width,ElementName=width}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
@@ -27,32 +29,38 @@
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </GridView.ItemTemplate>
+                </GridView>
             </PivotItem>
             <PivotItem Header="番剧" Tag="fanju">
-                <ListView x:Name="list_fanju" Style="{StaticResource ListViewStyle}" Tag="bangumi" Tapped="listTapped" ItemContainerStyle="{StaticResource listcontainerstyle}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
-                    <ListView.ItemTemplate>
+                <GridView x:Name="list_fanju" Style="{StaticResource GridViewStyle}" Tag="bangumi" Tapped="listTapped" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
+                    <GridView.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid Width="{Binding Width,ElementName=width}" Height="120">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Source="{Binding Cover}" Width="100"/>
-                                <TextBlock Grid.Column="1" Margin="4,0,0,0" Text="{Binding Title}"/>
-                                <TextBlock Grid.Column="2" Text="{Binding IsFinish}" Foreground="Gray" HorizontalAlignment="Right" Margin="4"/>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Image Grid.RowSpan="2" Source="{Binding Cover}" Width="90"/>
+                                <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding Evaluate}" TextWrapping="Wrap" MaxLines="3" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Count}" Foreground="Gray" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4"/>
                             </Grid>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </GridView.ItemTemplate>
+                </GridView>
             </PivotItem>
             <PivotItem Header="up主" Tag="up">
-                <ListView x:Name="list_up" Style="{StaticResource ListViewStyle}" Tag="up" Tapped="listTapped">
-                    <ListView.ItemTemplate>
+                <GridView x:Name="list_up" Style="{StaticResource GridViewStyle}" Tag="up" Tapped="listTapped">
+                    <GridView.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid Width="{Binding Width,ElementName=width}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
@@ -68,8 +76,8 @@
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </GridView.ItemTemplate>
+                </GridView>
             </PivotItem>
         </Pivot>
     </Grid>

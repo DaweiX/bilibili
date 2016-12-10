@@ -133,7 +133,7 @@ namespace bilibili.Views
                                 {
                                     await addcomment(cursor);
                                 }
-                                header_bangumi.init(await ContentServ.GetFilpItems());
+                                header_bangumi.init(await ContentServ.GetFilpItems(), 3.2);
                                 if (list_lastupdate.Items.Count == 0)
                                 {
                                     list_lastupdate.ItemsSource = await ContentServ.GetLastUpdateAsync();
@@ -269,23 +269,7 @@ namespace bilibili.Views
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double i = ActualWidth;
-            if (i > 1600)
-            {
-                i = i / 480;
-            }
-            else if (i > 1200)
-            {
-                i = 3;
-            }
-            else if (i > 600)
-            {
-                i = 2;
-            }
-            else
-            {
-                i = 1;
-            }
-            width.Width = this.ActualWidth / i - 12;
+            width.Width = Methods.WidthFit.GetWidth(i, 600, 300);
         }
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)

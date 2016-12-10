@@ -446,13 +446,15 @@ namespace bilibili.Http
                         if (json2.ContainsKey("cover"))
                             bang.Cover = json2["cover"].GetString();
                         if (json2.ContainsKey("is_finish"))
-                            bang.IsFinish = (json2["is_finish"].ToString() == "1") ? "已完结" : "连载中";
+                            bang.IsFinish = json2["is_finish"].ToString();
                         if (json2.ContainsKey("season_id"))
                             bang.ID = json2["season_id"].ToString();
                         if (json2.ContainsKey("title"))
                             bang.Title = json2["title"].GetString();
                         if (json2.ContainsKey("total_count"))
                             bang.Count = json2["total_count"].ToString();
+                        if (json2.ContainsKey("evaluate"))
+                            bang.Evaluate = json2["evaluate"].GetString();
                         if (bang.ID.Length > 0)
                             contentList.Add(bang);
                     }

@@ -25,6 +25,7 @@ namespace bilibili
     public sealed partial class MainPage : Page
     {
         DispatcherTimer timer = new DispatcherTimer();
+        bool currentTheme;
         public MainPage()
         {
             this.InitializeComponent();
@@ -43,6 +44,21 @@ namespace bilibili
             if (SettingHelper.ContainsKey("_topbar"))
             {
                 TopShoworHide();
+            }
+            if (SettingHelper.ContainsKey("_nighttheme"))
+            {
+                if (SettingHelper.GetValue("_nighttheme").ToString() == "dark")
+                {
+                    RequestedTheme = ElementTheme.Dark;
+                    currentTheme = false;
+                    txt.Text = "日间模式";
+                }
+                else if (SettingHelper.GetValue("_nighttheme").ToString() == "light")
+                {
+                    RequestedTheme = ElementTheme.Light;
+                    currentTheme = true;
+                    txt.Text = "夜间模式";
+                }
             }
         }
 
@@ -67,7 +83,7 @@ namespace bilibili
             }
         }
 
-        bool ChangeTheme(bool a=true)
+        bool ChangeTheme(bool a = true)
         {
             string ThemeName = string.Empty;
             if (SettingHelper.ContainsKey("_Theme"))
@@ -115,15 +131,27 @@ namespace bilibili
             try
             {
                 if (!SettingHelper.ContainsKey("_accesskey"))
-                    SettingHelper.SetValue("_accesskey", "");
+                {
+                    SettingHelper.SetValue("_accesskey", string.Empty);
+                }
                 if (SettingHelper.ContainsKey("_autologin") && ApiHelper.IsLogin() == false) 
                 {
                     if ((bool)SettingHelper.GetValue("_autologin") == true)
                     {
-                        await ApiHelper.login("","");
+                        string p = string.Empty;
+                        string u = string.Empty;
+                        if (!string.IsNullOrEmpty(SettingHelper.GetValue("_password").ToString()))
+                        {
+                            p = SettingHelper.GetValue("_password").ToString();
+                        }
+                        if (!string.IsNullOrEmpty(SettingHelper.GetValue("_username").ToString()))
+                        {
+                            u = SettingHelper.GetValue("_username").ToString();
+                        }
+                        await ApiHelper.login(p, u, false);
                     }
                 }
-                if (SettingHelper.GetValue("_accesskey").ToString().Length > 2)
+                if (ApiHelper.IsLogin()) 
                 {
                     ApiHelper.accesskey = SettingHelper.GetValue("_accesskey").ToString();
                     string url = "http://api.bilibili.com/myinfo?appkey=422fd9d7289a1dd9&access_key=" + SettingHelper.GetValue("_accesskey").ToString();
@@ -381,9 +409,14 @@ namespace bilibili
                     case "night":
                         {
                             //fonticon.Glyph = "&#xE708/6;";
-                            bool currentTheme = this.RequestedTheme == ElementTheme.Light ? true : false;
                             bool isDark = ChangeDarkMode(currentTheme);
-                            txt.Text = isDark ? "日间模式" : "夜间模式";
+                            stk.Background =
+                                (mainframe.CurrentSourcePageType == typeof(Views.Partition))
+                                || mainframe.CurrentSourcePageType == typeof(Views.Friends)
+                                || mainframe.CurrentSourcePageType.AssemblyQualifiedName.Split(',')[0].Split('.')[2] == "PartViews"
+                                || mainframe.CurrentSourcePageType == typeof(Views.Message) ?
+                                new SolidColorBrush(Color.FromArgb(255, 226, 115, 169)) :
+                                isDark ? new SolidColorBrush(Color.FromArgb(255, 29, 29, 29)) : new SolidColorBrush(Color.FromArgb(255, 241, 241, 241));
                         }
                         break;
                 }
@@ -392,21 +425,23 @@ namespace bilibili
         }
 
 
-        private bool ChangeDarkMode(bool value = true)
+        private bool ChangeDarkMode(bool value)
         {
-            if (!value)
+            if (value)
             {
-                this.RequestedTheme = ElementTheme.Light;
-                SettingHelper.SetValue("_nighttheme", false);
-                stk.Background = (mainframe.CurrentSourcePageType == typeof(Views.Partition)) || mainframe.CurrentSourcePageType == typeof(Views.Friends) || mainframe.CurrentSourcePageType.AssemblyQualifiedName.Split(',')[0].Split('.')[2] == "PartViews" || mainframe.CurrentSourcePageType == typeof(Views.Message) ? new SolidColorBrush(Color.FromArgb(255, 226, 115, 169)) : (this.RequestedTheme == ElementTheme.Dark ? new SolidColorBrush(Color.FromArgb(255, 43, 43, 43)) : new SolidColorBrush(Color.FromArgb(255, 240, 240, 240)));
-                return false;
-            }
-            else
-            {
-                this.RequestedTheme = ElementTheme.Dark;
-                SettingHelper.SetValue("_nighttheme", true);
-                stk.Background = (mainframe.CurrentSourcePageType == typeof(Views.Partition)) || mainframe.CurrentSourcePageType == typeof(Views.Friends) || mainframe.CurrentSourcePageType.AssemblyQualifiedName.Split(',')[0].Split('.')[2] == "PartViews" || mainframe.CurrentSourcePageType == typeof(Views.Message) ? new SolidColorBrush(Color.FromArgb(255, 226, 115, 169)) : (this.RequestedTheme == ElementTheme.Dark ? new SolidColorBrush(Color.FromArgb(255, 43, 43, 43)) : new SolidColorBrush(Color.FromArgb(255, 240, 240, 240)));
+                RequestedTheme = ElementTheme.Dark;
+                currentTheme = false;
+                SettingHelper.SetValue("_nighttheme", "dark");
+                txt.Text = "日间模式";
                 return true;
+            }
+            else 
+            {
+                RequestedTheme = ElementTheme.Light;
+                currentTheme = true;
+                SettingHelper.SetValue("_nighttheme", "light");
+                txt.Text = "夜间模式";
+                return false;
             }
         }
 
