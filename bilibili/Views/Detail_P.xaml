@@ -25,17 +25,13 @@
                     <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
                         <StackPanel Margin="8,0,8,56">
                             <TextBlock x:Name="title" FontSize="24" TextWrapping="Wrap" Text="标题"/>
-                            <Button>
-                                <Button.Background>
-                                    <SolidColorBrush Opacity="0"/>
-                                </Button.Background>
-                                <Image x:Name="pic" Width="320" Height="200" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="3" Source="ms-appx:///Assets//SplashScreen.scale-200.png"/>
-                                <Button.Flyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Text="保存封面" Click="Save_Click"/>
+                            <Image x:Name="pic" Width="320" Height="200" Tapped="pic_Tapped" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="3" Source="ms-appx:///Assets//SplashScreen.scale-200.png">
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout Placement="Right">
+                                        <MenuFlyoutItem Click="Save_Click">保存封面</MenuFlyoutItem>
                                     </MenuFlyout>
-                                </Button.Flyout>
-                            </Button>
+                                </FlyoutBase.AttachedFlyout>
+                            </Image>
                             <StackPanel Orientation="Horizontal">
                                 <HyperlinkButton Style="{StaticResource HyperlinkButtonStyle1}" x:Name="up" Click="up_Click"/>
                                 <TextBlock Text="发表于" Foreground="{ThemeResource bili_Fontcolor_Second}" Margin="2,0,2,0"/>
@@ -124,7 +120,7 @@
             </PivotItem>
             <PivotItem Header="评论" Margin="0">
                 <Grid>
-                    <ListView x:Name="listview"
+                    <ListView x:Name="listview" Margin="0,0,0,56"
                               ContainerContentChanging="listview_ContainerContentChanging" 
                               ItemContainerStyle="{StaticResource replystyle}" 
                               Template="{StaticResource myControlTemplete}" 

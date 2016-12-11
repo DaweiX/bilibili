@@ -204,26 +204,53 @@ namespace bilibili.Views
             {
                 left.Visibility = right.Visibility = Visibility.Collapsed;
                 MyVideo myVideo = e.Parameter as MyVideo;
-                part = myVideo.Part;
-                folder = myVideo.Folder;
-                StorageFolder myfolder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");            
-                myfolder = await myfolder.GetFolderAsync(folder);
-                StorageFile file = await myfolder.GetFileAsync(part + ".mp4");
-                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
-                status.Text += "正在读取弹幕...";
-                var danmupool = await GetDanmu(cid);
-                if (danmupool != null)
+                if (myVideo != null)
                 {
-                    DanmuPool = danmupool;
+                    part = myVideo.Part;
+                    folder = myVideo.Folder;
+                    StorageFolder myfolder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");
+                    myfolder = await myfolder.GetFolderAsync(folder);
+                    StorageFile file = await myfolder.GetFileAsync(part + ".mp4");
+                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                    status.Text += "正在读取弹幕...";
+                    var danmupool = await GetDanmu(file);
+                    if (danmupool != null)
+                    {
+                        DanmuPool = danmupool;
+                        status.Text += "完毕";
+                    }
+                    status.Text += Environment.NewLine + "正在读取视频...";
+                    txt_title.Text = part;
+                    var stream = await file.OpenAsync(FileAccessMode.Read);
+                    media.SetSource(stream, file.ContentType);
                     status.Text += "完毕";
+                    await Task.Delay(500);
+                    return;
                 }
-                status.Text += Environment.NewLine + "正在读取视频...";
-                txt_title.Text = part;
-                var stream = await file.OpenAsync(FileAccessMode.Read);
-                media.SetSource(stream, file.ContentType);
-                status.Text += "完毕";
-                await Task.Delay(500);
-                return;
+                else
+                {
+                    if (e.Parameter.ToString()[0] == '@')
+                    {
+                        string path = e.Parameter.ToString().Substring(1);
+                        StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                        Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                        status.Text += "正在读取弹幕...";
+                        var danmupool = await GetDanmu(file);
+                        if (danmupool != null)
+                        {
+                            DanmuPool = danmupool;
+                            status.Text += "完毕";
+                        }
+                        status.Text += Environment.NewLine + "正在读取视频...";
+                        txt_title.Text = file.DisplayName;
+                        var stream = await file.OpenAsync(FileAccessMode.Read);
+                        media.SetSource(stream, file.ContentType);
+                        status.Text += "完毕";
+                        await Task.Delay(500);
+                        return;
+                    }
+                    return;
+                }
             }
             Index = Convert.ToInt32(infos[0].Cid) + 1;
             if (Index == 1) 
@@ -455,45 +482,13 @@ namespace bilibili.Views
         }
 
         /// <summary>
-        /// 获取弹幕数据
+        /// 弹幕文档解析
         /// </summary>
-        async Task<List<DanmuModel>> GetDanmu(string cid)
+        /// <param name="doc">弹幕XML文档</param>
+        /// <returns></returns>
+        private List<DanmuModel> AnalysisDanmaku(XmlDocument doc)
         {
             List<DanmuModel> list = new List<DanmuModel>();
-            XmlDocument doc = new XmlDocument();
-            try
-            {
-                StorageFolder myfolder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");
-                myfolder = await myfolder.GetFolderAsync(folder);
-                StorageFile file = await myfolder.GetFileAsync(part + ".xml");
-                if (file != null)
-                {
-                    string xml = string.Empty;
-                    using (Stream file0 = await file.OpenStreamForReadAsync())
-                    {
-                        using (StreamReader read = new StreamReader(file0))
-                        {
-                           xml = read.ReadToEnd();
-                        }
-                    }
-                    doc.LoadXml(xml);
-                }
-            }
-            catch
-            {
-                //http://comment.bilibili.com/10631099.xml
-                if (WebStatusHelper.IsOnline() && cid.Length > 0) //离线视频需要加个cid
-                {
-                    string url = "http://comment.bilibili.com/" + cid + ".xml";
-                    string txt = await BaseService.SentGetAsync(url);
-                    doc.LoadXml(txt);
-                }
-                else
-                {
-                    status.Text += "没有下载弹幕且当前无网络连接，跳过";
-                    return null;
-                };
-            }
             var a = doc.GetElementsByTagName("d");
             foreach (XmlElement item in a)
             {
@@ -514,6 +509,55 @@ namespace bilibili.Views
             }
             list = list.OrderBy(f => f.Time).ToList();
             return list;
+        }
+        /// <summary>
+        /// 获取弹幕数据
+        /// </summary>
+        async Task<List<DanmuModel>> GetDanmu(string cid)
+        {
+            List<DanmuModel> list = new List<DanmuModel>();
+            XmlDocument doc = new XmlDocument();
+            try
+            {
+                //http://comment.bilibili.com/10631099.xml
+                if (WebStatusHelper.IsOnline() && cid.Length > 0) //离线视频需要加个cid
+                {
+                    string url = "http://comment.bilibili.com/" + cid + ".xml";
+                    string txt = await BaseService.SentGetAsync(url);
+                    doc.LoadXml(txt);
+                    return AnalysisDanmaku(doc);
+                }
+                else
+                {
+                    status.Text += "没有下载弹幕且当前无网络连接，跳过";
+                    return null;
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        async Task<List<DanmuModel>> GetDanmu(StorageFile file)
+        {
+            XmlDocument doc = new XmlDocument();
+            StorageFolder folder = await file.GetParentAsync();
+            file = await folder.GetFileAsync(file.DisplayName + ".xml");
+            if (file != null)
+            {
+                string xml = string.Empty;
+                using (Stream file0 = await file.OpenStreamForReadAsync())
+                {
+                    using (StreamReader read = new StreamReader(file0))
+                    {
+                        xml = read.ReadToEnd();
+                    }
+                }
+                doc.LoadXml(xml);
+                return AnalysisDanmaku(doc);
+            }
+            return null;
         }
         /// <summary>
         /// 显示弹幕

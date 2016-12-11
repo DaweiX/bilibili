@@ -24,6 +24,22 @@
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#e273a9" />
       </uap:VisualElements>
+	  <Extensions>
+      <uap:Extension Category="windows.fileTypeAssociation" EntryPoint="bilibili.App">
+        <uap:FileTypeAssociation Name="format_mp4">
+          <uap:DisplayName>哔哩哔哩</uap:DisplayName>
+          <uap:InfoTip>播放MP4视频</uap:InfoTip>
+          <uap:SupportedFileTypes>
+            <uap:FileType ContentType="video/mp4">.mp4</uap:FileType>
+          </uap:SupportedFileTypes>
+        </uap:FileTypeAssociation>
+      </uap:Extension>
+      <uap:Extension Category="windows.protocol" EntryPoint="bilibili.App">
+        <uap:Protocol Name="web">
+          <uap:DisplayName>哔哩哔哩</uap:DisplayName>
+        </uap:Protocol>
+      </uap:Extension>
+	  </Extensions>
     </Application>
   </Applications>
   <Capabilities>

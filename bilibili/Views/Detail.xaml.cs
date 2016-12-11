@@ -17,6 +17,7 @@ using bilibili.Http;
 using bilibili.Methods;
 using bilibili.Models;
 using Windows.Data.Json;
+using Windows.UI.Xaml.Controls.Primitives;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -54,7 +55,7 @@ namespace bilibili.Views
             title.Text = aa.Title;
             up.Text = aa.Copyright;
             desc.Text = aa.Brief;
-            count.Text = "播放：" + aa.View + "\t" + "收藏：" + aa.Fav + "\t" + "弹幕：" + aa.Danmaku + "\t" + "硬币：" + aa.Coins;
+            count.Text = "播放：" + aa.View + "\n" + "收藏：" + aa.Fav + "\n" + "弹幕：" + aa.Danmaku + "\n" + "硬币：" + aa.Coins;
             time.Text = aa.Time;
             staff.Text = aa.Staff ?? string.Empty;
             if (aa.IsConcerned == "1")
@@ -268,6 +269,11 @@ namespace bilibili.Views
         private void directly_Click(object sender, RoutedEventArgs e)
         {
             SettingHelper.SetValue("_isdirect", (bool)directly.IsChecked);
+        }
+
+        private void pic_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout(pic);
         }
     }
 }

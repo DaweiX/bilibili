@@ -60,15 +60,16 @@ namespace bilibili.Views
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (this.ActualWidth < 640)
-            {
-                width.Width = double.NaN;
-            }
-            else
-            {
-                int i = Convert.ToInt32(this.ActualWidth / 400);
-                width.Width = (this.ActualWidth / i) - 8 * i - 8;
-            }
+            //if (this.ActualWidth < 640)
+            //{
+            //    width.Width = double.NaN;
+            //}
+            //else
+            //{
+            //    int i = Convert.ToInt32(this.ActualWidth / 400);
+            //    width.Width = (this.ActualWidth / i) - 8 * i - 8;
+            //}
+            width.Width = WidthFit.GetWidth(ActualWidth, 600, 300);
         }
 
         private void list_topic_Tapped(object sender, TappedRoutedEventArgs e)

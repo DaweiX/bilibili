@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using bilibili.Helpers;
+using System.Text.RegularExpressions;
 
 namespace bilibili
 {
@@ -79,6 +80,76 @@ namespace bilibili
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+        }
+
+        /// <summary>
+        /// 从URL唤醒程序
+        /// </summary>
+        /// <param name="args"></param>
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            if (args.Kind == ActivationKind.Protocol)
+            {
+                ProtocolActivatedEventArgs urlArgs = args as ProtocolActivatedEventArgs;
+                string sid = Regex.Match(urlArgs.Uri.AbsoluteUri, @"(?<=anime/)\d*").Value;
+                string aid = Regex.Match(urlArgs.Uri.AbsoluteUri, @"(?<=/video/av)\d*").Value;
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    Frame rootFrame = Window.Current.Content as Frame;
+                    if (rootFrame == null)
+                    {
+                        rootFrame = new Frame();
+                        Window.Current.Content = rootFrame;
+                    }
+                    rootFrame.Navigate(typeof(Views.Detail), sid);
+                    Window.Current.Activate();
+                    return;
+                }
+                if (!string.IsNullOrEmpty(aid))
+                {
+                    Frame rootFrame = Window.Current.Content as Frame;
+                    if (rootFrame == null)
+                    {
+                        rootFrame = new Frame();
+                        Window.Current.Content = rootFrame;
+                    }
+                    rootFrame.Navigate(typeof(Views.Detail_P), aid);
+                    Window.Current.Activate();
+                    return;
+                }
+            }
+        }
+
+        protected override void OnFileActivated(FileActivatedEventArgs args)
+        {
+            //mp4:@     flv:#
+            StorageFile file = args.Files[0] as StorageFile;
+            string path = file.Path;
+            string type = file.FileType;
+            if (type == ".mp4")
+            {
+                type = "@";
+            }
+            else if (type == ".flv")
+            {
+                type = "#";
+            }
+            else
+            {
+                type = string.Empty;
+            }
+            if (!string.IsNullOrEmpty(type))
+            {
+                Frame rootFrame = Window.Current.Content as Frame;
+                if (rootFrame == null)
+                {
+                    rootFrame = new Frame();
+                    Window.Current.Content = rootFrame;
+                }
+                rootFrame.Navigate(typeof(Views.Video), type + path);
+                Window.Current.Activate();
+                return;
+            }
         }
 
         /// <summary>

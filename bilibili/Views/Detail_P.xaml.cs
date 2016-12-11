@@ -22,6 +22,7 @@ using System.IO;
 using Windows.Foundation;
 using Windows.Networking.BackgroundTransfer;
 using bilibili.Dialogs;
+using Windows.UI.Xaml.Controls.Primitives;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -476,6 +477,11 @@ namespace bilibili.Views
             {
                 Frame.Navigate(typeof(Friends), details.Mid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
             }
+        }
+
+        private void pic_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout(pic);
         }
     }
 }
