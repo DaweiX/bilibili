@@ -62,7 +62,7 @@ namespace bilibili.Views
 
         private void list_videos_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Models.Content).Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Content).Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -88,6 +88,11 @@ namespace bilibili.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MyConcerns), mid, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+        }
+
+        private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            width.Width = Methods.WidthFit.GetWidth(ActualWidth, 400, 200);
         }
     }
 }

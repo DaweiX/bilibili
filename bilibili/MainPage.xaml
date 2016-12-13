@@ -43,7 +43,7 @@
                             FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="20" IsThreeState="False"
                             x:Name="hambtn" Style="{StaticResource hamButtonStyle}" Foreground="White"/>
             <AppBarButton Icon="Back" Grid.Column="1" Foreground="White" Height="48" x:Name="back" Visibility="Collapsed" Click="back_Click"/>
-            <TextBlock x:Name="txt_head" Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="White" FontWeight="Light"/>
+            <TextBlock x:Name="txt_head" Grid.Column="2" Margin="8,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="White" FontWeight="Light"/>
             <AutoSuggestBox x:Name="SearchBox" Grid.Column="3" HorizontalAlignment="Right" Width="220" VerticalAlignment="Center" Margin="0,0,8,0"                          
                                 QueryIcon="Find" PlaceholderText="请输入搜索内容" QuerySubmitted="SearchBox_QuerySubmitted" TextChanged="SearchBox_TextChanged"/>
         </Grid>

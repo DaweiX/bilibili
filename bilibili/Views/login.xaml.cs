@@ -55,7 +55,7 @@ namespace bilibili.Views
             if (status)
             {
                 messagepop.Show("登录成功");
-                SettingHelper.SetValue("_autologin", (bool)autologin.IsChecked ? true : false);
+                SettingHelper.SetValue("_autologin", (bool)autologin.IsChecked);
                 reportLogin();
                 Frame.Navigate(typeof(UserInfo), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
             }

@@ -66,6 +66,7 @@
             <AppBarButton x:Name="pause" Label="暂停" Icon="Pause" Click="pause_Click"/>
             <AppBarButton x:Name="resume" Label="继续" Icon="Play" Click="play_Click"/>
             <AppBarButton Icon="List" Label="选择" Click="AppBarButton_Click"/>
+            <AppBarButton x:Name="local" Icon="NewFolder" Label="本地视频" Click="local_Click"/>
         </CommandBar>
     </Grid>
 </Page>

@@ -115,6 +115,7 @@ namespace bilibili.Views
                             {
                                 if (!isTopicLoaded)
                                 {
+                                    bar.Visibility = Visibility.Visible;
                                     //string url = "http://api.bilibili.com/x/web-show/res/loc?jsonp=jsonp&pf=0&id=23";
                                     //List<Models.Topic> MyList = await ContentServ.GetTopicListAsync(url);
                                     //foreach (var item in MyList)
@@ -122,13 +123,16 @@ namespace bilibili.Views
                                     //    show_1.Source.Add(new Controls.RecommandShow.MySource { bmp = new BitmapImage { UriSource = new Uri(item.Pic) }, url = item.Url });
                                     //}
                                     //show_1.show();
-                                    comment.init();
+                                    await comment.init();
+                                    bar.Visibility = Visibility.Collapsed;
                                     isTopicLoaded = true;
                                 }
                             }
                             break;
                         case 1:
                             {
+                                bar.Visibility = Visibility.Visible;
+
                                 if (!await addcomment(cursor))
                                 {
                                     await addcomment(cursor);
@@ -139,13 +143,16 @@ namespace bilibili.Views
                                     list_lastupdate.ItemsSource = await ContentServ.GetLastUpdateAsync();
                                 }
                                 header_bangumi.navi += Header_bangumi_navi;
+                                bar.Visibility = Visibility.Collapsed;
                             }
                             break;
                         case 2:
                             {
                                 if (!isFriendsLoaded)
                                 {
+                                    bar.Visibility = Visibility.Collapsed;
                                     await loadfriends();
+                                    bar.Visibility = Visibility.Visible;
                                     isFriendsLoaded = true;
                                 }
                             }

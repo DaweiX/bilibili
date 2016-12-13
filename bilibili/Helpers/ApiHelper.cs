@@ -21,7 +21,7 @@ namespace bilibili.Helpers
         public static string appkey = "422fd9d7289a1dd9";
         public static string accesskey = string.Empty;
         public static string code = string.Empty;
-        public static string password, username, e_password;
+        public static string password, username, e_password = string.Empty;
         public static bool isfirst = true;
         /// <summary>
         /// 获取Linux时间戳
@@ -111,7 +111,8 @@ namespace bilibili.Helpers
         {
             string accesskey1 = string.Empty;
             string mid = string.Empty;
-            string p = isfirst ? await GetEncryptedPassword(pwd) : pwd;        
+            e_password = await GetEncryptedPassword(pwd);
+            string p = isfirst ? e_password : pwd;        
             string url = "https://api.bilibili.com/login?appkey=" + appkey + "&platform=wp&pwd=" + WebUtility.UrlEncode(p) + "&type=json&userid=" + WebUtility.UrlEncode(username);
             JsonObject json = await BaseService.GetJson(url);
             if (json.ContainsKey("access_key"))
@@ -146,9 +147,6 @@ namespace bilibili.Helpers
             }
             else
             {
-                hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
-                SettingHelper.SetValue("_username", username);
-                SettingHelper.SetValue("_epassword", e_password);
                 return true;
             }
         }
@@ -190,8 +188,11 @@ namespace bilibili.Helpers
             }
             if (ls.Contains("DedeUserID"))
             {
-                if (string.IsNullOrEmpty(SettingHelper.GetValue("_accesskey").ToString())) 
-                    SettingHelper.SetValue("_accesskey", accesskey);
+                SettingHelper.SetValue("_accesskey", accesskey);
+                hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
+                SettingHelper.SetValue("_accesskey", accesskey);
+                SettingHelper.SetValue("_username", username);
+                SettingHelper.SetValue("_epassword", e_password);
                 return true;
             }
             else

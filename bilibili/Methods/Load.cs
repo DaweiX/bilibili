@@ -57,10 +57,12 @@ namespace bilibili.Methods
                 if (Math.Abs(i - i2) < 1) 
                 {
                     column = (int)Math.Truncate(i2) == 0 ? 1 : (int)Math.Truncate(i2);
+                    break;
                 }
             }
             w = width / column;
-            w -= offset * column;
+            double temp = w - offset * column;
+            w = temp > min ? temp : w;
             return w;
         }
     }

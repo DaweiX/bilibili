@@ -87,7 +87,7 @@
                     <TextBlock x:Name="h3" Text="通知" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
                 <StackPanel>
-                    <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="推送通知" IsEnabled="False"/>
+                    <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="推送通知"/>
                 </StackPanel>
             </PivotItem>
             <PivotItem>

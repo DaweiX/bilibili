@@ -22,7 +22,7 @@ namespace bilibili.Controls
             this.InitializeComponent();
         }
 
-        public async void init()
+        public async Task init()
         {
             //直播
             await LoadLive();

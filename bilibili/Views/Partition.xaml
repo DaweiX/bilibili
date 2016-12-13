@@ -61,33 +61,7 @@
                 </PivotItem.Header>
                 <ScrollViewer Style="{StaticResource ScrollViewerStyle1}" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <Grid>
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup>
-                                    <VisualState>
-                                        <VisualState.StateTriggers>
-                                            <AdaptiveTrigger MinWindowWidth="0"/>
-                                        </VisualState.StateTriggers>
-                                        <VisualState.Setters>
-                                            <Setter Target="grid.Margin" Value="60,0,60,0"/>
-                                            <Setter Target="left.Width" Value="0"/>
-                                            <Setter Target="right.Width" Value="0"/>
-                                            <Setter Target="btn_right.(Grid.Row)" Value="0"/>
-                                            <Setter Target="btn_left.(Grid.Row)" Value="0"/>
-                                            <Setter Target="btn_right.(Grid.RowSpan)" Value="2"/>
-                                            <Setter Target="btn_left.(Grid.RowSpan)" Value="2"/>
-                                            <Setter Target="center.(Grid.Column)" Value="0"/>
-                                            <Setter Target="center.(Grid.ColumnSpan)" Value="3"/>
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState>
-                                        <VisualState.StateTriggers>
-                                            <AdaptiveTrigger MinWindowWidth="640"/>
-                                        </VisualState.StateTriggers>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Grid>
+                        <ProgressBar x:Name="bar" IsIndeterminate="True" Foreground="{ThemeResource bili_Theme}" Visibility="Collapsed"/>
                         <controls:Comment x:Name="comment"/>
                     </StackPanel>
                 </ScrollViewer>

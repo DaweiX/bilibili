@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using bilibili.Models;
 using Windows.UI.Notifications;
+using Windows.Storage.Pickers;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -367,6 +368,19 @@ namespace bilibili.Views
             {
                 Frame.Navigate(typeof(Video), (MyVideo)donelist.SelectedItem);
             }
+        }
+
+        private async void local_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            FileOpenPicker picker = new FileOpenPicker();
+            picker.SuggestedStartLocation = PickerLocationId.VideosLibrary;
+            picker.FileTypeFilter.Add(".mp4");
+            StorageFile file = await picker.PickSingleFileAsync();
+            if (file != null)
+            {
+                Frame.Navigate(typeof(Video), file);
+            }
+            else return;
         }
     }
 }

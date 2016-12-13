@@ -12,8 +12,9 @@ using bilibili.Http;
 using Windows.UI.Xaml.Media;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Navigation;
-using Windows.Graphics.Display;
 using System.Collections.Generic;
+using Windows.ApplicationModel.Background;
+using System.Diagnostics;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -67,12 +68,57 @@ namespace bilibili
             if (WebStatusHelper.IsOnline())
             {
                 await autologin();
+                if (SettingHelper.GetValue("_pull") != null)
+                {
+                    if ((bool)SettingHelper.GetValue("_pull") == true)
+                    {
+                        await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
+                    }
+                }
             }
             else
             {
                 timer.Interval = new TimeSpan(0, 0, 1);
                 timer.Tick += Timer_Tick;
             }
+        }
+
+        private async Task RegisterBackgroundTask(Type EntryPoint, string name, IBackgroundTrigger trigger, IBackgroundCondition condition)
+        {
+            var status = await BackgroundExecutionManager.RequestAccessAsync();
+            if (status == BackgroundAccessStatus.Unspecified || status == BackgroundAccessStatus.DeniedByUser)
+            {
+                return;
+            }
+            foreach (var item in BackgroundTaskRegistration.AllTasks)
+            {
+                if (item.Value.Name == name) 
+                {
+                    item.Value.Unregister(true);
+                }
+            }
+            var builder = new BackgroundTaskBuilder { Name = name, TaskEntryPoint = EntryPoint.FullName, IsNetworkRequested = false };
+            builder.SetTrigger(trigger);
+            if (condition != null)
+            {
+                builder.AddCondition(condition);
+            }
+            builder.Register();
+            BackgroundTaskRegistration a = builder.Register();
+            Debug.WriteLine("---------Register---------");
+            a.Progress += A_Progress;
+            a.Completed += A_Completed;
+            return;
+        }
+
+        private void A_Completed(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
+        {
+            Debug.WriteLine("---------Completed!---------");
+        }
+
+        private void A_Progress(BackgroundTaskRegistration sender, BackgroundTaskProgressEventArgs args)
+        {
+            Debug.WriteLine("---------Processing...---------");
         }
 
         private async void Timer_Tick(object sender, object e)
@@ -134,15 +180,15 @@ namespace bilibili
                 {
                     SettingHelper.SetValue("_accesskey", string.Empty);
                 }
-                if (SettingHelper.ContainsKey("_autologin") && ApiHelper.IsLogin() == false) 
+                if (SettingHelper.ContainsKey("_autologin")) 
                 {
-                    if ((bool)SettingHelper.GetValue("_autologin") == true)
+                    if (bool.Parse(SettingHelper.GetValue("_autologin").ToString()) == true)
                     {
                         string p = string.Empty;
                         string u = string.Empty;
-                        if (!string.IsNullOrEmpty(SettingHelper.GetValue("_password").ToString()))
+                        if (!string.IsNullOrEmpty(SettingHelper.GetValue("_epassword").ToString()))
                         {
-                            p = SettingHelper.GetValue("_password").ToString();
+                            p = SettingHelper.GetValue("_epassword").ToString();
                         }
                         if (!string.IsNullOrEmpty(SettingHelper.GetValue("_username").ToString()))
                         {
@@ -425,7 +471,7 @@ namespace bilibili
         }
 
 
-        private bool ChangeDarkMode(bool value)
+    private bool ChangeDarkMode(bool value)
         {
             if (value)
             {

@@ -7,6 +7,7 @@ using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Notifications;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -22,7 +23,7 @@ namespace bilibili.Views
         public event SettingHandler ChangeTheme;
         public Setting()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             init();
         }
 
@@ -45,6 +46,10 @@ namespace bilibili.Views
             if (SettingHelper.ContainsKey("_quality"))
             {
                 quality.SelectedIndex = Convert.ToInt32(SettingHelper.GetValue("_quality").ToString()) - 1;
+            }
+            if (SettingHelper.ContainsKey("_pull"))
+            {
+                background.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_pull"));
             }
         }
 
@@ -174,7 +179,12 @@ namespace bilibili.Views
 
         private void background_Toggled(object sender, RoutedEventArgs e)
         {
-
+            SettingHelper.SetValue("_pull", background.IsOn);
+            if (background.IsOn == false)
+            {
+                var updater = TileUpdateManager.CreateTileUpdaterForApplication();
+                updater.Clear();
+            }
         }
 
         private void direct_Toggled(object sender, RoutedEventArgs e)

@@ -110,13 +110,13 @@
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Source="{Binding Pic}" Width="100"/>
+                                <Image Source="{Binding Pic}" Width="120"/>
                                 <Grid Grid.Column="1" Padding="2">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="{Binding Title}" Foreground="{ThemeResource bili_Theme}" TextWrapping="WrapWholeWords" FontSize="14"/>
+                                    <TextBlock Text="{Binding Title}" Foreground="{ThemeResource bili_Fontcolor_Main}" TextWrapping="WrapWholeWords" FontSize="14"/>
                                     <Grid Grid.Row="1" VerticalAlignment="Bottom">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
@@ -141,23 +141,23 @@
                 <PivotItem.Header>
                     <TextBlock x:Name="h2" Text="TA的关注" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <ListView x:Name="list_concern" IsItemClickEnabled="True" ItemContainerStyle="{StaticResource listcontainerstyle}" Style="{StaticResource ListViewStyle}" ItemClick="list_concern_ItemClick">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Face}" Width="80" Height="80"/>
-                                <TextBlock Text="{Binding Uname}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.Template>
-                        <ControlTemplate>
-                            <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
-                                <ItemsPresenter/>
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </ListView.Template>
-                </ListView>
+                <StackPanel>
+                    <Border x:Name="width"/>
+                    <GridView x:Name="list_concern" IsItemClickEnabled="True" Style="{StaticResource GridViewStyle}" ItemClick="list_concern_ItemClick" SizeChanged="StackPanel_SizeChanged">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Width="{Binding Width,ElementName=width}">
+                                    <Ellipse Width="60" Height="60">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding Face}"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding Uname}" Margin="4,0,0,0" VerticalAlignment="Center" TextWrapping="WrapWholeWords"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </StackPanel>
             </PivotItem>
         </Pivot>
     </Grid>

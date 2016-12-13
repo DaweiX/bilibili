@@ -202,15 +202,32 @@ namespace bilibili.Views
             infos = e.Parameter as List<VideoInfo>;
             if (infos == null)                  //读取本地视频
             {
-                left.Visibility = right.Visibility = Visibility.Collapsed;
-                MyVideo myVideo = e.Parameter as MyVideo;
-                if (myVideo != null)
+                string a = e.Parameter.ToString();
+                StorageFile file0 = e.Parameter as StorageFile;
+                //文件选取
+                if (file0 != null)
                 {
-                    part = myVideo.Part;
-                    folder = myVideo.Folder;
-                    StorageFolder myfolder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");
-                    myfolder = await myfolder.GetFolderAsync(folder);
-                    StorageFile file = await myfolder.GetFileAsync(part + ".mp4");
+                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file0);
+                    status.Text += "正在读取弹幕...";
+                    var danmupool = await GetDanmu(file0);
+                    if (danmupool != null)
+                    {
+                        DanmuPool = danmupool;
+                        status.Text += "完毕";
+                    }
+                    status.Text += Environment.NewLine + "正在读取视频...";
+                    txt_title.Text = file0.DisplayName;
+                    var stream = await file0.OpenAsync(FileAccessMode.Read);
+                    media.SetSource(stream, file0.ContentType);
+                    status.Text += "完毕";
+                    await Task.Delay(500);
+                    return;
+                }
+                //文件关联(有点问题)
+                if (a[0] == '@')
+                {
+                    string path = e.Parameter.ToString().Substring(1);
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(path);
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
                     status.Text += "正在读取弹幕...";
                     var danmupool = await GetDanmu(file);
@@ -220,19 +237,25 @@ namespace bilibili.Views
                         status.Text += "完毕";
                     }
                     status.Text += Environment.NewLine + "正在读取视频...";
-                    txt_title.Text = part;
+                    txt_title.Text = file.DisplayName;
                     var stream = await file.OpenAsync(FileAccessMode.Read);
                     media.SetSource(stream, file.ContentType);
                     status.Text += "完毕";
                     await Task.Delay(500);
                     return;
                 }
+                //下载列表
                 else
                 {
-                    if (e.Parameter.ToString()[0] == '@')
+                    left.Visibility = right.Visibility = Visibility.Collapsed;
+                    MyVideo myVideo = e.Parameter as MyVideo;
+                    if (myVideo != null)
                     {
-                        string path = e.Parameter.ToString().Substring(1);
-                        StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                        part = myVideo.Part;
+                        folder = myVideo.Folder;
+                        StorageFolder myfolder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");
+                        myfolder = await myfolder.GetFolderAsync(folder);
+                        StorageFile file = await myfolder.GetFileAsync(part + ".mp4");
                         Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
                         status.Text += "正在读取弹幕...";
                         var danmupool = await GetDanmu(file);
@@ -242,14 +265,13 @@ namespace bilibili.Views
                             status.Text += "完毕";
                         }
                         status.Text += Environment.NewLine + "正在读取视频...";
-                        txt_title.Text = file.DisplayName;
+                        txt_title.Text = part;
                         var stream = await file.OpenAsync(FileAccessMode.Read);
                         media.SetSource(stream, file.ContentType);
                         status.Text += "完毕";
                         await Task.Delay(500);
                         return;
                     }
-                    return;
                 }
             }
             Index = Convert.ToInt32(infos[0].Cid) + 1;
@@ -511,8 +533,10 @@ namespace bilibili.Views
             return list;
         }
         /// <summary>
-        /// 获取弹幕数据
+        /// 获取弹幕数据(网络)
         /// </summary>
+        /// <param name="cid"></param>
+        /// <returns></returns>
         async Task<List<DanmuModel>> GetDanmu(string cid)
         {
             List<DanmuModel> list = new List<DanmuModel>();
@@ -539,28 +563,40 @@ namespace bilibili.Views
             }
         }
 
+        /// <summary>
+        /// 读取本地弹幕
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         async Task<List<DanmuModel>> GetDanmu(StorageFile file)
         {
-            XmlDocument doc = new XmlDocument();
-            StorageFolder folder = await file.GetParentAsync();
-            file = await folder.GetFileAsync(file.DisplayName + ".xml");
-            if (file != null)
+            try
             {
-                string xml = string.Empty;
-                using (Stream file0 = await file.OpenStreamForReadAsync())
+                XmlDocument doc = new XmlDocument();
+                StorageFolder folder = await file.GetParentAsync();
+                file = await folder.GetFileAsync(file.DisplayName + ".xml");
+                if (file != null)
                 {
-                    using (StreamReader read = new StreamReader(file0))
+                    string xml = string.Empty;
+                    using (Stream file0 = await file.OpenStreamForReadAsync())
                     {
-                        xml = read.ReadToEnd();
+                        using (StreamReader read = new StreamReader(file0))
+                        {
+                            xml = read.ReadToEnd();
+                        }
                     }
+                    doc.LoadXml(xml);
+                    return AnalysisDanmaku(doc);
                 }
-                doc.LoadXml(xml);
-                return AnalysisDanmaku(doc);
+                return null;
             }
-            return null;
+            catch
+            {
+                return null;
+            }
         }
         /// <summary>
-        /// 显示弹幕
+        /// 弹幕开关
         /// </summary>
         private void DanmuSwitch_Click(object sender, RoutedEventArgs e)
         {

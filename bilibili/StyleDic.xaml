@@ -65,7 +65,7 @@
         <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
             <StackPanel>
                 <ItemsPresenter/>
-                <TextBlock Text="加载中..." Foreground="Gray" HorizontalAlignment="Center" Margin="0,8,0,4"/>
+                <TextBlock Foreground="Gray" HorizontalAlignment="Center" Margin="0,8,0,4"/>
             </StackPanel>
         </ScrollViewer>
     </ControlTemplate>
