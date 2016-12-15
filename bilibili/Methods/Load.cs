@@ -62,7 +62,11 @@ namespace bilibili.Methods
             }
             w = width / column;
             double temp = w - offset * column;
-            w = temp > min ? temp : w;
+            w = temp > 0 ? temp : w;
+            if (Math.Abs(width - w * column) / w > 0.3)
+            {
+                w = width / ++column;
+            }
             return w;
         }
     }

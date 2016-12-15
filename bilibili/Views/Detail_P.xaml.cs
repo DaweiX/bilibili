@@ -100,7 +100,7 @@ namespace bilibili.Views
         {
             string url = "http://api.bilibili.com/x/reply?_device=wp&_ulv=10000&build=424000&platform=android&appkey=422fd9d7289a1dd9&oid=" + aid + "&sort=0&type=1&pn=" + page.ToString() + "&ps=20";
             url += ApiHelper.GetSign(url);
-            List<Models.Reply> replys = new List<Models.Reply>();
+            List<Reply> replys = new List<Reply>();
             replys = await ContentServ.GetReplysAsync(url);
             foreach (var item in replys)
             {
@@ -125,7 +125,7 @@ namespace bilibili.Views
                     page++;
                     isLoading = true;
                     bool isDone = await load(page, aid);
-                    if (isDone) 
+                    if (isDone && text != null)  
                     {
                         text.Text = "评论装填完毕！";
                         return;
@@ -177,10 +177,10 @@ namespace bilibili.Views
             {
                 if (aid.Length > 0)
                 {
+                    var text = Load.FindChildOfType<TextBlock>(listview);
                     bool isDone = await load(1, aid);
-                    if (isDone)
+                    if (isDone && text != null) 
                     {
-                        var text = Load.FindChildOfType<TextBlock>(listview);
                         text.Text = "评论装填完毕！";                             
                     }
                 }
@@ -313,27 +313,47 @@ namespace bilibili.Views
         /// 分享
         /// </summary>
         #region 分享
-        private void Share_Click(object sender, RoutedEventArgs e)
+        private async void Share_Click(object sender, RoutedEventArgs e)
         {
-            MenuFlyoutItem item = sender as MenuFlyoutItem;
-            switch (item.Tag.ToString())
+            string url = "http://app.bilibili.com/x/v2/view/share/add";
+            string args = "access_key=" + ApiHelper.accesskey + "&aid=" + aid + "&appkey=" + ApiHelper.appkey + "&build=431001&mobi_app=android&platform=android&ts=" + ApiHelper.GetLinuxTS().ToString();
+            args += ApiHelper.GetSign(url + "?" + args);
+            try
             {
-                case "0":
-                    {
-                        DataPackage pack = new DataPackage();
-                        pack.SetText(string.Format("http://www.bilibili.com/av{0}", aid));
-                        Clipboard.SetContent(pack);
-                        Clipboard.Flush();
-                        messagepop.Show("已将链接复制到剪贴板", 3000);
-                    }break;
-                case "1":
-                    {
-                        DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-                        dataTransferManager.DataRequested += DataTransferManager_DataRequested;
-                        DataTransferManager.ShowShareUI();
-                    }
-                    break;
+                string result = await BaseService.SendPostAsync(url, args, "http://app.bilibili.com");
+                JsonObject json = JsonObject.Parse(result);
+                if (json["code"].ToString() == "0")
+                {
+                    await new ContentDialog { Content = "今天分享视频的5经验到手了！！！", IsSecondaryButtonEnabled = true, SecondaryButtonText = "了解" }.ShowAsync();
+                }
             }
+            catch
+            {
+
+            }
+            finally
+            {
+                MenuFlyoutItem item = sender as MenuFlyoutItem;
+                switch (item.Tag.ToString())
+                {
+                    case "0":
+                        {
+                            DataPackage pack = new DataPackage();
+                            pack.SetText(string.Format("http://www.bilibili.com/av{0}", aid));
+                            Clipboard.SetContent(pack);
+                            Clipboard.Flush();
+                            messagepop.Show("已将链接复制到剪贴板", 3000);
+                        }
+                        break;
+                    case "1":
+                        {
+                            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+                            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+                            DataTransferManager.ShowShareUI();
+                        }
+                        break;
+                }
+            }          
         }
 
         private void DataTransferManager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
@@ -345,7 +365,7 @@ namespace bilibili.Views
             request.Data.SetText(string.Format("我在bilibili上向你推荐视频【{0}】\n链接：http://www.bilibili.com/av{1}", title.Text, aid));
         }
         #endregion
-        async void SendComment(string txt)
+        async Task SendComment(string txt)
         {
             if (ApiHelper.IsLogin())
             {
@@ -361,9 +381,14 @@ namespace bilibili.Views
                     JsonObject json = JsonObject.Parse(result);
                     if (json["code"].ToString() == "0")
                     {
-                        messagepop.Show("已发送评论!", 3000);
                         listview.Items.Clear();
-                        await load(1, aid);
+                        var text = Load.FindChildOfType<TextBlock>(listview);
+                        bool isDone = await load(1, aid);
+                        if (isDone && text != null)
+                        {
+                            text.Text = "评论装填完毕！";
+                        }
+                        page = 1;
                     }
                     else
                     {
@@ -384,9 +409,7 @@ namespace bilibili.Views
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            SendReply sendDialog = new SendReply();
-            sendDialog.Send += SendComment;
-            await sendDialog.ShowAsync();
+            await SendComment(txt.Text);
         }
 
         private void download_Click(object sender, RoutedEventArgs e)
@@ -482,6 +505,50 @@ namespace bilibili.Views
         private void pic_Tapped(object sender, TappedRoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout(pic);
+        }
+
+
+        Reply reply = new Reply();
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            flyout.ShowAt(listview, e.GetPosition(listview));
+            var r = (sender as Grid).DataContext as Reply;
+            reply = r;
+        }
+
+        private async void like_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string url = "http://api.bilibili.com/x/reply/action";
+                JsonObject json = JsonObject.Parse(await BaseService.SendPostAsync(url, "jsonp=jsonp&oid=" + reply.Oid + "&type=1&rpid=" + reply.Rpid + "&action=1"));
+                if (json.ContainsKey("code"))
+                {
+                    if (json["code"].ToString() == "0")
+                    {
+                        messagepop.Show("赞同成功");
+                    }
+                }
+            }
+            catch
+            {
+               // messagepop.Show("赞同成功");
+            }
+        }
+
+        private void Space_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(reply.Mid))
+            {
+                Frame.Navigate(typeof(Friends), reply.Mid, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+            }
+        }
+
+        private void reply_Click(object sender, RoutedEventArgs e)
+        {
+            //string url = "http://api.bilibili.com/x/reply/add?_device=wp&build=429001&platform=android&scale=xhdpi&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey;
+            //url += ApiHelper.GetSign(url);
+            //JsonObject json
         }
     }
 }

@@ -18,17 +18,23 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
             <TextBlock VerticalAlignment="Center" x:Name="txt_count" Margin="0,4,0,0"/>
-            <GridView x:Name="favlist" Style="{StaticResource GridViewStyle1}" IsItemClickEnabled="True" ItemClick="favlist_ItemClick" Margin="0,8,0,8">
+            <Border x:Name="width"/>
+            <GridView x:Name="favlist" Style="{StaticResource GridViewStyle}" IsItemClickEnabled="True" ItemClick="favlist_ItemClick" Margin="0,8,0,8" SizeChanged="favlist_SizeChanged">
                 <GridView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Width="160" Background="{x:Null}">
-                            <Image Source="{Binding Pic}" Width="160" Height="96"/>
-                            <TextBlock Text="{Binding Title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="收藏于：" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
-                                <TextBlock Text="{Binding Creat}" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords" FontSize="12"/>
-                            </StackPanel>
-                        </StackPanel>
+                        <Grid Width="{Binding Width,ElementName=width}" Height="90">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Image Source="{Binding Pic}" Grid.RowSpan="2" Width="120" Height="90"/>
+                            <TextBlock Text="{Binding Title}" Grid.Column="1" Margin="4,0,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
+                            <TextBlock Text="{Binding Creat}" Grid.Column="1" Margin="4,0,0,0" Grid.Row="1" VerticalAlignment="Bottom" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords" FontSize="12"/>
+                        </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>
                 <GridView.ItemContainerStyle>

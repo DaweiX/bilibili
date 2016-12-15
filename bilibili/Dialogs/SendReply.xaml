@@ -8,10 +8,10 @@
     mc:Ignorable="d"
     Title="发送评论"
     PrimaryButtonText="发送"
-    SecondaryButtonText="放弃"
+    SecondaryButtonText="放弃" 
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
 
     <Grid>
-        <TextBox x:Name="txt" Margin="0,8,0,0" Height="160"/>
+        <TextBox x:Name="txt" Margin="0,8,0,0"/>
     </Grid>
 </ContentDialog>

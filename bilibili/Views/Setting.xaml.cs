@@ -213,5 +213,10 @@ namespace bilibili.Views
         {
             SettingHelper.SetValue("_quality", (quality.SelectedItem as ComboBoxItem).Tag.ToString());
         }
+
+        private void sli_fontsize_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            SettingHelper.SetValue("_fontsize", (int)sli_fontsize.Value);
+        }
     }
 }

@@ -381,6 +381,11 @@ namespace bilibili.Views
             }
             catch { }
         }
+
+        private void rank_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(RankPage), null, new DrillInNavigationTransitionInfo());
+        }
     }
 
     public class WidthToHeight : IValueConverter

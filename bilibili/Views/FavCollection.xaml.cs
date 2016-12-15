@@ -41,5 +41,10 @@ namespace bilibili.Views
         {
             Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Models.Content).Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
+
+        private void favlist_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        {
+            width.Width = Methods.WidthFit.GetWidth(ActualWidth, 600, 300);
+        }
     }
 }

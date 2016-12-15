@@ -9,6 +9,7 @@ namespace bilibili.Models
 {
     class Content
     {
+        private string creat;
         /// <summary>
         /// 标题
         /// </summary>
@@ -24,7 +25,11 @@ namespace bilibili.Models
         /// 视频编号
         /// </summary>
         public string Num { get; set; }
-        public string Creat { get; set; }
+        public string Creat
+        {
+            get { return "收藏于" + creat; }
+            set { creat = value; }
+        }
         public string Play { get; set; }
         public string Comment { get; set; }
     }

@@ -143,6 +143,7 @@
     <Compile Include="Models\Bangumi.cs" />
     <Compile Include="Models\Content.cs" />
     <Compile Include="Models\Details.cs" />
+    <Compile Include="Models\Rank.cs" />
     <Compile Include="Models\Reply.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\Season.cs" />
@@ -242,6 +243,9 @@
     </Compile>
     <Compile Include="Views\PartViews\Tech.xaml.cs">
       <DependentUpon>Tech.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RankPage.xaml.cs">
+      <DependentUpon>RankPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Search.xaml.cs">
       <DependentUpon>Search.xaml</DependentUpon>
@@ -462,6 +466,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PartViews\Tech.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RankPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

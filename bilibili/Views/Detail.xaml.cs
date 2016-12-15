@@ -69,27 +69,30 @@ namespace bilibili.Views
                     list_tags.Items.Add(new Tags { Tag = item });
             }
             List<Season_episodes> ep = await ContentServ.GetSeasonResultAsync(url, 3) as List<Season_episodes>;
-            string id_0 = ep[0].ID;
-            foreach (var item in ep)
+            if (ep.Count > 0)
             {
-                if (item.ID == id_0)
+                string id_0 = ep[0].ID;
+                foreach (var item in ep)
                 {
-                    continue;
-                }
-                else
-                {
-                    foreach (var item1 in ep)
+                    if (item.ID == id_0)
                     {
-                        mylist.Items.Add(item1);
+                        continue;
                     }
-                    break;
+                    else
+                    {
+                        foreach (var item1 in ep)
+                        {
+                            mylist.Items.Add(item1);
+                        }
+                        break;
+                    }
                 }
-            }
-            if (mylist.Items.Count == 0)    //合集
-            {
-                isCollection = true;
-                mylist.Items.Add(new Season_episodes { Title = aa.Title, ID = ep[0].ID, Cover = ep[0].Cover });
-            }      
+                if (mylist.Items.Count == 0)    //合集
+                {
+                    isCollection = true;
+                    mylist.Items.Add(new Season_episodes { Title = aa.Title, ID = ep[0].ID, Cover = ep[0].Cover });
+                }
+            }          
             List<Season_actor> ac = await ContentServ.GetSeasonResultAsync(url, 2) as List<Season_actor>;
             foreach (var item in ac)
             {

@@ -202,6 +202,7 @@ namespace bilibili.Views
             infos = e.Parameter as List<VideoInfo>;
             if (infos == null)                  //读取本地视频
             {
+                left.Visibility = right.Visibility = Visibility.Collapsed;
                 string a = e.Parameter.ToString();
                 StorageFile file0 = e.Parameter as StorageFile;
                 //文件选取
@@ -247,7 +248,6 @@ namespace bilibili.Views
                 //下载列表
                 else
                 {
-                    left.Visibility = right.Visibility = Visibility.Collapsed;
                     MyVideo myVideo = e.Parameter as MyVideo;
                     if (myVideo != null)
                     {
@@ -399,7 +399,7 @@ namespace bilibili.Views
 
         async void SendDanmu()
         {
-            if (!ApiHelper.IsLogin())
+            if (!ApiHelper.IsLogin() || !WebStatusHelper.IsOnline()) 
             {
                 return;
             }
@@ -625,6 +625,7 @@ namespace bilibili.Views
                 media.Pause();
                 icon.Symbol = Symbol.Play;
                 double actual = X / this.ActualWidth;
+                //横跨屏幕的TimeSpan:150s（两分半）
                 sli_main.Value += actual * 150;
                 TimeSpan time = new TimeSpan(0, 0, (int)sli_main.Value);
                 string posttime = string.Empty;
@@ -674,6 +675,10 @@ namespace bilibili.Views
             {
                 sli_speed.Value = int.Parse(SettingHelper.GetValue("_speed").ToString());
             }
+            if (SettingHelper.ContainsKey("_fontsize"))
+            {
+                sli_fontsize.Value = int.Parse(SettingHelper.GetValue("_fontsize").ToString());
+            }
             if (info.Text.Length == 0 && URL != null) 
             {
                 info.Text = "视频大小:" + (int.Parse(URL.Size) / 1024 / 1024).ToString() + "MB" + Environment.NewLine;
@@ -721,7 +726,7 @@ namespace bilibili.Views
         {
             SettingHelper.SetValue("_space", sli_space.Value);
             //注意:由于预定义了value值，初始化时会引发ValueChanged事件
-            if (danmaku != null) danmaku.ChangeSpace((4 - (int)sli_space.Value) * 60);
+            if (danmaku != null) danmaku.ChangeSpace((int)sli_space.Value);
         }
 
         private void sli_speed_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
@@ -743,6 +748,14 @@ namespace bilibili.Views
                 }
             }
         }
+
+        private void sli_fontsize_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            int value = (int)sli_fontsize.Value;
+            SettingHelper.SetValue("_fontsize", value);
+            if (danmaku != null) danmaku.ChangeSize(value);
+        }
+
         private void Repeat_Click(object sender, RoutedEventArgs e)
         {
             switch(isRepeat)

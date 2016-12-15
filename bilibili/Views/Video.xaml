@@ -40,7 +40,9 @@
                     <TextBlock Text="弹幕速度" Foreground="{ThemeResource bili_Theme}" Margin="0,8,0,0"/>
                     <Slider x:Name="sli_speed" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
                     <TextBlock Text="弹幕间距" Foreground="{ThemeResource bili_Theme}"/>
-                    <Slider Maximum="3" x:Name="sli_space" ValueChanged="sli_space_ValueChanged"/>
+                    <Slider Maximum="2" x:Name="sli_space" ValueChanged="sli_space_ValueChanged"/>
+                    <TextBlock Text="弹幕字号" Foreground="{ThemeResource bili_Theme}"/>
+                    <Slider Maximum="3" x:Name="sli_fontsize" ValueChanged="sli_fontsize_ValueChanged"/>
                     <StackPanel>
                         <TextBlock Text="视频信息" Foreground="{ThemeResource bili_Theme}"/>
                         <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White"/>

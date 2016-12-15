@@ -1,0 +1,73 @@
+﻿<Page
+    x:Class="bilibili.Views.RankPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    SizeChanged="Page_SizeChanged">
+    <Page.Resources>
+        <local:NumToForeground x:Key="cvt"/>
+        <DataTemplate x:Key="mydatatemplate">
+            <Grid Height="90" Width="{Binding Width,ElementName=width}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding Ranking}" Foreground="{Binding Ranking,Converter={StaticResource cvt}}" FontSize="20" Grid.RowSpan="2" VerticalAlignment="Center" Margin="8,0,8,0"/>
+                <Image Source="{Binding Pic}" Grid.RowSpan="2" Grid.Column="1" Width="120" Height="90"/>
+                <StackPanel Grid.Column="2" Margin="4,0,0,0">
+                    <TextBlock Text="{Binding Title}" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
+                </StackPanel>
+                <TextBlock Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" Text="{Binding Create}" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Grid Background="{ThemeResource bili_PageBackground}">
+        <Border x:Name="width"/>
+        <Pivot x:Name="mainpivot" SelectionChanged="mainpivot_SelectionChanged">
+            <PivotItem Header="番剧" Tag="13">
+                <GridView x:Name="list13" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="动画" Tag="1">
+                <GridView x:Name="list1" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="音乐" Tag="3">
+                <GridView x:Name="list3" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="舞蹈" Tag="129">
+                <GridView x:Name="list129" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="科技" Tag="36">
+                <GridView x:Name="list36" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="游戏" Tag="4">
+                <GridView x:Name="list4" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="生活" Tag="160">
+                <GridView x:Name="list160" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="鬼畜" Tag="119">
+                <GridView x:Name="list119" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="时尚" Tag="155">
+                <GridView x:Name="list155" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="娱乐" Tag="5">
+                <GridView x:Name="list5" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="电影" Tag="23">
+                <GridView x:Name="list23" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+            <PivotItem Header="电视剧" Tag="11">
+                <GridView x:Name="list11" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>

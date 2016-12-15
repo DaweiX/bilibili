@@ -8,9 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources>
-        <Style x:Key="replystyle" TargetType="ListViewItem">
-            <Setter Property="Margin" Value="0,2,0,2"/>
-        </Style>
+        <MenuFlyout x:Name="flyout">
+            <MenuFlyoutItem Click="reply_Click">回复</MenuFlyoutItem>
+            <MenuFlyoutItem Click="like_Click">点赞</MenuFlyoutItem>
+            <MenuFlyoutItem Click="Space_Click">个人空间</MenuFlyoutItem>
+            <MenuFlyoutItem>举报</MenuFlyoutItem>
+        </MenuFlyout>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Grid.RowDefinitions>
@@ -120,19 +123,20 @@
             </PivotItem>
             <PivotItem Header="评论" Margin="0">
                 <Grid>
-                    <ListView x:Name="listview" Margin="0,0,0,56"
-                              ContainerContentChanging="listview_ContainerContentChanging" 
-                              ItemContainerStyle="{StaticResource replystyle}" 
-                              Template="{StaticResource myControlTemplete}" 
-                              SelectionMode="None">
-                        <ListView.ItemContainerTransitions>
-                            <TransitionCollection>
-                                <EntranceThemeTransition/>
-                            </TransitionCollection>
-                        </ListView.ItemContainerTransitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <ListView x:Name="listview" SelectionMode="None"
+                              ContainerContentChanging="listview_ContainerContentChanging" Template="{StaticResource myControlTemplete}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
+                                <Grid Tapped="Grid_Tapped">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="*"/>
@@ -148,13 +152,17 @@
                                         <HyperlinkButton Content="{Binding Uname}" Style="{StaticResource HyperlinkButtonStyle1}"/>
                                         <TextBlock Text="{Binding Time}" FontSize="14" Foreground="Gray"/>
                                         <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
-                                        <ListView 
-                                            ItemsSource="{Binding Res}" 
-                                            ItemContainerStyle="{StaticResource replystyle}"
+                                        <ListView Template="{StaticResource myControlTemplete}"
+                                            ItemsSource="{Binding Res}"
                                             SelectionMode="None">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem">
+                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
                                             <ListView.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
+                                                    <Grid Tapped="Grid_Tapped">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="auto"/>
                                                             <ColumnDefinition Width="auto"/>
@@ -182,9 +190,24 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <CommandBar Style="{StaticResource CommandbarStyle}">
-                        <AppBarButton Label="添加评论" Icon="Add" Click="Button_Click"/>
-                    </CommandBar>
+                    <Grid VerticalAlignment="Bottom" Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.4"/>
+                        <TextBox x:Name="txt" Background="{ThemeResource bili_PageBackground}" BorderThickness="0" Grid.Row="1" AcceptsReturn="True" Grid.Column="1" FontSize="16" MinHeight="48" VerticalContentAlignment="Center" TextWrapping="Wrap" MaxHeight="200"/>
+                        <Button Grid.Row="1" Grid.Column="2" VerticalAlignment="Stretch" Width="48" Background="{ThemeResource bili_PageBackground}" Click="Button_Click">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Send"/>
+                            </Button.Content>
+                        </Button>
+                    </Grid>
                 </Grid>
             </PivotItem>
             <PivotItem Header="相关视频">

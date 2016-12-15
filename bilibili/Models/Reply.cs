@@ -32,6 +32,11 @@ namespace bilibili.Models
         /// 赞
         /// </summary>
         public string Like { get; set; }
+        public string Oid { get; set; }
+        public string Parent { get; set; }
+        public string Root { get; set; }
+        public string Mid { get; set; }
+        public string Rpid { get; set; }
     }
     public class Friend
     {

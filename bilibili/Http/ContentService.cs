@@ -981,6 +981,26 @@ namespace bilibili.Http
                         {
                             rp.Like = temp["like"].ToString();
                         }
+                        if (temp.ContainsKey("mid"))
+                        {
+                            rp.Mid = temp["mid"].ToString();
+                        }
+                        if (temp.ContainsKey("oid"))
+                        {
+                            rp.Oid = temp["oid"].ToString();
+                        }
+                        if (temp.ContainsKey("parent"))
+                        {
+                            rp.Parent = temp["parent"].ToString();
+                        }
+                        if (temp.ContainsKey("oid"))
+                        {
+                            rp.Root = temp["root"].ToString();
+                        }
+                        if (temp.ContainsKey("rpid"))
+                        {
+                            rp.Rpid = temp["rpid"].ToString();
+                        }
                         if (temp.ContainsKey("replies"))
                         {
                             rp.Res = new List<Reply>();
@@ -1541,6 +1561,55 @@ namespace bilibili.Http
                 }             
             }
             return null;
+        }
+
+        /// <summary>
+        /// 获取排行榜
+        /// </summary>
+        /// <param name="tid"></param>
+        /// <returns></returns>
+        public static async Task<List<Rank>> GetRankItemsAsync(string tid)
+        {
+            List<Rank> list = new List<Rank>();
+            string url = "http://www.bilibili.com/index/rank/all-03-" + tid + ".json";
+            JsonObject json = await BaseService.GetJson(url);
+            try
+            {
+                int i = 1;
+                json = JsonObject.Parse(json["rank"].ToString());
+                JsonArray array = json["list"].GetArray();
+                foreach (var item in array)
+                {
+                    Rank rank = new Rank();
+                    json = JsonObject.Parse(item.ToString());
+                    if (json.ContainsKey("aid"))
+                        rank.Aid = json["aid"].GetString();
+                    if (json.ContainsKey("author"))
+                        rank.Author = json["author"].GetString();
+                    if (json.ContainsKey("coins"))
+                        rank.Coins = json["coins"].ToString();
+                    if (json.ContainsKey("duration"))
+                        rank.Duration = json["duration"].GetString();
+                    if (json.ContainsKey("create"))
+                        rank.Create = json["create"].GetString();
+                    if (json.ContainsKey("pic"))
+                        rank.Pic = json["pic"].GetString();
+                    if (json.ContainsKey("title"))
+                        rank.Title = json["title"].GetString();
+                    if (json.ContainsKey("favorites"))
+                        rank.Favorites = json["favorites"].ToString();
+                    if (json.ContainsKey("play"))
+                        rank.Play = json["play"].ToString();
+                    rank.Ranking = i.ToString();
+                    i++;
+                    list.Add(rank);
+                }
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static async Task<List<FlipItem>> GetFilpItems()

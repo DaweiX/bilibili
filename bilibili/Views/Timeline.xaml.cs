@@ -10,6 +10,8 @@ using bilibili.Http;
 using bilibili.Methods;
 using bilibili.Models;
 using System.Collections.Generic;
+using bilibili.Helpers;
+using Windows.UI;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -90,7 +92,7 @@ namespace bilibili.Views
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var b = (bool)value;
-            return b ? "#e273a9" : "auto";
+            return b ? "#e273a9" : SettingHelper.GetValue("_nighttheme").ToString() == "light" ? "Black" : "White";
         }
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {

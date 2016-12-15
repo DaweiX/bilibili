@@ -20,12 +20,12 @@ namespace bilibili.Controls
             speed = SettingHelper.GetValue("_speed") != null ? int.Parse(SettingHelper.GetValue("_speed").ToString()) : 8;
             if (SettingHelper.GetValue("_space") != null)
             {
-                int value = (4 - int.Parse(SettingHelper.GetValue("_space").ToString())) * 60;
+                int value = int.Parse(SettingHelper.GetValue("_space").ToString());
                 ChangeSpace(value);
             }
             else
             {
-                ChangeSpace(240);
+                ChangeSpace(0);
             }
         }
         int row = 0;
@@ -125,10 +125,21 @@ namespace bilibili.Controls
         /// <summary>
         /// 弹幕间距
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">0:单倍行距；1:1.2倍行距;2:1.5倍行距</param>
         public void ChangeSpace(int value)
         {
-            space.Height = new GridLength(value, GridUnitType.Pixel);
+            double h = 0;
+            double actualHeight = r1.ActualHeight;
+            switch (value)
+            {
+                case 0:
+                    h = actualHeight;break;
+                case 1:
+                    h = 1.2 * actualHeight;break;
+                case 2:
+                    h = 1.5 * actualHeight;break;
+            }
+            space.Height = new GridLength(h, GridUnitType.Pixel);
         }
 
         /// <summary>
@@ -138,6 +149,21 @@ namespace bilibili.Controls
         public void ChangeSpeed(int value)
         {
             speed = value;
+        }
+
+        /// <summary>
+        /// 弹幕字号
+        /// </summary>
+        /// <param name="value"></param>
+        public void ChangeSize(int value)
+        {
+            switch(value)
+            {
+                case 0:fontsize = 14;break;
+                case 1: fontsize = 16; break;
+                case 2: fontsize = 21; break;
+                case 3: fontsize = 25; break;
+            }
         }
 
         /// <summary>
