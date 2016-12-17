@@ -40,6 +40,10 @@ namespace bilibili.Models
         public string Title { get; set; }
         public string ID { get; set; }
         public string sqCover { get; set; }
+        public string Owner { get; set; }
+        public string View { get; set; }
+        public string Favorite { get; set; }
+        public string Danmaku { get; set; }
     }
 
     class Concern:Basic

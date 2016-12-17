@@ -20,8 +20,17 @@
             <ListView Grid.Row="1" x:Name="hslist" 
                   Tapped="hslist_Tapped"
                   ContainerContentChanging="hslist_ContainerContentChanging"
-                  ItemContainerStyle="{StaticResource listcontainerstyle}"
-                  Template="{StaticResource myControlTemplete}">
+                  ItemContainerStyle="{StaticResource listcontainerstyle}">
+                <ListView.Template>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                            <StackPanel>
+                                <ItemsPresenter/>
+                                <TextBlock Foreground="Gray" HorizontalAlignment="Center" Margin="0,8,0,56"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ListView.Template>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>

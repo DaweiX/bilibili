@@ -7,10 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource bili_PageBackground}">
         <CommandBar VerticalAlignment="Bottom" Opacity="0.5"/>
         <StackPanel>
-            <ComboBox x:Name="cb_folder" Margin="0,8,0,0" MinWidth="160" SelectionChanged="cb_folder_SelectionChanged">
+            <ComboBox x:Name="cb_folder" Margin="0,8,0,0" Width="160" SelectionChanged="cb_folder_SelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}"/>

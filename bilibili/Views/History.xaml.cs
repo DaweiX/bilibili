@@ -18,6 +18,7 @@ namespace bilibili.Views
     public sealed partial class History : Page
     {
         int page = 1;
+        bool isDone = false;
         public History()
         {
             this.InitializeComponent();
@@ -32,18 +33,23 @@ namespace bilibili.Views
 
         async Task load(int p)
         {
-            string url = "http://api.bilibili.com/x/v2/history?_device=wp&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=427000&platform=android&pn=" + p.ToString() + "&ps=20";
-            url += ApiHelper.GetSign(url);
-            List<Models.History> hs = await ContentServ.GetHistoryAsync(url);
-            foreach (var item in hs)
+            try
             {
-                hslist.Items.Add(item);
+                string url = "http://api.bilibili.com/x/v2/history?_device=wp&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=427000&platform=android&pn=" + p.ToString() + "&ps=20";
+                url += ApiHelper.GetSign(url);
+                List<Models.History> hs = await ContentServ.GetHistoryAsync(url);
+                foreach (var item in hs)
+                {
+                    hslist.Items.Add(item);
+                }
+                if (hs.Count < 20)
+                {
+                    var text = Load.FindChildOfType<TextBlock>(hslist);
+                    text.Text = "没有更多历史项";
+                    isDone = true;
+                }
             }
-            if (hs.Count < 20)
-            {
-                var text = Load.FindChildOfType<TextBlock>(hslist);
-                text.Text = "没有更多历史项";
-            }
+            catch { }
         }
 
         private void hslist_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -52,7 +58,7 @@ namespace bilibili.Views
             var text = Load.FindChildOfType<TextBlock>(hslist);
             scroll.ViewChanged += async (s, a) =>
             {
-                if (scroll.VerticalOffset == scroll.ScrollableHeight)// && NextLoading)
+                if (scroll.VerticalOffset == scroll.ScrollableHeight && isDone == false) 
                 {
                     int count0 = hslist.Items.Count;
                     //滑动到底部了    

@@ -943,21 +943,22 @@ namespace bilibili.Http
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static async Task<List<Models.Reply>> GetReplysAsync(string url)
+        public static async Task<List<Reply>> GetReplysAsync(string url)
         {
-            List<Models.Reply> reList = new List<Models.Reply>();
+            List<Reply> reList = new List<Reply>();
             JsonObject json = new JsonObject();
             json = await BaseService.GetJson(url);
             if (json.ContainsKey("data"))
             {
 
                 JsonObject json2 = JsonObject.Parse(json["data"].ToString());
+                //一层回复
                 if (json2.ContainsKey("replies"))
                 {
                     var a = json2["replies"].GetArray();
                     foreach (var item in a)
                     {
-                        Models.Reply rp = new Models.Reply();
+                        Reply rp = new Reply();
                         JsonObject temp = JsonObject.Parse(item.ToString());
                         if (temp.ContainsKey("content"))
                         {
@@ -1001,36 +1002,111 @@ namespace bilibili.Http
                         {
                             rp.Rpid = temp["rpid"].ToString();
                         }
+                        //回复的回复
                         if (temp.ContainsKey("replies"))
                         {
-                            rp.Res = new List<Reply>();
-                            JsonArray aa = temp["replies"].GetArray();
-                            foreach (var item1 in aa)
-                            {
-                                Models.Reply rp1 = new Models.Reply();
-                                JsonObject temp1 = JsonObject.Parse(item1.ToString());
-                                if (temp1.ContainsKey("content"))
-                                {
-                                    JsonObject json3 = JsonObject.Parse(temp1["content"].ToString());
-                                    if (json3.ContainsKey("message"))
-                                        rp1.Message = json3["message"].GetString();
-                                }
-                                if (temp1.ContainsKey("member"))
-                                {
-                                    JsonObject json3 = JsonObject.Parse(temp1["member"].ToString());
-                                    if (json3.ContainsKey("avatar"))
-                                        rp1.Avatar = json3["avatar"].GetString();
-                                    if (json3.ContainsKey("uname"))
-                                        rp1.Uname = json3["uname"].GetString();
-                                }
-                                rp.Res.Add(rp1);
-                            }
+                            List<Reply> list = new List<Reply>();
+                            GetReKids getrekid = new GetReKids();
+                            getrekid.GetReplyKids(temp, true);
+                            list = getrekid.list;
+                            rp.Res = list;
                         }
                         reList.Add(rp);
                     }
                 }
             }
             return reList;
+        }
+        public class GetReKids
+        {
+            public List<Reply> list;
+            static JsonArray aa;
+            static bool isFirst;
+            public GetReKids()
+            {
+                isFirst = true;
+                aa = new JsonArray();
+                list = new List<Reply>();
+            }
+            /// <summary>
+            /// 获取评论的回复
+            /// </summary>
+            /// <param name="json"></param>
+            /// <returns></returns>
+            public void GetReplyKids(JsonObject json, bool issecond)
+            {
+                if (isFirst == true) 
+                {
+                    isFirst = false;
+                    aa = json["replies"].GetArray();
+                    list.Clear();
+                }
+                foreach (var item1 in aa)
+                {
+                    Reply rp1 = new Reply();
+                    issecond = true;
+                    JsonObject temp1 = JsonObject.Parse(item1.ToString());
+                    if (temp1.ContainsKey("content"))
+                    {
+                        JsonObject json3 = JsonObject.Parse(temp1["content"].ToString());
+                        if (json3.ContainsKey("message"))
+                            rp1.Message = json3["message"].GetString();
+                    }
+                    if (temp1.ContainsKey("member"))
+                    {
+                        JsonObject json3 = JsonObject.Parse(temp1["member"].ToString());
+                        if (json3.ContainsKey("avatar"))
+                            rp1.Avatar = json3["avatar"].GetString();
+                        if (json3.ContainsKey("uname"))
+                            rp1.Uname = json3["uname"].GetString();
+                    }
+                    if (temp1.ContainsKey("like"))
+                    {
+                        rp1.Like = temp1["like"].ToString();
+                    }
+                    if (temp1.ContainsKey("mid"))
+                    {
+                        rp1.Mid = temp1["mid"].ToString();
+                    }
+                    if (temp1.ContainsKey("oid"))
+                    {
+                        rp1.Oid = temp1["oid"].ToString();
+                    }
+                    if (temp1.ContainsKey("parent"))
+                    {
+                        rp1.Parent = temp1["parent"].ToString();
+                    }
+                    if (temp1.ContainsKey("root"))
+                    {
+                        rp1.Root = temp1["root"].ToString();
+                    }
+                    if (temp1.ContainsKey("rpid"))
+                    {
+                        rp1.Rpid = temp1["rpid"].ToString();
+                    }
+                    if (issecond == true)
+                    {
+                        issecond = false;
+                        rp1.Baseon = string.Empty;
+                    }
+                    else
+                    {
+                        rp1.Baseon = rp1.Uname;
+                    }
+                    list.Add(rp1);
+                    try
+                    {
+                        if (temp1["replies"].GetArray().Count > 0)
+                        {
+                            GetReplyKids(temp1, false);
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+            }
         }
         /// <summary>
         /// 获取收藏
@@ -1108,8 +1184,9 @@ namespace bilibili.Http
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static async Task<List<Basic>> GetRelatesAsync(string url)
+        public static async Task<List<Basic>> GetRelatesAsync(string aid)
         {
+            string url = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=" + aid;
             List<Basic> relates = new List<Basic>();
             JsonObject json = await BaseService.GetJson(url);
             if (json.ContainsKey("data"))
@@ -1125,9 +1202,25 @@ namespace bilibili.Http
                         if (temp.ContainsKey("aid"))
                             basic.ID = temp["aid"].ToString();
                         if (temp.ContainsKey("title"))
-                            basic.Title = StringDeal.delQuotationmarks(temp["title"].ToString());
+                            basic.Title = temp["title"].GetString();
                         if (temp.ContainsKey("pic"))
-                            basic.Cover = StringDeal.delQuotationmarks(temp["pic"].ToString());
+                            basic.Cover = temp["pic"].GetString();
+                        if (temp.ContainsKey("owner"))
+                        {
+                            json = JsonObject.Parse(temp["owner"].ToString());
+                            if (json.ContainsKey("name"))
+                                basic.Owner = json["name"].GetString();
+                        }
+                        if (temp.ContainsKey("stat"))
+                        {
+                            json = JsonObject.Parse(temp["stat"].ToString());
+                            if (json.ContainsKey("danmaku"))
+                                basic.Danmaku = json["danmaku"].ToString();
+                            if (json.ContainsKey("view"))
+                                basic.View = json["view"].ToString();
+                            if (json.ContainsKey("favorite"))
+                                basic.Favorite = json["favorite"].ToString();
+                        }
                         relates.Add(basic);
                     }
                 }
@@ -1356,7 +1449,7 @@ namespace bilibili.Http
                             h.Title = StringDeal.delQuotationmarks(temp["title"].ToString());
                         if (temp.ContainsKey("view_at")) 
                         {
-                            h.Time = StringDeal.LinuxToData(StringDeal.delQuotationmarks(temp["view_at"].ToString()));
+                            h.Time = StringDeal.LinuxToData(temp["view_at"].ToString());
                         }
                         hs.Add(h);
                     }

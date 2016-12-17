@@ -14,7 +14,6 @@ namespace bilibili.Methods
         {
             var queue = new Queue<DependencyObject>();
             queue.Enqueue(root);
-
             while (queue.Count > 0)
             {
                 var current = queue.Dequeue();

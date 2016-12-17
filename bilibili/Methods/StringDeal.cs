@@ -17,7 +17,7 @@ namespace bilibili.Methods
             {
                 long sec = long.Parse(str);
                 DateTimeOffset start = DateTimeOffset.FromUnixTimeSeconds(sec);
-                return start.DateTime.ToString();
+                return start.DateTime.ToLocalTime().ToString();
             }
             catch
             {

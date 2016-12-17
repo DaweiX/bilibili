@@ -362,14 +362,6 @@ namespace bilibili.Views
             catch { }
         }
 
-        private void donelist_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(donelist.SelectedItem.ToString()))
-            {
-                Frame.Navigate(typeof(Video), (MyVideo)donelist.SelectedItem);
-            }
-        }
-
         private async void local_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             FileOpenPicker picker = new FileOpenPicker();
@@ -381,6 +373,15 @@ namespace bilibili.Views
                 Frame.Navigate(typeof(Video), file);
             }
             else return;
+        }
+
+        private void donelist_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            MyVideo mv = e.ClickedItem as MyVideo;
+            if (mv != null)
+            {
+                Frame.Navigate(typeof(Video), mv);
+            }
         }
     }
 }

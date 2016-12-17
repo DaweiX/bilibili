@@ -43,8 +43,6 @@
         <Style x:Key="grid" TargetType="GridViewItem">
             <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
             <Setter Property="Margin" Value="4"/>
-            <Setter Property="MaxWidth" Value="640"/>
-            <Setter Property="MinWidth" Value="300"/>
         </Style>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
@@ -193,36 +191,33 @@
                 <PivotItem.Header>
                     <TextBlock x:Name="h4" Text="发现" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="160"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <AutoSuggestBox x:Name="SearchBox" VerticalAlignment="Center" Margin="8,20,8,0" Pivot.SlideInAnimationGroup="GroupThree"                      
+                <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                    <StackPanel>
+                        <AutoSuggestBox x:Name="SearchBox" VerticalAlignment="Center" Margin="8,20,8,0" Pivot.SlideInAnimationGroup="GroupThree"                      
                                 QueryIcon="Find" PlaceholderText="搜索视频、番剧、AV号或UP主" QuerySubmitted="SearchBox_QuerySubmitted" TextChanged="SearchBox_TextChanged"/>
-                    <GridView x:Name="list_hottags" Margin="8" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" Pivot.SlideInAnimationGroup="GroupTwo" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
-                        <GridView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" BorderThickness="1" BorderBrush="LightGray" Padding="2">
-                                    <TextBlock Text="{Binding Keyword}"/>
-                                    <TextBlock Text="{Binding Status}" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <controls:WrapPanel/>
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
-                    </GridView>
-                    <StackPanel Grid.Row="2" Pivot.SlideInAnimationGroup="GroupOne">
-                        <Button Tapped="Random_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">运气不错</Button>
-                        <Button HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0" Click="rank_Click">排行榜</Button>
-                        <Button Tag="0" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">话题中心</Button>
-                        <Button Tag="1" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">活动中心</Button>
+                        <GridView Height="160" x:Name="list_hottags" Margin="8" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" Pivot.SlideInAnimationGroup="GroupTwo" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
+                            <GridView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" BorderThickness="1" BorderBrush="LightGray" Padding="2">
+                                        <TextBlock Text="{Binding Keyword}"/>
+                                        <TextBlock Text="{Binding Status}" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <controls:WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
+                        <StackPanel Grid.Row="2" Pivot.SlideInAnimationGroup="GroupOne">
+                            <Button Tapped="Random_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">运气不错</Button>
+                            <Button HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0" Click="rank_Click">排行榜</Button>
+                            <Button Tag="0" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">话题中心</Button>
+                            <Button Tag="1" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">活动中心</Button>
+                        </StackPanel>
                     </StackPanel>
-                </Grid>
+                </ScrollViewer>
             </PivotItem>
         </Pivot>
     </Grid>

@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource bili_PageBackground}">
+    <Grid Background="{ThemeResource bili_PageBackground}" SizeChanged="Grid_SizeChanged">
+        <Border x:Name="width"/>
         <Grid Height="48" Background="{ThemeResource bili_Theme}" VerticalAlignment="Top"/>
         <Pivot SelectionChanged="Pivot_SelectionChanged">
             <PivotItem>
@@ -15,31 +16,31 @@
                     <TextBlock x:Name="h0" Text="精彩推荐" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
                 <!--精彩推荐http://api.bilibili.com/x/web-show/res/loc?jsonp=jsonp&pf=0&id=100-->
-                <GridView x:Name="gv_hot" Tag="119" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+                <GridView HorizontalAlignment="Center"  x:Name="gv_hot" Tag="119" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
                     <TextBlock x:Name="h1" Text="鬼畜调教" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <GridView x:Name="gv_teach" Tag="22" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+                <GridView HorizontalAlignment="Center"  x:Name="gv_teach" Tag="22" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
                     <TextBlock x:Name="h2" Text="音MAD" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <GridView x:Name="gv_mad" Tag="26" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+                <GridView HorizontalAlignment="Center"  x:Name="gv_mad" Tag="26" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
                     <TextBlock x:Name="h3" Text="人力VOVALOID" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <GridView x:Name="gv_vo" Tag="126" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+                <GridView HorizontalAlignment="Center"  x:Name="gv_vo" Tag="126" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
                     <TextBlock x:Name="h4" Text="教程演示" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <GridView x:Name="gv_demo" Tag="127" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
+                <GridView HorizontalAlignment="Center"  x:Name="gv_demo" Tag="127" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
         </Pivot>
     </Grid>

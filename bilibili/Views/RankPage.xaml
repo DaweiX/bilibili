@@ -23,7 +23,7 @@
                 <TextBlock Text="{Binding Ranking}" Foreground="{Binding Ranking,Converter={StaticResource cvt}}" FontSize="20" Grid.RowSpan="2" VerticalAlignment="Center" Margin="8,0,8,0"/>
                 <Image Source="{Binding Pic}" Grid.RowSpan="2" Grid.Column="1" Width="120" Height="90"/>
                 <StackPanel Grid.Column="2" Margin="4,0,0,0">
-                    <TextBlock Text="{Binding Title}" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
+                    <TextBlock Text="{Binding Title}" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Main}" TextWrapping="Wrap"/>
                 </StackPanel>
                 <TextBlock Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" Text="{Binding Create}" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
             </Grid>

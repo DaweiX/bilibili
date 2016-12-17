@@ -136,22 +136,22 @@
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Tapped="Grid_Tapped">
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
+                                    <StackPanel Grid.Column="0" Tapped="Grid_Tapped">
                                         <Image Height="60" Width="60" Source="{Binding Avatar}"/>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE19f;" VerticalAlignment="Center"/>
                                             <TextBlock Text="{Binding Like}" VerticalAlignment="Center" Margin="2,0,0,0"/>
                                         </StackPanel>
                                     </StackPanel>
-                                    <StackPanel Grid.Column="2" Margin="8,0,8,0">
+                                    <StackPanel Grid.Column="2" Margin="4,0,4,0">
                                         <HyperlinkButton Content="{Binding Uname}" Style="{StaticResource HyperlinkButtonStyle1}"/>
                                         <TextBlock Text="{Binding Time}" FontSize="14" Foreground="Gray"/>
-                                        <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
                                         <ListView Template="{StaticResource myControlTemplete}"
                                             ItemsSource="{Binding Res}"
                                             SelectionMode="None">
@@ -162,14 +162,14 @@
                                             </ListView.ItemContainerStyle>
                                             <ListView.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid Tapped="Grid_Tapped">
+                                                    <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="auto"/>
                                                             <ColumnDefinition Width="auto"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
                                                         <Rectangle Width="4" Fill="LightGray" Height="60" VerticalAlignment="Top" Margin="0,0,8,0"/>
-                                                        <StackPanel Grid.Column="1">
+                                                        <StackPanel Grid.Column="1" Tapped="Grid_Tapped">
                                                             <Image Height="60" Width="60" Source="{Binding Avatar}" VerticalAlignment="Top"/>
                                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                                 <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE19f;" VerticalAlignment="Center"/>
@@ -179,7 +179,10 @@
                                                         <StackPanel Grid.Column="2" Margin="8,0,8,0">
                                                             <HyperlinkButton Content="{Binding Uname}" Style="{StaticResource HyperlinkButtonStyle1}"/>
                                                             <TextBlock Text="{Binding Time}" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
-                                                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="{Binding Baseon}" TextWrapping="Wrap"/>
+                                                                <TextBlock Text="{Binding Message}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+                                                            </StackPanel>
                                                         </StackPanel>
                                                     </Grid>
                                                 </DataTemplate>
@@ -200,9 +203,15 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Border Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0.4"/>
-                        <TextBox x:Name="txt" Background="{ThemeResource bili_PageBackground}" BorderThickness="0" Grid.Row="1" AcceptsReturn="True" Grid.Column="1" FontSize="16" MinHeight="48" VerticalContentAlignment="Center" TextWrapping="Wrap" MaxHeight="200"/>
-                        <Button Grid.Row="1" Grid.Column="2" VerticalAlignment="Stretch" Width="48" Background="{ThemeResource bili_PageBackground}" Click="Button_Click">
+                        <StackPanel Grid.ColumnSpan="3">
+                            <StackPanel Orientation="Horizontal" x:Name="stk_reply" Visibility="Collapsed">
+                                <TextBlock x:Name="txt_reply" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="14"/>
+                                <HyperlinkButton Content="取消" Style="{StaticResource HyperlinkButtonStyle1}" Margin="12,0,0,0" Click="ReplyBack_Click"/>
+                            </StackPanel>
+                            <Border BorderBrush="Gray" BorderThickness="0.4"/>
+                        </StackPanel>
+                        <TextBox x:Name="txt_main" Grid.Row="1" Background="{ThemeResource bili_PageBackground}" BorderThickness="0" AcceptsReturn="True" Grid.Column="1" FontSize="16" MinHeight="48" VerticalContentAlignment="Center" TextWrapping="Wrap" MaxHeight="200"/>
+                        <Button Grid.Row="2" Grid.Column="2" VerticalAlignment="Stretch" Width="48" Background="{ThemeResource bili_PageBackground}" Click="Button_Click">
                             <Button.Content>
                                 <SymbolIcon Symbol="Send"/>
                             </Button.Content>
@@ -211,20 +220,50 @@
                 </Grid>
             </PivotItem>
             <PivotItem Header="相关视频">
-                <ListView x:Name="list_relates" Style="{StaticResource ListViewStyle}" IsItemClickEnabled="True" ItemClick="list_relates_ItemClick" ItemContainerStyle="{StaticResource listcontainerstyle}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Image Source="{Binding Cover}"/>
-                                <TextBlock Grid.Column="1" Margin="4,0,0,0" Text="{Binding Title}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <Grid SizeChanged="Grid_SizeChanged">
+                    <Border x:Name="width"/>
+                    <GridView x:Name="list_relates" Style="{StaticResource GridViewStyle}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_relates_ItemClick">
+                        <GridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                                <Setter Property="Margin" Value="4"/>
+                            </Style>
+                        </GridView.ItemContainerStyle>
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Width="{Binding Width,ElementName=width}" Height="90">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="110"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Image Source="{Binding Cover}" Grid.RowSpan="2"/>
+                                    <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                                        <TextBlock Text="{Binding Title}" Foreground="{ThemeResource bili_Fontcolor_Main}" FontSize="13" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding Owner}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                    </StackPanel>
+                                    <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Column="0" Grid.Row="0" Text="播放数：" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding View}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                        <TextBlock Grid.Column="0" Grid.Row="1" Text="收藏数：" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Favorite}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </Grid>
             </PivotItem>
         </Pivot>
     </Grid>

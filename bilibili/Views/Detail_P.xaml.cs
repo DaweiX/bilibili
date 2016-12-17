@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -36,6 +35,7 @@ namespace bilibili.Views
         public delegate void PageNavi(string text);
         public event PageNavi pageNavi;
         Details details = new Details();
+        bool isReply = false;
         int page = 1;
         static string cid = string.Empty;
         string aid = string.Empty;
@@ -98,7 +98,7 @@ namespace bilibili.Views
 
         async Task<bool> load(int page, string aid)
         {
-            string url = "http://api.bilibili.com/x/reply?_device=wp&_ulv=10000&build=424000&platform=android&appkey=422fd9d7289a1dd9&oid=" + aid + "&sort=0&type=1&pn=" + page.ToString() + "&ps=20";
+            string url = "http://api.bilibili.com/x/reply?_device=wp&_ulv=10000&build=424000&platform=android&appkey=" + ApiHelper.appkey + "&oid=" + aid + "&sort=0&type=1&pn=" + page.ToString() + "&ps=20";
             url += ApiHelper.GetSign(url);
             List<Reply> replys = new List<Reply>();
             replys = await ContentServ.GetReplysAsync(url);
@@ -193,8 +193,7 @@ namespace bilibili.Views
             {
                 if (aid.Length > 0) 
                 {
-                    string url = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=" + aid;
-                    list_relates.ItemsSource = await ContentServ.GetRelatesAsync(url);
+                    list_relates.ItemsSource = await ContentServ.GetRelatesAsync(aid);
                 }
                 else
                 {
@@ -365,40 +364,60 @@ namespace bilibili.Views
             request.Data.SetText(string.Format("我在bilibili上向你推荐视频【{0}】\n链接：http://www.bilibili.com/av{1}", title.Text, aid));
         }
         #endregion
-        async Task SendComment(string txt)
+        async Task SendComment(string txt, bool isRep)
         {
             if (ApiHelper.IsLogin())
             {
                 try
                 {
-                    Uri ReUri = new Uri("http://api.bilibili.com/x/reply/add");
-                    HttpClient client = new HttpClient();
-                    client.DefaultRequestHeaders.Referer = new Uri("http://www.bilibili.com/");
-                    string Str = "plat=6&jsonp=jsonp&message=" + Uri.EscapeDataString(txt) + "&type=1&oid=" + aid;
-                    var response = await client.PostAsync(ReUri, new HttpStringContent(Str, UnicodeEncoding.Utf8, "application/x-www-form-urlencoded"));
-                    response.EnsureSuccessStatusCode();
-                    string result = await response.Content.ReadAsStringAsync();
-                    JsonObject json = JsonObject.Parse(result);
-                    if (json["code"].ToString() == "0")
+                    //发送新评论
+                    if (isRep == false)
                     {
-                        listview.Items.Clear();
-                        var text = Load.FindChildOfType<TextBlock>(listview);
-                        bool isDone = await load(1, aid);
-                        if (isDone && text != null)
+                        Uri ReUri = new Uri("http://api.bilibili.com/x/reply/add");
+                        HttpClient client = new HttpClient();
+                        client.DefaultRequestHeaders.Referer = new Uri("http://www.bilibili.com/");
+                        string Str = "plat=6&jsonp=jsonp&message=" + Uri.EscapeDataString(txt) + "&type=1&oid=" + aid;
+                        var response = await client.PostAsync(ReUri, new HttpStringContent(Str, UnicodeEncoding.Utf8, "application/x-www-form-urlencoded"));
+                        response.EnsureSuccessStatusCode();
+                        string result = await response.Content.ReadAsStringAsync();
+                        JsonObject json = JsonObject.Parse(result);
+                        if (json["code"].ToString() == "0")
                         {
-                            text.Text = "评论装填完毕！";
+                            txt_main.Text = string.Empty;
+                            await RefreshReply();
                         }
-                        page = 1;
+                        else
+                        {
+                            messagepop.Show("评论失败:" + result, 3000);
+                        }
                     }
+                    //回复评论
                     else
                     {
-                        messagepop.Show("评论失败\t" + result, 3000);
+                        try
+                        {
+                            string url = "http://api.bilibili.com/x/reply/add?_device=wp&build=429001&platform=android&scale=xhdpi&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey;
+                            url += ApiHelper.GetSign(url);
+                            string Args = "parent=" + reply.Parent + "&root=" + reply.Root + "&rpid=" + reply.Rpid + "&oid=" + reply.Oid + "&plat=4&type=1&message=" + "回复 @" + reply.Uname + " :" + txt;
+                            JsonObject json = JsonObject.Parse(await BaseService.SendPostAsync(url, Args, "http://app.bilibili.com"));
+                            if (json["code"].ToString() == "0")
+                            {
+                                isReply = false;
+                                stk_reply.Visibility = Visibility.Collapsed;
+                                txt_main.Text = string.Empty;
+                                await RefreshReply();
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                        }                      
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    messagepop.Show("评论时发生错误\t" + ex.Message, 3000);
+                    messagepop.Show("评论时发生错误:" + ex.Message, 3000);
                 }
             }
             else
@@ -407,9 +426,21 @@ namespace bilibili.Views
             }
         }
 
+        private async Task RefreshReply()
+        {
+            listview.Items.Clear();
+            var text = Load.FindChildOfType<TextBlock>(listview);
+            bool isDone = await load(1, aid);
+            if (isDone && text != null)
+            {
+                text.Text = "评论装填完毕！";
+            }
+            page = 1;
+        }
+
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            await SendComment(txt.Text);
+            await SendComment(txt_main.Text, isReply);
         }
 
         private void download_Click(object sender, RoutedEventArgs e)
@@ -512,7 +543,7 @@ namespace bilibili.Views
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
             flyout.ShowAt(listview, e.GetPosition(listview));
-            var r = (sender as Grid).DataContext as Reply;
+            var r = (sender as StackPanel).DataContext as Reply;
             reply = r;
         }
 
@@ -546,9 +577,20 @@ namespace bilibili.Views
 
         private void reply_Click(object sender, RoutedEventArgs e)
         {
-            //string url = "http://api.bilibili.com/x/reply/add?_device=wp&build=429001&platform=android&scale=xhdpi&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey;
-            //url += ApiHelper.GetSign(url);
-            //JsonObject json
+            txt_reply.Text = "回复    " + reply.Uname + ":";
+            isReply = true;
+            stk_reply.Visibility = Visibility.Visible;
+        }
+
+        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            width.Width = WidthFit.GetWidth(ActualWidth, 800, 400, 12);
+        }
+
+        private void ReplyBack_Click(object sender, RoutedEventArgs e)
+        {
+            isReply = false;
+            stk_reply.Visibility = Visibility.Collapsed;
         }
     }
 }

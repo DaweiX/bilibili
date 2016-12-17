@@ -489,7 +489,7 @@ namespace bilibili.Views
             }
             else
             {
-                if (Index <= infos.Count - 1)
+                if (Index < infos.Count - 1)
                 {
                     status.Text = "本选集已播放完毕，即将进入下一选集…";
                     left.Visibility = Visibility.Visible;

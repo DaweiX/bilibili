@@ -8,6 +8,7 @@ namespace bilibili.Models
 {
     class Reply
     {
+        private string baseon;
         /// <summary>
         /// 评论
         /// </summary>
@@ -37,6 +38,14 @@ namespace bilibili.Models
         public string Root { get; set; }
         public string Mid { get; set; }
         public string Rpid { get; set; }
+        public string Baseon
+        {
+            get
+            {
+                return baseon == string.Empty ? string.Empty : "回复 @" + baseon + " :";
+            }
+            set { baseon = value; }
+        }
     }
     public class Friend
     {

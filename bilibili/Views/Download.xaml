@@ -9,64 +9,72 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource bili_PageBackground}">
-        <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
-            <StackPanel Margin="8,0,8,56">
-                <controls:MessagePopup x:Name="messagepop"/>
-                <StackPanel Orientation="Horizontal">
-                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                    <TextBlock Text="正在下载" FontSize="20" Margin="8,0,0,0"/>
-                </StackPanel>
-                <ListView x:Name="list_now">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Padding="8">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="{Binding Name}"/>
-                                <ProgressBar Grid.Row="1" x:Name="bar" Value="{Binding Progress}" Foreground="{StaticResource bili_Theme}" Margin="0,12,0,12"/>
-                                <StackPanel Orientation="Horizontal" Grid.Row="2">
-                                    <TextBlock Text="{Binding Size}"/>
-                                    <TextBlock Text="{Binding Status}" Margin="40,0,40,0"/>
-                                    <TextBlock Margin="8,0,0,0">
+        <controls:MessagePopup x:Name="messagepop"/>
+        <Pivot>
+            <PivotItem Header="正在下载" Margin="0">
+                <Grid>
+                    <TextBlock x:Name="txt" Margin="0,-24,0,0" Text="当前没有下载项" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <ListView x:Name="list_now" Style="{StaticResource ListViewStyle}" Margin="0,0,0,56">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <ProgressBar Grid.Row="1" x:Name="bar" Value="{Binding Progress}" Foreground="{StaticResource bili_Theme}" Margin="0,12,0,12"/>
+                                    <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                        <TextBlock Text="{Binding Size}"/>
+                                        <TextBlock Text="{Binding Status}" Margin="40,0,40,0"/>
+                                        <TextBlock Margin="8,0,0,0">
                                         <Run Text="{Binding Progress}"/>
                                         <Run>%</Run>
-                                    </TextBlock>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Margin" Value="0,4,0,4"/>
-                            <Setter Property="Background" Value="White"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-                <TextBlock x:Name="txt" Text="当前没有下载项" Margin="0,20,0,20" Visibility="Collapsed"/>
-                <StackPanel Orientation="Horizontal">
-                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                    <TextBlock Text="本地视频" FontSize="20" Margin="8,0,0,0"/>
-                </StackPanel>
-                <ListView x:Name="donelist" ItemContainerStyle="{StaticResource listcontainerstyle}" Tapped="donelist_Tapped" Margin="8,12,8,0">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Part}"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
-        </ScrollViewer>
-        <CommandBar Style="{StaticResource CommandbarStyle}">
-            <AppBarButton x:Name="high" Label="高优先级" Icon="Upload" Click="high_Click"/>
-            <AppBarButton x:Name="del" Label="删除" Icon="Delete" Click="del_Click"/>
-            <AppBarButton x:Name="pause" Label="暂停" Icon="Pause" Click="pause_Click"/>
-            <AppBarButton x:Name="resume" Label="继续" Icon="Play" Click="play_Click"/>
-            <AppBarButton Icon="List" Label="选择" Click="AppBarButton_Click"/>
-            <AppBarButton x:Name="local" Icon="NewFolder" Label="本地视频" Click="local_Click"/>
-        </CommandBar>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Margin" Value="0,4,0,4"/>
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                    <CommandBar Style="{StaticResource CommandbarStyle}">
+                        <AppBarButton x:Name="high" Label="高优先级" Icon="Upload" Click="high_Click"/>
+                        <AppBarButton x:Name="del" Label="删除" Icon="Delete" Click="del_Click"/>
+                        <AppBarButton x:Name="pause" Label="暂停" Icon="Pause" Click="pause_Click"/>
+                        <AppBarButton x:Name="resume" Label="继续" Icon="Play" Click="play_Click"/>
+                        <AppBarButton Icon="List" Label="选择" Click="AppBarButton_Click"/>
+                    </CommandBar>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="本地视频" Margin="0">
+                <Grid>
+                    <ListView x:Name="donelist" ItemContainerStyle="{StaticResource listcontainerstyle}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="donelist_ItemClick">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Part}"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Template>
+                            <ControlTemplate>
+                                <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                                    <ItemsPresenter Margin="0,0,0,56"/>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ListView.Template>
+                    </ListView>
+                    <CommandBar Style="{StaticResource CommandbarStyle}">
+                        <AppBarButton Icon="List" Label="选择"/>
+                        <AppBarButton x:Name="local" Icon="NewFolder" Label="本地视频" Click="local_Click"/>
+                    </CommandBar>
+                </Grid>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>
