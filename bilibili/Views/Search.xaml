@@ -13,7 +13,7 @@
         <Border x:Name="width"/>
         <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
             <PivotItem Header="视频" Tag="video">
-                <GridView x:Name="list_videos" Style="{StaticResource GridViewStyle}" Tag="videos" Tapped="listTapped" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
+                <GridView x:Name="list_videos" Tag="videos" Tapped="listTapped" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid Width="{Binding Width,ElementName=width}">
@@ -33,7 +33,7 @@
                 </GridView>
             </PivotItem>
             <PivotItem Header="番剧" Tag="fanju">
-                <GridView x:Name="list_fanju" Style="{StaticResource GridViewStyle}" Tag="bangumi" Tapped="listTapped" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
+                <GridView x:Name="list_fanju" Tag="bangumi" Tapped="listTapped" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid Width="{Binding Width,ElementName=width}" Height="120">
@@ -57,7 +57,7 @@
                 </GridView>
             </PivotItem>
             <PivotItem Header="up主" Tag="up">
-                <GridView x:Name="list_up" Style="{StaticResource GridViewStyle}" Tag="up" Tapped="listTapped">
+                <GridView x:Name="list_up" Tag="up" Tapped="listTapped">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid Width="{Binding Width,ElementName=width}">

@@ -10,7 +10,7 @@
 
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Border x:Name="width"/>
-        <GridView x:Name="gridview" Style="{StaticResource GridViewStyle}" Tapped="gridview_Tapped" HorizontalAlignment="Center">
+        <GridView x:Name="gridview" Tapped="gridview_Tapped" HorizontalAlignment="Center">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="{Binding ElementName=width,Path=Width}" Height="{Binding ElementName=width,Path=Width}">

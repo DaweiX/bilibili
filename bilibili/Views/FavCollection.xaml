@@ -5,21 +5,40 @@
     xmlns:local="using:bilibili.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="using:bilibili.Controls"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource bili_PageBackground}">
-        <CommandBar VerticalAlignment="Bottom" Opacity="0.5"/>
-        <StackPanel>
-            <ComboBox x:Name="cb_folder" Margin="0,8,0,0" Width="160" SelectionChanged="cb_folder_SelectionChanged">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            <TextBlock VerticalAlignment="Center" x:Name="txt_count" Margin="0,4,0,0"/>
+        <c:MessagePopup x:Name="pop" VerticalAlignment="Top"/>
+        <Grid Margin="8,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <ComboBox x:Name="cb_folder" Width="160" VerticalAlignment="Center" SelectionChanged="cb_folder_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ToggleSwitch x:Name="togpublic" Margin="12,0,0,0" OffContent="仅自己可见" OnContent="公开" Toggled="togpublic_Toggled"/>
+            </StackPanel>
+            <TextBlock Grid.Row="1" VerticalAlignment="Center" x:Name="txt_count" Margin="0,4,0,0"/>
             <Border x:Name="width"/>
-            <GridView x:Name="favlist" Style="{StaticResource GridViewStyle}" IsItemClickEnabled="True" ItemClick="favlist_ItemClick" Margin="0,8,0,8" SizeChanged="favlist_SizeChanged">
+            <GridView x:Name="favlist" Grid.Row="2" IsItemClickEnabled="True" ItemClick="favlist_ItemClick" SizeChanged="favlist_SizeChanged">
+                <GridView.Template>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <ScrollViewer>
+                            <StackPanel>
+                                <ItemsPresenter/>
+                                <TextBlock Foreground="Gray" HorizontalAlignment="Center" Margin="0,8,0,56"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </GridView.Template>
                 <GridView.ItemTemplate>
                     <DataTemplate>
                         <Grid Width="{Binding Width,ElementName=width}" Height="90">
@@ -45,6 +64,31 @@
                     </Style>
                 </GridView.ItemContainerStyle>
             </GridView>
-        </StackPanel>
+        </Grid>
+        <CommandBar>
+            <AppBarButton x:Name="add" Icon="Add" Label="新建">
+                <AppBarButton.Flyout>
+                    <Flyout x:Name="flyout2" Opened="flyout2_Opened">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Width="160" x:Name="txt_new" TabIndex="0"/>
+                            <Button Click="new_Click" Content="确定" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton x:Name="rename" Icon="Rename" Label="重命名">
+                <AppBarButton.Flyout>
+                    <Flyout x:Name="flyout" Opened="flyout_Opened">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Width="160" x:Name="txt_name" TabIndex="0"/>
+                            <Button Click="rename_Click" Content="确定" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton x:Name="delete" Icon="Delete" Label="删除" Click="delete_Click"/>
+            <AppBarSeparator/>
+            <AppBarButton x:Name="refresh" Icon="Refresh" Label="刷新" Click="refresh_Click"/>
+        </CommandBar>
     </Grid>
 </Page>

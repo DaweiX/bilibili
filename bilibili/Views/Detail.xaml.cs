@@ -18,6 +18,7 @@ using bilibili.Methods;
 using bilibili.Models;
 using Windows.Data.Json;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.StartScreen;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -28,7 +29,10 @@ namespace bilibili.Views
     /// </summary>
     public sealed partial class Detail : Page
     {
-        Season_Total aa = null;
+        public delegate void TryLogin();
+        public event TryLogin trylogin;
+        Season aa = null;
+        bool isPinned = false;
         static string cid = string.Empty;
         string sid = string.Empty;
         bool isCollection = false;
@@ -41,14 +45,16 @@ namespace bilibili.Views
             {
                 directly.IsChecked = (bool)isdirect;
             }
+            if (!ApiHelper.IsLogin())
+            {
+                trylogin();
+            }
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            string para = sid = e.Parameter.ToString();
-            string url = "http://bangumi.bilibili.com/api/season_v2?_device=wp&build=424000&platform=android&access_key="+ApiHelper.accesskey+"&appkey=422fd9d7289a1dd9&ts=" + ApiHelper.GetLinuxTS().ToString() + "&type=bangumi&season_id=" + para;
-            url += ApiHelper.GetSign(url);
-            aa = await ContentServ.GetSeasonResultAsync(url, 1) as Season_Total;
+            sid = e.Parameter.ToString();
+            aa = await ContentServ.GetSeasonResultAsync(sid);
             BitmapImage bmp = new BitmapImage();
             bmp.UriSource = new Uri(aa.Cover);
             pic.Source = bmp;
@@ -66,9 +72,11 @@ namespace bilibili.Views
             foreach (var item in aa.Tags)
             {
                 if (item.Length > 0)
+                {
                     list_tags.Items.Add(new Tags { Tag = item });
+                }
             }
-            List<Season_episodes> ep = await ContentServ.GetSeasonResultAsync(url, 3) as List<Season_episodes>;
+            List<Episodes> ep = aa.EPS;
             if (ep.Count > 0)
             {
                 string id_0 = ep[0].ID;
@@ -90,11 +98,16 @@ namespace bilibili.Views
                 if (mylist.Items.Count == 0)    //合集
                 {
                     isCollection = true;
-                    mylist.Items.Add(new Season_episodes { Title = aa.Title, ID = ep[0].ID, Cover = ep[0].Cover });
+                    mylist.Items.Add(new Episodes { Title = aa.Title + "(合集)", ID = ep[0].ID, Cover = ep[0].Cover });
                 }
-            }          
-            List<Season_actor> ac = await ContentServ.GetSeasonResultAsync(url, 2) as List<Season_actor>;
-            foreach (var item in ac)
+            }
+            if (SecondaryTile.Exists("tile" + sid)) 
+            {
+                pin.Icon = new SymbolIcon(Symbol.UnPin);
+                pin.Label = "取消固定";
+                isPinned = true;
+            }
+            foreach (var item in aa.CVlist) 
             {
                 cvlist.Items.Add(new Actors { Actor = item.Actor, Role = item.Role });
             }
@@ -238,7 +251,7 @@ namespace bilibili.Views
 
         private async void mylist_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Season_episodes ep = e.ClickedItem as Season_episodes;
+            Episodes ep = e.ClickedItem as Episodes;
             if (directly.IsChecked == true && isCollection == false)
             {
                 string url = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=" + ep.ID + "&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey;
@@ -277,6 +290,69 @@ namespace bilibili.Views
         private void pic_Tapped(object sender, TappedRoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout(pic);
+        }
+
+        private async void Pin_Click(object sender, RoutedEventArgs e)
+        {
+            if (isPinned == false)
+            {
+                string filename = sid + ".bmp";
+                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+                //using (IRandomAccessStream ss = await file.OpenAsync(FileAccessMode.ReadWrite))
+                //{
+                //    await RandomAccessStream.CopyAndCloseAsync(pic, ss);
+                //}
+                //((XmlElement)picNodes[0]).SetAttribute("src", "ms-appdata:///local/pic.bmp");
+                IBuffer buffer = await DownloadHelper.GetBuffer(aa.SquareCover);
+                CachedFileManager.DeferUpdates(file);
+                await FileIO.WriteBufferAsync(file, buffer);
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                string tileID = "tile" + sid;
+                string displayName = aa.Title;
+                string args = sid;
+                Uri logoUri = new Uri("ms-appdata:///local/" + filename);
+                var size = TileSize.Square150x150;
+                SecondaryTile tile = new SecondaryTile(tileID, aa.Title, args, logoUri, size);
+                tile.VisualElements.ShowNameOnSquare150x150Logo = true;
+                tile.VisualElements.Square150x150Logo = logoUri;
+                bool isCreated = await tile.RequestCreateAsync();
+                if (isCreated)
+                {
+                    await tile.UpdateAsync();
+                    pin.Icon = new SymbolIcon(Symbol.UnPin);
+                    pin.Label = "取消固定";
+                    await new ContentDialog { Content = "固定成功！", SecondaryButtonText = "确定" }.ShowAsync();
+                }
+                isPinned = true;
+            }
+            else
+            {
+                SecondaryTile tile = new SecondaryTile();
+                IReadOnlyList<SecondaryTile> tiles = await SecondaryTile.FindAllAsync();
+                foreach (var item in tiles)
+                {
+                    if (item.Arguments == sid)
+                    {
+                        tile = item;
+                        break;
+                    }
+                }
+                //有趣了，这个“‘从开始屏幕取消固定’浮出控件”压根就没有浮出过
+                bool isDeleted = await tile.RequestDeleteAsync();
+                if (isDeleted)
+                {
+                    pin.Icon = new SymbolIcon(Symbol.Pin);
+                    pin.Label = "固定磁贴";
+                    await new ContentDialog { Content = "已取消固定", SecondaryButtonText = "确定" }.ShowAsync();
+                    try
+                    {
+                        StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(sid + ".bmp");
+                        await file.DeleteAsync();
+                    }
+                    catch { }
+                }
+                isPinned = false;
+            }
         }
     }
 }

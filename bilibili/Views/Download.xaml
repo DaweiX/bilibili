@@ -14,7 +14,7 @@
             <PivotItem Header="正在下载" Margin="0">
                 <Grid>
                     <TextBlock x:Name="txt" Margin="0,-24,0,0" Text="当前没有下载项" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <ListView x:Name="list_now" Style="{StaticResource ListViewStyle}" Margin="0,0,0,56">
+                    <ListView x:Name="list_now" Margin="0,0,0,56">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Padding="8">
@@ -44,7 +44,7 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    <CommandBar Style="{StaticResource CommandbarStyle}">
+                    <CommandBar>
                         <AppBarButton x:Name="high" Label="高优先级" Icon="Upload" Click="high_Click"/>
                         <AppBarButton x:Name="del" Label="删除" Icon="Delete" Click="del_Click"/>
                         <AppBarButton x:Name="pause" Label="暂停" Icon="Pause" Click="pause_Click"/>
@@ -63,13 +63,13 @@
                         </ListView.ItemTemplate>
                         <ListView.Template>
                             <ControlTemplate>
-                                <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                                <ScrollViewer>
                                     <ItemsPresenter Margin="0,0,0,56"/>
                                 </ScrollViewer>
                             </ControlTemplate>
                         </ListView.Template>
                     </ListView>
-                    <CommandBar Style="{StaticResource CommandbarStyle}">
+                    <CommandBar>
                         <AppBarButton Icon="List" Label="选择"/>
                         <AppBarButton x:Name="local" Icon="NewFolder" Label="本地视频" Click="local_Click"/>
                     </CommandBar>

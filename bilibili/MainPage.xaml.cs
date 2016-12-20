@@ -67,12 +67,20 @@ namespace bilibili
         {
             if (WebStatusHelper.IsOnline())
             {
-                await autologin();
-                if (SettingHelper.GetValue("_pull") != null)
+                bool isLogin = await autologin();
+                if (isLogin)
                 {
-                    if ((bool)SettingHelper.GetValue("_pull") == true)
+                    if (SettingHelper.GetValue("_pull") != null)
                     {
-                        await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
+                        if ((bool)SettingHelper.GetValue("_pull") == true)
+                        {
+                            await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
+                        }
+                    }
+                    string sid = e.Parameter.ToString();
+                    if (!string.IsNullOrEmpty(sid))
+                    {
+                        mainframe.Navigate(typeof(Views.Detail), sid);
                     }
                 }
             }
@@ -123,9 +131,12 @@ namespace bilibili
 
         private async void Timer_Tick(object sender, object e)
         {
-            if (await autologin() == true)
+            if (WebStatusHelper.IsOnline())
             {
-                timer.Stop();
+                if (await autologin() == true)
+                {
+                    timer.Stop();
+                }
             }
         }
 
@@ -321,6 +332,7 @@ namespace bilibili
                     break;
                 case "Detail":
                     txt_head.Text = "番剧详情";
+                    (mainframe.Content as Views.Detail).trylogin += Detail_trylogin;
                     break;
                 case "Detail_P":
                     (mainframe.Content as Views.Detail_P).pageNavi += DetailPNavi;
@@ -365,6 +377,14 @@ namespace bilibili
                 case "UserInfo":
                     txt_head.Text = "个人中心";
                     break;
+            }
+        }
+
+        private async void Detail_trylogin()
+        {
+            if (await autologin() == true)
+            {
+                timer.Stop();
             }
         }
 

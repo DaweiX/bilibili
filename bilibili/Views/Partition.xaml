@@ -53,14 +53,15 @@
         <controls:MessagePopup Grid.Row="0" VerticalAlignment="Top" x:Name="popup"/>
         <Grid Height="48" Background="{ThemeResource bili_Theme}" VerticalAlignment="Top"/>
         <Pivot x:Name="mainpivot" SelectionChanged="mainpivot_SelectionChanged">
-            <PivotItem>
+            <PivotItem Margin="0">
                 <PivotItem.Header>
                     <TextBlock x:Name="h0" Text="推荐" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <ScrollViewer Style="{StaticResource ScrollViewerStyle1}" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <ProgressBar x:Name="bar" IsIndeterminate="True" Foreground="{ThemeResource bili_Theme}" Visibility="Collapsed"/>
-                        <controls:Comment x:Name="comment"/>
+                        <controls:MyFlipControl x:Name="header_Home" Height="120"/>
+                        <controls:Comment x:Name="comment" Margin="4 0"/>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
@@ -68,17 +69,15 @@
                 <PivotItem.Header>
                     <TextBlock x:Name="h1" Text="番剧" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <ScrollViewer x:Name="scollviewer" Style="{StaticResource ScrollViewerStyle1}" DataContextChanged="scollviewer_DataContextChanged">
+                <ScrollViewer x:Name="scollviewer" DataContextChanged="scollviewer_DataContextChanged">
                     <Grid x:Name="grid">
                         <Grid.RowDefinitions>
-                            <!--"{Binding ElementName=header_bangumi,Path=Width,Converter={StaticResource cvt2}}"-->
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Border x:Name="height"/>
-                        <controls:MyFlipControl x:Name="header_bangumi" Height="{Binding Height,ElementName=height}"/>
+                        <controls:MyFlipControl x:Name="header_bangumi" Height="120"/>
                         <Grid Height="48" Grid.Row="1" Margin="4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -89,7 +88,7 @@
                             <Button Background="{ThemeResource bili_Theme}" Foreground="White" Grid.Column="1" Content="放送播报" HorizontalAlignment="Stretch" Tag="2" Margin="4,0,4,0" Click="Button_Click"/>
                             <Button Background="{ThemeResource bili_Theme}" Foreground="White" Grid.Column="2" Content="番剧索引" HorizontalAlignment="Stretch" Tag="3" Margin="4,0,4,0" Click="Button_Click"/>
                         </Grid>
-                        <GridView x:Name="list_lastupdate" Grid.Row="2" Style="{StaticResource GridViewStyle1}" HorizontalAlignment="Stretch" Tapped="list_lastupdate_Tapped">
+                        <GridView x:Name="list_lastupdate" HorizontalAlignment="Center" Grid.Row="2" Style="{StaticResource GridViewStyle1}" Tapped="list_lastupdate_Tapped">
                             <GridView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -177,21 +176,9 @@
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
-                    <TextBlock x:Name="h3" Text="直播" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                    <TextBlock x:Name="h3" Text="发现" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <ScrollViewer x:Name="scollviewer2" Style="{StaticResource ScrollViewerStyle1}" DataContextChanged="scollviewer2_DataContextChanged">
-                    <Grid>
-                        <!--<controls:MyFlipControl x:Name="header_bangumi" Height="120"/>-->
-                        <GridView Grid.Row="2" x:Name="list_live" HorizontalAlignment="Center" Tapped="list_live_Tapped" ShowsScrollingPlaceholders="True" ItemContainerStyle="{StaticResource grid}">
-                        </GridView>
-                    </Grid>
-                </ScrollViewer>
-            </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h4" Text="发现" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
-                <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                <ScrollViewer>
                     <StackPanel>
                         <AutoSuggestBox x:Name="SearchBox" VerticalAlignment="Center" Margin="8,20,8,0" Pivot.SlideInAnimationGroup="GroupThree"                      
                                 QueryIcon="Find" PlaceholderText="搜索视频、番剧、AV号或UP主" QuerySubmitted="SearchBox_QuerySubmitted" TextChanged="SearchBox_TextChanged"/>

@@ -33,40 +33,40 @@
         <Border x:Name="width"/>
         <Pivot x:Name="mainpivot" SelectionChanged="mainpivot_SelectionChanged">
             <PivotItem Header="番剧" Tag="13">
-                <GridView x:Name="list13" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list13" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="动画" Tag="1">
-                <GridView x:Name="list1" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list1" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="音乐" Tag="3">
-                <GridView x:Name="list3" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list3" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="舞蹈" Tag="129">
-                <GridView x:Name="list129" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list129" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="科技" Tag="36">
-                <GridView x:Name="list36" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list36" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="游戏" Tag="4">
-                <GridView x:Name="list4" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list4" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="生活" Tag="160">
-                <GridView x:Name="list160" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list160" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="鬼畜" Tag="119">
-                <GridView x:Name="list119" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list119" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="时尚" Tag="155">
-                <GridView x:Name="list155" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list155" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="娱乐" Tag="5">
-                <GridView x:Name="list5" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list5" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="电影" Tag="23">
-                <GridView x:Name="list23" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list23" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
             <PivotItem Header="电视剧" Tag="11">
-                <GridView x:Name="list11" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}" Style="{StaticResource GridViewStyle}"/>
+                <GridView x:Name="list11" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
             </PivotItem>
         </Pivot>
     </Grid>

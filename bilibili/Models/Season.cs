@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace bilibili.Models
 {
-    class Season_episodes
+    class Episodes
     {
         /// <summary>
         /// 视频ID（av_id）
@@ -37,7 +37,7 @@ namespace bilibili.Models
         /// </summary>
         public string Time { get; set; }
     }
-    class Season_Total
+    class Season
     {
         public string IsConcerned { get; set; }
         public string Coins { get; set; }
@@ -53,8 +53,11 @@ namespace bilibili.Models
         public bool isFinish { get; set; }
         public string Fav { get; set; }
         public string Staff { get; set; }
+        public string SquareCover { get; set;}
+        public List<Cast> CVlist { get; set;}
+        public List<Episodes> EPS { get; set; }
     }
-    class Season_actor
+    class Cast
     {
         public string Actor { get; set; }
         public string Role { get; set; }

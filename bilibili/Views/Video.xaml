@@ -68,7 +68,7 @@
                     </Grid>
                 </StackPanel>
                 <Border x:Name="border" Grid.RowSpan="3" Canvas.ZIndex="99" Tapped="border_Tapped" DoubleTapped="border_DoubleTapped" ManipulationMode="TranslateX,TranslateY" Background="Black" Opacity="0" ManipulationDelta="border_ManipulationDelta" ManipulationCompleted="border_ManipulationCompleted"/>
-                    <controls:MessagePopup Grid.RowSpan="3" x:Name="messagepop" Canvas.ZIndex="80" Width="120" Foreground="White" Height="40"/>
+                    <controls:MessagePopup Grid.RowSpan="3" x:Name="messagepop" Canvas.ZIndex="80" Foreground="White" Height="40"/>
                 <controls:Danmaku x:Name="danmaku" Grid.RowSpan="3" Canvas.ZIndex="80"/>
                 <Grid x:Name="grid_top" Canvas.ZIndex="100">
                     <Grid.RowDefinitions>

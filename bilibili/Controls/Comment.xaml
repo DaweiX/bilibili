@@ -13,7 +13,7 @@
         <Border x:Name="width"/>
         <StackPanel HorizontalAlignment="Stretch">
             <Grid>
-                <HyperlinkButton Content="直播" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="直播" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="1" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -39,7 +39,7 @@
                 </GridView.ItemTemplate>
             </GridView>
             <Grid>
-                <HyperlinkButton Content="番剧" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="番剧" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="1" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -49,7 +49,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="13" ShowsScrollingPlaceholders="True" x:Name="gridview1" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="动画" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="动画" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="2" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -59,7 +59,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="1" ShowsScrollingPlaceholders="True" x:Name="gridview2" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="生活" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="生活" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="3" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -69,7 +69,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="160" ShowsScrollingPlaceholders="True" x:Name="gridview3" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="电影" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="电影" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="4" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -79,7 +79,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="23" ShowsScrollingPlaceholders="True" x:Name="gridview4" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="娱乐" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="娱乐" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="5" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -89,7 +89,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="71" ShowsScrollingPlaceholders="True" x:Name="gridview5" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="鬼畜" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="鬼畜" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="6" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -99,7 +99,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="119" ShowsScrollingPlaceholders="True" x:Name="gridview6" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="科技" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="科技" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="7" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -109,7 +109,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="36" ShowsScrollingPlaceholders="True" x:Name="gridview7" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="游戏" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="游戏" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="8" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -119,7 +119,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="4" ShowsScrollingPlaceholders="True" x:Name="gridview8" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="音乐" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="音乐" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="9" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -129,7 +129,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="3" ShowsScrollingPlaceholders="True" x:Name="gridview9" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="舞蹈" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="舞蹈" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="10" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -139,7 +139,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="20" ShowsScrollingPlaceholders="True" x:Name="gridview10" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="时尚" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="时尚" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="11" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -149,7 +149,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="155" ShowsScrollingPlaceholders="True" x:Name="gridview11" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="广告" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="广告" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="12" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>
@@ -159,7 +159,7 @@
             </Grid>
             <GridView HorizontalAlignment="Center" Tag="166" ShowsScrollingPlaceholders="True" x:Name="gridview12" Tapped="gridview_Tapped" ItemTemplate="{StaticResource gv_itemtemplete}" Style="{StaticResource GridViewStyle1}"/>
             <Grid>
-                <HyperlinkButton Content="电视剧" Style="{StaticResource HyperlinkButtonStyle1}" Margin="4" Click="HyperlinkButton_Click"/>
+                <HyperlinkButton Content="电视剧" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton Tag="13" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>
                         <Ellipse Fill="{ThemeResource bili_Theme}"></Ellipse>

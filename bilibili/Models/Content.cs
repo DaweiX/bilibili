@@ -77,6 +77,7 @@ namespace bilibili.Models
         public string Name { get; set; }
         public string Count { get; set; }
         public string MCount { get; set; }
+        public string State { get; set; }
         public List<Basic> Videos { get; set; }
     }
     class User

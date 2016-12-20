@@ -12,7 +12,7 @@
     <ContentDialog.Resources>
         <local:NumToForeground x:Key="cvt"/>
     </ContentDialog.Resources>
-    <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+    <ScrollViewer>
         <ItemsControl x:Name="list">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

@@ -23,7 +23,7 @@
                   ItemContainerStyle="{StaticResource listcontainerstyle}">
                 <ListView.Template>
                     <ControlTemplate TargetType="ItemsControl">
-                        <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                        <ScrollViewer>
                             <StackPanel>
                                 <ItemsPresenter/>
                                 <TextBlock Foreground="Gray" HorizontalAlignment="Center" Margin="0,8,0,56"/>
@@ -50,7 +50,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <CommandBar Style="{StaticResource CommandbarStyle}">
+            <CommandBar>
                 <AppBarButton x:Name="clear" Label="清空" Icon="Delete" Click="clear_Click"/>
             </CommandBar>
         </Grid>

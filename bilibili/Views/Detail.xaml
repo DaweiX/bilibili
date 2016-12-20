@@ -31,8 +31,8 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
-            <StackPanel Margin="4,8,4,56">
+        <ScrollViewer>
+            <StackPanel Margin="8,8,4,56">
                 <TextBlock x:Name="title" FontSize="24" TextWrapping="Wrap" Text="标题"/>
                 <Grid x:Name="grid">
                     <Grid.ColumnDefinitions>
@@ -53,47 +53,47 @@
                             <TextBlock x:Name="time"/>
                         </StackPanel>
                         <TextBlock x:Name="count" TextWrapping="Wrap"/>
+                        <StackPanel Margin="0,8,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
+                                <TextBlock Text="标签" FontSize="20" Margin="8,0,0,0"/>
+                            </StackPanel>
+                            <GridView x:Name="list_tags" Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
+                                <GridView.ItemContainerTransitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition/>
+                                    </TransitionCollection>
+                                </GridView.ItemContainerTransitions>
+                                <GridView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                                <GridView.ItemContainerStyle>
+                                    <Style TargetType="GridViewItem">
+                                        <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    </Style>
+                                </GridView.ItemContainerStyle>
+                                <GridView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <controls:WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </GridView.ItemsPanel>
+                            </GridView>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
-                <StackPanel Margin="8">
+                <StackPanel Margin="0,8,0,0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
                             <TextBlock Text="简介" FontSize="20" Margin="8,0,0,0"/>
                         </StackPanel>
                         <TextBlock x:Name="desc" MaxLines="3" TextWrapping="Wrap" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
-                        <HyperlinkButton x:Name="more" HorizontalAlignment="Right" Click="MoreDesc_Click" Style="{StaticResource HyperlinkButtonStyle1}">展开</HyperlinkButton>
-                    </StackPanel>
-                    <StackPanel Margin="0,8,0,0">
-                        <StackPanel Orientation="Horizontal">
-                            <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                            <TextBlock Text="标签" FontSize="20" Margin="8,0,0,0"/>
-                        </StackPanel>
-                        <GridView x:Name="list_tags" Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
-                            <GridView.ItemContainerTransitions>
-                                <TransitionCollection>
-                                    <EntranceThemeTransition/>
-                                </TransitionCollection>
-                            </GridView.ItemContainerTransitions>
-                            <GridView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                            <GridView.ItemContainerStyle>
-                                <Style TargetType="GridViewItem">
-                                    <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                </Style>
-                            </GridView.ItemContainerStyle>
-                            <GridView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <controls:WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </GridView.ItemsPanel>
-                        </GridView>
+                        <HyperlinkButton x:Name="more" HorizontalAlignment="Right" Click="MoreDesc_Click">展开</HyperlinkButton>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
@@ -133,9 +133,9 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Actor}" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
+                                                <TextBlock Text="{Binding Actor}" Foreground="{ThemeResource bili_Fontcolor_Main}" IsTextSelectionEnabled="True"/>
                                                 <TextBlock Text="饰" Margin="8,0,8,0" Foreground="{ThemeResource bili_Theme}"/>
-                                                <TextBlock Text="{Binding Role}" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
+                                                <TextBlock Text="{Binding Role}" Foreground="{ThemeResource bili_Fontcolor_Main}" IsTextSelectionEnabled="True"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -146,15 +146,14 @@
                                     <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
                                     <TextBlock Text="STAFF" FontSize="20" Margin="8,0,0,0"/>
                                 </StackPanel>
-                                <TextBlock TextWrapping="WrapWholeWords" x:Name="staff"/>
+                                <TextBlock TextWrapping="WrapWholeWords" x:Name="staff" IsTextSelectionEnabled="True"/>
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
-
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
-        <CommandBar Style="{StaticResource CommandbarStyle}">
+        <CommandBar>
             <AppBarButton Icon="ReShare" Label="分享">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
@@ -164,7 +163,7 @@
                 </AppBarButton.Flyout>
             </AppBarButton>
             <AppBarButton x:Name="addfav" Icon="Add" Label="订阅" Click="fav_Click"/>
-            <AppBarButton Icon="Pin" Label="固定磁贴"/>
+            <AppBarButton x:Name="pin" Icon="Pin" Label="固定磁贴" Click="Pin_Click"/>
             <CommandBar.SecondaryCommands>
                 <AppBarToggleButton x:Name="directly" Label="点击剧集直接播放" Click="directly_Click"/>
             </CommandBar.SecondaryCommands>

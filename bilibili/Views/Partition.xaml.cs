@@ -124,6 +124,8 @@ namespace bilibili.Views
                                     //}
                                     //show_1.show();
                                     await comment.init();
+                                    header_Home.init(await ContentServ.GetHomeBanners(), 3.2);
+                                    header_Home.navi += Header_navi;
                                     bar.Visibility = Visibility.Collapsed;
                                     isTopicLoaded = true;
                                 }
@@ -137,12 +139,13 @@ namespace bilibili.Views
                                 {
                                     await addcomment(cursor);
                                 }
-                                header_bangumi.init(await ContentServ.GetFilpItems(), 3.2);
+                                header_bangumi.Visibility = Visibility.Collapsed;
+                                //header_bangumi.init(await ContentServ.GetBangumiBanners(), 6.2 / 3);
                                 if (list_lastupdate.Items.Count == 0)
                                 {
                                     list_lastupdate.ItemsSource = await ContentServ.GetLastUpdateAsync();
                                 }
-                                header_bangumi.navi += Header_bangumi_navi;
+                                header_bangumi.navi += Header_navi;
                                 bar.Visibility = Visibility.Collapsed;
                             }
                             break;
@@ -180,13 +183,17 @@ namespace bilibili.Views
             }        
         }
 
-        private void Header_bangumi_navi(string arg)
+        private void Header_navi(string arg)
         {
             //link=http://bangumi.bilibili.com/anime/5516
             //@"(?<=av)\d+
             if (Regex.IsMatch(arg, @"(?<=anime/)\d*"))
             {
                 Frame.Navigate(typeof(Detail), Regex.Match(arg, @"(?<=anime/)\d*").Value, new DrillInNavigationTransitionInfo());
+            }
+            else
+            {
+                Frame.Navigate(typeof(MyWeb), arg, new DrillInNavigationTransitionInfo());
             }
         }
 
@@ -276,7 +283,7 @@ namespace bilibili.Views
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double i = ActualWidth;
-            width.Width = Methods.WidthFit.GetWidth(i, 600, 300);
+            width.Width = Methods.WidthFit.GetWidth(i, 600, 400);
         }
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)

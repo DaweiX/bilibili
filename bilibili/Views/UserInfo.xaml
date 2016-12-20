@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource bili_PageBackground}">
-        <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+        <ScrollViewer>
             <StackPanel Margin="8,0,8,0">
                 <StackPanel Margin="0,12,0,0" Orientation="Horizontal">
                     <Image x:Name="Face" Height="120" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -16,8 +16,8 @@
                         <TextBlock x:Name="userName" FontSize="26" Text="用户名" FontWeight="Light"/>
                         <TextBlock x:Name="sign" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
                         <TextBlock x:Name="coins" Text="硬币："/>
-                        <HyperlinkButton x:Name="coin" Content="硬币记录" Style="{StaticResource HyperlinkButtonStyle1}" Click="coin_Click"/>
-                        <HyperlinkButton x:Name="logout" Content="退出登录" Style="{StaticResource HyperlinkButtonStyle1}" Click="logout_Click"/>
+                        <HyperlinkButton x:Name="coin" Content="硬币记录" Click="coin_Click"/>
+                        <HyperlinkButton x:Name="logout" Content="退出登录" Click="logout_Click"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="20">
@@ -65,7 +65,7 @@
                             <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
                                 <StackPanel Orientation="Horizontal">
                                     <ItemsPresenter/>
-                                    <HyperlinkButton Style="{StaticResource HyperlinkButtonStyle1}" Content="查看全部→" Click="Button_Click" Margin="4"/>
+                                    <HyperlinkButton Content="查看全部→" Click="Button_Click" Margin="4"/>
                                 </StackPanel>
                             </ScrollViewer>
                         </ControlTemplate>

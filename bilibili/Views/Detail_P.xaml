@@ -25,7 +25,7 @@
         <Pivot x:Name="pivot" SelectionChanged="Pivot_SelectionChanged" Grid.Row="1">
             <PivotItem Header="详情" Margin="0">
                 <Grid>
-                    <ScrollViewer Style="{StaticResource ScrollViewerStyle1}">
+                    <ScrollViewer>
                         <StackPanel Margin="8,0,8,56">
                             <TextBlock x:Name="title" FontSize="24" TextWrapping="Wrap" Text="标题"/>
                             <Image x:Name="pic" Width="320" Height="200" Tapped="pic_Tapped" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="3" Source="ms-appx:///Assets//SplashScreen.scale-200.png">
@@ -36,7 +36,7 @@
                                 </FlyoutBase.AttachedFlyout>
                             </Image>
                             <StackPanel Orientation="Horizontal">
-                                <HyperlinkButton Style="{StaticResource HyperlinkButtonStyle1}" x:Name="up" Click="up_Click"/>
+                                <HyperlinkButton x:Name="up" Click="up_Click"/>
                                 <TextBlock Text="发表于" Foreground="{ThemeResource bili_Fontcolor_Second}" Margin="2,0,2,0"/>
                                 <TextBlock x:Name="time"/>
                             </StackPanel>
@@ -47,7 +47,7 @@
                                     <TextBlock Text="摘要" FontSize="20" Margin="8,0,0,0"/>
                                 </StackPanel>
                                 <TextBlock x:Name="desc" MaxLines="3" TextWrapping="Wrap" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
-                                <HyperlinkButton x:Name="more" HorizontalAlignment="Right" Click="MoreDesc_Click" Style="{StaticResource HyperlinkButtonStyle1}">展开</HyperlinkButton>
+                                <HyperlinkButton x:Name="more" HorizontalAlignment="Right" Click="MoreDesc_Click">展开</HyperlinkButton>
                             </StackPanel>
                             <StackPanel Margin="0,8,0,0">
                                 <StackPanel Orientation="Horizontal">
@@ -95,7 +95,7 @@
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
-                    <CommandBar Style="{StaticResource CommandbarStyle}">
+                    <CommandBar>
                         <AppBarButton x:Name="btn_ok" Icon="Accept" Label="确定" Click="btn_ok_Click" Visibility="Collapsed"/>
                         <AppBarButton x:Name="btn_all" Icon="SelectAll" Label="全选" Click="btn_all_Click" Visibility="Collapsed"/>
                         <AppBarButton x:Name="btn_cal" Icon="Cancel" Label="取消" Click="btn_cal_Click" Visibility="Collapsed"/>
@@ -149,7 +149,7 @@
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2" Margin="4,0,4,0">
-                                        <HyperlinkButton Content="{Binding Uname}" Style="{StaticResource HyperlinkButtonStyle1}"/>
+                                        <HyperlinkButton Content="{Binding Uname}"/>
                                         <TextBlock Text="{Binding Time}" FontSize="14" Foreground="Gray"/>
                                         <TextBlock Text="{Binding Message}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
                                         <ListView Template="{StaticResource myControlTemplete}"
@@ -177,7 +177,7 @@
                                                             </StackPanel>
                                                         </StackPanel>
                                                         <StackPanel Grid.Column="2" Margin="8,0,8,0">
-                                                            <HyperlinkButton Content="{Binding Uname}" Style="{StaticResource HyperlinkButtonStyle1}"/>
+                                                            <HyperlinkButton Content="{Binding Uname}"/>
                                                             <TextBlock Text="{Binding Time}" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                                                             <StackPanel Orientation="Horizontal">
                                                                 <TextBlock Text="{Binding Baseon}" TextWrapping="Wrap"/>
@@ -206,7 +206,7 @@
                         <StackPanel Grid.ColumnSpan="3">
                             <StackPanel Orientation="Horizontal" x:Name="stk_reply" Visibility="Collapsed">
                                 <TextBlock x:Name="txt_reply" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="14"/>
-                                <HyperlinkButton Content="取消" Style="{StaticResource HyperlinkButtonStyle1}" Margin="12,0,0,0" Click="ReplyBack_Click"/>
+                                <HyperlinkButton Content="取消" Margin="12,0,0,0" Click="ReplyBack_Click"/>
                             </StackPanel>
                             <Border BorderBrush="Gray" BorderThickness="0.4"/>
                         </StackPanel>
@@ -222,7 +222,7 @@
             <PivotItem Header="相关视频">
                 <Grid SizeChanged="Grid_SizeChanged">
                     <Border x:Name="width"/>
-                    <GridView x:Name="list_relates" Style="{StaticResource GridViewStyle}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_relates_ItemClick">
+                    <GridView x:Name="list_relates" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_relates_ItemClick">
                         <GridView.ItemContainerStyle>
                             <Style TargetType="GridViewItem">
                                 <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>

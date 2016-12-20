@@ -28,9 +28,9 @@ namespace bilibili.Http
         public static async Task<List<Content>> GetContentAsync(int tid, int page, int pagesize = 20, int order = 2)
         {
             string ord = string.Empty;
-            switch(order)
+            switch (order)
             {
-                case 1: ord = "default";break;
+                case 1: ord = "default"; break;
                 case 2: ord = "hot"; break;
                 case 3: ord = "review"; break;
             }
@@ -79,7 +79,7 @@ namespace bilibili.Http
             }
         }
 
-        public async static Task<List<Concern>> GetFriendsCons(string mid,int page)
+        public async static Task<List<Concern>> GetFriendsCons(string mid, int page)
         {
             List<Concern> mylist = new List<Concern>();
             string url = "http://space.bilibili.com/ajax/Bangumi/getList?mid=" + mid + "&pagesize=20&page=" + page.ToString();
@@ -115,7 +115,7 @@ namespace bilibili.Http
                             cont.Title = temp["title"].GetString();
                         mylist.Add(cont);
                     }
-                }                
+                }
             }
             return mylist;
         }
@@ -351,7 +351,7 @@ namespace bilibili.Http
                 return null;
             }
         }
-   
+
         /// <summary>
         /// 获取直播（头部）
         /// </summary>
@@ -461,7 +461,7 @@ namespace bilibili.Http
                 }
                 return contentList;
             }
-           catch
+            catch
             {
                 return null;
             }
@@ -520,149 +520,121 @@ namespace bilibili.Http
         /// <summary>
         /// 获取番剧详情
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="i">1:总览，2:演员，3:列表</param>
+        /// <param name="sid"></param>
         /// <returns></returns>
-        public static async Task<object> GetSeasonResultAsync(string url, int i)
+        public static async Task<Season> GetSeasonResultAsync(string sid)
         {
+            string url = "http://bangumi.bilibili.com/api/season_v2?_device=wp&build=424000&platform=android&access_key=" + ApiHelper.accesskey + "&appkey=422fd9d7289a1dd9&ts=" + ApiHelper.GetLinuxTS().ToString() + "&type=bangumi&season_id=" + sid;
+            url += ApiHelper.GetSign(url);
             JsonObject json = new JsonObject();
-            switch (i)
+            Season season = new Season();
+            try
             {
-                case 1:
+                json = await BaseService.GetJson(url);
+                if (json.ContainsKey("result"))
+                {
+                    JsonObject json2 = JsonObject.Parse(json["result"].ToString());
+                    if (json2.ContainsKey("coins"))
+                        season.Coins = StringDeal.delQuotationmarks(json2["coins"].ToString());
+                    if (json2.ContainsKey("danmaku_count"))
+                        season.Danmaku = StringDeal.delQuotationmarks(json2["danmaku_count"].ToString());
+                    if (json2.ContainsKey("copyright"))
+                        season.Copyright = json2["copyright"].GetString();
+                    if (json2.ContainsKey("cover"))
+                        season.Cover = json2["cover"].GetString();
+                    if (json2.ContainsKey("bangumi_title"))
+                        season.Title = json2["bangumi_title"].GetString();
+                    if (json2.ContainsKey("evaluate"))
+                        season.Brief = json2["evaluate"].GetString();
+                    if (json2.ContainsKey("staff"))
+                        season.Staff = json2["staff"].GetString();
+                    if (json2.ContainsKey("favorites"))
+                        season.Fav = StringDeal.delQuotationmarks(json2["favorites"].ToString());
+                    if (json2.ContainsKey("play_count"))
+                        season.View = StringDeal.delQuotationmarks(json2["play_count"].ToString());
+                    if (json2.ContainsKey("weekday"))
+                        season.WeekDay = json2["weekday"].ToString()[0];
+                    if (json2.ContainsKey("pub_time"))
+                        season.Time = json2["pub_time"].GetString().Split(' ')[0];
+                    if (json2.ContainsKey("is_finish"))
+                        season.isFinish = json2["is_finish"].ToString() == "0" ? false : true;
+                    if (json2.ContainsKey("squareCover"))
+                        season.SquareCover = json2["squareCover"].GetString();
+                    if (json2.ContainsKey("user_season"))
                     {
-                        try
+                        JsonObject j = json2["user_season"].GetObject();
+                        if (j.ContainsKey("attention"))
                         {
-                            json = await BaseService.GetJson(url);
-                            Season_Total season = new Season_Total();
-                            if (json.ContainsKey("result"))
-                            {
-                                JsonObject json2 = JsonObject.Parse(json["result"].ToString());
-                                if (json2.ContainsKey("coins"))
-                                    season.Coins = StringDeal.delQuotationmarks(json2["coins"].ToString());
-                                if (json2.ContainsKey("danmaku_count"))
-                                    season.Danmaku = StringDeal.delQuotationmarks(json2["danmaku_count"].ToString());
-                                if (json2.ContainsKey("copyright"))
-                                    season.Copyright = json2["copyright"].GetString();
-                                if (json2.ContainsKey("cover"))
-                                    season.Cover = json2["cover"].GetString();
-                                if (json2.ContainsKey("bangumi_title"))
-                                    season.Title = json2["bangumi_title"].GetString();
-                                if (json2.ContainsKey("evaluate"))
-                                    season.Brief = json2["evaluate"].GetString();
-                                if (json2.ContainsKey("staff"))
-                                    season.Staff = json2["staff"].GetString();
-                                if (json2.ContainsKey("favorites"))
-                                    season.Fav = StringDeal.delQuotationmarks(json2["favorites"].ToString());
-                                if (json2.ContainsKey("play_count"))
-                                    season.View = StringDeal.delQuotationmarks(json2["play_count"].ToString());
-                                if (json2.ContainsKey("weekday"))
-                                    season.WeekDay = json2["weekday"].ToString().ToCharArray()[0];
-                                if (json2.ContainsKey("pub_time"))
-                                    season.Time = StringDeal.delQuotationmarks(json2["pub_time"].ToString());
-                                if (json2.ContainsKey("is_finish"))
-                                    season.isFinish = json2["is_finish"].ToString() == "0" ? false : true;
-                                if (json2.ContainsKey("user_season"))
-                                {
-                                    JsonObject j = json2["user_season"].GetObject();
-                                    if (j.ContainsKey("attention"))
-                                    {
-                                        season.IsConcerned = j["attention"].GetString();
-                                    }
-                                }
-                                if (json2.ContainsKey("tags"))
-                                {
-                                    season.Tags = new List<string>();
-                                    foreach (var item in json2["tags"].GetArray())
-                                    {
-                                        JsonObject temp = JsonObject.Parse(item.ToString());
-                                        if (temp.ContainsKey("tag_name"))
-                                            season.Tags.Add(StringDeal.delQuotationmarks(temp["tag_name"].ToString()));
-                                    }
-                                }
-                            }
-                            return season;
-                        }
-                        catch (Exception e)
-                        {
-                            await new MessageDialog(e.Message).ShowAsync();
-                            return null;
+                            season.IsConcerned = j["attention"].GetString();
                         }
                     }
-                case 2:
+                    if (json2.ContainsKey("tags"))
                     {
-                        try
+                        season.Tags = new List<string>();
+                        foreach (var item in json2["tags"].GetArray())
                         {
-                            json = await BaseService.GetJson(url);
-                            List<Season_actor> mylist = new List<Season_actor>();
-                            if (json.ContainsKey("result"))
-                            {
-                                JsonObject json2 = JsonObject.Parse(json["result"].ToString());
-                                JsonArray Array_ac = json2["actor"].GetArray();
-                                foreach (var item in Array_ac)
-                                {
-                                    Season_actor actor = new Season_actor();
-                                    JsonObject json3 = JsonObject.Parse(item.ToString());
-                                    if (json3.ContainsKey("actor"))
-                                        actor.Actor = StringDeal.delQuotationmarks(json3["actor"].ToString());
-                                    if (json3.ContainsKey("role"))
-                                        actor.Role = StringDeal.delQuotationmarks(json3["role"].ToString());
-                                    mylist.Add(actor);
-                                }
-                            }
-                            return mylist;
-                        }
-                        catch (Exception e)
-                        {
-                            await new MessageDialog(e.Message).ShowAsync();
-                            return null;
+                            JsonObject temp = JsonObject.Parse(item.ToString());
+                            if (temp.ContainsKey("tag_name"))
+                                season.Tags.Add(StringDeal.delQuotationmarks(temp["tag_name"].ToString()));
                         }
                     }
-                case 3:
+                }
+                List<Cast> cvlist = new List<Cast>();
+                if (json.ContainsKey("result"))
+                {
+                    JsonObject json2 = JsonObject.Parse(json["result"].ToString());
+                    JsonArray Array_ac = json2["actor"].GetArray();
+                    foreach (var item in Array_ac)
                     {
-                        try
-                        {
-                            List<Season_episodes> indexList = new List<Season_episodes>();
-                            json = await BaseService.GetJson(url);
-                            if (json.ContainsKey("result"))
-                            {
-                                JsonObject json2 = JsonObject.Parse(json["result"].ToString());
-                                Season_episodes season;
-                                if (json2.ContainsKey("episodes"))
-                                {
-                                    JsonArray Array_rs = json2["episodes"].GetArray();
-                                    foreach (var item in Array_rs)
-                                    {
-                                        season = new Season_episodes();
-                                        JsonObject json3 = JsonObject.Parse(item.ToString());
-                                        if (json3.ContainsKey("av_id"))
-                                            season.ID = StringDeal.delQuotationmarks(json3["av_id"].ToString());
-                                        if (json3.ContainsKey("coins"))
-                                            season.Coins = StringDeal.delQuotationmarks(json3["coins"].ToString());
-                                        if (json3.ContainsKey("cover"))
-                                            season.Cover = StringDeal.delQuotationmarks(json3["cover"].ToString());
-                                        if (json3.ContainsKey("danmaku"))
-                                            season.Danmaku = StringDeal.delQuotationmarks(json3["danmaku"].ToString());
-                                        if (json3.ContainsKey("index"))
-                                            season.Index = StringDeal.delQuotationmarks(json3["index"].ToString());
-                                        if (json3.ContainsKey("index_title"))
-                                            season.Title = StringDeal.delQuotationmarks(json3["index_title"].ToString());
-                                        if (json3.ContainsKey("update_time"))
-                                            season.Time = StringDeal.delQuotationmarks(json3["update_time"].ToString()).Split(' ')[0];
-                                        indexList.Add(season);
-                                    }
-                                }
-                            }
-                            return indexList;
-                        }
-                        catch (Exception e)
-                        {
-                            await new MessageDialog(e.Message).ShowAsync();
-                            return null;
-                        }
+                        Cast cast = new Cast();
+                        JsonObject json3 = JsonObject.Parse(item.ToString());
+                        if (json3.ContainsKey("actor"))
+                            cast.Actor = json3["actor"].GetString();
+                        if (json3.ContainsKey("role"))
+                            cast.Role = json3["role"].GetString();
+                        cvlist.Add(cast);
                     }
-                default: return null;
+                    season.CVlist = cvlist;
+                }
+                List<Episodes> indexList = new List<Episodes>();
+                if (json.ContainsKey("result"))
+                {
+                    JsonObject json2 = JsonObject.Parse(json["result"].ToString());
+                    if (json2.ContainsKey("episodes"))
+                    {
+                        JsonArray Array_rs = json2["episodes"].GetArray();
+                        foreach (var item in Array_rs)
+                        {
+                            Episodes episode = new Episodes();
+                            JsonObject json3 = JsonObject.Parse(item.ToString());
+                            if (json3.ContainsKey("av_id"))
+                                episode.ID = StringDeal.delQuotationmarks(json3["av_id"].ToString());
+                            if (json3.ContainsKey("coins"))
+                                episode.Coins = StringDeal.delQuotationmarks(json3["coins"].ToString());
+                            if (json3.ContainsKey("cover"))
+                                episode.Cover = json3["cover"].GetString();
+                            if (json3.ContainsKey("danmaku"))
+                                episode.Danmaku = StringDeal.delQuotationmarks(json3["danmaku"].ToString());
+                            if (json3.ContainsKey("index"))
+                                episode.Index = StringDeal.delQuotationmarks(json3["index"].ToString());
+                            if (json3.ContainsKey("index_title"))
+                                episode.Title = json3["index_title"].GetString();
+                            if (json3.ContainsKey("update_time"))
+                                episode.Time = json3["update_time"].GetString().Split(' ')[0];
+                            indexList.Add(episode);
+                        }
+                        season.EPS = indexList;
+                    }
+                }
+                return season;
+            }
+            catch (Exception e)
+            {
+                await new MessageDialog(e.Message).ShowAsync();
+                return null;
             }
         }
+    
       /// <summary>
       /// 获取视频源地址及相关信息
       /// </summary>
@@ -820,7 +792,7 @@ namespace bilibili.Http
         public static async Task<List<LastUpdate>> GetLastUpdateAsync()
         {
             List<LastUpdate> list = new List<LastUpdate>();
-            string url = "http://bangumi.bilibili.com/api/app_index_page_v2";
+            string url = "http://bangumi.bilibili.com/api/app_index_page";
             try
             {
                 JsonObject json = await BaseService.GetJson(url);
@@ -1125,21 +1097,25 @@ namespace bilibili.Http
                 JsonObject json2 = JsonObject.Parse(json["data"].ToString());
                 if (json2.ContainsKey("videos"))
                 {
-                    JsonArray array = json2["videos"].GetArray();
-                    foreach (var item in array)
+                    try
                     {
-                        Content cont = new Content();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
-                        if (temp.ContainsKey("aid"))
-                            cont.Num = temp["aid"].ToString();
-                        if (temp.ContainsKey("fav_create_at"))
-                            cont.Creat = StringDeal.delQuotationmarks(temp["fav_create_at"].ToString()).Split(' ')[0];
-                        if (temp.ContainsKey("pic"))
-                            cont.Pic = StringDeal.delQuotationmarks(temp["pic"].ToString());
-                        if (temp.ContainsKey("title"))
-                            cont.Title = StringDeal.delQuotationmarks(temp["title"].ToString());
-                        mylist.Add(cont);
+                        JsonArray array = json2["videos"].GetArray();
+                        foreach (var item in array)
+                        {
+                            Content cont = new Content();
+                            JsonObject temp = JsonObject.Parse(item.ToString());
+                            if (temp.ContainsKey("aid"))
+                                cont.Num = temp["aid"].ToString();
+                            if (temp.ContainsKey("fav_create_at"))
+                                cont.Creat = StringDeal.delQuotationmarks(temp["fav_create_at"].ToString()).Split(' ')[0];
+                            if (temp.ContainsKey("pic"))
+                                cont.Pic = StringDeal.delQuotationmarks(temp["pic"].ToString());
+                            if (temp.ContainsKey("title"))
+                                cont.Title = StringDeal.delQuotationmarks(temp["title"].ToString());
+                            mylist.Add(cont);
+                        }
                     }
+                    catch { }
                 }
             }
             return mylist;
@@ -1486,8 +1462,10 @@ namespace bilibili.Http
                         fav.Fid = json2["fid"].ToString();
                     if (json2.ContainsKey("max_count"))
                         fav.MCount = json2["max_count"].ToString();
+                    if (json2.ContainsKey("state"))
+                        fav.State = json2["state"].ToString();
                     if (json2.ContainsKey("name"))
-                        fav.Name = StringDeal.delQuotationmarks(json2["name"].ToString());
+                        fav.Name = json2["name"].GetString();
                     myFolder.Add(fav);
                 }
                 return myFolder;
@@ -1705,37 +1683,33 @@ namespace bilibili.Http
             }
         }
 
-        public static async Task<List<FlipItem>> GetFilpItems()
+        public static async Task<List<FlipItem>> GetBangumiBanners()
         {
             List<FlipItem> items = new List<FlipItem>();
-            string url = "http://bangumi.bilibili.com/api/app_index_page_v2";
+            string url = "http://bangumi.bilibili.com/jsonp/slideshow/34.ver";
             JsonObject json = await BaseService.GetJson(url);
             if (json["code"].ToString() == "0")
             {
                 if (json.ContainsKey("result"))
                 {
-                    json = JsonObject.Parse(json["result"].ToString());
-                    if (json.ContainsKey("banners"))
+                    JsonArray array = json["result"].GetArray();
+                    foreach (var temp in array)
                     {
-                        JsonArray array = json["banners"].GetArray();
-                        foreach (var temp in array)
+                        FlipItem item = new FlipItem();
+                        json = JsonObject.Parse(temp.ToString());
+                        if (json.ContainsKey("img"))
                         {
-                            FlipItem item = new FlipItem();
-                            json = JsonObject.Parse(temp.ToString());
-                            if (json.ContainsKey("img"))
-                            {
-                                item.Img = json["img"].GetString();
-                            }
-                            if (json.ContainsKey("link"))
-                            {
-                                item.Link = json["link"].GetString();
-                            }
-                            if (json.ContainsKey("title"))
-                            {
-                                item.Title = json["title"].GetString();
-                            }
-                            items.Add(item);
+                            item.Img = json["img"].GetString();
                         }
+                        if (json.ContainsKey("link"))
+                        {
+                            item.Link = json["link"].GetString();
+                        }
+                        if (json.ContainsKey("title"))
+                        {
+                            item.Title = json["title"].GetString();
+                        }
+                        items.Add(item);
                     }
                 }
                 return items;
@@ -1744,6 +1718,37 @@ namespace bilibili.Http
             {
                 return null;
             }
+        }
+
+        public static async Task<List<FlipItem>> GetHomeBanners()
+        {
+            List<FlipItem> list = new List<FlipItem>();
+            try
+            {
+                string url = "http://app.bilibili.com/x/banner?plat=4&build=412001";
+                JsonObject json = await BaseService.GetJson(url);
+                if (json.ContainsKey("data"))
+                {
+                    JsonArray array = json["data"].GetArray();
+                    foreach (var temp in array)
+                    {
+                        FlipItem item = new FlipItem();
+                        json = JsonObject.Parse(temp.ToString());
+                        if (json.ContainsKey("image"))
+                            item.Img = json["image"].GetString();
+                        if (json.ContainsKey("title"))
+                            item.Title = json["title"].GetString();
+                        if (json.ContainsKey("value"))
+                            item.Link = json["value"].GetString();
+                        list.Add(item);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            return list;
         }
     }
 }
