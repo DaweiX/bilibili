@@ -7,6 +7,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using bilibili.Helpers;
 using System.Text.RegularExpressions;
+using Windows.UI.ViewManagement;
+using Windows.UI;
+using Windows.UI.Notifications;
 
 namespace bilibili
 {
@@ -35,6 +38,7 @@ namespace bilibili
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
+                //关掉一个我觉得没啥卵用的东东
                 this.DebugSettings.EnableFrameRateCounter = false;
             }
 #endif
@@ -45,14 +49,19 @@ namespace bilibili
             {
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
-
+                //标题栏
+                var TitleBar = ApplicationView.GetForCurrentView().TitleBar;
+                TitleBar.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
+                TitleBar.ForegroundColor = Colors.White;
+                TitleBar.ButtonBackgroundColor = Color.FromArgb(1, 226, 115, 170);
+                TitleBar.ButtonHoverForegroundColor = Colors.Black;
+                TitleBar.ButtonHoverBackgroundColor = Colors.White;
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: 从之前挂起的应用程序加载状态
                 }
-
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;
             }
@@ -81,10 +90,6 @@ namespace bilibili
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        /// <summary>
-        /// 从URL唤醒程序
-        /// </summary>
-        /// <param name="args"></param>
         protected override void OnActivated(IActivatedEventArgs args)
         {
             if (args.Kind == ActivationKind.Protocol)
@@ -116,6 +121,10 @@ namespace bilibili
                     Window.Current.Activate();
                     return;
                 }
+            }
+            if (args.Kind == ActivationKind.ToastNotification)
+            {
+                string aid=args.ToString();
             }
         }
 

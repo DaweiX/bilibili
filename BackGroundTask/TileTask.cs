@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Data.Json;
@@ -13,16 +14,18 @@ namespace BackgroundTask
     {
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
+            //Helper.SetValue("_toastquene", "");
             var deferral = taskInstance.GetDeferral();
             List<Feed_Bangumi> list0 = await GetPulls();
-            UpdateToast(list0);
+            UpdateTile(list0);
+            SendToast(list0);
             deferral.Complete();
         }
 
         private async Task<List<Feed_Bangumi>> GetPulls()
         {
             List<Feed_Bangumi> list = new List<Feed_Bangumi>();
-            string url = "http://api.bilibili.com/x/feed/pull?type=0&_device=wp&_ulv=10000&build=424000&platform=android&appkey=" + Helper.appkey + "&access_key=" + Helper.GetValue("_accesskey").ToString() + "&pn=1&ps=10&rnd=" + new Random().Next(1000, 2000).ToString();
+            string url = "http://api.bilibili.com/x/feed/pull?type=0&_device=wp&_ulv=10000&build=424000&platform=android&appkey=" + Helper.appkey + "&access_key=" + Helper.GetValue("_accesskey").ToString() + "&pn=1&ps=20&rnd=" + new Random().Next(1000, 2000).ToString();
             url += Helper.GetSign(url);
             JsonObject json = await Helper.GetJson(url);
             if (json.ContainsKey("data"))
@@ -31,10 +34,8 @@ namespace BackgroundTask
                 if (json.ContainsKey("feeds"))
                 {
                     JsonArray array = json["feeds"].GetArray();
-                    //磁贴最多更新5个
-                    for (int i = 0; i < 5; i++)
+                    foreach (var item in array)
                     {
-                        var item = array[i];
                         Feed_Bangumi feed = new Feed_Bangumi();
                         json = item.GetObject();
                         if (json.ContainsKey("addition"))
@@ -75,13 +76,48 @@ namespace BackgroundTask
                             }
                         }
                     }
+                    string temp = string.Empty;
+                    string OldQuene = Helper.GetValue("_toastquene").ToString();
+                    foreach (var item in list)
+                    {
+                        temp += item.Aid + " ";
+                        if (OldQuene.Contains(item.Aid))
+                            continue;
+                        OldQuene += item.Aid + ",";
+                    }
+                    foreach (var str in Regex.Match(OldQuene, @"\d*(?=@)").Groups) 
+                    {
+                        string value = str.ToString();
+                        if (!temp.Contains(value))//最新的推送列表里没有该番剧的信息，它将被删除
+                            OldQuene = OldQuene.Replace(value + "@,", "");
+                    }
+                    Helper.SetValue("_toastquene", OldQuene);
                     return list;
                 }
             }
             return null;
         }
+        string TileTemplete = @"<tile branding='name'> 
+  <visual>
+    <binding template='TileMedium'>
+      <image src='{0}' placement='peek'/>
+      <text>{1}</text>
+      <text hint-style='captionsubtle' hint-wrap='true'>{2}</text>
+    </binding>
+    <binding template='TileWide'>
+      <image src='{0}' placement='peek'/>
+      <text>{1}</text>
+      <text hint-style='captionsubtle' hint-wrap='true'>{2}</text>
+    </binding>
+    <binding template='TileLarge'>
+      <image src='{0}' placement='peek'/>
+      <text>{1}</text>
+      <text hint-style='captionsubtle' hint-wrap='true'>{2}</text>
+    </binding>
+  </visual>
+</tile>";
 
-        private void UpdateToast(List<Feed_Bangumi> list)
+        private void UpdateTile(List<Feed_Bangumi> list)
         {
             var updater = TileUpdateManager.CreateTileUpdaterForApplication();
             updater.EnableNotificationQueue(true);
@@ -89,37 +125,50 @@ namespace BackgroundTask
             int itemcount = 0;
             foreach (var feed in list)
             {
-                XmlDocument xml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWide310x150PeekImage01);
-                var textNodes = xml.GetElementsByTagName("text");
-                textNodes[0].InnerText = feed.Title + "\n" + feed.New_ep + "\n" + feed.Time;
-                var imagenodes = xml.GetElementsByTagName("image");
-                ((XmlElement)imagenodes[0]).SetAttribute("src", feed.Pic);
-                TileNotification tileNoti = new TileNotification(xml);
-                //tileNoti.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(15);
-                updater.Update(tileNoti);
+                XmlDocument xml = new XmlDocument();
+                string templete = string.Format(TileTemplete, feed.Pic, feed.Title, feed.New_ep);
+                xml.LoadXml(templete);
                 if (itemcount++ > 5) break;
             }
         }
-        //public static object GetJsonValue(JsonObject json, string key)
-        //{
-        //    if (!json.ContainsKey(key))
-        //    {
-        //        return null;
-        //    }
-        //    else
-        //    {
-        //        var value = json[key];
-        //        JsonValueType type = value.ValueType;
-        //        switch (type)
-        //        {
-        //            case JsonValueType.String: return value.GetString();
-        //            case JsonValueType.Object: return value.GetObject();
-        //            case JsonValueType.Array: return value.GetArray();
-        //            case JsonValueType.Null: return null;
-        //            default: return value.ValueType;
-        //        }
-        //    }
-        //}
+
+        private void SendToast(List<Feed_Bangumi> list)
+        {
+            if (Helper.GetValue("_toast") == null)
+                return;
+            if ((bool)Helper.GetValue("_toast") == false)
+                return;
+            if (Helper.GetValue("_toastquene") == null)
+                return;
+            string UnpulledQuene = Helper.GetValue("_toastquene").ToString();
+            foreach (var feed in list)
+            {
+                if (UnpulledQuene.Contains(feed.Aid + "@")) 
+                    continue;
+                var tmp = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText01);
+                var txtNodes = tmp.GetElementsByTagName("text");
+                var imageNodes = tmp.GetElementsByTagName("image");
+                if (!(txtNodes == null || txtNodes.Length == 0))
+                {
+                    var txtnode = txtNodes[0];
+                    if (!(imageNodes == null || imageNodes.Length == 0))
+                    {
+                        var imagenode = imageNodes[0];
+                        if (imagenode != null)
+                        {
+                            var attr = imagenode.Attributes[1].NodeValue = feed.Pic;
+                        }
+                    }
+                    txtnode.InnerText = string.Format("【{0}】{1}", feed.Title, feed.New_ep);
+                    ToastNotification toast = new ToastNotification(tmp);
+                    toast.Tag = feed.Aid;
+                    ToastNotificationManager.CreateToastNotifier().Show(toast);
+                    //Helper.SetValue("_toastarg", feed.Aid);
+                    UnpulledQuene = UnpulledQuene.Replace(feed.Aid, feed.Aid + "@");//后接@表示已推送过
+                }
+            }
+            Helper.SetValue("_toastquene", UnpulledQuene);
+        }
 
         class Feed_Bangumi
         {

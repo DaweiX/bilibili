@@ -19,6 +19,7 @@ using bilibili.Models;
 using Windows.Data.Json;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.StartScreen;
+using bilibili.UI;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -47,7 +48,7 @@ namespace bilibili.Views
             }
             if (!ApiHelper.IsLogin())
             {
-                trylogin();
+                trylogin?.Invoke();//这块可能要改
             }
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -56,7 +57,21 @@ namespace bilibili.Views
             sid = e.Parameter.ToString();
             aa = await ContentServ.GetSeasonResultAsync(sid);
             BitmapImage bmp = new BitmapImage();
-            bmp.UriSource = new Uri(aa.Cover);
+            Uri url = new Uri(aa.Cover);
+            //var streamReference = RandomAccessStreamReference.CreateFromUri(url);
+            //IRandomAccessStream stream = await streamReference.OpenReadAsync();
+            //MyImage myimage;
+            //if (stream != null)
+            //{
+            //    BitmapImage img = new BitmapImage(url);
+            //    WriteableBitmap bmp = new WriteableBitmap(480, 640);
+            //    await bmp.SetSourceAsync(stream);
+            //    myimage = new MyImage(bmp);
+            //    GaussianBlurFilter filter = new GaussianBlurFilter();
+            //    myimage = filter.process(myimage);
+            //    pic.Source = myimage.image;
+            //}
+            bmp.UriSource = url;
             pic.Source = bmp;
             title.Text = aa.Title;
             up.Text = aa.Copyright;

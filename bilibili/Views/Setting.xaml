@@ -90,7 +90,8 @@
                     <TextBlock x:Name="h3" Text="通知" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
                 <StackPanel>
-                    <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="主磁贴更新"/>
+                    <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="主磁贴更新" IsOn="True"/>
+                    <ToggleSwitch x:Name="toast" Toggled="toast_Toggled" Header="推送通知" IsOn="True"/>
                 </StackPanel>
             </PivotItem>
             <PivotItem>
@@ -107,7 +108,7 @@
                 </PivotItem.Header>
                 <StackPanel>
                     <ToggleSwitch x:Name="direct" Header="点击剧集直接播放" Toggled="direct_Toggled"/>
-                    <ComboBox x:Name="quality" Header="默认清晰度选择" SelectionChanged="quality_SelectionChanged">
+                    <ComboBox x:Name="quality" Header="默认清晰度选择" SelectedIndex="1" SelectionChanged="quality_SelectionChanged">
                         <ComboBoxItem Tag="1">流畅</ComboBoxItem>
                         <ComboBoxItem Tag="2">清晰</ComboBoxItem>
                         <ComboBoxItem Tag="3">高清</ComboBoxItem>

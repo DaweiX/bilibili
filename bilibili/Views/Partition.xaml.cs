@@ -162,11 +162,6 @@ namespace bilibili.Views
                             break;
                         case 3:
                             {
-                                //list_live
-                            }
-                            break;
-                        case 4:
-                            {
                                 //发现
                                 if (list_hottags.Items.Count == 0)
                                 {

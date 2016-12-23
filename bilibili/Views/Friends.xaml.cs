@@ -94,5 +94,12 @@ namespace bilibili.Views
         {
             width.Width = Methods.WidthFit.GetWidth(ActualWidth, 400, 200);
         }
+
+        private void toutu_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            BitmapImage bmp = new BitmapImage();
+            bmp.UriSource = ActualWidth > 600 ? new Uri("http://i0.hdslb.com/" + user.Toutu, UriKind.Absolute) : new Uri("http://i0.hdslb.com/" + user.Toutu_s, UriKind.Absolute);
+            toutu.Source = bmp;
+        }
     }
 }

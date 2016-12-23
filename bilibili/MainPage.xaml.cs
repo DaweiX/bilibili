@@ -31,17 +31,9 @@ namespace bilibili
         {
             this.InitializeComponent();
             this.DataContext = this;
-            //标题栏
-            var TitleBar = ApplicationView.GetForCurrentView().TitleBar;
-            TitleBar.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
-            TitleBar.ForegroundColor = Colors.White;
-            TitleBar.ButtonBackgroundColor = Color.FromArgb(1, 226, 115, 170);
-            TitleBar.ButtonHoverForegroundColor = Colors.Black;
-            TitleBar.ButtonHoverBackgroundColor = Colors.White;
             //后退键
             SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
             MainList.SelectedIndex = 0;
-            mainframe.Navigate(typeof(Views.Partition), null, new Windows.UI.Xaml.Media.Animation.EntranceNavigationTransitionInfo());
             if (SettingHelper.ContainsKey("_topbar"))
             {
                 TopShoworHide();
@@ -67,20 +59,24 @@ namespace bilibili
         {
             if (WebStatusHelper.IsOnline())
             {
+                string sid = e.Parameter.ToString();
+                if (!string.IsNullOrEmpty(sid))
+                {
+                    mainframe.Navigate(typeof(Views.Detail), sid);
+                }
+                else
+                {
+                    mainframe.Navigate(typeof(Views.Partition));
+                }
                 bool isLogin = await autologin();
                 if (isLogin)
-                {
+                {                    
                     if (SettingHelper.GetValue("_pull") != null)
                     {
                         if ((bool)SettingHelper.GetValue("_pull") == true)
                         {
                             await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
                         }
-                    }
-                    string sid = e.Parameter.ToString();
-                    if (!string.IsNullOrEmpty(sid))
-                    {
-                        mainframe.Navigate(typeof(Views.Detail), sid);
                     }
                 }
             }
@@ -332,7 +328,10 @@ namespace bilibili
                     break;
                 case "Detail":
                     txt_head.Text = "番剧详情";
-                    (mainframe.Content as Views.Detail).trylogin += Detail_trylogin;
+                    if (!ApiHelper.IsLogin())
+                    {
+                        (mainframe.Content as Views.Detail).trylogin += Detail_trylogin;
+                    }
                     break;
                 case "Detail_P":
                     (mainframe.Content as Views.Detail_P).pageNavi += DetailPNavi;
@@ -376,6 +375,9 @@ namespace bilibili
                     break;
                 case "UserInfo":
                     txt_head.Text = "个人中心";
+                    break;
+                case "RankPage":
+                    txt_head.Text = "排行榜";
                     break;
             }
         }

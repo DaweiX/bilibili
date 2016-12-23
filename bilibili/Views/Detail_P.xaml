@@ -240,11 +240,11 @@
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
-                                    <Image Source="{Binding Cover}" Grid.RowSpan="2"/>
-                                    <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                                        <TextBlock Text="{Binding Title}" Foreground="{ThemeResource bili_Fontcolor_Main}" FontSize="13" TextWrapping="Wrap"/>
+                                    <StackPanel Grid.RowSpan="2">
+                                        <Image Source="{Binding Cover}"/>
                                         <TextBlock Text="{Binding Owner}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
                                     </StackPanel>
+                                    <TextBlock Text="{Binding Title}" Grid.Column="1" Margin="4,0,0,0" Foreground="{ThemeResource bili_Fontcolor_Main}" FontSize="13" TextWrapping="Wrap"/>
                                     <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="auto"/>

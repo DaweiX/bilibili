@@ -46,45 +46,49 @@
                             </MenuFlyout>
                         </FlyoutBase.AttachedFlyout>
                     </Image>
-                    <StackPanel Grid.Column="1" Margin="4,0,4,0">
+                    <Grid Grid.Column="1" Margin="4 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock x:Name="up"/>
                             <TextBlock Text="上传于" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                             <TextBlock x:Name="time"/>
                         </StackPanel>
-                        <TextBlock x:Name="count" TextWrapping="Wrap"/>
-                        <StackPanel Margin="0,8,0,0">
-                            <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="count" TextWrapping="Wrap" Grid.Row="1"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="2">
                                 <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
                                 <TextBlock Text="标签" FontSize="20" Margin="8,0,0,0"/>
                             </StackPanel>
-                            <GridView x:Name="list_tags" Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
-                                <GridView.ItemContainerTransitions>
-                                    <TransitionCollection>
-                                        <EntranceThemeTransition/>
-                                    </TransitionCollection>
-                                </GridView.ItemContainerTransitions>
-                                <GridView.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </GridView.ItemTemplate>
-                                <GridView.ItemContainerStyle>
-                                    <Style TargetType="GridViewItem">
-                                        <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
-                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                    </Style>
-                                </GridView.ItemContainerStyle>
-                                <GridView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <controls:WrapPanel/>
-                                    </ItemsPanelTemplate>
-                                </GridView.ItemsPanel>
-                            </GridView>
-                        </StackPanel>
-                    </StackPanel>
+                        <GridView x:Name="list_tags" Grid.Row="3" Margin="0,8,0,0" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
+                            <GridView.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    <EntranceThemeTransition/>
+                                </TransitionCollection>
+                            </GridView.ItemContainerTransitions>
+                            <GridView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <controls:WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
+                    </Grid>
                 </Grid>
                 <StackPanel Margin="0,8,0,0">
                     <StackPanel>

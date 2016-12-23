@@ -51,6 +51,10 @@ namespace bilibili.Views
             {
                 background.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_pull"));
             }
+            if (SettingHelper.ContainsKey("_toast"))
+            {
+                background.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast"));
+            }
         }
 
         private void night_Toggled(object sender, RoutedEventArgs e)
@@ -217,6 +221,11 @@ namespace bilibili.Views
         private void sli_fontsize_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
             SettingHelper.SetValue("_fontsize", (int)sli_fontsize.Value);
+        }
+
+        private void toast_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_toast", toast.IsOn);
         }
     }
 }

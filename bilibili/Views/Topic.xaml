@@ -12,7 +12,7 @@
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Border x:Name="width"/>
-        <GridView x:Name="list_topic" Tag="0" Visibility="Collapsed" HorizontalAlignment="Center" Tapped="list_topic_Tapped" ShowsScrollingPlaceholders="True" ContainerContentChanging="GridView_ContainerContentChanging">
+        <GridView x:Name="list_topic" Tag="0" Visibility="Collapsed" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="{Binding ElementName=width,Path=Width}">
@@ -26,7 +26,7 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <GridView x:Name="list_event" Tag="1" Visibility="Collapsed" HorizontalAlignment="Center" Tapped="list_topic_Tapped" ShowsScrollingPlaceholders="True" ContainerContentChanging="GridView_ContainerContentChanging">
+        <GridView x:Name="list_event" Tag="1" Visibility="Collapsed" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="{Binding ElementName=width,Path=Width}">

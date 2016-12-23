@@ -12,6 +12,7 @@ using Windows.Web.Http;
 using Windows.Data.Xml.Dom;
 using System.Text.RegularExpressions;
 using System.Net;
+using bilibili.Http;
 
 namespace bilibili.Http
 {
@@ -46,13 +47,13 @@ namespace bilibili.Http
                     var list = json["list"];
                     if (list != null)
                     {
-                        var json2 = JsonObject.Parse(list.ToString());
+                        var json2 = list.GetObject();
                         for (int i = 0; i < 20; i++)
                         {
                             if (json2.ContainsKey(string.Format("{0}", i)))
                             {
                                 var item = json2[string.Format("{0}", i)];
-                                var json3 = JsonObject.Parse(item.ToString());
+                                var json3 = item.GetObject();
                                 Content myContent = new Content();
                                 if (json3.ContainsKey("title"))
                                 {
@@ -95,14 +96,14 @@ namespace bilibili.Http
             }
             if (json.ContainsKey("data"))
             {
-                json = JsonObject.Parse(json["data"].ToString());
+                json = json["data"].GetObject();
                 if (json.ContainsKey("result"))
                 {
                     JsonArray array = json["result"].GetArray();
                     foreach (var item in array)
                     {
                         Concern cont = new Concern();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("season_id"))
                             cont.ID = StringDeal.delQuotationmarks(temp["season_id"].ToString());
                         if (temp.ContainsKey("newest_ep_index"))
@@ -136,7 +137,7 @@ namespace bilibili.Http
                 foreach (var item in array)
                 {
                     KeyWord hot = new KeyWord();
-                    JsonObject temp = JsonObject.Parse(item.ToString());
+                    JsonObject temp = item.GetObject();
                     if (temp.ContainsKey("keyword"))
                     {
                         hot.Keyword = temp["keyword"].GetString();
@@ -172,13 +173,13 @@ namespace bilibili.Http
                     var list = json["list"];
                     if (list != null)
                     {
-                        var json2 = JsonObject.Parse(list.ToString());
+                        var json2 = list.GetObject();
                         for (int i = 0; i < 20; i++)
                         {
                             if (json2.ContainsKey(string.Format("{0}", i)))
                             {
                                 var item = json2[string.Format("{0}", i)];
-                                var json3 = JsonObject.Parse(item.ToString());
+                                var json3 = item.GetObject();
                                 Content myContent = new Content();
                                 if (json3.ContainsKey("title"))
                                 {
@@ -220,7 +221,7 @@ namespace bilibili.Http
             if (json.ContainsKey("data"))
             {
                 List<Pages> pages = new List<Pages>();
-                JsonObject json2 = JsonObject.Parse(json["data"].ToString());
+        JsonObject json2 = json["data"].GetObject();
                 details.Desc = json2.ContainsKey("desc") ? json2["desc"].GetString() : "";
                 if (json2.ContainsKey("aid"))
                     details.Aid = json2["aid"].ToString();
@@ -246,7 +247,7 @@ namespace bilibili.Http
                     foreach (var item in array)
                     {
                         Pages page = new Pages();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("cid"))
                             page.Cid = temp["cid"].ToString();
                         if (temp.ContainsKey("part"))
@@ -258,7 +259,7 @@ namespace bilibili.Http
                 }
                 if (json2.ContainsKey("owner"))
                 {
-                    JsonObject json2_owner = JsonObject.Parse(json2["owner"].ToString());
+                    JsonObject json2_owner = json2["owner"].GetObject();
                     if (json2_owner.ContainsKey("name"))
                         details.Upzhu = StringDeal.delQuotationmarks(json2_owner["name"].ToString());
                     if (json2_owner.ContainsKey("mid"))
@@ -266,7 +267,7 @@ namespace bilibili.Http
                 }
                 if (json2.ContainsKey("stat"))
                 {
-                    JsonObject json2_stat = JsonObject.Parse(json2["stat"].ToString());
+                    JsonObject json2_stat = json2["stat"].GetObject();
                     if (json2_stat.ContainsKey("view"))
                         details.View = json2_stat["view"].ToString();
                     if (json2_stat.ContainsKey("danmaku"))
@@ -325,7 +326,7 @@ namespace bilibili.Http
                         foreach (var item in Myarray)
                         {
                             SearchResult rs = new SearchResult();
-                            JsonObject json2 = JsonObject.Parse(item.ToString());
+                            JsonObject json2 = item.GetObject();
                             if (json2.ContainsKey("aid"))
                                 rs.Aid = json2["aid"].ToString();
                             if (json2.ContainsKey("author"))
@@ -366,10 +367,10 @@ namespace bilibili.Http
                 JsonObject json = await BaseService.GetJson(url);
                 if (json.ContainsKey("data"))
                 {
-                    json = JsonObject.Parse(json["data"].ToString());
+                    json = json["data"].GetObject();
                     if (json.ContainsKey("recommend_data"))
                     {
-                        json = JsonObject.Parse(json["recommend_data"].ToString());
+                        json = json["recommend_data"].GetObject();
                         if (json.ContainsKey("lives"))
                         {
                             JsonArray array = json["lives"].GetArray();
@@ -442,7 +443,7 @@ namespace bilibili.Http
                     foreach (var item in Myarray)
                     {
                         SearchResult_Bangumi bang = new SearchResult_Bangumi();
-                        JsonObject json2 = JsonObject.Parse(item.ToString());
+                        JsonObject json2 = item.GetObject();
                         if (json2.ContainsKey("cover"))
                             bang.Cover = json2["cover"].GetString();
                         if (json2.ContainsKey("is_finish"))
@@ -481,13 +482,13 @@ namespace bilibili.Http
             json = await BaseService.GetJson(url);
             if (json.ContainsKey("data"))
             {
-                json = JsonObject.Parse(json["data"].ToString());
+                json = json["data"].GetObject();
                 if (json.ContainsKey("items"))
                 {
                     var Myarray = json["items"].GetArray();
                     foreach (var item in Myarray)
                     {
-                        JsonObject json2 = JsonObject.Parse(item.ToString());
+                        JsonObject json2 = item.GetObject();
                         UpForSearch up = new UpForSearch();
                         if (json2.ContainsKey("archives"))
                         {
@@ -533,7 +534,7 @@ namespace bilibili.Http
                 json = await BaseService.GetJson(url);
                 if (json.ContainsKey("result"))
                 {
-                    JsonObject json2 = JsonObject.Parse(json["result"].ToString());
+                    JsonObject json2 = json["result"].GetObject();
                     if (json2.ContainsKey("coins"))
                         season.Coins = StringDeal.delQuotationmarks(json2["coins"].ToString());
                     if (json2.ContainsKey("danmaku_count"))
@@ -573,7 +574,7 @@ namespace bilibili.Http
                         season.Tags = new List<string>();
                         foreach (var item in json2["tags"].GetArray())
                         {
-                            JsonObject temp = JsonObject.Parse(item.ToString());
+                            JsonObject temp = item.GetObject();
                             if (temp.ContainsKey("tag_name"))
                                 season.Tags.Add(StringDeal.delQuotationmarks(temp["tag_name"].ToString()));
                         }
@@ -582,12 +583,12 @@ namespace bilibili.Http
                 List<Cast> cvlist = new List<Cast>();
                 if (json.ContainsKey("result"))
                 {
-                    JsonObject json2 = JsonObject.Parse(json["result"].ToString());
+                    JsonObject json2 = json["result"].GetObject();
                     JsonArray Array_ac = json2["actor"].GetArray();
                     foreach (var item in Array_ac)
                     {
                         Cast cast = new Cast();
-                        JsonObject json3 = JsonObject.Parse(item.ToString());
+                        JsonObject json3 = item.GetObject();
                         if (json3.ContainsKey("actor"))
                             cast.Actor = json3["actor"].GetString();
                         if (json3.ContainsKey("role"))
@@ -599,14 +600,14 @@ namespace bilibili.Http
                 List<Episodes> indexList = new List<Episodes>();
                 if (json.ContainsKey("result"))
                 {
-                    JsonObject json2 = JsonObject.Parse(json["result"].ToString());
+                    JsonObject json2 = json["result"].GetObject();
                     if (json2.ContainsKey("episodes"))
                     {
                         JsonArray Array_rs = json2["episodes"].GetArray();
                         foreach (var item in Array_rs)
                         {
                             Episodes episode = new Episodes();
-                            JsonObject json3 = JsonObject.Parse(item.ToString());
+                            JsonObject json3 = item.GetObject();
                             if (json3.ContainsKey("av_id"))
                                 episode.ID = StringDeal.delQuotationmarks(json3["av_id"].ToString());
                             if (json3.ContainsKey("coins"))
@@ -674,7 +675,7 @@ namespace bilibili.Http
             //    }
             //    if (json.ContainsKey("durl"))
             //    {
-            //        json = JsonObject.Parse(json["durl"].GetArray()[0].ToString());
+            //        json = json["durl"].GetArray()[0].ToString());
             //        if (json.ContainsKey("backup_url"))
             //        {
             //            URL.BackupUrl = json["backup_url"].GetArray()[0].GetString();
@@ -731,7 +732,7 @@ namespace bilibili.Http
                 foreach (var item in a)
                 {
                     Tags tag = new Tags();
-                    JsonObject temp = JsonObject.Parse(item.ToString());
+                    JsonObject temp = item.GetObject();
                     if (temp.ContainsKey("cover"))
                         tag.Cover = StringDeal.delQuotationmarks(temp["cover"].ToString());
                     if (temp.ContainsKey("tag_id"))
@@ -755,14 +756,14 @@ namespace bilibili.Http
             json = await BaseService.GetJson(url);
             if (json.ContainsKey("result"))
             {
-                JsonObject json2 = JsonObject.Parse(json["result"].ToString());
+                JsonObject json2 = json["result"].GetObject();
                 if (json2.ContainsKey("list"))
                 {
                     var a = json2["list"].GetArray();
                     foreach (var item in a)
                     {
                         Models.Bangumi ban = new Models.Bangumi();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("cover"))
                             ban.Cover = temp["cover"].GetString();
                         if (temp.ContainsKey("is_finish"))
@@ -798,17 +799,17 @@ namespace bilibili.Http
                 JsonObject json = await BaseService.GetJson(url);
                 if (json.ContainsKey("result"))
                 {
-                    json = JsonObject.Parse(json["result"].ToString());
+                    json = json["result"].GetObject();
                     if (json.ContainsKey("latestUpdate"))
                     {
-                        json = JsonObject.Parse(json["latestUpdate"].ToString());
+                        json = json["latestUpdate"].GetObject();
                         if (json.ContainsKey("list"))
                         {
                             JsonArray array = json["list"].GetArray();
                             foreach (var item in array)
                             {
                                 LastUpdate last = new LastUpdate();
-                                json = JsonObject.Parse(item.ToString());
+                                json = item.GetObject();
                                 if (json.ContainsKey("cover"))
                                 {
                                     last.Cover = json["cover"].GetString();
@@ -864,7 +865,7 @@ namespace bilibili.Http
                 foreach (var item in array)
                 {
                     Topic topic = new Topic();
-                    JsonObject temp = JsonObject.Parse(item.ToString());
+                    JsonObject temp = item.GetObject();
                     if (temp.ContainsKey("title"))
                         topic.Name = temp["title"].GetString();
                     if (temp.ContainsKey("link"))
@@ -895,7 +896,7 @@ namespace bilibili.Http
                 foreach (var item in array)
                 {
                     Event topic = new Event();
-                    JsonObject temp = JsonObject.Parse(item.ToString());
+                    JsonObject temp = item.GetObject();
                     if (temp.ContainsKey("title"))
                         topic.Title = temp["title"].GetString();
                     if (temp.ContainsKey("state"))
@@ -923,7 +924,7 @@ namespace bilibili.Http
             if (json.ContainsKey("data"))
             {
 
-                JsonObject json2 = JsonObject.Parse(json["data"].ToString());
+                JsonObject json2 = json["data"].GetObject();
                 //一层回复
                 if (json2.ContainsKey("replies"))
                 {
@@ -931,16 +932,16 @@ namespace bilibili.Http
                     foreach (var item in a)
                     {
                         Reply rp = new Reply();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("content"))
                         {
-                            JsonObject json3 = JsonObject.Parse(temp["content"].ToString());
+                            JsonObject json3 = temp["content"].GetObject();
                             if (json3.ContainsKey("message"))
                                 rp.Message = json3["message"].GetString();
                         }
                         if (temp.ContainsKey("member"))
                         {
-                            JsonObject json3 = JsonObject.Parse(temp["member"].ToString());
+                            JsonObject json3 = temp["member"].GetObject();
                             if (json3.ContainsKey("avatar"))
                                 rp.Avatar = json3["avatar"].GetString();
                             if (json3.ContainsKey("uname"))
@@ -1017,16 +1018,16 @@ namespace bilibili.Http
                 {
                     Reply rp1 = new Reply();
                     issecond = true;
-                    JsonObject temp1 = JsonObject.Parse(item1.ToString());
+                    JsonObject temp1 = item1.GetObject();
                     if (temp1.ContainsKey("content"))
                     {
-                        JsonObject json3 = JsonObject.Parse(temp1["content"].ToString());
+                        JsonObject json3 = temp1["content"].GetObject();
                         if (json3.ContainsKey("message"))
                             rp1.Message = json3["message"].GetString();
                     }
                     if (temp1.ContainsKey("member"))
                     {
-                        JsonObject json3 = JsonObject.Parse(temp1["member"].ToString());
+                        JsonObject json3 = temp1["member"].GetObject();
                         if (json3.ContainsKey("avatar"))
                             rp1.Avatar = json3["avatar"].GetString();
                         if (json3.ContainsKey("uname"))
@@ -1094,7 +1095,7 @@ namespace bilibili.Http
             JsonObject json = await BaseService.GetJson(url);
             if (json.ContainsKey("data"))
             {
-                JsonObject json2 = JsonObject.Parse(json["data"].ToString());
+                JsonObject json2 = json["data"].GetObject();
                 if (json2.ContainsKey("videos"))
                 {
                     try
@@ -1103,7 +1104,7 @@ namespace bilibili.Http
                         foreach (var item in array)
                         {
                             Content cont = new Content();
-                            JsonObject temp = JsonObject.Parse(item.ToString());
+                            JsonObject temp = item.GetObject();
                             if (temp.ContainsKey("aid"))
                                 cont.Num = temp["aid"].ToString();
                             if (temp.ContainsKey("fav_create_at"))
@@ -1137,7 +1138,7 @@ namespace bilibili.Http
                 foreach (var item in array)
                 {
                     Concern cont = new Concern();
-                    JsonObject temp = JsonObject.Parse(item.ToString());
+                    JsonObject temp = item.GetObject();
                     if (temp.ContainsKey("season_id"))
                         cont.ID = temp["season_id"].GetString();
                     if (temp.ContainsKey("newest_ep_index"))
@@ -1167,14 +1168,14 @@ namespace bilibili.Http
             JsonObject json = await BaseService.GetJson(url);
             if (json.ContainsKey("data"))
             {
-                json = JsonObject.Parse(json["data"].ToString());
+                json = json["data"].GetObject();
                 if(json.ContainsKey("relates"))
                 {
                     JsonArray array = json["relates"].GetArray();
                     foreach (var item in array)
                     {
                         Basic basic = new Basic();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("aid"))
                             basic.ID = temp["aid"].ToString();
                         if (temp.ContainsKey("title"))
@@ -1183,13 +1184,13 @@ namespace bilibili.Http
                             basic.Cover = temp["pic"].GetString();
                         if (temp.ContainsKey("owner"))
                         {
-                            json = JsonObject.Parse(temp["owner"].ToString());
+                            json = temp["owner"].GetObject();
                             if (json.ContainsKey("name"))
                                 basic.Owner = json["name"].GetString();
                         }
                         if (temp.ContainsKey("stat"))
                         {
-                            json = JsonObject.Parse(temp["stat"].ToString());
+                            json = temp["stat"].GetObject();
                             if (json.ContainsKey("danmaku"))
                                 basic.Danmaku = json["danmaku"].ToString();
                             if (json.ContainsKey("view"))
@@ -1217,7 +1218,7 @@ namespace bilibili.Http
                 JsonObject json = await BaseService.GetJson(url);
                 if (json.ContainsKey("data"))
                 {
-                    json = JsonObject.Parse(json["data"].ToString());
+                    json = json["data"].GetObject();
                     if (json.ContainsKey("at_me"))
                         count.At_me = json["at_me"].ToString();
                     if (json.ContainsKey("chat_me"))
@@ -1254,7 +1255,7 @@ namespace bilibili.Http
                     foreach (var item in array)
                     {
                         Chat chat = new Chat();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("content"))
                         {
                             chat.Content = Regex.Match(temp["content"].GetString(), @"(?<={).*?(?=})").Value;
@@ -1268,7 +1269,7 @@ namespace bilibili.Http
                             chat.Time = StringDeal.delQuotationmarks(temp["time_at"].ToString());
                         if (temp.ContainsKey("publisher"))
                         {
-                            json = JsonObject.Parse(temp["publisher"].ToString());
+                            json = temp["publisher"].GetObject();
                             if (json.ContainsKey("face"))
                                 chat.Face = StringDeal.delQuotationmarks(json["face"].ToString());
                             if (json.ContainsKey("mid"))
@@ -1304,7 +1305,7 @@ namespace bilibili.Http
                     foreach (var item in array)
                     {
                         Notify noti = new Notify();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("content"))
                             noti.Content = StringDeal.delQuotationmarks(temp["content"].ToString());
                         if (temp.ContainsKey("title"))
@@ -1339,7 +1340,7 @@ namespace bilibili.Http
                     foreach (var item in array)
                     {
                         Wisper wis = new Wisper();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("room_name"))
                             wis.Room = StringDeal.delQuotationmarks(temp["room_name"].ToString());
                         if (temp.ContainsKey("last_msg"))
@@ -1378,7 +1379,7 @@ namespace bilibili.Http
                     foreach (var item in array)
                     {
                         HotBangumi hot = new HotBangumi();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("cursor"))
                             hot.Cursor = temp["cursor"].ToString();
                         if (temp.ContainsKey("cover"))
@@ -1416,7 +1417,7 @@ namespace bilibili.Http
                     foreach (var item in array)
                     {
                         History h = new History();
-                        JsonObject temp = JsonObject.Parse(item.ToString());
+                        JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("aid"))
                             h.Aid = temp["aid"].ToString();
                         if (temp.ContainsKey("pic"))
@@ -1452,7 +1453,7 @@ namespace bilibili.Http
                 JsonArray favs = json_f["data"].GetArray();
                 foreach (var item in favs)
                 {
-                    JsonObject json2 = JsonObject.Parse(item.ToString());
+                    JsonObject json2 = item.GetObject();
                     Folder fav = new Folder();
                     if (json2.ContainsKey("ctime"))
                         fav.Ctime = StringDeal.LinuxToData(json2["ctime"].ToString());
@@ -1481,7 +1482,7 @@ namespace bilibili.Http
             {
                 User user = new User();
                 user.Attentions = new List<string>();
-                json = JsonObject.Parse(json["data"].ToString());
+                json = json["data"].GetObject();
                 if (json.ContainsKey("article"))
                     user.Article = json["article"].ToString();
                 if (json.ContainsKey("attention"))
@@ -1504,34 +1505,41 @@ namespace bilibili.Http
                     user.Sign = StringDeal.delQuotationmarks(json["sign"].ToString());
                 if (json.ContainsKey("coins"))
                     user.Coins = json["coins"].ToString();
-                if (json.ContainsKey("discription"))
-                    user.Discription = StringDeal.delQuotationmarks(json["discription"].ToString());
+                if (json.ContainsKey("description"))
+                    user.Discription = json["description"].GetString();
                 if (json.ContainsKey("fans"))
                     user.Fans = json["fans"].ToString();
                 if (json.ContainsKey("face"))
-                    user.Face = StringDeal.delQuotationmarks(json["face"].ToString());
+                    user.Face = json["face"].GetString();
                 if (json.ContainsKey("friend"))
                     user.Friend = json["friend"].ToString();
                 if (json.ContainsKey("im9_sign"))
-                    user.Im9_sign = StringDeal.delQuotationmarks(json["im9_sign"].ToString());
+                    user.Im9_sign = json["im9_sign"].GetString();
                 if (json.ContainsKey("mid"))
                     user.Mid = json["mid"].ToString();
                 if (json.ContainsKey("name"))
-                    user.Name = StringDeal.delQuotationmarks(json["name"].ToString());
+                    user.Name = json["name"].GetString();
                 if (json.ContainsKey("regtime"))
-                {
-                    string a = json["regtime"].ToString();
                     user.RegTime = StringDeal.LinuxToData(json["regtime"].ToString());
+                string url2 = "http://space.bilibili.com/ajax/settings/getSettings?mid=" + mid;
+                JsonObject json_toutu = await BaseService.GetJson(url2);
+                if (json_toutu.ContainsKey("data"))
+                {
+                    json_toutu = json_toutu["data"].GetObject();
+                    if (json_toutu.ContainsKey("toutu"))
+                    {
+                        json_toutu = json_toutu["toutu"].GetObject();
+                        if (json_toutu.ContainsKey("l_img"))
+                            user.Toutu = json_toutu["l_img"].GetString();
+                        if (json_toutu.ContainsKey("s_img"))
+                            user.Toutu_s = json_toutu["s_img"].GetString();
+                    }
                 }
-                if (json.ContainsKey("toutu"))
-                    user.Toutu = StringDeal.delQuotationmarks(json["toutu"].ToString()); ;
-                if (json.ContainsKey("toutuId"))
-                    user.ToutuId = json["toutuId"].ToString();
                 if (json.ContainsKey("sex"))
                     user.Sex = StringDeal.delQuotationmarks(json["sex"].ToString());
                 if (json.ContainsKey("level_info"))
                 {
-                    JsonObject json2 = JsonObject.Parse(json["level_info"].ToString());
+                    JsonObject json2 = json["level_info"].GetObject();
                     if (json2.ContainsKey("current_exp"))
                         user.Current_exp = json2["current_exp"].ToString();
                     if (json2.ContainsKey("next_exp"))
@@ -1559,14 +1567,14 @@ namespace bilibili.Http
                 JsonObject json = await BaseService.GetJson(url);
                 if (json.ContainsKey("data"))
                 {
-                    json = JsonObject.Parse(json["data"].ToString());
+                    json = json["data"].GetObject();
                     if (json.ContainsKey("result"))
                     {
                         JsonArray array = json["result"].GetArray();
                         foreach (var item in array)
                         {
                             CoinHs hs = new CoinHs();
-                            json = JsonObject.Parse(item.ToString());
+                            json = item.GetObject();
                             if (json.ContainsKey("delta"))
                             {
                                 hs.Delta = json["delta"].ToString();
@@ -1611,18 +1619,18 @@ namespace bilibili.Http
                 }
                 else
                 {
-                    json = JsonObject.Parse(json["data"].ToString());
+                    json = json["data"].GetObject();
                     if (json.ContainsKey("list"))
                     {
                         JsonArray ja = json["list"].GetArray();
                         foreach (var item in ja)
                         {
                             Friend friend = new Friend();
-                            JsonObject temp = JsonObject.Parse(item.ToString());
+                            JsonObject temp = item.GetObject();
                             if (temp.ContainsKey("face"))
-                                friend.Face = StringDeal.delQuotationmarks(temp["face"].ToString());
+                                friend.Face = temp["face"].GetString();
                             if (temp.ContainsKey("uname"))
-                                friend.Uname = StringDeal.delQuotationmarks(temp["uname"].ToString());
+                                friend.Uname = temp["uname"].GetString();
                             if (temp.ContainsKey("fid"))
                                 friend.Fid = temp["fid"].ToString();
                             friends.Add(friend);
@@ -1647,12 +1655,12 @@ namespace bilibili.Http
             try
             {
                 int i = 1;
-                json = JsonObject.Parse(json["rank"].ToString());
+                json = json["rank"].GetObject();
                 JsonArray array = json["list"].GetArray();
                 foreach (var item in array)
                 {
                     Rank rank = new Rank();
-                    json = JsonObject.Parse(item.ToString());
+                    json = item.GetObject();
                     if (json.ContainsKey("aid"))
                         rank.Aid = json["aid"].GetString();
                     if (json.ContainsKey("author"))
@@ -1696,7 +1704,7 @@ namespace bilibili.Http
                     foreach (var temp in array)
                     {
                         FlipItem item = new FlipItem();
-                        json = JsonObject.Parse(temp.ToString());
+                        json = temp.GetObject();
                         if (json.ContainsKey("img"))
                         {
                             item.Img = json["img"].GetString();
@@ -1720,6 +1728,7 @@ namespace bilibili.Http
             }
         }
 
+
         public static async Task<List<FlipItem>> GetHomeBanners()
         {
             List<FlipItem> list = new List<FlipItem>();
@@ -1733,7 +1742,7 @@ namespace bilibili.Http
                     foreach (var temp in array)
                     {
                         FlipItem item = new FlipItem();
-                        json = JsonObject.Parse(temp.ToString());
+                        json = temp.GetObject();
                         if (json.ContainsKey("image"))
                             item.Img = json["image"].GetString();
                         if (json.ContainsKey("title"))

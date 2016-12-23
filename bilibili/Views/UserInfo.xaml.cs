@@ -21,6 +21,7 @@ namespace bilibili.Views
     public sealed partial class UserInfo : Page
     {
         List<Folder> myFolder = new List<Folder>();
+        string tl, ts = string.Empty;
         public UserInfo()
         {
             this.InitializeComponent();
@@ -62,7 +63,23 @@ namespace bilibili.Views
                             level.Source = new BitmapImage { UriSource = new Uri("ms-appx:///Assets//Others//lv" + json2["current_level"].ToString() + ".png", UriKind.Absolute) };
                         }
                     }
+                    string url2 = "http://space.bilibili.com/ajax/settings/getSettings?mid=" + UserHelper.mid;
+                    JsonObject json_toutu = await BaseService.GetJson(url2);
+                    if (json_toutu.ContainsKey("data"))
+                    {
+                        json_toutu = json_toutu["data"].GetObject();
+                        if (json_toutu.ContainsKey("toutu"))
+                        {
+                            json_toutu = json_toutu["toutu"].GetObject();
+                            if (json_toutu.ContainsKey("l_img"))
+                                tl = "http://i0.hdslb.com/" + json_toutu["l_img"].GetString();
+                            if (json_toutu.ContainsKey("s_img"))
+                                ts = "http://i0.hdslb.com/" + json_toutu["s_img"].GetString();
+
+                        }
+                    }
                 }
+                UpDateHeader();
                 myFolder = await ContentServ.GetFavFolders();
                 foreach (var item in await ContentServ.GetConAsync(1))
                 {
@@ -82,22 +99,6 @@ namespace bilibili.Views
             }
         }
 
-        private async void logout_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            if (ApiHelper.IsLogin())
-            {
-                ContentDialog dialog = new ContentDialog
-                {
-                    Content = "确定登出吗？",
-                    IsPrimaryButtonEnabled = true,
-                    IsSecondaryButtonEnabled = true,
-                    PrimaryButtonText = "确定",
-                    SecondaryButtonText = "手滑了",
-                };
-                dialog.PrimaryButtonClick += Dialog_PrimaryButtonClick;
-                await dialog.ShowAsync();
-            }
-        }
         private void Dialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             ApiHelper.logout();
@@ -124,6 +125,39 @@ namespace bilibili.Views
             {
                 Dialogs.CoinHistory ch = new Dialogs.CoinHistory();
                 await ch.ShowAsync();
+            }
+        }
+
+        private void StackPanel_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        {
+            UpDateHeader();
+        }
+
+        private void UpDateHeader()
+        {
+            if (tl != null && ts != null)
+            {
+                BitmapImage bmp = new BitmapImage();
+                bmp.UriSource = ActualWidth > 600 ? new Uri(tl, UriKind.Absolute) : new Uri(ts, UriKind.Absolute);
+                img.Source = bmp;
+            }
+            Face.Width = Face.Height = ActualWidth > 600 ? 120 : 80;
+        }
+
+        private async void Face_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            if (ApiHelper.IsLogin())
+            {
+                ContentDialog dialog = new ContentDialog
+                {
+                    Content = "确定登出吗？",
+                    IsPrimaryButtonEnabled = true,
+                    IsSecondaryButtonEnabled = true,
+                    PrimaryButtonText = "确定",
+                    SecondaryButtonText = "手滑了",
+                };
+                dialog.PrimaryButtonClick += Dialog_PrimaryButtonClick;
+                await dialog.ShowAsync();
             }
         }
 

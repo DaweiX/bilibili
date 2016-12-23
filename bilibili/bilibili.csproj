@@ -157,6 +157,8 @@
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\WebStatusHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\Blur.cs" />
+    <Compile Include="UI\MyImage.cs" />
     <Compile Include="Views\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>

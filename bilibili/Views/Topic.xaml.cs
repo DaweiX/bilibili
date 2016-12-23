@@ -60,29 +60,7 @@ namespace bilibili.Views
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //if (this.ActualWidth < 640)
-            //{
-            //    width.Width = double.NaN;
-            //}
-            //else
-            //{
-            //    int i = Convert.ToInt32(this.ActualWidth / 400);
-            //    width.Width = (this.ActualWidth / i) - 8 * i - 8;
-            //}
-            width.Width = WidthFit.GetWidth(ActualWidth, 600, 300);
-        }
-
-        private void list_topic_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            try
-            {
-                Frame.Navigate(typeof(MyWeb), (list_topic.SelectedItem as Models.Topic).Url);
-            }
-            catch
-            {
-                var a = list_event.SelectedItem as Models.Event;
-                Frame.Navigate(typeof(MyWeb), a.Link);
-            }
+            width.Width = WidthFit.GetWidth(ActualWidth, 600, 400);
         }
 
         bool isLoading = false;
@@ -125,6 +103,18 @@ namespace bilibili.Views
                     }                  
                 }
             };
+        }
+
+        private void list_topic_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                Frame.Navigate(typeof(MyWeb), (e.ClickedItem as Models.Topic).Url);
+            }
+            catch
+            {
+                Frame.Navigate(typeof(MyWeb), (e.ClickedItem as Models.Event).Link);
+            }
         }
     }
     public class StatusToText : IValueConverter

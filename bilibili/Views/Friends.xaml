@@ -8,26 +8,6 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource bili_PageBackground}">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="narrow">
-                    <VisualState.Setters>
-                        <Setter Target="header.Orientation" Value="Vertical"/>
-                    </VisualState.Setters>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0"/>
-                    </VisualState.StateTriggers>
-                </VisualState>
-                <VisualState x:Name="wide">
-                    <VisualState.Setters>
-                        <Setter Target="header.Orientation" Value="Horizontal"/>
-                    </VisualState.Setters>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="600"/>
-                    </VisualState.StateTriggers>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
         <Rectangle Fill="{ThemeResource bili_Theme}" Height="48" VerticalAlignment="Top"/>
         <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
             <PivotItem Margin="0">
@@ -38,7 +18,7 @@
                     <StackPanel>
                         <StackPanel x:Name="header">
                             <StackPanel>
-                                <Image x:Name="toutu" Stretch="Uniform" Height="120" HorizontalAlignment="Left"/>
+                                <Image x:Name="toutu" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Top" SizeChanged="toutu_SizeChanged"/>
                                 <StackPanel Orientation="Horizontal">
                                     <Ellipse Height="80" Width="80" Stroke="Gray" StrokeThickness="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="12,-40,0,0">
                                         <Ellipse.Fill>
@@ -141,7 +121,7 @@
                 <PivotItem.Header>
                     <TextBlock x:Name="h2" Text="TA的关注" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
                 </PivotItem.Header>
-                <StackPanel>
+                <Grid>
                     <Border x:Name="width"/>
                     <GridView x:Name="list_concern" IsItemClickEnabled="True" ItemClick="list_concern_ItemClick" SizeChanged="StackPanel_SizeChanged">
                         <GridView.ItemTemplate>
@@ -157,7 +137,7 @@
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
-                </StackPanel>
+                </Grid>
             </PivotItem>
         </Pivot>
     </Grid>

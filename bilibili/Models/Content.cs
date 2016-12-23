@@ -102,6 +102,7 @@ namespace bilibili.Models
         public string RegTime { get; set; }
         public string Sex { get; set; }
         public string Toutu { get; set; }
+        public string Toutu_s { get; set; }
         public string ToutuId { get; set; }
         public string Place { get; set; }
     }
