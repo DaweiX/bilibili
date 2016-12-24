@@ -9,25 +9,15 @@
 
     <Grid Background="{ThemeResource bili_PageBackground}" SizeChanged="Grid_SizeChanged">
         <Border x:Name="width"/>
-        <Grid Height="48" Background="{ThemeResource bili_Theme}" VerticalAlignment="Top"/>
         <Pivot SelectionChanged="Pivot_SelectionChanged">
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h0" Text="宅舞" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="宅舞">
                 <!--精彩推荐http://api.bilibili.com/x/web-show/res/loc?jsonp=jsonp&pf=0&id=64-->
                 <GridView HorizontalAlignment="Center"  x:Name="gv_hot" Tag="20" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h1" Text="三次元舞蹈" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="三次元舞蹈">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_dance" Tag="154" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h2" Text="舞蹈教程" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="舞蹈教程">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_teach" Tag="156" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
         </Pivot>

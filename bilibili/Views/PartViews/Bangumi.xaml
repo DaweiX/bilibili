@@ -9,43 +9,24 @@
 
     <Grid Background="{ThemeResource bili_PageBackground}" SizeChanged="Grid_SizeChanged">
         <Border x:Name="width"/>
-        <Grid Height="48" Background="{ThemeResource bili_Theme}" VerticalAlignment="Top"/>
         <Pivot SelectionChanged="Pivot_SelectionChanged">
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h0" Text="精彩推荐" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="精彩推荐">
                 <!--精彩推荐http://bangumi.bilibili.com/jsonp/slideshow/34.ver-->
                 <GridView HorizontalAlignment="Center" x:Name="gv_hot" Tag="32" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h1" Text="完结动画" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="完结动画">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_finish" Tag="32" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h2" Text="连载动画" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="连载动画">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_now" Tag="33" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h3" Text="资讯" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="资讯">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_news" Tag="51" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h4" Text="官方延伸" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="官方延伸">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_more" Tag="152" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h5" Text="国产动画" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="国产动画">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_china" Tag="153" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
         </Pivot>

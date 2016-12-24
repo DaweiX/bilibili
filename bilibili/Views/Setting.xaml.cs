@@ -196,18 +196,6 @@ namespace bilibili.Views
             SettingHelper.SetValue("_isdirect", direct.IsOn);
         }
 
-        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Pivot pivot = sender as Pivot;
-            TextBlock txt = this.FindName(string.Format("h{0}", pivot.SelectedIndex)) as TextBlock;
-            for (int i = 0; i < pivot.Items.Count; i++)
-            {
-                TextBlock temp = this.FindName(string.Format("h{0}", i)) as TextBlock;
-                temp.Foreground = new SolidColorBrush(Colors.LightGray);
-            }
-            txt.Foreground = new SolidColorBrush(Colors.White);
-        }
-
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 

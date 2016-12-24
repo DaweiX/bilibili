@@ -67,7 +67,7 @@ namespace bilibili.Views
 
         private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Pivot pivot = sender as Pivot;
+            
             TextBlock txt = this.FindName(string.Format("h{0}", pivot.SelectedIndex)) as TextBlock;
             for (int i = 0; i < pivot.Items.Count; i++)
             {

@@ -9,43 +9,24 @@
 
     <Grid Background="{ThemeResource bili_PageBackground}" SizeChanged="Grid_SizeChanged">
         <Border x:Name="width"/>
-        <Grid Height="48" Background="{ThemeResource bili_Theme}" VerticalAlignment="Top"/>
         <Pivot SelectionChanged="Pivot_SelectionChanged">
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h0" Text="精彩推荐" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="精彩推荐">
                 <!--精彩推荐http://bangumi.bilibili.com/jsonp/slideshow/57.ver-->
                 <GridView HorizontalAlignment="Center"  x:Name="gv_hot" Tag="1" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h1" Text="短片" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="短片">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_short" Tag="85" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h2" Text="欧美电影" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="欧美电影">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_ur" Tag="145" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h3" Text="日本电影" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="日本电影">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_jp" Tag="146" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h4" Text="国产电影" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="国产电影">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_ch" Tag="147" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h5" Text="其他国家" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Header="其他国家">
                 <GridView HorizontalAlignment="Center"  x:Name="gv_other" Tag="83" Tapped="GridView_Tapped" ItemContainerStyle="{StaticResource gv_container}" ItemTemplate="{StaticResource gv_itemtemplete}" Template="{StaticResource myControlTemplete}" ContainerContentChanging="GridView_ContainerContentChanging"/>
             </PivotItem>
         </Pivot>

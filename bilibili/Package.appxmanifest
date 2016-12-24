@@ -5,7 +5,7 @@
   <Properties>
     <DisplayName>bilibili</DisplayName>
     <PublisherDisplayName>Dawei</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>Assets\NewStoreLogo.png</Logo>
   </Properties>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
@@ -16,20 +16,22 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="bilibili.App">
       <uap:VisualElements DisplayName="哔哩哔哩" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="哔哩哔哩动画UWP客户端" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+        <uap:LockScreen Notification="badgeAndTileText" BadgeLogo="Assets\BadgeLogo.png" />
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\Square310x310Logo.png" Square71x71Logo="Assets\Square71x71Logo.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />
             <uap:ShowOn Tile="wide310x150Logo" />
+            <uap:ShowOn Tile="square310x310Logo" />
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#e273a9" />
       </uap:VisualElements>
       <Extensions>
-        <uap:Extension Category="windows.protocol" EntryPoint="bilibili.App">
-          <uap:Protocol Name="web">
-            <uap:DisplayName>哔哩哔哩</uap:DisplayName>
-          </uap:Protocol>
-        </uap:Extension>
+        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTask.TileTask">
+          <BackgroundTasks>
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
         <uap:Extension Category="windows.fileTypeAssociation" EntryPoint="bilibili.App">
           <uap:FileTypeAssociation Name="format_mp4">
             <uap:DisplayName>哔哩哔哩</uap:DisplayName>
@@ -39,11 +41,11 @@
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
-        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTask.TileTask">
-          <BackgroundTasks>
-            <Task Type="timer" />
-          </BackgroundTasks>
-        </Extension>
+        <uap:Extension Category="windows.protocol" EntryPoint="bilibili.App">
+          <uap:Protocol Name="web">
+            <uap:DisplayName>哔哩哔哩</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
       </Extensions>
     </Application>
   </Applications>

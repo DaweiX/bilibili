@@ -50,12 +50,6 @@ namespace bilibili
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
                 //标题栏
-                var TitleBar = ApplicationView.GetForCurrentView().TitleBar;
-                TitleBar.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
-                TitleBar.ForegroundColor = Colors.White;
-                TitleBar.ButtonBackgroundColor = Color.FromArgb(1, 226, 115, 170);
-                TitleBar.ButtonHoverForegroundColor = Colors.Black;
-                TitleBar.ButtonHoverBackgroundColor = Colors.White;
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -92,6 +86,23 @@ namespace bilibili
 
         protected override void OnActivated(IActivatedEventArgs args)
         {
+            if (args.Kind == ActivationKind.ToastNotification)
+            {
+                var toastArgs = args as ToastNotificationActivatedEventArgs;
+                string aid = toastArgs.Argument;
+                if (!string.IsNullOrEmpty(aid))
+                {
+                    Frame rootFrame = Window.Current.Content as Frame;
+                    if (rootFrame == null)
+                    {
+                        rootFrame = new Frame();
+                        Window.Current.Content = rootFrame;
+                    }
+                    rootFrame.Navigate(typeof(MainPage), "t" + aid);
+                    Window.Current.Activate();
+                    return;
+                }
+            }
             if (args.Kind == ActivationKind.Protocol)
             {
                 ProtocolActivatedEventArgs urlArgs = args as ProtocolActivatedEventArgs;

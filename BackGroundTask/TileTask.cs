@@ -97,7 +97,8 @@ namespace BackgroundTask
             }
             return null;
         }
-        string TileTemplete = @"<tile branding='name'> 
+        string TileTemplete = @"
+ <tile>
   <visual>
     <binding template='TileMedium'>
       <image src='{0}' placement='peek'/>
@@ -116,7 +117,17 @@ namespace BackgroundTask
     </binding>
   </visual>
 </tile>";
-
+        string ToastTemplete = @"
+<toast launch='{0}'>
+	<visual>
+		<binding template='ToastGeneric'>
+			<text>{1}</text>
+			<text>{2}</text>
+			<image src='{3}'/>
+		</binding>
+		<audio src='ms-winsoundevent:Notification.Reminder'/>
+	</visual>
+</toast>";
         private void UpdateTile(List<Feed_Bangumi> list)
         {
             var updater = TileUpdateManager.CreateTileUpdaterForApplication();
@@ -126,11 +137,13 @@ namespace BackgroundTask
             foreach (var feed in list)
             {
                 XmlDocument xml = new XmlDocument();
-                string templete = string.Format(TileTemplete, feed.Pic, feed.Title, feed.New_ep);
+                string templete = string.Format(TileTemplete, feed.Pic, feed.Title, feed.New_ep + "\n" + feed.Time);
                 xml.LoadXml(templete);
+                TileNotification noti = new TileNotification(xml);
+                updater.Update(noti);
                 if (itemcount++ > 5) break;
             }
-        }
+         }
 
         private void SendToast(List<Feed_Bangumi> list)
         {
@@ -143,29 +156,15 @@ namespace BackgroundTask
             string UnpulledQuene = Helper.GetValue("_toastquene").ToString();
             foreach (var feed in list)
             {
-                if (UnpulledQuene.Contains(feed.Aid + "@")) 
+                if (UnpulledQuene.Contains(feed.Aid + "@"))
                     continue;
-                var tmp = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText01);
-                var txtNodes = tmp.GetElementsByTagName("text");
-                var imageNodes = tmp.GetElementsByTagName("image");
-                if (!(txtNodes == null || txtNodes.Length == 0))
-                {
-                    var txtnode = txtNodes[0];
-                    if (!(imageNodes == null || imageNodes.Length == 0))
-                    {
-                        var imagenode = imageNodes[0];
-                        if (imagenode != null)
-                        {
-                            var attr = imagenode.Attributes[1].NodeValue = feed.Pic;
-                        }
-                    }
-                    txtnode.InnerText = string.Format("【{0}】{1}", feed.Title, feed.New_ep);
-                    ToastNotification toast = new ToastNotification(tmp);
-                    toast.Tag = feed.Aid;
-                    ToastNotificationManager.CreateToastNotifier().Show(toast);
-                    //Helper.SetValue("_toastarg", feed.Aid);
-                    UnpulledQuene = UnpulledQuene.Replace(feed.Aid, feed.Aid + "@");//后接@表示已推送过
-                }
+                XmlDocument xml = new XmlDocument();
+                xml.LoadXml(string.Format(ToastTemplete, feed.Aid, feed.Title, feed.New_ep, feed.Pic));
+                ToastNotification toast = new ToastNotification(xml);
+                toast.Tag = feed.Aid;
+                ToastNotificationManager.CreateToastNotifier().Show(toast);
+                //Helper.SetValue("_toastarg", feed.Aid);
+                UnpulledQuene = UnpulledQuene.Replace(feed.Aid, feed.Aid + "@");//后接@表示已推送过
             }
             Helper.SetValue("_toastquene", UnpulledQuene);
         }

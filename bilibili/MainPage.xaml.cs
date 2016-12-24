@@ -31,6 +31,12 @@ namespace bilibili
         {
             this.InitializeComponent();
             this.DataContext = this;
+            var TitleBar = ApplicationView.GetForCurrentView().TitleBar;
+            TitleBar.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
+            TitleBar.ForegroundColor = Colors.White;
+            TitleBar.ButtonBackgroundColor = Color.FromArgb(1, 226, 115, 170);
+            TitleBar.ButtonHoverForegroundColor = Colors.Black;
+            TitleBar.ButtonHoverBackgroundColor = Colors.White;
             //后退键
             SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
             MainList.SelectedIndex = 0;
@@ -59,10 +65,17 @@ namespace bilibili
         {
             if (WebStatusHelper.IsOnline())
             {
-                string sid = e.Parameter.ToString();
-                if (!string.IsNullOrEmpty(sid))
+                string arg = e.Parameter.ToString();
+                if (!string.IsNullOrEmpty(arg))
                 {
-                    mainframe.Navigate(typeof(Views.Detail), sid);
+                    if (arg[0] == 't')
+                    {
+                        mainframe.Navigate(typeof(Views.Detail_P), arg.Substring(1));
+                    }
+                    else
+                    {
+                        mainframe.Navigate(typeof(Views.Detail), arg);
+                    }
                 }
                 else
                 {
