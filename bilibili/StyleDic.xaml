@@ -6,6 +6,20 @@
         <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
         <Setter Property="Margin" Value="8,3,8,3"/>
     </Style>
+    <Style TargetType="FlyoutPresenter">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="Black" Opacity="0.6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="MenuFlyoutPresenter">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="Black" Opacity="0.6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <DataTemplate x:Key="gv_itemtemplete">
         <Grid Width="{Binding Width,ElementName=width}" Background="{ThemeResource bili_ListBackground}">
             <Grid.RowDefinitions>
@@ -1773,6 +1787,497 @@
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Stretch"
                             Visibility="Collapsed" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="CheckBox">
+        <Setter Property="Background" Value="{ThemeResource CheckBoxBackgroundUnchecked}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Grid x:Name="RootGrid" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CombinedStates">
+                                <VisualState x:Name="UncheckedNormal">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundUnchecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundUnchecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushUnchecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeUnchecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundFillUnchecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundUnchecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="UncheckedPointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundUncheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundUncheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushUncheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeUncheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundFillUncheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundUncheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="UncheckedPressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundUncheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundUncheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushUncheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeUncheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundFillUncheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundUncheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Duration="0" To="{ThemeResource CheckBoxCheckedStrokeThickness}" Storyboard.TargetProperty="StrokeThickness" Storyboard.TargetName="NormalRectangle"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="CheckedNormal">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundChecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundChecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushChecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeChecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource bili_Theme}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundChecked}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Duration="0" To="{ThemeResource CheckBoxCheckedStrokeThickness}" Storyboard.TargetProperty="StrokeThickness" Storyboard.TargetName="NormalRectangle"/>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="CheckedPointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundCheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundCheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushCheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeCheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource bili_Theme}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundCheckedPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="CheckedPressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundCheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundCheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushCheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeCheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource bili_Theme}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundCheckedPressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Duration="0" To="{ThemeResource CheckBoxCheckedStrokeThickness}" Storyboard.TargetProperty="StrokeThickness" Storyboard.TargetName="NormalRectangle"/>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="IndeterminateNormal">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundIndeterminate}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundIndeterminate}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushIndeterminate}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeIndeterminate}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundFillIndeterminate}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundIndeterminate}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Glyph" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xE73C;"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="IndeterminatePointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundIndeterminatePointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundIndeterminatePointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushIndeterminatePointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeIndeterminatePointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundFillIndeterminatePointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundIndeterminatePointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Glyph" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xE73C;"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="IndeterminatePressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundIndeterminatePressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundIndeterminatePressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushIndeterminatePressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeIndeterminatePressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundFillIndeterminatePressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundIndeterminatePressed}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Glyph" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xE73C;"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="IndeterminateDisabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxForegroundIndeterminateDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBackgroundIndeterminateDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxBorderBrushIndeterminateDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundStrokeIndeterminateDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckBackgroundFillIndeterminateDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource CheckBoxCheckGlyphForegroundIndeterminateDisabled}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Glyph" Storyboard.TargetName="CheckGlyph">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xE73C;"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid Height="32" VerticalAlignment="Top">
+                            <Rectangle x:Name="NormalRectangle" Fill="{ThemeResource CheckBoxCheckBackgroundFillUnchecked}" Height="20" Stroke="{ThemeResource CheckBoxCheckBackgroundStrokeUnchecked}" StrokeThickness="{ThemeResource CheckBoxBorderThemeThickness}" UseLayoutRounding="False" Width="20"/>
+                            <FontIcon x:Name="CheckGlyph" Foreground="{ThemeResource CheckBoxCheckGlyphForegroundUnchecked}" FontSize="20" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE001;" Opacity="0"/>
+                        </Grid>
+                        <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Grid.Column="1" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" TextWrapping="Wrap" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="AutoSuggestBoxTextBoxStyle" TargetType="TextBox">
+        <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}"/>
+        <Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextControlForeground}"/>
+        <Setter Property="Background" Value="{ThemeResource bili_PageBackground}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource TextControlBorderBrush}"/>
+        <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextControlSelectionHighlightColor}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+        <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
+        <Setter Property="Padding" Value="{ThemeResource TextControlThemePadding}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Grid.Resources>
+                            <Style x:Name="DeleteButtonStyle" TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid x:Name="ButtonLayoutGrid" BorderBrush="{ThemeResource TextControlButtonBorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{ThemeResource TextControlButtonBackground}">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup x:Name="CommonStates">
+                                                        <VisualState x:Name="Normal"/>
+                                                        <VisualState x:Name="PointerOver">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonLayoutGrid">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBackgroundPointerOver}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ButtonLayoutGrid">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBorderBrushPointerOver}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="GlyphElement">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonForegroundPointerOver}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Pressed">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonLayoutGrid">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBackgroundPressed}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ButtonLayoutGrid">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBorderBrushPressed}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="GlyphElement">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonForegroundPressed}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Disabled">
+                                                            <Storyboard>
+                                                                <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ButtonLayoutGrid"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+                                                <TextBlock x:Name="GlyphElement" AutomationProperties.AccessibilityView="Raw" Foreground="{ThemeResource TextControlButtonForeground}" FontStyle="Normal" FontSize="12" FontFamily="{ThemeResource SymbolThemeFontFamily}" HorizontalAlignment="Center" Text="&#xE10A;" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <Style x:Name="QueryButtonStyle" TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid x:Name="ButtonLayoutGrid" BorderBrush="{ThemeResource TextControlButtonBorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{ThemeResource TextControlButtonBackground}">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup x:Name="CommonStates">
+                                                        <VisualState x:Name="Normal"/>
+                                                        <VisualState x:Name="PointerOver">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonLayoutGrid">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBackgroundPointerOver}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ButtonLayoutGrid">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBorderBrushPointerOver}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonForegroundPointerOver}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Pressed">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonLayoutGrid">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBackgroundPressed}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ButtonLayoutGrid">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonBorderBrushPressed}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonForegroundPressed}"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Disabled">
+                                                            <Storyboard>
+                                                                <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ButtonLayoutGrid"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+                                                <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="BorderElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBorderBrushPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="BorderElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBackgroundPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="PlaceholderTextContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlPlaceholderForegroundPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlForegroundPointerOver}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="PlaceholderTextContentPresenter">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlPlaceholderForegroundFocused}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="BorderElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBackgroundFocused}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="BorderElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBorderBrushFocused}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlForegroundFocused}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="RequestedTheme" Storyboard.TargetName="ContentElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Light"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="QueryButton">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlButtonForeground}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ButtonStates">
+                                <VisualState x:Name="ButtonVisible">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeleteButton">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="ButtonCollapsed"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="BorderElement" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="1"/>
+                        <ContentPresenter x:Name="HeaderContentPresenter" Grid.ColumnSpan="3" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Foreground="{ThemeResource TextControlHeaderForeground}" FontWeight="Normal" Margin="0,0,0,8" Grid.Row="0" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                        <ScrollViewer x:Name="ContentElement" AutomationProperties.AccessibilityView="Raw" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsTabStop="False" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Grid.Row="1" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="Disabled"/>
+                        <ContentControl x:Name="PlaceholderTextContentPresenter" Grid.ColumnSpan="3" Content="{TemplateBinding PlaceholderText}" Foreground="{ThemeResource TextControlPlaceholderForeground}" IsHitTestVisible="False" IsTabStop="False" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Grid.Row="1"/>
+                        <Button x:Name="DeleteButton" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" Grid.Column="1" FontSize="{TemplateBinding FontSize}" IsTabStop="False" Margin="{ThemeResource HelperButtonThemePadding}" MinWidth="34" Grid.Row="1" Style="{StaticResource DeleteButtonStyle}" Visibility="Collapsed" VerticalAlignment="Stretch"/>
+                        <Button x:Name="QueryButton" BorderThickness="{TemplateBinding BorderThickness}" Grid.Column="2" FontSize="{TemplateBinding FontSize}" IsTabStop="False" Margin="{ThemeResource HelperButtonThemePadding}" MinWidth="34" Grid.Row="1" Style="{StaticResource QueryButtonStyle}" VerticalAlignment="Stretch"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="AutoSuggestBox">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="TextBoxStyle" Value="{StaticResource AutoSuggestBoxTextBoxStyle}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="AutoSuggestBox">
+                    <Grid x:Name="LayoutRoot">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="Orientation">
+                                <VisualState x:Name="Landscape"/>
+                                <VisualState x:Name="Portrait"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <TextBox x:Name="TextBox" ScrollViewer.BringIntoViewOnFocusChange="False" DesiredCandidateWindowAlignment="BottomEdge" Header="{TemplateBinding Header}" Margin="0" PlaceholderText="{TemplateBinding PlaceholderText}" Style="{TemplateBinding TextBoxStyle}" Width="{TemplateBinding Width}" Canvas.ZIndex="0"/>
+                        <Popup x:Name="SuggestionsPopup">
+                            <Border x:Name="SuggestionsContainer">
+                                <Border.RenderTransform>
+                                    <TranslateTransform x:Name="UpwardTransform"/>
+                                </Border.RenderTransform>
+                                <ListView x:Name="SuggestionsList" BorderBrush="{ThemeResource AutoSuggestBoxSuggestionsListBorderBrush}" BorderThickness="{ThemeResource AutoSuggestListBorderThemeThickness}" Background="{ThemeResource AutoSuggestBoxSuggestionsListBackground}" DisplayMemberPath="{TemplateBinding DisplayMemberPath}" IsItemClickEnabled="True" ItemTemplate="{TemplateBinding ItemTemplate}" ItemContainerStyle="{TemplateBinding ItemContainerStyle}" ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}" MaxHeight="{ThemeResource AutoSuggestListMaxHeight}" Margin="{ThemeResource AutoSuggestListMargin}" Padding="{ThemeResource AutoSuggestListPadding}">
+                                    <ListView.ItemContainerTransitions>
+                                        <TransitionCollection/>
+                                    </ListView.ItemContainerTransitions>
+                                </ListView>
+                            </Border>
+                        </Popup>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

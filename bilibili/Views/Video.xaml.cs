@@ -45,6 +45,7 @@ namespace bilibili.Views
         bool? isRepeat = null;
         DispatcherTimer timer_repeat = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         List<VideoInfo> infos = new List<VideoInfo>();
+        List<string> strs = new List<string>();
         bool isShowDanmu = false;
         List<DanmuModel> DanmuPool;
         bool isInited = false;
@@ -142,7 +143,14 @@ namespace bilibili.Views
                     }break;
                 case VirtualKey.Enter:
                     {
-                        ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                        if (ApplicationView.GetForCurrentView().IsFullScreenMode)
+                        {
+                            ApplicationView.GetForCurrentView().ExitFullScreenMode();
+                        }
+                        else
+                        {
+                            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                        }
                     }
                     break;
             }
@@ -158,6 +166,11 @@ namespace bilibili.Views
                     {
                         if(Convert.ToInt32(item.Time) == Convert.ToInt32(media.Position.TotalSeconds))
                         {
+                            foreach (string word in strs)
+                            {
+                                if (item.Message.Contains(word))
+                                    return;
+                            }
                             if (item.Mode == "1")
                             {
                                 danmaku.AddBasic(item, false);
@@ -417,15 +430,15 @@ namespace bilibili.Views
                 {
                     SendMode = 1;
                 }
-                if (cb_SendMode.SelectedIndex == 1)
+                else if (cb_SendMode.SelectedIndex == 1)
                 {
                     SendMode = 4;
                 }
-                if (cb_SendMode.SelectedIndex == 2)
+                else if (cb_SendMode.SelectedIndex == 2)
                 {
                     SendMode = 5;
                 }
-                int a = 255 << 24 | byte.Parse(r.Text) << 16 | byte.Parse(g.Text) << 8 | byte.Parse(b.Text);
+                int a = 255 << 24 | byte.Parse(sli_r.Value.ToString()) << 16 | byte.Parse(sli_g.Value.ToString()) << 8 | byte.Parse(sli_b.Value.ToString());
                 string color = a.ToString();
                 string Args = "mid=" + UserHelper.mid + "&msg=" + txt_mydanmu.Text + "&type=json" + "&pool=0&playTime=" + media.Position.TotalSeconds.ToString() + "&cid=" + cid + "&fontsize=25&mode=" + SendMode.ToString() + "&rnd=" + new Random().Next(1000, 9999).ToString() + "&color=" + color;
                 string code = await BaseService.SendPostAsync(url, Args, "http://api.bilibili.com");
@@ -754,6 +767,27 @@ namespace bilibili.Views
             int value = (int)sli_fontsize.Value;
             SettingHelper.SetValue("_fontsize", value);
             if (danmaku != null) danmaku.ChangeSize(value);
+        }
+
+        private void Kill_Click(object sender, RoutedEventArgs e)
+        {
+            strs.Clear();
+            foreach (var word in txt_word.Text.Split(' ')) 
+            {
+                if (word.Length < 0) continue;
+                strs.Add(word); 
+            }
+            if (wordInclude.IsChecked != true) 
+            {
+                if (SettingHelper.ContainsKey("_words"))
+                {
+                    string[] words = SettingHelper.GetValue("_words").ToString().Split(',');
+                    foreach (string word in words)
+                    {
+                        if (word.Length > 0) strs.Add(word);
+                    }
+                }
+            }
         }
 
         private void Repeat_Click(object sender, RoutedEventArgs e)

@@ -19,7 +19,6 @@ using bilibili.Models;
 using Windows.Data.Json;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.StartScreen;
-using bilibili.UI;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 

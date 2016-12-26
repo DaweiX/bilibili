@@ -127,7 +127,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <ListView x:Name="listview" SelectionMode="None"
+                    <ListView x:Name="listview" SelectionMode="None" Margin="0,4,0,0"
                               ContainerContentChanging="listview_ContainerContentChanging" Template="{StaticResource myControlTemplete}">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -148,7 +148,7 @@
                                             <TextBlock Text="{Binding Like}" VerticalAlignment="Center" Margin="2,0,0,0"/>
                                         </StackPanel>
                                     </StackPanel>
-                                    <StackPanel Grid.Column="2" Margin="4,0,4,0">
+                                    <StackPanel Grid.Column="2" Margin="2,0,0,0">
                                         <HyperlinkButton Content="{Binding Uname}"/>
                                         <TextBlock Text="{Binding Time}" FontSize="14" Foreground="Gray"/>
                                         <TextBlock Text="{Binding Message}" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
@@ -168,15 +168,15 @@
                                                             <ColumnDefinition Width="auto"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
-                                                        <Rectangle Width="4" Fill="LightGray" Height="60" VerticalAlignment="Top" Margin="0,0,8,0"/>
-                                                        <StackPanel Grid.Column="1" Tapped="Grid_Tapped">
+                                                        <Rectangle Width="2" Fill="LightGray" Height="60" VerticalAlignment="Top"/>
+                                                        <StackPanel Grid.Column="1" Margin="2,0,0,0" Tapped="Grid_Tapped">
                                                             <Image Height="60" Width="60" Source="{Binding Avatar}" VerticalAlignment="Top"/>
                                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                                 <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE19f;" VerticalAlignment="Center"/>
                                                                 <TextBlock Text="{Binding Like}" VerticalAlignment="Center" Margin="2,0,0,0"/>
                                                             </StackPanel>
                                                         </StackPanel>
-                                                        <StackPanel Grid.Column="2" Margin="8,0,8,0">
+                                                        <StackPanel Grid.Column="2">
                                                             <HyperlinkButton Content="{Binding Uname}"/>
                                                             <TextBlock Text="{Binding Time}" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                                                             <StackPanel Orientation="Horizontal">
@@ -219,7 +219,7 @@
                     </Grid>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="相关视频">
+            <PivotItem Header="相关视频" Margin="0">
                 <Grid SizeChanged="Grid_SizeChanged">
                     <Border x:Name="width"/>
                     <GridView x:Name="list_relates" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_relates_ItemClick">
@@ -247,17 +247,17 @@
                                     <TextBlock Text="{Binding Title}" Grid.Column="1" Margin="4,0,0,0" Foreground="{ThemeResource bili_Fontcolor_Main}" FontSize="13" TextWrapping="Wrap"/>
                                     <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Grid.Column="0" Grid.Row="0" Text="播放数：" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
-                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding View}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
-                                        <TextBlock Grid.Column="0" Grid.Row="1" Text="收藏数：" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
-                                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Favorite}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                            <TextBlock Grid.Column="0" Grid.Row="0" Text="播放数：" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding View}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+                                            <TextBlock Grid.Column="0" Grid.Row="1" Text="收藏数：" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Favorite}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
+                                        </StackPanel>
                                     </Grid>
                                 </Grid>
                             </DataTemplate>

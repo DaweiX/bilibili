@@ -5,6 +5,7 @@
     xmlns:local="using:bilibili.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="using:bilibili.Controls"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Pivot>
@@ -12,29 +13,29 @@
                 <StackPanel>
                     <ToggleSwitch x:Name="night" Toggled="night_Toggled" Header="夜间模式"/>
                     <ToggleSwitch x:Name="top" Toggled="top_Toggled" Header="隐藏状态栏"/>
-                    <ComboBox x:Name="cb_Theme" Width="150" Header="主题色选择" IsEnabled="False" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Theme}" SelectionChanged="cb_Theme_SelectionChanged">
+                    <ComboBox x:Name="cb_Theme" Width="150" Header="主题色选择" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Theme}" SelectionChanged="cb_Theme_SelectionChanged">
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#DF85A0" Margin="0,0,5,0"/>
+                                <Rectangle Width="16" Height="16" Fill="#E273A9" Margin="0,0,5,0"/>
                                 <TextBlock Foreground="#DF85A0" Text="少女粉"/>
                             </StackPanel>
                         </ComboBoxItem>
                         <ComboBoxItem >
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#F70D0D" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#F70D0D" Text="姨妈红"/>
+                                <Rectangle Width="16" Height="16" Fill="#F44336" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#F44336" Text="姨妈红"/>
                             </StackPanel>
                         </ComboBoxItem>
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#F9EF23" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#F9EF23" Text="咸蛋黄"/>
+                                <Rectangle Width="16" Height="16" Fill="#FFB007" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#FFB007" Text="咸蛋黄"/>
                             </StackPanel>
                         </ComboBoxItem>
                         <ComboBoxItem >
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#71F923" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#71F923" Text="早苗绿"/>
+                                <Rectangle Width="16" Height="16" Fill="#7BB33A" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#7BB33A" Text="早苗绿"/>
                             </StackPanel>
                         </ComboBoxItem>
                         <ComboBoxItem >
@@ -45,8 +46,14 @@
                         </ComboBoxItem>
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#FFB92CBF" Margin="0,0,5,0"/>
+                                <Rectangle Width="16" Height="16" Fill="#B92CBF" Margin="0,0,5,0"/>
                                 <TextBlock Foreground="#B92CBF" Text="基佬紫"/>
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="#FF6633" Margin="0,0,5,0"/>
+                                <TextBlock Foreground="#FF6633" Text="那个橙"/>
                             </StackPanel>
                         </ComboBoxItem>
                     </ComboBox>
@@ -62,6 +69,33 @@
                         <Slider x:Name="sli_speed" Header="弹幕速度" Width="200" HorizontalAlignment="Left" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
                         <Slider Maximum="3" x:Name="sli_space" Header="弹幕间距" Width="200" HorizontalAlignment="Left" ValueChanged="sli_space_ValueChanged"/>
                         <Slider Maximum="3" x:Name="sli_fontsize" Header="弹幕字号" Width="200" HorizontalAlignment="Left" ValueChanged="sli_fontsize_ValueChanged"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="弹幕屏蔽关键字"/>
+                            <HyperlinkButton Content="编辑" Margin="40,0,0,0" Click="delword_Click"/>
+                        </StackPanel>
+                        <GridView Margin="0 4" x:Name="list_kill" IsItemClickEnabled="True" ItemClick="list_kill_ItemClick">
+                            <GridView.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    <EntranceThemeTransition/>
+                                </TransitionCollection>
+                            </GridView.ItemContainerTransitions>
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <Setter Property="Padding" Value="2"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <c:WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="txt_word" Width="240" HorizontalAlignment="Left"/>
+                            <Button x:Name="addword" Content="添加" Margin="8 0" Width="80" Click="addword_Click"/>
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>

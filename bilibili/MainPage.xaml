@@ -127,7 +127,7 @@
                             </TransitionCollection>
                         </Frame.ContentTransitions>
                     </Frame>
-                    <controls:MessagePopup x:Name="messagepop" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,60" Width="120"/>
+                    <controls:MessagePopup x:Name="messagepop" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,60"/>
                 </Grid>
             </SplitView.Content>
         </SplitView>

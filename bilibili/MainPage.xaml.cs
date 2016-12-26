@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Background;
 using System.Diagnostics;
+using bilibili.UI;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -27,16 +28,11 @@ namespace bilibili
     {
         DispatcherTimer timer = new DispatcherTimer();
         bool currentTheme;
+        bool isExit = false;
         public MainPage()
         {
             this.InitializeComponent();
             this.DataContext = this;
-            var TitleBar = ApplicationView.GetForCurrentView().TitleBar;
-            TitleBar.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
-            TitleBar.ForegroundColor = Colors.White;
-            TitleBar.ButtonBackgroundColor = Color.FromArgb(1, 226, 115, 170);
-            TitleBar.ButtonHoverForegroundColor = Colors.Black;
-            TitleBar.ButtonHoverBackgroundColor = Colors.White;
             //后退键
             SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
             MainList.SelectedIndex = 0;
@@ -59,6 +55,7 @@ namespace bilibili
                     txt.Text = "夜间模式";
                 }
             }
+            ChangeTheme();
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -151,25 +148,30 @@ namespace bilibili
 
         bool ChangeTheme(bool a = true)
         {
-            string ThemeName = string.Empty;
-            if (SettingHelper.ContainsKey("_Theme"))
+            try
             {
-                ThemeName = SettingHelper.GetValue("_Theme") as string;
+                if (SettingHelper.ContainsKey("_Theme"))
+                {
+                    var TitleBar = ApplicationView.GetForCurrentView().TitleBar;
+                    Color color = ColorRelated.GetColor();
+                    Application.Current.Resources["bili_Theme"] = new SolidColorBrush(color);
+                    ChangeDarkMode(currentTheme);
+                    ChangeDarkMode(currentTheme);
+                    TitleBar.BackgroundColor = color;
+                    TitleBar.ButtonBackgroundColor = color;
+                    TitleBar.ForegroundColor = Colors.White;
+                    TitleBar.ButtonHoverForegroundColor = Colors.Black;
+                    TitleBar.ButtonHoverBackgroundColor = Colors.White;
+					if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+					{
+						StatusBar sb = StatusBar.GetForCurrentView();
+						sb.BackgroundColor = color;
+						sb.BackgroundOpacity = 1;
+					}
+				}
+                return true;
             }
-            else
-            {
-                ThemeName = "Pink";
-                SettingHelper.SetValue("_Theme", "Pink");
-            }
-            //Application.Current.Resources.ThemeDictionaries.Clear();
-            //KeyValuePair<object, object> openWith = new KeyValuePair<object, object>("bili_Theme", new SolidColorBrush(Color.FromArgb(255, 255, 0, 0)));
-            //Application.Current.Resources.ThemeDictionaries.Add(new ResourceDictionary { });
-            //找不到来自“ms-appx:///Theme//RedTheme.xaml”的资源
-            ResourceDictionary newDictionary = new ResourceDictionary();
-            newDictionary.Source = new Uri("ms-appx:///Theme/RedTheme.xaml", UriKind.RelativeOrAbsolute);
-            Application.Current.Resources.MergedDictionaries.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(newDictionary);
-            return true;
+			catch { return false; }
         }
 
         async void TopShoworHide()
@@ -180,7 +182,8 @@ namespace bilibili
                 if ((bool)SettingHelper.GetValue("_topbar") == false)
                 {
                     await sb.ShowAsync();
-                    sb.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
+                    Color color = ColorRelated.GetColor();
+                    sb.BackgroundColor = color;
                     sb.BackgroundOpacity = 1;
                 }
                 else if ((bool)SettingHelper.GetValue("_topbar") == true)
@@ -272,7 +275,6 @@ namespace bilibili
         //后退键
         private async void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
-            bool isExit = false;
             if (mainframe == null)
                 return;
             if (e.Handled == false)
@@ -292,7 +294,7 @@ namespace bilibili
                     {
                         e.Handled = true;
                         isExit = true;
-                        messagepop.Show("再次电击后退键退出", 2000);
+                        messagepop.Show("再次点击后退键退出", 2000);
                         await Task.Delay(2000);
                         isExit = false;
                     }
@@ -319,8 +321,6 @@ namespace bilibili
             //bilibili.Views.PartViews.Bangumi, bilibili, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
             Sets.SelectedIndex = -1;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = mainframe.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
-            stk.Background = (mainframe.CurrentSourcePageType == typeof(Views.Partition))|| mainframe.CurrentSourcePageType == typeof(Views.Friends) || mainframe.CurrentSourcePageType == typeof(Views.Setting) || mainframe.CurrentSourcePageType.AssemblyQualifiedName.Split(',')[0].Split('.')[2] == "PartViews" || mainframe.CurrentSourcePageType == typeof(Views.Message) ? new SolidColorBrush(Color.FromArgb(255, 226, 115, 169)) : (this.RequestedTheme == ElementTheme.Dark ? new SolidColorBrush(Color.FromArgb(255, 43, 43, 43)) : new SolidColorBrush(Color.FromArgb(255, 240, 240, 240)));
-            uname.Foreground = (mainframe.CurrentSourcePageType == typeof(Views.Partition))|| mainframe.CurrentSourcePageType == typeof(Views.Friends) || mainframe.CurrentSourcePageType == typeof(Views.Setting) || mainframe.CurrentSourcePageType.AssemblyQualifiedName.Split(',')[0].Split('.')[2] == "PartViews" || mainframe.CurrentSourcePageType == typeof(Views.Message) ? new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)) : new SolidColorBrush(Color.FromArgb(255, 226, 115, 169));
             if (mainframe.CurrentSourcePageType == typeof(Views.Video))
             {
                 grid_top.Visibility = Visibility.Collapsed;
@@ -491,13 +491,6 @@ namespace bilibili
                         {
                             //fonticon.Glyph = "&#xE708/6;";
                             bool isDark = ChangeDarkMode(currentTheme);
-                            stk.Background =
-                                (mainframe.CurrentSourcePageType == typeof(Views.Partition))
-                                || mainframe.CurrentSourcePageType == typeof(Views.Friends)
-                                || mainframe.CurrentSourcePageType.AssemblyQualifiedName.Split(',')[0].Split('.')[2] == "PartViews"
-                                || mainframe.CurrentSourcePageType == typeof(Views.Message) ?
-                                new SolidColorBrush(Color.FromArgb(255, 226, 115, 169)) :
-                                isDark ? new SolidColorBrush(Color.FromArgb(255, 29, 29, 29)) : new SolidColorBrush(Color.FromArgb(255, 241, 241, 241));
                         }
                         break;
                 }
@@ -506,7 +499,7 @@ namespace bilibili
         }
 
 
-    private bool ChangeDarkMode(bool value)
+        private bool ChangeDarkMode(bool value)
         {
             if (value)
             {

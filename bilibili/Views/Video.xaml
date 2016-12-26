@@ -35,13 +35,21 @@
                             <TextBlock Text="顶部弹幕" Foreground="White"/>
                         </CheckBox.Content>
                     </CheckBox>
-                    <TextBlock Text="屏蔽关键字" Foreground="White" Margin="0,8,0,4"/>
-                    <TextBox/>
-                    <TextBlock Text="弹幕速度" Foreground="{ThemeResource bili_Theme}" Margin="0,8,0,0"/>
+                    <TextBlock Text="屏蔽关键字(请以空格分隔关键词)" Foreground="White" Margin="0,8,0,4"/>
+                    <TextBox x:Name="txt_word"/>
+                    <Grid Margin="0 4">
+                        <Button Content="执行" Click="Kill_Click" HorizontalAlignment="Left" Foreground="White"/>
+                        <CheckBox x:Name="wordInclude" HorizontalAlignment="Right">
+                            <CheckBox.Content>
+                                <TextBlock Foreground="White" Text="单独设定(仅对该视频有效)"/>
+                            </CheckBox.Content>
+                        </CheckBox>
+                    </Grid>
+                    <TextBlock Text="弹幕速度" Foreground="White" Margin="0,8,0,0"/>
                     <Slider x:Name="sli_speed" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
-                    <TextBlock Text="弹幕间距" Foreground="{ThemeResource bili_Theme}"/>
+                    <TextBlock Text="弹幕间距" Foreground="White"/>
                     <Slider Maximum="2" x:Name="sli_space" ValueChanged="sli_space_ValueChanged"/>
-                    <TextBlock Text="弹幕字号" Foreground="{ThemeResource bili_Theme}"/>
+                    <TextBlock Text="弹幕字号" Foreground="White"/>
                     <Slider Maximum="3" x:Name="sli_fontsize" ValueChanged="sli_fontsize_ValueChanged"/>
                     <StackPanel>
                         <TextBlock Text="视频信息" Foreground="{ThemeResource bili_Theme}"/>
@@ -214,7 +222,7 @@
                     </StackPanel>
                     <Grid Grid.Column="1">
                         <Slider Margin="0,8,0,0" x:Name="sli_main" Value="{Binding ElementName=media,Path=Position,Mode=TwoWay,Converter={StaticResource cvt2}}" Style="{StaticResource SliderStyle1}" Canvas.ZIndex="62" ThumbToolTipValueConverter="{StaticResource cvt}"/>
-                        <ProgressBar x:Name="pro_down" Foreground="Pink" Canvas.ZIndex="61"/>
+                        <ProgressBar x:Name="pro_down" Foreground="{ThemeResource bili_Theme}" Opacity="0.6" Canvas.ZIndex="61"/>
                     </Grid>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="42">
                         <Button x:Name="pause" Click="AppBarButton_Click" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="播放/暂停">
@@ -238,15 +246,6 @@
                             </Button.Content>
                             <Button.Flyout>
                                 <Flyout>
-                                    <Flyout.FlyoutPresenterStyle>
-                                        <Style TargetType="FlyoutPresenter">
-                                            <Setter Property="Background">
-                                                <Setter.Value>
-                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </Flyout.FlyoutPresenterStyle>
                                     <StackPanel Orientation="Horizontal">
                                         <Button x:Name="vol" Foreground="White" Background="{x:Null}" ToolTipService.ToolTip="音量调节">
                                             <Button.Content>
@@ -292,15 +291,6 @@
                                             </Button.Content>
                                             <Button.Flyout>
                                                 <MenuFlyout>
-                                                    <MenuFlyout.MenuFlyoutPresenterStyle>
-                                                        <Style TargetType="MenuFlyoutPresenter">
-                                                            <Setter Property="Background">
-                                                                <Setter.Value>
-                                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Style>
-                                                    </MenuFlyout.MenuFlyoutPresenterStyle>
                                                     <MenuFlyoutItem Tag="0" Click="full_Click" Foreground="White">保持比例</MenuFlyoutItem>
                                                     <MenuFlyoutItem Tag="1" Click="full_Click" Foreground="White">拉伸占满</MenuFlyoutItem>
                                                 </MenuFlyout>

@@ -21,6 +21,7 @@ namespace bilibili.Views
         public delegate bool SettingHandler(bool value);
         public event SettingHandler ChangeDark;
         public event SettingHandler ChangeTheme;
+        bool isWordEditting = false;
         public Setting()
         {
             InitializeComponent();
@@ -54,6 +55,47 @@ namespace bilibili.Views
             if (SettingHelper.ContainsKey("_toast"))
             {
                 background.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast"));
+            }
+            if (SettingHelper.ContainsKey("_Theme"))
+            {
+                switch (SettingHelper.GetValue("_Theme").ToString())
+                {
+                    case "Pink":
+                        cb_Theme.SelectedIndex = 0;
+                        break;
+                    case "Red":
+                        cb_Theme.SelectedIndex = 1;
+                        break;
+                    case "Yellow":
+                        cb_Theme.SelectedIndex = 2;
+                        break;
+                    case "Green":
+                        cb_Theme.SelectedIndex = 3;
+                        break;
+                    case "Blue":
+                        cb_Theme.SelectedIndex = 4;
+                        break;
+                    case "Purple":
+                        cb_Theme.SelectedIndex = 5;
+                        break;
+                    case "Orange":
+                        cb_Theme.SelectedIndex = 6;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                cb_Theme.SelectedIndex = 0;
+            }
+            if (SettingHelper.ContainsKey("_words"))
+            {
+                string[] words = SettingHelper.GetValue("_words").ToString().Split(',');
+                foreach (string word in words) 
+                {
+                    if (word.Length > 0) list_kill.Items.Add(word);
+                }
             }
         }
 
@@ -132,6 +174,9 @@ namespace bilibili.Views
                         break;
                     case 5:
                         SettingHelper.SetValue("_Theme", "Purple");
+                        break;
+                    case 6:
+                        SettingHelper.SetValue("_Theme", "Orange");
                         break;
                     default:
                         break;
@@ -214,6 +259,51 @@ namespace bilibili.Views
         private void toast_Toggled(object sender, RoutedEventArgs e)
         {
             SettingHelper.SetValue("_toast", toast.IsOn);
+        }
+
+        private void addword_Click(object sender, RoutedEventArgs e)
+        {
+            if (!SettingHelper.ContainsKey("_words"))
+            {
+                SettingHelper.SetValue("_words", string.Empty);
+            }
+            string oldstring = SettingHelper.GetValue("_words").ToString();
+            string word = txt_word.Text;
+            if (!string.IsNullOrEmpty(word) && !oldstring.Contains(word)) 
+            {
+                oldstring += word + ",";
+                list_kill.Items.Add(word);
+                SettingHelper.SetValue("_words", oldstring);
+                txt_word.Text = string.Empty;
+            }
+        }
+
+        private void delword_Click(object sender, RoutedEventArgs e)
+        {
+            HyperlinkButton btn = sender as HyperlinkButton;
+            if (!isWordEditting)
+            {
+                btn.Content = "退出删除";
+                isWordEditting = true;
+            }
+            else
+            {
+                btn.Content = "删除";
+                isWordEditting = false;
+            }
+        }
+
+        private void list_kill_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (!isWordEditting) return;
+            if (!SettingHelper.ContainsKey("_words"))
+            {
+                SettingHelper.SetValue("_words", string.Empty);
+            }
+            string oldstring = SettingHelper.GetValue("_words").ToString();
+            string newstring = oldstring.Replace(e.ClickedItem.ToString() + ",", string.Empty);
+            SettingHelper.SetValue("_words", newstring);
+            list_kill.Items.Remove(e.ClickedItem);
         }
     }
 }

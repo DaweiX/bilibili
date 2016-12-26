@@ -1,5 +1,6 @@
 ﻿using bilibili.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Core;
@@ -221,6 +222,9 @@ namespace bilibili.Controls
             }
         }
 
+        /// <summary>
+        /// 清除弹幕
+        /// </summary>
         public void ClearDanmu()
         {
             grid_0.Children.Clear();

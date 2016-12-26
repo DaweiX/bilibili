@@ -9,11 +9,8 @@
 
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Rectangle Fill="{ThemeResource bili_Theme}" Height="48" VerticalAlignment="Top"/>
-        <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
-            <PivotItem Margin="0">
-                <PivotItem.Header>
-                    <TextBlock x:Name="h0" Text="基本属性" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+        <Pivot x:Name="pivot">
+            <PivotItem Margin="0" Header="基本属性">
                 <ScrollViewer>
                     <StackPanel>
                         <StackPanel x:Name="header">
@@ -78,10 +75,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h1" Text="投稿视频" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
+            <PivotItem Margin="0" Header="投稿视频">
                 <ListView x:Name="list_videos" IsItemClickEnabled="True" ItemContainerStyle="{StaticResource listcontainerstyle}" ItemClick="list_videos_ItemClick">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -117,11 +111,8 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </PivotItem>
-            <PivotItem>
-                <PivotItem.Header>
-                    <TextBlock x:Name="h2" Text="TA的关注" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
-                </PivotItem.Header>
-                <Grid>
+            <PivotItem Margin="0" Header="TA的关注">
+                <Grid Margin="0 8">
                     <Border x:Name="width"/>
                     <GridView x:Name="list_concern" IsItemClickEnabled="True" ItemClick="list_concern_ItemClick" SizeChanged="StackPanel_SizeChanged">
                         <GridView.ItemTemplate>

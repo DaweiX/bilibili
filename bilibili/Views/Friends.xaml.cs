@@ -65,18 +65,6 @@ namespace bilibili.Views
             Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Content).Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
-        private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
-            TextBlock txt = this.FindName(string.Format("h{0}", pivot.SelectedIndex)) as TextBlock;
-            for (int i = 0; i < pivot.Items.Count; i++)
-            {
-                TextBlock temp = this.FindName(string.Format("h{0}", i)) as TextBlock;
-                temp.Foreground = new SolidColorBrush(Colors.LightGray);
-            }
-            txt.Foreground = new SolidColorBrush(Colors.White);
-        }
-
         private void conlist_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (conlist.SelectedItem != null)

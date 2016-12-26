@@ -29,7 +29,7 @@ namespace bilibili.Helpers
         /// <returns>无符号整型时间戳</returns>
         public static uint GetLinuxTS()
         {
-            uint ts = Convert.ToUInt32((DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds);
+            uint ts = Convert.ToUInt32((DateTime.Now.ToLocalTime() - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds);
             return ts;
         }
 
