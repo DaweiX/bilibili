@@ -24,10 +24,7 @@
                 <ListView.Template>
                     <ControlTemplate TargetType="ItemsControl">
                         <ScrollViewer>
-                            <StackPanel>
-                                <ItemsPresenter/>
-                                <TextBlock Foreground="Gray" HorizontalAlignment="Center" Margin="0,8,0,56"/>
-                            </StackPanel>
+                            <ItemsPresenter Margin="0,8,0,56"/>
                         </ScrollViewer>
                     </ControlTemplate>
                 </ListView.Template>

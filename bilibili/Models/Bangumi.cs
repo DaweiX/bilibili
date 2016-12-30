@@ -141,4 +141,15 @@ namespace bilibili.Models
         public string Reason { get; set; }
         public string Time { get; set; }
     }
+    class PraiseMe
+    {
+        public string Content { get; set; }
+        public string Face { get; set; }
+        public string Mid { get; set; }
+        public string Name { get; set; }
+        public string Time { get; set; }
+        public string Title { get; set; }
+        public string Reply { get; set; }
+        public string Aid { get; set; }
+    }
 }

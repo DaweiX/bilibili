@@ -2,6 +2,12 @@
 
 namespace bilibili.Helpers
 {
+    public enum DeviceType
+    {
+        PC,
+        Mobile,
+        Unknown
+    }
     class SettingHelper
     {
         static ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
@@ -44,6 +50,21 @@ namespace bilibili.Helpers
             else
             {
                 return false;
+            }
+        }
+     
+        /// <summary>
+        /// 获取设备类型
+        /// </summary>
+        /// <returns></returns>
+        public static DeviceType GetDeviceType()
+        {
+            string type = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
+            switch(type)
+            {
+                case "Windows.Desktop":return DeviceType.PC;
+                case "Windows.Mobile": return DeviceType.Mobile;
+                default:return DeviceType.Unknown;
             }
         }
     }

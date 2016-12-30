@@ -165,7 +165,10 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <ContentPresenter x:Name="ContentPresenter">
-                            <TextBlock Text="{TemplateBinding Content}"/>
+                            <Grid>
+                                <ContentPresenter Content="{TemplateBinding Content}"/>
+                                <TextBlock Text="{TemplateBinding Content}"/>
+                            </Grid>
                         </ContentPresenter>
                     </Grid>
                 </ControlTemplate>

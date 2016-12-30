@@ -185,10 +185,10 @@
                             </GridView.ItemsPanel>
                         </GridView>
                         <StackPanel Grid.Row="2" Pivot.SlideInAnimationGroup="GroupOne">
-                            <Button Tapped="Random_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">运气不错</Button>
-                            <Button HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0" Click="rank_Click">排行榜</Button>
-                            <Button Tag="0" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">话题中心</Button>
-                            <Button Tag="1" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="{ThemeResource bili_PageBackground}" Margin="0,4,0,0">活动中心</Button>
+                            <Button Tapped="Random_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="White" Margin="0,4,0,0">运气不错</Button>
+                            <Button HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="White" Margin="0,4,0,0" Click="rank_Click">排行榜</Button>
+                            <Button Tag="0" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="White" Margin="0,4,0,0">话题中心</Button>
+                            <Button Tag="1" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="White" Margin="0,4,0,0">活动中心</Button>
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

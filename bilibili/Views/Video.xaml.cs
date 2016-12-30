@@ -42,6 +42,7 @@ namespace bilibili.Views
         string aid = string.Empty;
         DispatcherTimer timer = new DispatcherTimer();
         int R_1, R_2;
+        string danmakuMode = "1";
         bool? isRepeat = null;
         DispatcherTimer timer_repeat = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         List<VideoInfo> infos = new List<VideoInfo>();
@@ -63,7 +64,13 @@ namespace bilibili.Views
             timer_danmaku.Tick += Timer_danmaku_Tick;
             timer.Start();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Landscape; //横向屏幕
-            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            if (SettingHelper.ContainsKey("_autofull"))
+            {
+                if ((bool)SettingHelper.GetValue("_autofull") != false)
+                {
+                    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                }
+            }
             if (SettingHelper.ContainsKey("_vol"))
             {
                 sli_vol.Value = Convert.ToInt32(SettingHelper.GetValue("_vol"));
@@ -423,35 +430,32 @@ namespace bilibili.Views
             }
             try
             {
-                string url = "http://api.bilibili.com/comment/post?_device=android&_ulv=10000&build=424000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&aid=" + aid + "&cid=" + cid + "&pid=1&platform=wp";
+                /*
+                 int v = int.Parse(Color, System.Globalization.NumberStyles.HexNumber);
+                        SolidColorBrush solid = new SolidColorBrush(new Color()
+                        {
+                            A = Convert.ToByte(255),
+                            R = Convert.ToByte((v >> 16) & 255),
+                            G = Convert.ToByte((v >> 8) & 255),
+                            B = Convert.ToByte((v >> 0) & 255)
+                        });
+                */
+                string url = "http://api.bilibili.com/comment/post?_device=wp&_ulv=10000&build=430000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&aid=" + aid + "&cid=" + cid + "&pid=1&platform=android&scale=xhdpi";
                 url += ApiHelper.GetSign(url);
-                int SendMode = 1;
-                if (cb_SendMode.SelectedIndex == 0)
-                {
-                    SendMode = 1;
-                }
-                else if (cb_SendMode.SelectedIndex == 1)
-                {
-                    SendMode = 4;
-                }
-                else if (cb_SendMode.SelectedIndex == 2)
-                {
-                    SendMode = 5;
-                }
-                int a = 255 << 24 | byte.Parse(sli_r.Value.ToString()) << 16 | byte.Parse(sli_g.Value.ToString()) << 8 | byte.Parse(sli_b.Value.ToString());
+                int a = (byte.Parse(sli_r.Value.ToString()) << 16) + (byte.Parse(sli_g.Value.ToString()) << 8) + (byte.Parse(sli_b.Value.ToString()) << 0);//位运算的优先级最低！
                 string color = a.ToString();
-                string Args = "mid=" + UserHelper.mid + "&msg=" + txt_mydanmu.Text + "&type=json" + "&pool=0&playTime=" + media.Position.TotalSeconds.ToString() + "&cid=" + cid + "&fontsize=25&mode=" + SendMode.ToString() + "&rnd=" + new Random().Next(1000, 9999).ToString() + "&color=" + color;
+                string Args = "mid=" + UserHelper.mid + "&type=json" + "&cid=" + cid + "&playTime=" + media.Position.TotalSeconds.ToString() +"&color=" + color+ "&msg=" + txt_mydanmu.Text + "&fontsize=25&mode=" + danmakuMode + "&pool=0&rnd=" + new Random().Next(1000, 2000).ToString();
                 string code = await BaseService.SendPostAsync(url, Args, "http://api.bilibili.com");
                 JsonObject json = JsonObject.Parse(code);
                 if (json.ContainsKey("code"))
                 {
-                    if (json["code"].ToString() == "0")
+                    if (json["code"].ToString() == "0") 
                     {
-                        switch (SendMode)
+                        switch (danmakuMode)
                         {
-                            case 1: danmaku.AddBasic(new DanmuModel { Message = txt_mydanmu.Text, Color = color, Size = "25" }, true); break;
-                            case 4: danmaku.AddTop(new DanmuModel { Message = txt_mydanmu.Text, Color = color, Size = "25", Mode = "5" }, true); break;
-                            case 5: danmaku.AddTop(new DanmuModel { Message = txt_mydanmu.Text, Color = color, Size = "25", Mode = "4" }, true); break;
+                            case "1": danmaku.AddBasic(new DanmuModel { Message = txt_mydanmu.Text, Color = color, Size = "25" }, true); break;
+                            case "4": danmaku.AddTop(new DanmuModel { Message = txt_mydanmu.Text, Color = color, Size = "25", Mode = "5" }, true); break;
+                            case "5": danmaku.AddTop(new DanmuModel { Message = txt_mydanmu.Text, Color = color, Size = "25", Mode = "4" }, true); break;
                         }
                         return;
                     }
@@ -788,6 +792,13 @@ namespace bilibili.Views
                     }
                 }
             }
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem item = sender as MenuFlyoutItem;
+            danmakuMode = item.Tag.ToString();
+            SendMode.Content = item.Text.ToString();
         }
 
         private void Repeat_Click(object sender, RoutedEventArgs e)

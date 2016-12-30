@@ -1,4 +1,5 @@
-﻿using bilibili.Http;
+﻿using bilibili.Helpers;
+using bilibili.Http;
 using bilibili.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace bilibili.Controls
 {
     public sealed partial class Comment : UserControl
     {
+        int size = 0;
         public delegate void MyHandler(string tid);
         public event MyHandler Navi;
         public event MyHandler Info;
@@ -24,6 +26,9 @@ namespace bilibili.Controls
 
         public async Task init()
         {
+            DeviceType type = SettingHelper.GetDeviceType();
+            if (type == DeviceType.PC) size = 6;
+            else if (type == DeviceType.Mobile) size = 3;
             //直播
             await LoadLive();
             //番剧
@@ -68,7 +73,7 @@ namespace bilibili.Controls
         private async Task LoadItems(GridView gridview, int tid, int page)
         {
             //int count=
-            List<Content> a = await ContentServ.GetContentAsync(tid, page, 6);
+            List<Content> a = await ContentServ.GetContentAsync(tid, page, size);
             if (a != null)
             {
                 gridview.ItemsSource = a;
@@ -99,6 +104,11 @@ namespace bilibili.Controls
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            if (size == 3)
+            {
+                width.Width = ActualWidth / 3 - 8;
+                return;
+            }
             double i = this.ActualWidth;
             if (i > 800)
             {

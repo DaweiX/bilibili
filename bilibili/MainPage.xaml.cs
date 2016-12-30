@@ -26,6 +26,8 @@ namespace bilibili
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        //public delegate void ShowStatus(string message);
+        //public event ShowStatus Showstatus;
         DispatcherTimer timer = new DispatcherTimer();
         bool currentTheme;
         bool isExit = false;
@@ -54,6 +56,12 @@ namespace bilibili
                     currentTheme = true;
                     txt.Text = "夜间模式";
                 }
+            }
+            else
+            {
+                RequestedTheme = ElementTheme.Light;
+                currentTheme = true;
+                txt.Text = "夜间模式";
             }
             ChangeTheme();
         }

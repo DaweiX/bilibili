@@ -19,6 +19,7 @@ namespace bilibili.Views
         bool IsChatLoaded = false;
         bool IsNotiLoaded = false;
         bool IsWissLoaded = false;
+        bool PraiseLoaded = false;
         public Message()
         {
             this.InitializeComponent();
@@ -84,15 +85,27 @@ namespace bilibili.Views
                         }
                     }
                     break;
+                case 3:
+                    {
+                        if (!PraiseLoaded)
+                        {
+                            List<PraiseMe> notis = await ContentServ.GetPraiseListAsync();
+                            ls_prme.ItemsSource = notis;
+                            PraiseLoaded = true;
+                        }
+                    }
+                    break;
             }
         }
 
         private void ls_chat_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (e.ClickedItem as Chat != null)
-            {
-                Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Chat).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-            }
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Chat).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+        }
+
+        private void ls_prme_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as PraiseMe).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
     }
 }

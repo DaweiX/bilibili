@@ -9,8 +9,10 @@
     d:DesignHeight="40"
     d:DesignWidth="400">
 
-    <Grid x:Name="grid" Height="40" Visibility="Collapsed">
-        <Rectangle Fill="Gray" Opacity="0.5"/>
-        <TextBlock x:Name="txt" FontSize="20" Text="Hello World" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+    <Grid x:Name="grid" Visibility="Collapsed" Padding="4">
+        <Grid.Background>
+            <SolidColorBrush Color="DarkGray" Opacity="0.6"/>
+        </Grid.Background>
+        <TextBlock x:Name="txt" FontSize="16" Text="Hello World" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
     </Grid>
 </UserControl>

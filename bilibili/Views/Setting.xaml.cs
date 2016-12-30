@@ -2,11 +2,9 @@
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Notifications;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
@@ -30,6 +28,15 @@ namespace bilibili.Views
 
         void init()
         {
+            var type = SettingHelper.GetDeviceType();
+            if (type == DeviceType.PC)
+            {
+                m_top.Visibility = Visibility.Collapsed;
+            }
+            else if (type == DeviceType.Mobile)
+            {
+                pc_fullscreen.Visibility = Visibility.Collapsed;
+            }
             if (SettingHelper.ContainsKey("_nighttheme"))
             {
                 night.IsOn = SettingHelper.GetValue("_nighttheme").ToString() == "light" ? false : true;
@@ -52,9 +59,17 @@ namespace bilibili.Views
             {
                 background.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_pull"));
             }
+            if (SettingHelper.ContainsKey("_autofull"))
+            {
+                pc_fullscreen.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_autofull"));
+            }
+            else
+            {
+                pc_fullscreen.IsOn = true;
+            }
             if (SettingHelper.ContainsKey("_toast"))
             {
-                background.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast"));
+                toast.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast"));
             }
             if (SettingHelper.ContainsKey("_Theme"))
             {
@@ -134,9 +149,9 @@ namespace bilibili.Views
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 StatusBar sb = StatusBar.GetForCurrentView();
-                if (!string.IsNullOrEmpty(top.IsOn.ToString()))
+                if (!string.IsNullOrEmpty(m_top.IsOn.ToString()))
                 {           
-                    SettingHelper.SetValue("_topbar", top.IsOn);
+                    SettingHelper.SetValue("_topbar", m_top.IsOn);
                     if ((bool)SettingHelper.GetValue("_topbar") == false) 
                     {
                         await sb.ShowAsync();
@@ -304,6 +319,11 @@ namespace bilibili.Views
             string newstring = oldstring.Replace(e.ClickedItem.ToString() + ",", string.Empty);
             SettingHelper.SetValue("_words", newstring);
             list_kill.Items.Remove(e.ClickedItem);
+        }
+
+        private void fullscreen_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_autofull", pc_fullscreen.IsOn);
         }
     }
 }

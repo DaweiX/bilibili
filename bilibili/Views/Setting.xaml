@@ -12,7 +12,7 @@
             <PivotItem Header="外观">
                 <StackPanel>
                     <ToggleSwitch x:Name="night" Toggled="night_Toggled" Header="夜间模式"/>
-                    <ToggleSwitch x:Name="top" Toggled="top_Toggled" Header="隐藏状态栏"/>
+                    <ToggleSwitch x:Name="m_top" Toggled="top_Toggled" Header="隐藏状态栏"/>
                     <ComboBox x:Name="cb_Theme" Width="150" Header="主题色选择" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Theme}" SelectionChanged="cb_Theme_SelectionChanged">
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
@@ -119,6 +119,7 @@
             <PivotItem Header="播放">
                 <StackPanel>
                     <ToggleSwitch x:Name="direct" Header="点击剧集直接播放" Toggled="direct_Toggled"/>
+                    <ToggleSwitch x:Name="pc_fullscreen" Header="自动全屏" Toggled="fullscreen_Toggled"/>
                     <ComboBox x:Name="quality" Header="默认清晰度选择" SelectedIndex="1" SelectionChanged="quality_SelectionChanged">
                         <ComboBoxItem Tag="1">流畅</ComboBoxItem>
                         <ComboBoxItem Tag="2">清晰</ComboBoxItem>

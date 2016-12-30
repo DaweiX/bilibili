@@ -134,11 +134,11 @@ namespace bilibili.Controls
             switch (value)
             {
                 case 0:
-                    h = actualHeight;break;
+                    h = 1.5 * actualHeight;break;
                 case 1:
                     h = 1.2 * actualHeight;break;
                 case 2:
-                    h = 1.5 * actualHeight;break;
+                    h = actualHeight;break;
             }
             space.Height = new GridLength(h, GridUnitType.Pixel);
         }

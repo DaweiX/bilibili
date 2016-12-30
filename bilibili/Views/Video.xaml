@@ -160,21 +160,15 @@
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
-                                <ComboBox x:Name="cb_SendMode" SelectedIndex="0" Margin="2,0,0,0" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕模式">
-                                    <ComboBox.ItemContainerStyle>
-                                        <Style TargetType="ComboBoxItem">
-                                            <Setter Property="Background">
-                                                <Setter.Value>
-                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Setter Property="Foreground" Value="White"/>
-                                        </Style>
-                                    </ComboBox.ItemContainerStyle>
-                                    <ComboBoxItem>滚动</ComboBoxItem>
-                                    <ComboBoxItem>顶端</ComboBoxItem>
-                                    <ComboBoxItem>底端</ComboBoxItem>
-                                </ComboBox>
+                                <Button x:Name="SendMode" Content="滚动" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕模式">
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Tag="1" Foreground="White" Click="MenuFlyoutItem_Click">滚动</MenuFlyoutItem>
+                                            <MenuFlyoutItem Tag="4" Foreground="White" Click="MenuFlyoutItem_Click">顶部</MenuFlyoutItem>
+                                            <MenuFlyoutItem Tag="5" Foreground="White" Click="MenuFlyoutItem_Click">底部</MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
                             </StackPanel>
                             <TextBox x:Name="txt_mydanmu" Grid.Column="1" VerticalAlignment="Center" Background="{x:Null}" PlaceholderText="蓄势待发的弹幕君..." BorderThickness="0.5" BorderBrush="White"/>
                             <Button x:Name="send" Grid.Column="3" Width="60" Click="send_Click" Background="{x:Null}" ToolTipService.ToolTip="发送弹幕">
@@ -225,7 +219,7 @@
                         <ProgressBar x:Name="pro_down" Foreground="{ThemeResource bili_Theme}" Opacity="0.6" Canvas.ZIndex="61"/>
                     </Grid>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="42">
-                        <Button x:Name="pause" Click="AppBarButton_Click" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="播放/暂停">
+                        <Button x:Name="pause" VerticalAlignment="Stretch" Click="AppBarButton_Click" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="播放/暂停">
                             <Button.Content>
                                 <SymbolIcon x:Name="icon" Symbol="Pause"/>
                             </Button.Content>

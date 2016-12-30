@@ -1729,6 +1729,51 @@ namespace bilibili.Http
         }
 
 
+        public static async Task<List<PraiseMe>> GetPraiseListAsync()
+        {
+            List<PraiseMe> list = new List<PraiseMe>();
+            try
+            {
+                string url = "http://message.bilibili.com/api/notify/query.praiseme.list.do?_device=wp&&_ulv=10000&access_key=" + ApiHelper.accesskey + "&actionKey=appkey&appkey=" + ApiHelper.appkey + "&build=410005&data_type=1&page_size=40&platform=android&ts=" + ApiHelper.GetLinuxTS().ToString();
+                url += ApiHelper.GetSign(url);
+                JsonObject json = await BaseService.GetJson(url);
+                if (json.ContainsKey("data"))
+                {
+                    JsonArray array = json["data"].GetArray();
+                    foreach (var item in array)
+                    {
+                        PraiseMe pr = new PraiseMe();
+                        string title = string.Empty;
+                        json = item.GetObject();
+                        if (json.ContainsKey("content"))
+                            pr.Content = json["content"].GetString();
+                        if (json.ContainsKey("title"))
+                            title = json["title"].GetString();
+                        if (json.ContainsKey("time_at"))
+                            pr.Time = json["time_at"].GetString();
+                        if (json.ContainsKey("publisher"))
+                        {
+                            json = json["publisher"].GetObject();
+                            if(json.ContainsKey("face"))
+                                pr.Face = json["face"].GetString();
+                            if (json.ContainsKey("mid"))
+                                pr.Mid = json["mid"].ToString();
+                            if (json.ContainsKey("name"))
+                                pr.Name = json["name"].GetString();
+                        }
+                        pr.Title = Regex.Match(title, @"(?<={).*?(?=})").Value;
+                        pr.Aid = Regex.Match(title, @"(?<=av)\d+").Value;
+                        list.Add(pr);
+                    }
+                } 
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public static async Task<List<FlipItem>> GetHomeBanners()
         {
             List<FlipItem> list = new List<FlipItem>();
