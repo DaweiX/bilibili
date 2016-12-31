@@ -170,7 +170,7 @@
                                     </Button.Flyout>
                                 </Button>
                             </StackPanel>
-                            <TextBox x:Name="txt_mydanmu" Grid.Column="1" VerticalAlignment="Center" Background="{x:Null}" PlaceholderText="蓄势待发的弹幕君..." BorderThickness="0.5" BorderBrush="White"/>
+                            <TextBox x:Name="txt_mydanmu" Grid.Column="1" VerticalAlignment="Center" Foreground="White" Background="{x:Null}" PlaceholderText="蓄势待发的弹幕君..." BorderThickness="0.5" BorderBrush="White"/>
                             <Button x:Name="send" Grid.Column="3" Width="60" Click="send_Click" Background="{x:Null}" ToolTipService.ToolTip="发送弹幕">
                                 <Button.Content>
                                     <SymbolIcon Symbol="Send" Foreground="White"/>

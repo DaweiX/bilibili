@@ -29,6 +29,14 @@ namespace bilibili.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             await loadStatus();
+            if (e.Parameter != null)
+            {
+                string para = e.Parameter.ToString();
+                if (!string.IsNullOrEmpty(para))
+                {
+                    mainpivot.SelectedIndex = int.Parse(para);
+                }
+            }
         }
 
         private async Task loadStatus()

@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using Windows.Data.Json;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
-using Windows.Web.Http;
-using Windows.Web.Http.Filters;
 using bilibili.Helpers;
 using bilibili.Http;
 using bilibili.Methods;
 using bilibili.Models;
+using Windows.UI.Xaml;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -90,6 +88,7 @@ namespace bilibili.Views
                 {
                     count += int.Parse(item.Count);
                 }
+                folderlist.ItemsSource = myFolder;
                 if (count == 0)
                     fav.Content += "（暂无收藏）";
             }
@@ -161,9 +160,34 @@ namespace bilibili.Views
             }
         }
 
+        private void folderlist_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(FavCollection), (e.ClickedItem as Folder).Name, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+        }
+
         private void fav_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             Frame.Navigate(typeof(FavCollection), null, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+        }
+    }
+    public sealed class MyDataTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate ThreePic { get; set; }
+        public DataTemplate TwoPic { get; set; }
+        public DataTemplate OnePic { get; set; }
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
+            Folder folder = item as Folder;
+            if (folder != null)
+            {
+                switch (folder.VideoPics.Count)
+                {
+                    case 1: return OnePic;
+                    case 2: return TwoPic;
+                    case 3: return ThreePic;
+                }
+            }
+            return null;
         }
     }
 }

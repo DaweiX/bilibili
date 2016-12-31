@@ -158,15 +158,84 @@ namespace BackgroundTask
             {
                 if (UnpulledQuene.Contains(feed.Aid + "@"))
                     continue;
-                XmlDocument xml = new XmlDocument();
-                xml.LoadXml(string.Format(ToastTemplete, feed.Aid, feed.Title, feed.New_ep, feed.Pic));
-                ToastNotification toast = new ToastNotification(xml);
-                toast.Tag = feed.Aid;
-                ToastNotificationManager.CreateToastNotifier().Show(toast);
                 //Helper.SetValue("_toastarg", feed.Aid);
+                PullToast(feed.Aid, feed.Title, feed.New_ep, feed.Pic);
                 UnpulledQuene = UnpulledQuene.Replace(feed.Aid, feed.Aid + "@");//后接@表示已推送过
             }
             Helper.SetValue("_toastquene", UnpulledQuene);
+        }
+
+        /// <summary>
+        /// 推送Toast通知
+        /// </summary>
+        /// <param name="Args">启动参数</param>
+        /// <param name="Title">标题</param>
+        /// <param name="SubTitle">副标题</param>
+        /// <param name="Pic">图片（可选）</param>
+        private void PullToast(string Args, string Title, string SubTitle, string Pic = "")
+        {
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(string.Format(ToastTemplete, Args, Title, SubTitle, Pic));
+            ToastNotification toast = new ToastNotification(xml);
+            ToastNotificationManager.CreateToastNotifier().Show(toast);
+        }
+
+        private async void SendToast()
+        {
+            try
+            {
+                string url = "http://message.bilibili.com/api/notify/query.notify.count.do?access_key=" + Helper.GetValue("_accesskey").ToString() + "&actionKey=appkey" + "&appkey=422fd9d7289a1dd9&build=427000&platform=android&ts=" + Helper.GetLinuxTS().ToString();
+                url += Helper.GetSign(url);
+                JsonObject json = await Helper.GetJson(url);
+                if (json.ContainsKey("data"))
+                {
+                    json = json["data"].GetObject();
+                    if (json.ContainsKey("reply_me"))
+                    {
+                        string Reply_me = json["reply_me"].ToString();
+                        if (Reply_me != "0")
+                        {
+                            PullToast("m0", string.Format("您收到了{0}条回复", Reply_me), "点击查看");
+                        }
+                    }
+                    if (json.ContainsKey("chat_me"))
+                    {
+                        string Chat_me = json["chat_me"].ToString();
+                        if (Chat_me != "0")
+                        {
+                            PullToast("m1", string.Format("您收到了{0}条私信", Chat_me), "点击查看");
+                        }
+                    }
+                    if (json.ContainsKey("notify_me"))
+                    {
+                        string Notify_me = json["notify_me"].ToString();
+                        if (Notify_me != "0")
+                        {
+                            PullToast("m2", string.Format("您收到了{0}条系统通知", Notify_me), "点击查看");
+                        }
+                    }
+                    if (json.ContainsKey("at_me"))
+                    {
+                        string At_me = json["at_me"].ToString();
+                        if (At_me != "0")
+                        {
+                            PullToast("m3", string.Format("您收到了{0}条@", At_me), "点击查看");
+                        }
+                    }
+                    if (json.ContainsKey("praise_me"))
+                    {
+                        string Praise_me = json["praise_me"].ToString();
+                        if (Praise_me != "0")
+                        {
+                            PullToast("m3", string.Format("您的评论收到了{0}条赞", Praise_me), "点击查看");
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return;
+            }
         }
 
         class Feed_Bangumi

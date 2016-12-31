@@ -6,6 +6,7 @@
     xmlns:controls="using:bilibili.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:m="using:bilibili.Models"
     mc:Ignorable="d"
     SizeChanged="Page_SizeChanged">
     <Grid Background="{ThemeResource bili_PageBackground}">
@@ -31,132 +32,135 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <ScrollViewer>
-            <StackPanel Margin="8,8,4,56">
-                <TextBlock x:Name="title" FontSize="24" TextWrapping="Wrap" Text="标题"/>
-                <Grid x:Name="grid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Image x:Name="pic" VerticalAlignment="Top" Tapped="pic_Tapped" Source="ms-appx:///Assets//SplashScreen.scale-200.png" HorizontalAlignment="Left">
-                        <FlyoutBase.AttachedFlyout>
-                            <MenuFlyout Placement="Right">
-                                <MenuFlyoutItem Click="Save_Click">保存封面</MenuFlyoutItem>
-                            </MenuFlyout>
-                        </FlyoutBase.AttachedFlyout>
-                    </Image>
-                    <Grid Grid.Column="1" Margin="4 0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="up"/>
-                            <TextBlock Text="上传于" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
-                            <TextBlock x:Name="time"/>
-                        </StackPanel>
-                        <TextBlock x:Name="count" TextWrapping="Wrap" Grid.Row="1"/>
-                        <StackPanel Orientation="Horizontal" Grid.Row="2">
-                                <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                                <TextBlock Text="标签" FontSize="20" Margin="8,0,0,0"/>
-                            </StackPanel>
-                        <GridView x:Name="list_tags" Grid.Row="3" Margin="0,8,0,0" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
-                            <GridView.ItemContainerTransitions>
-                                <TransitionCollection>
-                                    <EntranceThemeTransition/>
-                                </TransitionCollection>
-                            </GridView.ItemContainerTransitions>
-                            <GridView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                            <GridView.ItemContainerStyle>
-                                <Style TargetType="GridViewItem">
-                                    <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
-                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                </Style>
-                            </GridView.ItemContainerStyle>
-                            <GridView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <controls:WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </GridView.ItemsPanel>
-                        </GridView>
-                    </Grid>
-                </Grid>
-                <StackPanel Margin="0,8,0,0">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                            <TextBlock Text="简介" FontSize="20" Margin="8,0,0,0"/>
-                        </StackPanel>
-                        <TextBlock x:Name="desc" MaxLines="3" TextWrapping="Wrap" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
-                        <HyperlinkButton x:Name="more" HorizontalAlignment="Right" Click="MoreDesc_Click">展开</HyperlinkButton>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                        <TextBlock Text="选集" FontSize="20" Margin="8,0,0,0"/>
-                    </StackPanel>
-                    <Border x:Name="width"/>
-                    <GridView x:Name="mylist" IsItemClickEnabled="True" ItemClick="mylist_ItemClick">
-                        <GridView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Width="{Binding Width,ElementName=width}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Source="{Binding Cover}"/>
-                                    <TextBlock Text="{Binding Title}" TextWrapping="WrapWholeWords" Margin="8,0,0,0" FontSize="15" Grid.Column="1"/>
-                                    <TextBlock Text="{Binding Index}" Margin="8,0,8,0" FontSize="15" Grid.Column="2"/>
-                                </Grid>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                        <GridView.ItemContainerStyle>
-                            <Style TargetType="GridViewItem">
-                                <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
-                                <Setter Property="Margin" Value="8,4,8,4"/>
-                            </Style>
-                        </GridView.ItemContainerStyle>
-                    </GridView>
-                    <ScrollViewer VerticalScrollBarVisibility="Hidden">
-                        <StackPanel>
-                            <StackPanel Margin="0,8,0,0">
+        <Pivot>
+            <PivotItem x:Name="mainitem" Header="标题" Margin="0">
+                <ScrollViewer>
+                    <StackPanel Margin="8,8,4,56">
+                        <Grid x:Name="grid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="pic" VerticalAlignment="Top" Tapped="pic_Tapped" Source="ms-appx:///Assets//SplashScreen.scale-200.png" HorizontalAlignment="Left">
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout Placement="Right">
+                                        <MenuFlyoutItem Click="Save_Click">保存封面</MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </Image>
+                            <Grid Grid.Column="1" Margin="4 0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
-                                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                                    <TextBlock Text="CV" FontSize="20" Margin="8,0,0,0"/>
+                                    <TextBlock x:Name="up"/>
+                                    <TextBlock Text="上传于" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                    <TextBlock x:Name="time"/>
                                 </StackPanel>
-                                <ItemsControl x:Name="cvlist" Margin="0,0,0,12">
-                                    <ItemsControl.ItemTemplate>
+                                <TextBlock x:Name="count" TextWrapping="Wrap" Grid.Row="1"/>
+                                <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="标签" FontSize="20" Margin="8,0,0,0"/>
+                                </StackPanel>
+                                <GridView x:Name="list_tags" Grid.Row="3" Margin="0,8,0,0" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
+                                    <GridView.ItemContainerTransitions>
+                                        <TransitionCollection>
+                                            <EntranceThemeTransition/>
+                                        </TransitionCollection>
+                                    </GridView.ItemContainerTransitions>
+                                    <GridView.ItemTemplate>
                                         <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Actor}" Foreground="{ThemeResource bili_Fontcolor_Main}" IsTextSelectionEnabled="True"/>
-                                                <TextBlock Text="饰" Margin="8,0,8,0" Foreground="{ThemeResource bili_Theme}"/>
-                                                <TextBlock Text="{Binding Role}" Foreground="{ThemeResource bili_Fontcolor_Main}" IsTextSelectionEnabled="True"/>
+                                            <StackPanel>
+                                                <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
                                             </StackPanel>
                                         </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                            <StackPanel Margin="0,8,0,0">
+                                    </GridView.ItemTemplate>
+                                    <GridView.ItemContainerStyle>
+                                        <Style TargetType="GridViewItem">
+                                            <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        </Style>
+                                    </GridView.ItemContainerStyle>
+                                    <GridView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <controls:WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </GridView.ItemsPanel>
+                                </GridView>
+                            </Grid>
+                        </Grid>
+                        <StackPanel Margin="0,8,0,0">
+                            <StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                                    <TextBlock Text="STAFF" FontSize="20" Margin="8,0,0,0"/>
+                                    <TextBlock Text="简介" FontSize="20" Margin="8,0,0,0"/>
                                 </StackPanel>
-                                <TextBlock TextWrapping="WrapWholeWords" x:Name="staff" IsTextSelectionEnabled="True"/>
+                                <TextBlock x:Name="desc" MaxLines="3" TextWrapping="Wrap" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                <HyperlinkButton x:Name="more" HorizontalAlignment="Right" Click="MoreDesc_Click">展开</HyperlinkButton>
                             </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
+                                <TextBlock Text="选集" FontSize="20" Margin="8,0,0,0"/>
+                            </StackPanel>
+                            <Border x:Name="width"/>
+                            <GridView x:Name="mylist" IsItemClickEnabled="True" ItemClick="mylist_ItemClick">
+                                <GridView.ItemTemplate>
+                                    <DataTemplate x:DataType="m:Episodes">
+                                        <Grid Width="{Binding Width,ElementName=width}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image Source="{x:Bind Cover}"/>
+                                            <TextBlock Text="{x:Bind Title}" TextWrapping="WrapWholeWords" Margin="8,0,0,0" FontSize="15" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind Index}" Margin="8,0,8,0" FontSize="15" Grid.Column="2"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                                <GridView.ItemContainerStyle>
+                                    <Style TargetType="GridViewItem">
+                                        <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                                        <Setter Property="Margin" Value="8,4,8,4"/>
+                                    </Style>
+                                </GridView.ItemContainerStyle>
+                            </GridView>
+                            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                <StackPanel>
+                                    <StackPanel Margin="0,8,0,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="CV" FontSize="20" Margin="8,0,0,0"/>
+                                        </StackPanel>
+                                        <ItemsControl x:Name="cvlist" Margin="0,0,0,12">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="m:Cast">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{x:Bind Actor}" Foreground="{ThemeResource bili_Fontcolor_Main}" IsTextSelectionEnabled="True"/>
+                                                        <TextBlock Text="饰" Margin="8,0,8,0" Foreground="{ThemeResource bili_Theme}"/>
+                                                        <TextBlock Text="{x:Bind Role}" Foreground="{ThemeResource bili_Fontcolor_Main}" IsTextSelectionEnabled="True"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,8,0,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="STAFF" FontSize="20" Margin="8,0,0,0"/>
+                                        </StackPanel>
+                                        <TextBlock TextWrapping="WrapWholeWords" x:Name="staff" IsTextSelectionEnabled="True"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ScrollViewer>
                         </StackPanel>
-                    </ScrollViewer>
-                </StackPanel>
-            </StackPanel>
-        </ScrollViewer>
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+        </Pivot>
         <CommandBar>
             <AppBarButton Icon="ReShare" Label="分享">
                 <AppBarButton.Flyout>

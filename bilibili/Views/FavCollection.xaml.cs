@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Windows.Data.Json;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -21,6 +22,17 @@ namespace bilibili.Views
         public FavCollection()
         {
             this.InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter != null)
+            {
+                if (!string.IsNullOrEmpty(e.Parameter.ToString()))
+                {
+                    name = e.Parameter.ToString();
+                }
+            }
             load();
         }
 

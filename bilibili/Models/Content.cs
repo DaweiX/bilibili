@@ -60,7 +60,7 @@ namespace bilibili.Models
         {
             get
             {
-                if (_isfinish == "1") return "已完结，" + _new + "话全";
+                if (_isfinish == "1") return  _new + "话全";
                 else if (_isfinish == "0") return "更新到" + _new + "话";
                 else return _new;
             }
@@ -70,6 +70,13 @@ namespace bilibili.Models
             }
         }
     }
+    public class Pic
+    {
+        public int Count { get; set; }
+        public string Pic1 { get; set; }
+        public string Pic2 { get; set; }
+        public string Pic3 { get; set; }
+    }
     class Folder
     {
         public string Ctime { get; set; }
@@ -78,7 +85,7 @@ namespace bilibili.Models
         public string Count { get; set; }
         public string MCount { get; set; }
         public string State { get; set; }
-        public List<Basic> Videos { get; set; }
+        public Pic VideoPics { get; set; }
     }
     class User
     {

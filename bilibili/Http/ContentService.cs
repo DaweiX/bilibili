@@ -1467,6 +1467,28 @@ namespace bilibili.Http
                         fav.State = json2["state"].ToString();
                     if (json2.ContainsKey("name"))
                         fav.Name = json2["name"].GetString();
+                    if (json2.ContainsKey("videos"))
+                    {
+                        Pic pic = new Pic();
+                        JsonArray array = json2["videos"].GetArray();
+                        pic.Count = array.Count;
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < array.Count; i++)
+                        {
+                            json2 = array[i].GetObject();
+                            if (json2.ContainsKey("pic"))
+                            {
+                                string p = json2["pic"].GetString();
+                                switch (i)
+                                {
+                                    case 0:pic.Pic1 = p;break;
+                                    case 1: pic.Pic2 = p; break;
+                                    case 2: pic.Pic3 = p; break;
+                                }
+                            }
+                        }
+                        fav.VideoPics = pic;
+                    }
                     myFolder.Add(fav);
                 }
                 return myFolder;

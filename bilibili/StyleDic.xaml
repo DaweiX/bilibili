@@ -2,24 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:bilibili">
-    <Style x:Key="listcontainerstyle" TargetType="ListViewItem">
-        <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
-        <Setter Property="Margin" Value="8,3,8,3"/>
-    </Style>
-    <Style TargetType="FlyoutPresenter">
-        <Setter Property="Background">
-            <Setter.Value>
-                <SolidColorBrush Color="Black" Opacity="0.6"/>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style TargetType="MenuFlyoutPresenter">
-        <Setter Property="Background">
-            <Setter.Value>
-                <SolidColorBrush Color="Black" Opacity="0.6"/>
-            </Setter.Value>
-        </Setter>
-    </Style>
     <DataTemplate x:Key="gv_itemtemplete">
         <Grid Width="{Binding Width,ElementName=width}" Background="{ThemeResource bili_ListBackground}">
             <Grid.RowDefinitions>
@@ -45,11 +27,37 @@
             </Grid>
         </Grid>
     </DataTemplate>
+
+    <Style x:Key="listcontainerstyle" TargetType="ListViewItem">
+        <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+        <Setter Property="Margin" Value="8,3,8,3"/>
+    </Style>
+    <Style TargetType="FlyoutPresenter">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{ThemeResource CommandBarColor}" Opacity="0.6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="MenuFlyoutPresenter">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{ThemeResource CommandBarColor}" Opacity="0.6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style TargetType="CommandBar">
         <Setter Property="VerticalAlignment" Value="Bottom"/>
         <Setter Property="Background">
             <Setter.Value>
-                <SolidColorBrush Color="Gray" Opacity="0.6"/>
+                <SolidColorBrush Color="{ThemeResource CommandBarColor}" Opacity="0.6"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="CommandBarOverflowPresenter">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="{ThemeResource CommandBarColor}" Opacity="0.6"/>
             </Setter.Value>
         </Setter>
     </Style>

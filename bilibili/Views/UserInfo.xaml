@@ -5,8 +5,49 @@
     xmlns:local="using:bilibili.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:m="using:bilibili.Models"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <DataTemplate x:DataType="m:Folder" x:Key="ThreePic">
+            <StackPanel>
+                <Grid Width="120" Height="120">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{x:Bind VideoPics.Pic1}" Grid.ColumnSpan="2" Stretch="UniformToFill" Margin="4"/>
+                    <Image Source="{x:Bind VideoPics.Pic2}" Grid.Row="1" Stretch="UniformToFill" Margin="4,0,4,4"/>
+                    <Image Source="{x:Bind VideoPics.Pic3}" Grid.Row="1" Grid.Column="1" Stretch="UniformToFill" Margin="0,0,4,4"/>
+                </Grid>
+                <TextBlock HorizontalAlignment="Center" Text="{x:Bind Name}" FontSize="13"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:DataType="m:Folder" x:Key="TwoPic">
+            <StackPanel>
+                <Grid Width="120" Height="120">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Image Source="{x:Bind VideoPics.Pic1}" Stretch="UniformToFill" Margin="4"/>
+                    <Image Source="{x:Bind VideoPics.Pic2}" Grid.Row="1" Stretch="UniformToFill" Margin="4,0,4,4"/>
+                </Grid>
+                <TextBlock HorizontalAlignment="Center" Text="{x:Bind Name}" FontSize="13"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:DataType="m:Folder" x:Key="OnePic">
+            <StackPanel>
+                <Grid Width="120" Height="120">
+                    <Image Source="{x:Bind VideoPics.Pic1}" Stretch="UniformToFill" Margin="4"/>
+                </Grid>
+                <TextBlock HorizontalAlignment="Center" Text="{x:Bind Name}" FontSize="13"/>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <ScrollViewer>
             <StackPanel>
@@ -30,19 +71,23 @@
                     <TextBlock x:Name="coins" Text="硬币："/>
                     <HyperlinkButton x:Name="coin" Content="硬币记录" Click="coin_Click" Margin="8 0"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="8 0">
+                <!--<StackPanel Orientation="Horizontal" Margin="8 0">
                     <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
                     <HyperlinkButton Content="关注" Style="{StaticResource HyperlinkButtonStyle2}" Click="Button_Click" FontSize="20" Margin="8,0,0,0"/>
                     <TextBlock x:Name="txt_atten"/>
                     <HyperlinkButton Content="粉丝" Style="{StaticResource HyperlinkButtonStyle2}" Click="Button_Click" FontSize="20" Margin="16,0,0,0"/>
                     <TextBlock x:Name="txt_fans"/>
-                </StackPanel>
+                </StackPanel>-->
                 <StackPanel Margin="8 4">
                     <StackPanel Orientation="Horizontal">
                         <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
                         <HyperlinkButton x:Name="fav" Content="收藏" Style="{StaticResource HyperlinkButtonStyle2}" Click="fav_Click" FontSize="20" Margin="8,0,0,0"/>
                     </StackPanel>
-                    <!--收藏夹视图-->
+                    <GridView x:Name="folderlist" IsItemClickEnabled="True" Style="{StaticResource GridViewStyle1}" ItemClick="folderlist_ItemClick">
+                        <GridView.ItemTemplateSelector>
+                            <local:MyDataTemplateSelector ThreePic="{StaticResource ThreePic}" TwoPic="{StaticResource TwoPic}" OnePic="{StaticResource OnePic}"/>
+                        </GridView.ItemTemplateSelector>
+                    </GridView>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="8 0">
                     <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>

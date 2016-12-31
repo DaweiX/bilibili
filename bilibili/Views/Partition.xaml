@@ -56,7 +56,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <ProgressBar x:Name="bar" IsIndeterminate="True" Foreground="{ThemeResource bili_Theme}" Visibility="Collapsed"/>
-                        <controls:MyFlipControl x:Name="header_Home" Height="120"/>
+                        <controls:MyFlipControl x:Name="header_Home" Height="0"/>
                         <controls:Comment x:Name="comment" Margin="4 0"/>
                     </StackPanel>
                 </ScrollViewer>

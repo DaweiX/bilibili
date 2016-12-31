@@ -32,7 +32,7 @@ namespace bilibili.Controls
         int row = 0;
         int speed = 8;
         int fontsize = 21;
-        bool isPlaying = true;
+        bool isPause = false;
         /// <summary>
         /// 添加滚动弹幕
         /// </summary>
@@ -100,7 +100,7 @@ namespace bilibili.Controls
                 int i = 0;
                 while (true)
                 {
-                    if (!isPlaying)
+                    if (isPause)
                     {
                         await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                             sty.Pause();
@@ -121,6 +121,11 @@ namespace bilibili.Controls
                 }
             });
             grid_0.Children.Remove(grid);
+        }
+
+        public void IsPauseDanmaku(bool isAction)
+        {
+            isPause = isAction;
         }
 
         /// <summary>
@@ -212,13 +217,19 @@ namespace bilibili.Controls
             {
                 top.Children.Add(grid);
                 await Task.Delay(5000);
-                top.Children.Remove(grid);
+                if (!isPause)
+                {
+                    top.Children.Remove(grid);
+                }
             }
             else if (model.Mode == "4")
             {
                 bottom.Children.Add(grid);
                 await Task.Delay(5000);
-                bottom.Children.Remove(grid);
+                if (!isPause)
+                {
+                    bottom.Children.Remove(grid);
+                }
             }
         }
 

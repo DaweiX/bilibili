@@ -70,6 +70,7 @@ namespace bilibili
         {
             if (WebStatusHelper.IsOnline())
             {
+                //处理跳转参数
                 string arg = e.Parameter.ToString();
                 if (!string.IsNullOrEmpty(arg))
                 {
@@ -77,9 +78,13 @@ namespace bilibili
                     {
                         mainframe.Navigate(typeof(Views.Detail_P), arg.Substring(1));
                     }
-                    else
+                    else if (arg[0] == 's') 
                     {
-                        mainframe.Navigate(typeof(Views.Detail), arg);
+                        mainframe.Navigate(typeof(Views.Detail), arg.Substring(1));
+                    }
+                    else if (arg[0] == 'm')
+                    {
+                        mainframe.Navigate(typeof(Views.Message), arg.Substring(1));
                     }
                 }
                 else

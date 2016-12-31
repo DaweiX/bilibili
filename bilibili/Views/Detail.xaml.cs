@@ -72,7 +72,7 @@ namespace bilibili.Views
             //}
             bmp.UriSource = url;
             pic.Source = bmp;
-            title.Text = aa.Title;
+            mainitem.Header = aa.Title;
             up.Text = aa.Copyright;
             desc.Text = aa.Brief;
             count.Text = "播放：" + aa.View + "\n" + "收藏：" + aa.Fav + "\n" + "弹幕：" + aa.Danmaku + "\n" + "硬币：" + aa.Coins;
@@ -121,10 +121,12 @@ namespace bilibili.Views
                 pin.Label = "取消固定";
                 isPinned = true;
             }
-            foreach (var item in aa.CVlist) 
+            foreach (Cast item in aa.CVlist) 
             {
-                cvlist.Items.Add(new Actors { Actor = item.Actor, Role = item.Role });
+                cvlist.Items.Add(item);
             }
+            //HyperlinkButton btn = new HyperlinkButton();
+            //btn.Command=ne
             //if (UserHelper.concernList.FindIndex(o => o.ID == sid) != -1)
             //{
             //    addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
@@ -142,11 +144,6 @@ namespace bilibili.Views
             public string Pic { get; set; }
             public string Title { get; set; }
             public string Index { get; set; }
-        }
-        class Actors
-        {
-            public string Actor { get; set; }
-            public string Role { get; set; }
         }
 
         async Task GetDanmu()
@@ -168,7 +165,7 @@ namespace bilibili.Views
             FileSavePicker picker = new FileSavePicker();
             picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             picker.FileTypeChoices.Add("图片", new List<string>() { ".jpg" });
-            picker.SuggestedFileName = title.Text;
+            picker.SuggestedFileName = aa.Title;
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null & aa != null)
             {
@@ -216,7 +213,7 @@ namespace bilibili.Views
             request.Data.Properties.Title = "来自哔哩哔哩的分享";
             request.Data.Properties.Description = "分享当前番剧";
             //IRandomAccessStreamReference bitmapRef = await new BitmapImage(new Uri(details.Pic));
-            request.Data.SetText(string.Format("我在bilibili上正在追番【{0}】\n链接：http://bangumi.bilibili.com/anime/{1}", title.Text, sid));
+            request.Data.SetText(string.Format("我在bilibili上正在追番【{0}】\n链接：http://bangumi.bilibili.com/anime/{1}", aa.Title, sid));
         }
 
         private async void fav_Click(object sender, RoutedEventArgs e)
@@ -323,7 +320,7 @@ namespace bilibili.Views
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
                 string tileID = "tile" + sid;
                 string displayName = aa.Title;
-                string args = sid;
+                string args = "s" + sid;
                 Uri logoUri = new Uri("ms-appdata:///local/" + filename);
                 var size = TileSize.Square150x150;
                 SecondaryTile tile = new SecondaryTile(tileID, aa.Title, args, logoUri, size);

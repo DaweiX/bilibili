@@ -113,11 +113,13 @@ namespace bilibili.Views
                         if (media.CurrentState == MediaElementState.Playing)
                         {
                             media.Pause();
+                            danmaku.IsPauseDanmaku(true);
                             icon.Symbol = Symbol.Play;
                         }
                         else if (media.CurrentState == MediaElementState.Paused)
                         {
                             media.Play();
+                            danmaku.IsPauseDanmaku(false);
                             icon.Symbol = Symbol.Pause;
                         }
                     }break;
@@ -355,11 +357,13 @@ namespace bilibili.Views
             if (media.CurrentState == MediaElementState.Playing)
             {
                 media.Pause();
+                danmaku.IsPauseDanmaku(true);
                 icon.Symbol = Symbol.Play;
             }
             else if (media.CurrentState == MediaElementState.Paused)
             {
                 media.Play();
+                danmaku.IsPauseDanmaku(false);
                 icon.Symbol = Symbol.Pause;
             }
         }
@@ -716,11 +720,13 @@ namespace bilibili.Views
             if (media.CurrentState == MediaElementState.Playing)
             {
                 media.Pause();
+                danmaku.IsPauseDanmaku(true);
                 icon.Symbol = Symbol.Play;
             }
             else if (media.CurrentState == MediaElementState.Paused)
             {
                 media.Play();
+                danmaku.IsPauseDanmaku(false);
                 icon.Symbol = Symbol.Pause;
             }
         }

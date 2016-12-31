@@ -6,6 +6,7 @@ using System;
 using bilibili.Methods;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Navigation;
+using bilibili.Helpers;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -16,7 +17,9 @@ namespace bilibili.Views
     /// </summary>
     public sealed partial class MyConcerns : Page
     {
+        bool isGrid;
         bool isConcernLoad = false;
+        int page = 1;
         public MyConcerns()
         {
             this.InitializeComponent();         
@@ -39,12 +42,21 @@ namespace bilibili.Views
 
         async void load(string mid)
         {
+            if (SettingHelper.GetDeviceType() == DeviceType.PC)
+            {
+                isGrid = true;
+                conlist.ItemTemplate = this.Resources["TemplateGrid"] as DataTemplate;
+            }
+            else
+            {
+                isGrid = false;
+                conlist.ItemTemplate = this.Resources["TemplateList"] as DataTemplate;
+            }
             if (mid.Length == 0)
             {
                 foreach (var item in await ContentServ.GetConAsync(1))
                 {
                     conlist.Items.Add(item);
-                    conlist2.Items.Add(item);
                 }
             }
             else
@@ -52,10 +64,9 @@ namespace bilibili.Views
                 foreach (var item in await ContentServ.GetFriendsCons(mid, 1)) 
                 {
                     conlist.Items.Add(item);
-                    conlist2.Items.Add(item);
                 }
             }
-            if (conlist.Items.Count < 20)
+            if (conlist.Items.Count < 30)
             {
                 var text1 = Load.FindChildOfType<TextBlock>(conlist);
                 text1.Text = "加载完毕！";
@@ -65,66 +76,42 @@ namespace bilibili.Views
             isConcernLoad = true;
         }
 
-        private void conlist_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            Type a = sender.GetType();
-            if (a.Name == "GridView") 
-            {
-                GridView ctrl = sender as GridView;
-                var item = ctrl.SelectedItem as Concern;
-                if (item != null)
-                    Frame.Navigate(typeof(Detail), item.ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-            }
-            else if(a.Name=="ListView")
-            {
-                ListView ctrl = sender as ListView;
-                var item = ctrl.SelectedItem as Concern;
-                if (item != null)
-                    Frame.Navigate(typeof(Detail), item.ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-            }        
-        }
-
         private void Reflesh_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-               // conlist.ItemsSource = conlist2.ItemsSource = await ContentServ.GetConAsync();
-
-            }
-            catch
-            {
-
-            }
+            page = 1;
+            conlist.Items.Clear();
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            conlist.Visibility = conlist.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-            conlist2.Visibility = conlist2.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        bool isLoading = false;
-        private void GridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            Type type = sender.GetType();
-            ListViewBase view;
-            if(type.Name=="GridView")
+            isGrid = !isGrid;
+            if (isGrid)
             {
-                view = sender as GridView;
+                conlist.ItemTemplate = this.Resources["TemplateGrid"] as DataTemplate;
             }
             else
             {
-                view = sender as ListView;
+                conlist.ItemTemplate = this.Resources["TemplateList"] as DataTemplate;
             }
+            FitWidth();
+        }
+
+        bool isLoading = false;
+        bool LoadingDone = false;
+        private void GridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (isLoading) return;
+            if (LoadingDone) return;
+            GridView view = sender as GridView;
             var scroll = Load.FindChildOfType<ScrollViewer>(view);
             var text = Load.FindChildOfType<TextBlock>(view);
             scroll.ViewChanged += async (s, a) =>
             {
-                if (scroll.VerticalOffset >= scroll.ScrollableHeight - 50 && !isLoading)
+                if (scroll.VerticalOffset >= scroll.ScrollableHeight - 50 && !isLoading) 
                 {
                     text.Visibility = Visibility.Visible;
                     int count0 = view.Items.Count;
-                    int page = view.Items.Count / 20 + 1;
+                    page++;
                     isLoading = true;
                     List<Concern> temps = await ContentServ.GetConAsync(page);
                     text.Visibility = Visibility.Collapsed;
@@ -134,12 +121,35 @@ namespace bilibili.Views
                     }
                     if (temps.Count < 30)
                     {
+                        LoadingDone = true;
                         text.Text = "装填完毕！";
                         return;
                     }
                     isLoading = false;
                 }
             };
+        }
+
+        private void conlist_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(Detail), (e.ClickedItem as Concern).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+        }
+
+        private void conlist_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            FitWidth();
+        }
+
+        private void FitWidth()
+        {
+            if (isGrid)
+            {
+                width.Width = WidthFit.GetWidth(ActualWidth, 160, 120, 10);
+            }
+            else
+            {
+                width.Width = WidthFit.GetWidth(ActualWidth, 500, 400);
+            }
         }
     }
 }
