@@ -20,28 +20,13 @@
                         <SolidColorBrush Color="Black" Opacity="0.8"/>
                     </StackPanel.Background>
                     <TextBlock FontWeight="Light" Text="更多选项" FontSize="20" Foreground="White"/>
-                    <CheckBox Tag="b" IsChecked="True" Click="CheckBox_Click">
-                        <CheckBox.Content>
-                            <TextBlock Text="底端弹幕" Foreground="White"/>
-                        </CheckBox.Content>
-                    </CheckBox>
-                    <CheckBox Tag="g" IsChecked="True" Click="CheckBox_Click">
-                        <CheckBox.Content>
-                            <TextBlock Text="滚动弹幕" Foreground="White"/>
-                        </CheckBox.Content>
-                    </CheckBox>
-                    <CheckBox Tag="t" IsChecked="True" Click="CheckBox_Click">
-                        <CheckBox.Content>
-                            <TextBlock Text="顶部弹幕" Foreground="White"/>
-                        </CheckBox.Content>
-                    </CheckBox>
                     <TextBlock Text="屏蔽关键字(请以空格分隔关键词)" Foreground="White" Margin="0,8,0,4"/>
                     <TextBox x:Name="txt_word"/>
                     <Grid Margin="0 4">
                         <Button Content="执行" Click="Kill_Click" HorizontalAlignment="Left" Foreground="White"/>
                         <CheckBox x:Name="wordInclude" HorizontalAlignment="Right">
                             <CheckBox.Content>
-                                <TextBlock Foreground="White" Text="单独设定(仅对该视频有效)"/>
+                                <TextBlock Foreground="White" Text="忽略全局关键词"/>
                             </CheckBox.Content>
                         </CheckBox>
                     </Grid>
@@ -224,10 +209,47 @@
                                 <SymbolIcon x:Name="icon" Symbol="Pause"/>
                             </Button.Content>
                         </Button>
-                        <Button VerticalAlignment="Stretch" Click="DanmuSwitch_Click" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕开关" Margin="4,0,4,0">
+                        <Button VerticalAlignment="Stretch" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕开关" Margin="4,0,4,0">
                             <Button.Content>
                                 <SymbolIcon Symbol="Comment"/>
                             </Button.Content>
+                            <Button.Flyout>
+                                <Flyout>
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
+                                    <StackPanel>
+                                        <CheckBox x:Name="kill_all" Click="DanmuSwitch_Click">
+                                            <CheckBox.Content>
+                                                <TextBlock Text="全部" Foreground="White"/>
+                                            </CheckBox.Content>
+                                        </CheckBox>
+                                        <StackPanel x:Name="stk">
+                                            <CheckBox Tag="b" IsChecked="True" Click="CheckBox_Click">
+                                                <CheckBox.Content>
+                                                    <TextBlock Text="底端弹幕" Foreground="White"/>
+                                                </CheckBox.Content>
+                                            </CheckBox>
+                                            <CheckBox Tag="g" IsChecked="True" Click="CheckBox_Click">
+                                                <CheckBox.Content>
+                                                    <TextBlock Text="滚动弹幕" Foreground="White"/>
+                                                </CheckBox.Content>
+                                            </CheckBox>
+                                            <CheckBox Tag="t" IsChecked="True" Click="CheckBox_Click">
+                                                <CheckBox.Content>
+                                                    <TextBlock Text="顶部弹幕" Foreground="White"/>
+                                                </CheckBox.Content>
+                                            </CheckBox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
                         </Button>
                         <Button VerticalAlignment="Stretch" Background="{x:Null}" ToolTipService.ToolTip="锚点循环" Click="Repeat_Click">
                             <Button.Content>

@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.Data.Xml.Dom;
+using Windows.Devices.Input;
 using Windows.Devices.Power;
 using Windows.Graphics.Display;
 using Windows.Storage;
@@ -50,6 +52,8 @@ namespace bilibili.Views
         bool isShowDanmu = false;
         List<DanmuModel> DanmuPool;
         bool isInited = false;
+        bool isMouseMoving = false;
+        DeviceType type;
         int Index = 0;
         public Video()
         {
@@ -89,7 +93,19 @@ namespace bilibili.Views
                 txt_mydanmu.IsEnabled = false;
             }
             displayRq.RequestActive();      //保持屏幕常亮
+            type = SettingHelper.GetDeviceType();
+            if (type == DeviceType.PC)
+            {
+                MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved; MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved;
+            }
             CoreWindow.GetForCurrentThread().KeyDown += Video_KeyDown;
+        }
+
+        private void Video_MouseMoved(MouseDevice sender, MouseEventArgs args)
+        {
+            isMouseMoving = true;
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
+            isMouseMoving = false;
         }
 
         private void Timer_repeat_Tick(object sender, object e)
@@ -167,6 +183,7 @@ namespace bilibili.Views
 
         private void Timer_danmaku_Tick(object sender, object e)
         {
+            bool isKill = false;
             if (media.CurrentState == MediaElementState.Playing)
             {
                 if (DanmuPool != null)
@@ -177,16 +194,22 @@ namespace bilibili.Views
                         {
                             foreach (string word in strs)
                             {
-                                if (item.Message.Contains(word))
-                                    return;
+                                if (Regex.IsMatch(item.Message, word) && word.Length > 0) 
+                                {
+                                    isKill = true;
+                                    break;
+                                }
                             }
-                            if (item.Mode == "1")
+                            if (isKill == false) 
                             {
-                                danmaku.AddBasic(item, false);
-                            }
-                            if (item.Mode == "4" || item.Mode == "5")
-                            {
-                                danmaku.AddTop(item, false);
+                                if (item.Mode == "1")
+                                {
+                                    danmaku.AddBasic(item, false);
+                                }
+                                if (item.Mode == "4" || item.Mode == "5")
+                                {
+                                    danmaku.AddTop(item, false);
+                                }
                             }
                         }
                     }
@@ -205,7 +228,7 @@ namespace bilibili.Views
             displayRq.RequestRelease();     //撤销常亮请求  
         }
 
-        private void Timer_Tick(object sender, object e)
+        private async void Timer_Tick(object sender, object e)
         {
             switch(WebStatusHelper.GetConnType())
             {
@@ -216,6 +239,17 @@ namespace bilibili.Views
             }
             txt_now.Text = DateTime.Now.Hour.ToString("00") + " ：" + DateTime.Now.Minute.ToString("00");
             txt_bat.Text = ((double)Battery.AggregateBattery.GetReport().RemainingCapacityInMilliwattHours / (double)Battery.AggregateBattery.GetReport().FullChargeCapacityInMilliwattHours * 100).ToString("00") + "%";
+            await HideCursor();
+        }
+
+        async Task HideCursor()
+        {
+            if (type == DeviceType.PC && isMouseMoving == false && border.Visibility == Visibility.Collapsed) 
+            {
+                await Task.Delay(3000);
+                //隐藏光标
+                Window.Current.CoreWindow.PointerCursor = null;
+            }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -284,7 +318,7 @@ namespace bilibili.Views
                         if (danmupool != null)
                         {
                             DanmuPool = danmupool;
-                            status.Text += "完毕";
+                            status.Text += DanmuPool.Count.ToString() + "完毕";
                         }
                         status.Text += Environment.NewLine + "正在读取视频...";
                         txt_title.Text = part;
@@ -327,7 +361,7 @@ namespace bilibili.Views
             try
             {
                 DanmuPool = await GetDanmu(cid);
-                status.Text += "完毕";
+                status.Text += DanmuPool.Count.ToString() + "条";
             }
             catch
             {
@@ -339,7 +373,12 @@ namespace bilibili.Views
             loading.Visibility = Visibility.Visible;
         }
 
-        private void media_MediaOpened(object sender, RoutedEventArgs e)
+        void ReverseVisibility()
+        {
+            grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = grid_bottom.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private async void media_MediaOpened(object sender, RoutedEventArgs e)
         {
             status.Visibility = Visibility.Collapsed;
             media.Visibility = Visibility.Visible;
@@ -350,6 +389,8 @@ namespace bilibili.Views
             else
                 txt_total.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
             sli_main.Maximum = ts.TotalSeconds;
+            await Task.Delay(3000);
+            ReverseVisibility();
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
@@ -408,7 +449,7 @@ namespace bilibili.Views
 
         private void border_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = grid_bottom.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            ReverseVisibility();
         }
 
         private void back_Click(object sender, RoutedEventArgs e)
@@ -551,6 +592,10 @@ namespace bilibili.Views
                 });
             }
             list = list.OrderBy(f => f.Time).ToList();
+            if (list != null && (bool)SettingHelper.GetValue("_autokill") == true)
+            {
+                StartKill();
+            }
             return list;
         }
         /// <summary>
@@ -570,6 +615,10 @@ namespace bilibili.Views
                     string url = "http://comment.bilibili.com/" + cid + ".xml";
                     string txt = await BaseService.SentGetAsync(url);
                     doc.LoadXml(txt);
+                    if (DanmuPool != null && (bool)SettingHelper.GetValue("_autokill") == true)
+                    {
+                        StartKill();
+                    }
                     return AnalysisDanmaku(doc);
                 }
                 else
@@ -631,6 +680,7 @@ namespace bilibili.Views
             {
                 timer_danmaku.Start();
             }
+            stk.Visibility = (bool)kill_all.IsChecked ? Visibility.Collapsed : Visibility.Visible;
         }
         /// <summary>
         /// 手势
@@ -646,7 +696,7 @@ namespace bilibili.Views
                 media.Pause();
                 icon.Symbol = Symbol.Play;
                 double actual = X / this.ActualWidth;
-                //横跨屏幕的TimeSpan:150s（两分半）
+                //横跨屏幕的TimeSpan:90s（一分半）
                 sli_main.Value += actual * 150;
                 TimeSpan time = new TimeSpan(0, 0, (int)sli_main.Value);
                 string posttime = string.Empty;
@@ -682,7 +732,7 @@ namespace bilibili.Views
         private void send_Click(object sender, RoutedEventArgs e)
         {
             SendDanmu();
-            grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = grid_bottom.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            ReverseVisibility();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -781,13 +831,21 @@ namespace bilibili.Views
 
         private void Kill_Click(object sender, RoutedEventArgs e)
         {
+            StartKill();
+        }
+
+        private void StartKill()
+        {
             strs.Clear();
-            foreach (var word in txt_word.Text.Split(' ')) 
+            if (!string.IsNullOrWhiteSpace(txt_word.Text))
             {
-                if (word.Length < 0) continue;
-                strs.Add(word); 
+                foreach (var word in txt_word.Text.Split(' '))
+                {
+                    if (word.Length < 0) continue;
+                    strs.Add(word);
+                }
             }
-            if (wordInclude.IsChecked != true) 
+            if (wordInclude.IsChecked != true)
             {
                 if (SettingHelper.ContainsKey("_words"))
                 {

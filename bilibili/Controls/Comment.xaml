@@ -40,7 +40,7 @@
     <Grid>
         <Border x:Name="width"/>
         <StackPanel HorizontalAlignment="Stretch">
-            <Grid>
+            <Grid Visibility="Collapsed">
                 <HyperlinkButton Content="直播" Margin="4" Click="HyperlinkButton_Click"/>
                 <HyperlinkButton HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}" Click="Fresh_Click">
                     <Grid>

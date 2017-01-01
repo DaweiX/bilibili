@@ -1,6 +1,5 @@
 ﻿using bilibili.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Core;

@@ -71,7 +71,7 @@
                         <Slider Maximum="3" x:Name="sli_fontsize" Header="弹幕字号" Width="200" HorizontalAlignment="Left" ValueChanged="sli_fontsize_ValueChanged"/>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="弹幕屏蔽关键字"/>
-                            <HyperlinkButton Content="编辑" Margin="40,0,0,0" Click="delword_Click"/>
+                            <HyperlinkButton Content="删除" Margin="40,0,0,0" Click="delword_Click"/>
                         </StackPanel>
                         <GridView Margin="0 4" x:Name="list_kill" IsItemClickEnabled="True" ItemClick="list_kill_ItemClick">
                             <GridView.ItemContainerTransitions>
@@ -96,6 +96,7 @@
                             <TextBox x:Name="txt_word" Width="240" HorizontalAlignment="Left"/>
                             <Button x:Name="addword" Content="添加" Margin="8 0" Width="80" Click="addword_Click"/>
                         </StackPanel>
+                        <ToggleSwitch x:Name="autokill" Header="自动屏蔽" Toggled="autokill_Toggled" OffContent="播放中需手动开启屏蔽"/>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>

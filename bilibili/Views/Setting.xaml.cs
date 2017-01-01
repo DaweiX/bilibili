@@ -71,6 +71,14 @@ namespace bilibili.Views
             {
                 toast.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast"));
             }
+            if (SettingHelper.ContainsKey("_autokill"))
+            {
+                autokill.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_autokill"));
+            }
+            else
+            {
+                autokill.IsOn = true;
+            }
             if (SettingHelper.ContainsKey("_Theme"))
             {
                 switch (SettingHelper.GetValue("_Theme").ToString())
@@ -324,6 +332,11 @@ namespace bilibili.Views
         private void fullscreen_Toggled(object sender, RoutedEventArgs e)
         {
             SettingHelper.SetValue("_autofull", pc_fullscreen.IsOn);
+        }
+
+        private void autokill_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_autokill", autokill.IsOn);
         }
     }
 }

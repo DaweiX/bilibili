@@ -30,7 +30,7 @@ namespace bilibili.Controls
             if (type == DeviceType.PC) size = 6;
             else if (type == DeviceType.Mobile) size = 3;
             //直播
-            await LoadLive();
+            //await LoadLive();
             //番剧
             await LoadItems(gridview1, 13, 1);
             //动画
