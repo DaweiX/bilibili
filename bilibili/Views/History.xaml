@@ -12,10 +12,6 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Margin="8">
-            <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-            <TextBlock x:Name="con" Text="播放历史" FontSize="20" Margin="8,0,0,0"/>
-        </StackPanel>
         <Grid Grid.Row="1">
             <ListView Grid.Row="1" x:Name="hslist" 
                   Tapped="hslist_Tapped"

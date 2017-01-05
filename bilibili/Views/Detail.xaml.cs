@@ -19,6 +19,7 @@ using bilibili.Models;
 using Windows.Data.Json;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.StartScreen;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -72,12 +73,28 @@ namespace bilibili.Views
             //}
             bmp.UriSource = url;
             pic.Source = bmp;
+            pic_blur.Source = bmp;
+            if (AnimationExtensions.IsBlurSupported)
+            {
+                pic_blur.Blur(duration: 3000, value: 20).Start();
+            }
             mainitem.Header = aa.Title;
             up.Text = aa.Copyright;
             desc.Text = aa.Brief;
             count.Text = "播放：" + aa.View + "\n" + "收藏：" + aa.Fav + "\n" + "弹幕：" + aa.Danmaku + "\n" + "硬币：" + aa.Coins;
             time.Text = aa.Time;
             staff.Text = aa.Staff ?? string.Empty;
+            if (aa.CVlist.Count == 0) 
+            {
+                stk_staff_1.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                foreach (Cast item in aa.CVlist)
+                {
+                    cvlist.Items.Add(item);
+                }
+            }
             if (aa.IsConcerned == "1")
             {
                 addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
@@ -121,10 +138,13 @@ namespace bilibili.Views
                 pin.Label = "取消固定";
                 isPinned = true;
             }
-            foreach (Cast item in aa.CVlist) 
+            if (aa.Related != null)
             {
-                cvlist.Items.Add(item);
-            }
+                if (aa.Related.Count > 1)
+                {
+                    list_season.ItemsSource = aa.Related;
+                }
+            } 
             //HyperlinkButton btn = new HyperlinkButton();
             //btn.Command=ne
             //if (UserHelper.concernList.FindIndex(o => o.ID == sid) != -1)
@@ -364,6 +384,11 @@ namespace bilibili.Views
                 }
                 isPinned = false;
             }
+        }
+
+        private void list_season_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(Detail), (e.ClickedItem as RelateSeason).Sid, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
         }
     }
 }

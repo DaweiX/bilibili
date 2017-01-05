@@ -80,15 +80,6 @@ namespace bilibili.Controls
             }
         }
 
-        private void gridview_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            GridView gridview = sender as GridView;
-            if (gridview.SelectedItem != null)
-            {
-                Info((gridview.SelectedItem as Content).Num);
-            }
-        }
-
         private async void Fresh_Click(object sender, RoutedEventArgs e)
         {
             HyperlinkButton btn = sender as HyperlinkButton;
@@ -132,6 +123,11 @@ namespace bilibili.Controls
             {
                 live(a.PlayUrl);
             }
+        }
+
+        private void gridview_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Info((e.ClickedItem as Content).Num);
         }
     }
 }

@@ -68,6 +68,23 @@ namespace bilibili.Views
             timer_danmaku.Tick += Timer_danmaku_Tick;
             timer.Start();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Landscape; //横向屏幕
+            SettingInit();
+            if (!WebStatusHelper.IsOnline())
+            {
+                txt_mydanmu.PlaceholderText = "没有联网哦，不能发弹幕";
+                txt_mydanmu.IsEnabled = false;
+            }
+            displayRq.RequestActive();      //保持屏幕常亮
+            type = SettingHelper.GetDeviceType();
+            if (type == DeviceType.PC)
+            {
+                MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved; MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved;
+                CoreWindow.GetForCurrentThread().KeyDown += Video_KeyDown;
+            }
+        }
+
+        private void SettingInit()
+        {
             if (SettingHelper.ContainsKey("_autofull"))
             {
                 if ((bool)SettingHelper.GetValue("_autofull") != false)
@@ -87,18 +104,6 @@ namespace bilibili.Views
             {
                 sli_light.Value = 1;
             }
-            if (!WebStatusHelper.IsOnline())
-            {
-                txt_mydanmu.PlaceholderText = "没有联网哦，不能发弹幕";
-                txt_mydanmu.IsEnabled = false;
-            }
-            displayRq.RequestActive();      //保持屏幕常亮
-            type = SettingHelper.GetDeviceType();
-            if (type == DeviceType.PC)
-            {
-                MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved; MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved;
-            }
-            CoreWindow.GetForCurrentThread().KeyDown += Video_KeyDown;
         }
 
         private void Video_MouseMoved(MouseDevice sender, MouseEventArgs args)
@@ -135,6 +140,7 @@ namespace bilibili.Views
                         else if (media.CurrentState == MediaElementState.Paused)
                         {
                             media.Play();
+                            danmaku.ClearStaticDanmu();
                             danmaku.IsPauseDanmaku(false);
                             icon.Symbol = Symbol.Pause;
                         }
@@ -244,7 +250,7 @@ namespace bilibili.Views
 
         async Task HideCursor()
         {
-            if (type == DeviceType.PC && isMouseMoving == false && border.Visibility == Visibility.Collapsed) 
+            if (type == DeviceType.PC && isMouseMoving == false && grid_top.Visibility == Visibility.Collapsed) 
             {
                 await Task.Delay(3000);
                 //隐藏光标
@@ -404,6 +410,7 @@ namespace bilibili.Views
             else if (media.CurrentState == MediaElementState.Paused)
             {
                 media.Play();
+                danmaku.ClearStaticDanmu();
                 danmaku.IsPauseDanmaku(false);
                 icon.Symbol = Symbol.Pause;
             }
@@ -752,7 +759,8 @@ namespace bilibili.Views
             }
             if (info.Text.Length == 0 && URL != null) 
             {
-                info.Text = "视频大小:" + (int.Parse(URL.Size) / 1024 / 1024).ToString() + "MB" + Environment.NewLine;
+                info.Text = "视频大小:" + (int.Parse(URL.Size) / 1024 / 1024).ToString() + "MB" + Environment.NewLine +
+                      "视频长宽:" + media.NaturalVideoWidth.ToString() + "×" + media.NaturalVideoHeight.ToString();
             }
         }
 
@@ -777,6 +785,7 @@ namespace bilibili.Views
             {
                 media.Play();
                 danmaku.IsPauseDanmaku(false);
+                danmaku.ClearStaticDanmu();
                 icon.Symbol = Symbol.Pause;
             }
         }
@@ -799,18 +808,18 @@ namespace bilibili.Views
         {
             SettingHelper.SetValue("_space", sli_space.Value);
             //注意:由于预定义了value值，初始化时会引发ValueChanged事件
-            if (danmaku != null) danmaku.ChangeSpace((int)sli_space.Value);
+            if (isInited) danmaku.ChangeSpace((int)sli_space.Value);
         }
 
         private void sli_speed_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
             SettingHelper.SetValue("_speed", sli_speed.Value);
-            if (danmaku != null) danmaku.ChangeSpeed(15 - (int)sli_speed.Value);
+            if (isInited) danmaku.ChangeSpeed(15 - (int)sli_speed.Value);
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            if (danmaku != null)
+            if (isInited)
             {
                 CheckBox cb = sender as CheckBox;
                 switch (cb.Tag.ToString())
@@ -826,7 +835,7 @@ namespace bilibili.Views
         {
             int value = (int)sli_fontsize.Value;
             SettingHelper.SetValue("_fontsize", value);
-            if (danmaku != null) danmaku.ChangeSize(value);
+            if (isInited) danmaku.ChangeSize(value);
         }
 
         private void Kill_Click(object sender, RoutedEventArgs e)
@@ -863,6 +872,14 @@ namespace bilibili.Views
             MenuFlyoutItem item = sender as MenuFlyoutItem;
             danmakuMode = item.Tag.ToString();
             SendMode.Content = item.Text.ToString();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string font = string.Empty;
+            font = (cb_font.SelectedItem as ComboBoxItem).Content.ToString();
+   //         if (SettingHelper.ContainsKey("_danmufont"))
+            danmaku.Setfont(font);
         }
 
         private void Repeat_Click(object sender, RoutedEventArgs e)

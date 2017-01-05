@@ -534,76 +534,71 @@ namespace bilibili.Http
                 json = await BaseService.GetJson(url);
                 if (json.ContainsKey("result"))
                 {
-                    JsonObject json2 = json["result"].GetObject();
-                    if (json2.ContainsKey("coins"))
-                        season.Coins = StringDeal.delQuotationmarks(json2["coins"].ToString());
-                    if (json2.ContainsKey("danmaku_count"))
-                        season.Danmaku = StringDeal.delQuotationmarks(json2["danmaku_count"].ToString());
-                    if (json2.ContainsKey("copyright"))
-                        season.Copyright = json2["copyright"].GetString();
-                    if (json2.ContainsKey("cover"))
-                        season.Cover = json2["cover"].GetString();
-                    if (json2.ContainsKey("bangumi_title"))
-                        season.Title = json2["bangumi_title"].GetString();
-                    if (json2.ContainsKey("evaluate"))
-                        season.Brief = json2["evaluate"].GetString();
-                    if (json2.ContainsKey("staff"))
-                        season.Staff = json2["staff"].GetString();
-                    if (json2.ContainsKey("favorites"))
-                        season.Fav = StringDeal.delQuotationmarks(json2["favorites"].ToString());
-                    if (json2.ContainsKey("play_count"))
-                        season.View = StringDeal.delQuotationmarks(json2["play_count"].ToString());
-                    if (json2.ContainsKey("weekday"))
-                        season.WeekDay = json2["weekday"].ToString()[0];
-                    if (json2.ContainsKey("pub_time"))
-                        season.Time = json2["pub_time"].GetString().Split(' ')[0];
-                    if (json2.ContainsKey("is_finish"))
-                        season.isFinish = json2["is_finish"].ToString() == "0" ? false : true;
-                    if (json2.ContainsKey("squareCover"))
-                        season.SquareCover = json2["squareCover"].GetString();
-                    if (json2.ContainsKey("user_season"))
+                    json = json["result"].GetObject();
+                    if (json.ContainsKey("coins"))
+                        season.Coins = StringDeal.delQuotationmarks(json["coins"].ToString());
+                    if (json.ContainsKey("danmaku_count"))
+                        season.Danmaku = StringDeal.delQuotationmarks(json["danmaku_count"].ToString());
+                    if (json.ContainsKey("copyright"))
+                        season.Copyright = json["copyright"].GetString();
+                    if (json.ContainsKey("cover"))
+                        season.Cover = json["cover"].GetString();
+                    if (json.ContainsKey("bangumi_title"))
+                        season.Title = json["bangumi_title"].GetString();
+                    if (json.ContainsKey("evaluate"))
+                        season.Brief = json["evaluate"].GetString();
+                    if (json.ContainsKey("staff"))
+                        season.Staff = json["staff"].GetString();
+                    if (json.ContainsKey("favorites"))
+                        season.Fav = StringDeal.delQuotationmarks(json["favorites"].ToString());
+                    if (json.ContainsKey("play_count"))
+                        season.View = StringDeal.delQuotationmarks(json["play_count"].ToString());
+                    if (json.ContainsKey("weekday"))
+                        season.WeekDay = json["weekday"].ToString()[0];
+                    if (json.ContainsKey("pub_time"))
+                        season.Time = json["pub_time"].GetString().Split(' ')[0];
+                    if (json.ContainsKey("is_finish"))
+                        season.isFinish = json["is_finish"].ToString() == "0" ? false : true;
+                    if (json.ContainsKey("squareCover"))
+                        season.SquareCover = json["squareCover"].GetString();
+                    if (json.ContainsKey("user_season"))
                     {
-                        JsonObject j = json2["user_season"].GetObject();
+                        JsonObject j = json["user_season"].GetObject();
                         if (j.ContainsKey("attention"))
                         {
                             season.IsConcerned = j["attention"].GetString();
                         }
                     }
-                    if (json2.ContainsKey("tags"))
+                    if (json.ContainsKey("tags"))
                     {
                         season.Tags = new List<string>();
-                        foreach (var item in json2["tags"].GetArray())
+                        foreach (var item in json["tags"].GetArray())
                         {
                             JsonObject temp = item.GetObject();
                             if (temp.ContainsKey("tag_name"))
                                 season.Tags.Add(StringDeal.delQuotationmarks(temp["tag_name"].ToString()));
                         }
                     }
-                }
-                List<Cast> cvlist = new List<Cast>();
-                if (json.ContainsKey("result"))
-                {
-                    JsonObject json2 = json["result"].GetObject();
-                    JsonArray Array_ac = json2["actor"].GetArray();
-                    foreach (var item in Array_ac)
+                    if (json.ContainsKey("actor"))
                     {
-                        Cast cast = new Cast();
-                        JsonObject json3 = item.GetObject();
-                        if (json3.ContainsKey("actor"))
-                            cast.Actor = json3["actor"].GetString();
-                        if (json3.ContainsKey("role"))
-                            cast.Role = json3["role"].GetString();
-                        cvlist.Add(cast);
+                        List<Cast> cvlist = new List<Cast>();
+                        JsonArray Array_ac = json["actor"].GetArray();
+                        foreach (var item in Array_ac)
+                        {
+                            Cast cast = new Cast();
+                            JsonObject json3 = item.GetObject();
+                            if (json3.ContainsKey("actor"))
+                                cast.Actor = json3["actor"].GetString();
+                            if (json3.ContainsKey("role"))
+                                cast.Role = json3["role"].GetString();
+                            cvlist.Add(cast);
+                        }
+                        season.CVlist = cvlist;
                     }
-                    season.CVlist = cvlist;
-                }
-                List<Episodes> indexList = new List<Episodes>();
-                if (json.ContainsKey("result"))
-                {
-                    JsonObject json2 = json["result"].GetObject();
-                    if (json2.ContainsKey("episodes"))
+                    if (json.ContainsKey("episodes"))
                     {
-                        JsonArray Array_rs = json2["episodes"].GetArray();
+                        List<Episodes> indexList = new List<Episodes>();
+                        JsonArray Array_rs = json["episodes"].GetArray();
                         foreach (var item in Array_rs)
                         {
                             Episodes episode = new Episodes();
@@ -625,6 +620,26 @@ namespace bilibili.Http
                             indexList.Add(episode);
                         }
                         season.EPS = indexList;
+                    }
+                    if (json.ContainsKey("seasons"))
+                    {
+                        List<RelateSeason> seasons = new List<RelateSeason>();
+                        JsonArray array = json["seasons"].GetArray();
+                        foreach (var item in array)
+                        {
+                            RelateSeason rs = new RelateSeason();
+                            json = item.GetObject();
+                            if (json.ContainsKey("title"))
+                            {
+                                rs.Title = json["title"].GetString();
+                            }
+                            if (json.ContainsKey("season_id"))
+                            {
+                                rs.Sid = json["season_id"].GetString();
+                            }
+                            seasons.Add(rs);
+                        }
+                        season.Related = seasons;
                     }
                 }
                 return season;

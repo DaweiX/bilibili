@@ -11,6 +11,28 @@
     <Grid Background="{ThemeResource bili_PageBackground}">
         <controls:MessagePopup x:Name="messagepop"/>
         <Pivot>
+            <PivotItem Header="本地视频" Margin="0">
+                <Grid>
+                    <ListView x:Name="donelist" ItemContainerStyle="{StaticResource listcontainerstyle}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="donelist_ItemClick">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Part}"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Template>
+                            <ControlTemplate>
+                                <ScrollViewer>
+                                    <ItemsPresenter Margin="0,0,0,56"/>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ListView.Template>
+                    </ListView>
+                    <CommandBar>
+                        <AppBarButton Icon="List" Label="选择"/>
+                        <AppBarButton x:Name="local" Icon="NewFolder" Label="本地视频" Click="local_Click"/>
+                    </CommandBar>
+                </Grid>
+            </PivotItem>
             <PivotItem Header="正在下载" Margin="0">
                 <Grid>
                     <TextBlock x:Name="txt" Margin="0,-24,0,0" Text="当前没有下载项" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -50,28 +72,6 @@
                         <AppBarButton x:Name="pause" Label="暂停" Icon="Pause" Click="pause_Click"/>
                         <AppBarButton x:Name="resume" Label="继续" Icon="Play" Click="play_Click"/>
                         <AppBarButton Icon="List" Label="选择" Click="AppBarButton_Click"/>
-                    </CommandBar>
-                </Grid>
-            </PivotItem>
-            <PivotItem Header="本地视频" Margin="0">
-                <Grid>
-                    <ListView x:Name="donelist" ItemContainerStyle="{StaticResource listcontainerstyle}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="donelist_ItemClick">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Part}"/>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.Template>
-                            <ControlTemplate>
-                                <ScrollViewer>
-                                    <ItemsPresenter Margin="0,0,0,56"/>
-                                </ScrollViewer>
-                            </ControlTemplate>
-                        </ListView.Template>
-                    </ListView>
-                    <CommandBar>
-                        <AppBarButton Icon="List" Label="选择"/>
-                        <AppBarButton x:Name="local" Icon="NewFolder" Label="本地视频" Click="local_Click"/>
                     </CommandBar>
                 </Grid>
             </PivotItem>

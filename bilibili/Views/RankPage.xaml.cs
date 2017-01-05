@@ -1,7 +1,7 @@
 ﻿using bilibili.Helpers;
 using bilibili.Http;
 using bilibili.Models;
-using bilibili.UI;
+using bilibili.Methods;
 using System;
 using Windows.UI;
 using Windows.UI.Xaml;

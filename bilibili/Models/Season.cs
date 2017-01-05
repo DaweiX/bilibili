@@ -56,6 +56,12 @@ namespace bilibili.Models
         public string SquareCover { get; set;}
         public List<Cast> CVlist { get; set;}
         public List<Episodes> EPS { get; set; }
+        public List<RelateSeason> Related { get; set; }
+    }
+    class RelateSeason
+    {
+        public string Title { get; set; }
+        public string Sid { get; set; }
     }
     class Cast
     {

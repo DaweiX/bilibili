@@ -117,8 +117,14 @@ namespace bilibili.Views
                                     //}
                                     //show_1.show();
                                     await comment.init();
-                                    header_Home.init(await ContentServ.GetHomeBanners(), 3.2);
-                                    header_Home.navi += Header_navi;
+                                    if (SettingHelper.ContainsKey("_banner"))
+                                    {
+                                        if ((bool)SettingHelper.GetValue("_banner") == true)
+                                        {
+                                            header_Home.init(await ContentServ.GetHomeBanners(), 3.2);
+                                            header_Home.navi += Header_navi;
+                                        }
+                                    }
                                     bar.Visibility = Visibility.Collapsed;
                                     isTopicLoaded = true;
                                 }
@@ -194,6 +200,7 @@ namespace bilibili.Views
         //番剧推荐
         async Task<bool> addcomment(string p)
         {
+            isLoading = true;
             string url = "http://bangumi.bilibili.com/api/bangumi_recommend?appkey=" + ApiHelper.appkey + "&build=427000&cursor=" + p + "&pagesize=10&platform=android&ts=" + ApiHelper.GetLinuxTS().ToString();
             url += ApiHelper.GetSign(url);
             List<HotBangumi> MyList = await ContentServ.GetHotBangumiAsync(url);
@@ -202,6 +209,7 @@ namespace bilibili.Views
             {
                 list_commandbangumi.Items.Add(item);
             }
+            isLoading = false;
             return true;
         }
 
@@ -215,41 +223,12 @@ namespace bilibili.Views
                 case "3": Frame.Navigate(typeof(Bangumi), null, new SlideNavigationTransitionInfo()); break;
             }
         }
-
-        private void list_commandbangumi_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            HotBangumi hot = list_commandbangumi.SelectedItem as HotBangumi;
-            string para = string.Empty;
-            string url = hot.Link;
-            if (Regex.IsMatch(url, @"anime/"))
-            {
-                para = Regex.Match(url, @"(?<=anime/)\d*").Value;
-                this.Frame.Navigate(typeof(Detail), para);
-                return;
-            }
-            if (Regex.IsMatch(url, @"bangumi/i/"))
-            {
-                para = Regex.Match(url, @"(?<=bangumi/i/)\d*").Value;
-                this.Frame.Navigate(typeof(Detail), para);
-                return;
-            }
-            if ((Regex.IsMatch(url, @"/video/av")))
-            {
-                para = Regex.Match(url, @"(?<=/video/av)\d*").Value;
-                Frame.Navigate(typeof(Detail_P), para);
-                return;
-            }
-            else
-            {
-                Frame.Navigate(typeof(MyWeb), url,new DrillInNavigationTransitionInfo());
-            }
-        }
-
+        bool isLoading = false;
         private void scollviewer_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             scollviewer.ViewChanged += async (s, a) =>
             {
-                if (scollviewer.VerticalOffset == scollviewer.ScrollableHeight)// && NextLoading)
+                if (scollviewer.VerticalOffset == scollviewer.ScrollableHeight && !isLoading)
                 {
                     int count0 = list_commandbangumi.Items.Count;
                     //滑动到底部了    
@@ -271,7 +250,7 @@ namespace bilibili.Views
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double i = ActualWidth;
-            width.Width = Methods.WidthFit.GetWidth(i, 600, 400);
+            width.Width = Methods.WidthFit.GetWidth(i, 400, 280);
         }
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -333,15 +312,6 @@ namespace bilibili.Views
 
         }
 
-        private void list_lastupdate_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            var a = list_lastupdate.SelectedItem as LastUpdate;
-            if (a != null)
-            {
-                Frame.Navigate(typeof(Detail), a.Sid, new SlideNavigationTransitionInfo());
-            }
-        }
-
         private async void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (string.IsNullOrWhiteSpace(SearchBox.Text))
@@ -380,6 +350,40 @@ namespace bilibili.Views
         private void rank_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(RankPage), null, new DrillInNavigationTransitionInfo());
+        }
+
+        private void list_lastupdate_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(Detail), (e.ClickedItem as LastUpdate).Sid, new SlideNavigationTransitionInfo());
+        }
+
+        private void list_commandbangumi_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            HotBangumi hot = e.ClickedItem as HotBangumi;
+            string para = string.Empty;
+            string url = hot.Link;
+            if (Regex.IsMatch(url, @"anime/"))
+            {
+                para = Regex.Match(url, @"(?<=anime/)\d*").Value;
+                this.Frame.Navigate(typeof(Detail), para);
+                return;
+            }
+            if (Regex.IsMatch(url, @"bangumi/i/"))
+            {
+                para = Regex.Match(url, @"(?<=bangumi/i/)\d*").Value;
+                this.Frame.Navigate(typeof(Detail), para);
+                return;
+            }
+            if ((Regex.IsMatch(url, @"/video/av")))
+            {
+                para = Regex.Match(url, @"(?<=/video/av)\d*").Value;
+                Frame.Navigate(typeof(Detail_P), para);
+                return;
+            }
+            else
+            {
+                Frame.Navigate(typeof(MyWeb), url, new DrillInNavigationTransitionInfo());
+            }
         }
     }
 

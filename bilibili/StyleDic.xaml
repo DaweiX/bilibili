@@ -885,10 +885,11 @@
                         Interval="50"
                         Grid.Row="1"
                         Template="{StaticResource RepeatButtonTemplate}" />
+                            <!--桌面端滚动条-->
                             <Thumb x:Name="VerticalThumb"
                         Grid.Row="2"
                         Template="{StaticResource VerticalThumbTemplate}"
-                        Width="3"
+                        Width="8"
                         MinHeight="12"
                         AutomationProperties.AccessibilityView="Raw" >
                                 <Thumb.Background>

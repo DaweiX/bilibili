@@ -14,34 +14,41 @@
     </Page.Resources>
     <SplitView x:Name="ham" FlowDirection="RightToLeft" OpenPaneLength="300" DisplayMode="Overlay" PaneBackground="{x:Null}">
         <SplitView.Pane>
-            <ScrollViewer VerticalScrollBarVisibility="Hidden">
-                <StackPanel FlowDirection="LeftToRight" Padding="20">
-                    <StackPanel.Background>
-                        <SolidColorBrush Color="Black" Opacity="0.8"/>
-                    </StackPanel.Background>
-                    <TextBlock FontWeight="Light" Text="更多选项" FontSize="20" Foreground="White"/>
-                    <TextBlock Text="屏蔽关键字(请以空格分隔关键词)" Foreground="White" Margin="0,8,0,4"/>
-                    <TextBox x:Name="txt_word"/>
-                    <Grid Margin="0 4">
-                        <Button Content="执行" Click="Kill_Click" HorizontalAlignment="Left" Foreground="White"/>
-                        <CheckBox x:Name="wordInclude" HorizontalAlignment="Right">
-                            <CheckBox.Content>
-                                <TextBlock Foreground="White" Text="忽略全局关键词"/>
-                            </CheckBox.Content>
-                        </CheckBox>
-                    </Grid>
-                    <TextBlock Text="弹幕速度" Foreground="White" Margin="0,8,0,0"/>
-                    <Slider x:Name="sli_speed" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
-                    <TextBlock Text="弹幕间距" Foreground="White"/>
-                    <Slider Maximum="2" x:Name="sli_space" ValueChanged="sli_space_ValueChanged"/>
-                    <TextBlock Text="弹幕字号" Foreground="White"/>
-                    <Slider Maximum="3" x:Name="sli_fontsize" ValueChanged="sli_fontsize_ValueChanged"/>
+            <Pivot FlowDirection="LeftToRight">
+                <Pivot.Background>
+                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                </Pivot.Background>
+                <PivotItem Header="弹幕设定">
                     <StackPanel>
-                        <TextBlock Text="视频信息" Foreground="{ThemeResource bili_Theme}"/>
-                        <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White"/>
-                    </StackPanel>
-                </StackPanel>
-            </ScrollViewer>
+                            <ComboBox x:Name="cb_font" Header="弹幕字体" Foreground="White" SelectionChanged="ComboBox_SelectionChanged">
+                                <ComboBoxItem>默认</ComboBoxItem>
+                                <ComboBoxItem>宋体</ComboBoxItem>
+                                <ComboBoxItem>等线</ComboBoxItem>
+                                <ComboBoxItem>幼圆</ComboBoxItem>
+                                <ComboBoxItem>楷体</ComboBoxItem>
+                        </ComboBox>
+                            <TextBlock Text="弹幕速度" Foreground="White" Margin="0,8,0,0"/>
+                            <Slider x:Name="sli_speed" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
+                            <TextBlock Text="弹幕间距" Foreground="White"/>
+                            <Slider Maximum="2" x:Name="sli_space" ValueChanged="sli_space_ValueChanged"/>
+                            <TextBlock Text="弹幕字号" Foreground="White"/>
+                            <Slider Maximum="3" x:Name="sli_fontsize" ValueChanged="sli_fontsize_ValueChanged"/>
+                            <TextBlock Text="屏蔽关键字(请以空格分隔关键词)" Foreground="White" Margin="0,8,0,4"/>
+                            <TextBox x:Name="txt_word"/>
+                            <Grid Margin="0 4">
+                                <Button Content="执行" Click="Kill_Click" HorizontalAlignment="Left" Background="{ThemeResource bili_Theme}" Foreground="White"/>
+                                <CheckBox x:Name="wordInclude" HorizontalAlignment="Right">
+                                    <CheckBox.Content>
+                                        <TextBlock Foreground="White" Text="忽略全局关键词"/>
+                                    </CheckBox.Content>
+                                </CheckBox>
+                            </Grid>
+                        </StackPanel>
+                </PivotItem>
+                <PivotItem Header="视频信息">
+                    <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White"/>
+                </PivotItem>
+            </Pivot>
         </SplitView.Pane>
         <SplitView.Content>
             <Grid FlowDirection="LeftToRight">
@@ -262,6 +269,15 @@
                             </Button.Content>
                             <Button.Flyout>
                                 <Flyout>
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
                                     <StackPanel Orientation="Horizontal">
                                         <Button x:Name="vol" Foreground="White" Background="{x:Null}" ToolTipService.ToolTip="音量调节">
                                             <Button.Content>
@@ -307,6 +323,15 @@
                                             </Button.Content>
                                             <Button.Flyout>
                                                 <MenuFlyout>
+                                                    <MenuFlyout.MenuFlyoutPresenterStyle>
+                                                        <Style TargetType="MenuFlyoutPresenter">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </MenuFlyout.MenuFlyoutPresenterStyle>
                                                     <MenuFlyoutItem Tag="0" Click="full_Click" Foreground="White">保持比例</MenuFlyoutItem>
                                                     <MenuFlyoutItem Tag="1" Click="full_Click" Foreground="White">拉伸占满</MenuFlyoutItem>
                                                 </MenuFlyout>

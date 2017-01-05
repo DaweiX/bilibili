@@ -3,6 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using bilibili.Helpers;
+using System.Threading.Tasks;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -20,6 +21,20 @@ namespace bilibili.Views
         public login()
         {
             this.InitializeComponent();
+            ApiHelper.Report += ProcessReport;
+        }
+
+        private async void ProcessReport(string message)
+        {
+            await ShowMessageAsync(message);
+        }
+
+        private async Task ShowMessageAsync(string message)
+        {
+            stk_message.Visibility = Visibility.Visible;
+            status.Text = message;
+            await Task.Delay(2000);
+            stk_message.Visibility = Visibility.Collapsed;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -29,35 +44,35 @@ namespace bilibili.Views
             {
                 case "-1":
                     {
-                        messagepop.Show("233");
+                        await ShowMessageAsync("233");
                     }
                     break;
                 case "-628":
                     {
-                        messagepop.Show("纳尼？未知错误");
+                        await ShowMessageAsync("纳尼？未知错误");
                     }
                     break;
                 case "-627":
                     {
-                        messagepop.Show("密码错啦");
+                        await ShowMessageAsync("密码错啦");
                     }break;
                 case "-626":
                     {
-                        messagepop.Show("账号不存在哦");
+                        await ShowMessageAsync("账号不存在哦");
                     }
                     break;
                 case "-625":
                     {
-                        messagepop.Show("手残多次了，233");
+                        await ShowMessageAsync("手残多次了，233");
                     }
                     break;
             }
             if (status)
             {
-                messagepop.Show("登录成功");
+                await ShowMessageAsync("登录成功");
                 SettingHelper.SetValue("_autologin", (bool)autologin.IsChecked);
                 reportLogin();
-                Frame.Navigate(typeof(UserInfo), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.GoBack();
             }
         }
 

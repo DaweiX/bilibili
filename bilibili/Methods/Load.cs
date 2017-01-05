@@ -41,31 +41,26 @@ namespace bilibili.Methods
         /// <param name="min">列表项最小宽度</param>
         /// <param name="offset">偏移量</param>
         /// <returns></returns>
-        public static double GetWidth(double width, int max, int min, int offset = 8)
+        public static double GetWidth(double width, int max, int min, int offset = 16)
         {
-            if (offset < 0 || offset > 12)
+            if (offset < 0 || offset > 20)
             {
-                offset = 8;
+                offset = 16;
             }
             double w = 1;
             int column = 1;
-            int maxcolumn = (int)width / min;
-            double i2 = width / min;
-            for (int i = 1; i <= maxcolumn; i++)
+            width = width - 16;
+            double maxcolumn = width / min;
+            double mincolumn = width / max;
+            for (int i = (int)mincolumn; i < maxcolumn + 1; i++)
             {
-                if (Math.Abs(i - i2) < 1) 
+                double temp = width / i;
+                if (temp < max && temp > min)
                 {
-                    column = (int)Math.Truncate(i2) == 0 ? 1 : (int)Math.Truncate(i2);
-                    break;
+                    column = i;
                 }
             }
-            w = width / column;
-            double temp = w - offset * column;
-            w = temp > 0 ? temp : w;
-            if (Math.Abs(width - w * column) / w > 0.3)
-            {
-                w = width / ++column;
-            }
+            w = width / column - column * 3;
             return w;
         }
     }

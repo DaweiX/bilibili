@@ -10,6 +10,7 @@ namespace bilibili.Helpers
     }
     class SettingHelper
     {
+        public static DeviceType Devicetype;
         static ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
         /// <summary>
         /// 获取指定键的值

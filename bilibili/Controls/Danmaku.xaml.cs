@@ -14,6 +14,11 @@ namespace bilibili.Controls
 {
     public sealed partial class Danmaku : UserControl
     {
+        int row = 0;
+        int speed = 8;
+        int fontsize = 21;
+        bool isPause = false;
+        string font = "默认";
         public Danmaku()
         {
             this.InitializeComponent();
@@ -28,10 +33,6 @@ namespace bilibili.Controls
                 ChangeSpace(0);
             }
         }
-        int row = 0;
-        int speed = 8;
-        int fontsize = 21;
-        bool isPause = false;
         /// <summary>
         /// 添加滚动弹幕
         /// </summary>
@@ -41,10 +42,12 @@ namespace bilibili.Controls
             TextBlock txt1 = new TextBlock
             {
                 Foreground = model.DanColor,
+                FontFamily = new FontFamily(font)
             };
             TextBlock txt2 = new TextBlock
             {
                 Foreground = new SolidColorBrush(Colors.Black),
+                FontFamily = new FontFamily(font),
                 Margin = new Thickness(1),
             };
             Grid grid = new Grid
@@ -126,11 +129,14 @@ namespace bilibili.Controls
         {
             isPause = isAction;
         }
-
+        public void Setfont(string fontname)
+        {
+            font = fontname;
+        }
         /// <summary>
         /// 弹幕间距
         /// </summary>
-        /// <param name="value">0:单倍行距；1:1.2倍行距;2:1.5倍行距</param>
+        /// <param name="value">0:单倍行距；1:1.2倍行距;2:1.5倍行距(好像并不是这样)</param>
         public void ChangeSpace(int value)
         {
             double h = 0;
@@ -180,11 +186,13 @@ namespace bilibili.Controls
             TextBlock txt1 = new TextBlock
             {
                 Foreground = model.DanColor,
+                FontFamily = new FontFamily(font),
             };
             TextBlock txt2 = new TextBlock
             {
                 Foreground = new SolidColorBrush(Colors.Black),
                 Margin = new Thickness(1),
+                FontFamily = new FontFamily(font),
             };
             Grid grid = new Grid
             {
@@ -241,7 +249,14 @@ namespace bilibili.Controls
             top.Children.Clear();
             bottom.Children.Clear();
         }
-
+        /// <summary>
+        /// 清除顶部和底部
+        /// </summary>
+        public void ClearStaticDanmu()
+        {
+            top.Children.Clear();
+            bottom.Children.Clear();
+        }
         public void ClearGun(bool isvisual)
         {
             grid_0.Visibility = isvisual ? Visibility.Visible : Visibility.Collapsed;

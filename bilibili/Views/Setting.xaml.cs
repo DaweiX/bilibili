@@ -6,6 +6,7 @@ using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.UI.Notifications;
+using Windows.System;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -28,7 +29,7 @@ namespace bilibili.Views
 
         void init()
         {
-            var type = SettingHelper.GetDeviceType();
+            var type = SettingHelper.Devicetype;
             if (type == DeviceType.PC)
             {
                 m_top.Visibility = Visibility.Collapsed;
@@ -70,6 +71,14 @@ namespace bilibili.Views
             if (SettingHelper.ContainsKey("_toast"))
             {
                 toast.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast"));
+            }
+            if (SettingHelper.ContainsKey("_banner"))
+            {
+                banner.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_banner"));
+            }
+            else
+            {
+                banner.IsOn = false;
             }
             if (SettingHelper.ContainsKey("_autokill"))
             {
@@ -145,11 +154,6 @@ namespace bilibili.Views
         private void sli_speed_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
             SettingHelper.SetValue("_speed", sli_speed.Value);
-        }
-
-        private void about_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(About), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         private async void top_Toggled(object sender, RoutedEventArgs e)
@@ -337,6 +341,16 @@ namespace bilibili.Views
         private void autokill_Toggled(object sender, RoutedEventArgs e)
         {
             SettingHelper.SetValue("_autokill", autokill.IsOn);
+        }
+
+        private void banner_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_banner", banner.IsOn);
+        }
+
+        private async void HyperlinkButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("mailto:DaweiX@outlook.com"));
         }
     }
 }

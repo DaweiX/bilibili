@@ -83,14 +83,7 @@ namespace bilibili.Views
                 {
                     conlist.Items.Add(item);
                 }
-                int count = 0;
-                foreach (var item in myFolder)
-                {
-                    count += int.Parse(item.Count);
-                }
                 folderlist.ItemsSource = myFolder;
-                if (count == 0)
-                    fav.Content += "（暂无收藏）";
             }
             catch
             {
@@ -163,6 +156,15 @@ namespace bilibili.Views
         private void folderlist_ItemClick(object sender, ItemClickEventArgs e)
         {
             Frame.Navigate(typeof(FavCollection), (e.ClickedItem as Folder).Name, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+        }
+
+        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            double offset = scrollviewer.VerticalOffset;
+            if (offset <= img.ActualHeight)
+            {
+                img.Opacity = 1 - (offset / img.ActualHeight);
+            }
         }
 
         private void fav_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)

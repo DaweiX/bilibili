@@ -42,7 +42,7 @@ namespace bilibili.Views
 
         async void load(string mid)
         {
-            if (SettingHelper.GetDeviceType() == DeviceType.PC)
+            if (SettingHelper.Devicetype == DeviceType.PC)
             {
                 isGrid = true;
                 conlist.ItemTemplate = this.Resources["TemplateGrid"] as DataTemplate;
@@ -144,11 +144,11 @@ namespace bilibili.Views
         {
             if (isGrid)
             {
-                width.Width = WidthFit.GetWidth(ActualWidth, 160, 120, 10);
+                width.Width = WidthFit.GetWidth(ActualWidth, 180, 160);
             }
             else
             {
-                width.Width = WidthFit.GetWidth(ActualWidth, 500, 400);
+                width.Width = WidthFit.GetWidth(ActualWidth, 400, 200);
             }
         }
     }

@@ -60,7 +60,7 @@ namespace bilibili.Views
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            width.Width = WidthFit.GetWidth(ActualWidth, 600, 400);
+            width.Width = WidthFit.GetWidth(ActualWidth, 400, 280);
         }
 
         bool isLoading = false;

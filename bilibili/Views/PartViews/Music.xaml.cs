@@ -165,7 +165,7 @@ namespace bilibili.Views.PartViews
         }
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            width.Width = WidthFit.GetWidth(ActualWidth, 200, 160, 0);
+            width.Width = width.Width = width.Width = WidthFit.GetWidth(ActualWidth, 260, 160);
         }
     }
 }

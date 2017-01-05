@@ -30,7 +30,7 @@
                 </ListView>
             </SemanticZoom.ZoomedOutView>
             <SemanticZoom.ZoomedInView>
-                <GridView x:Name="listview" ItemsSource="{Binding Source={StaticResource cvs}}" Tapped="listview_Tapped" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <GridView x:Name="listview" ItemsSource="{Binding Source={StaticResource cvs}}" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <GridView.GroupStyle>
                         <GroupStyle>
                             <GroupStyle.HeaderTemplate>

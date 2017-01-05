@@ -22,6 +22,8 @@ namespace bilibili.Helpers
         public static string accesskey = string.Empty;
         public static string code = string.Empty;
         public static string password, username, e_password = string.Empty;
+        public delegate void LoginReport(string message);
+        public static event LoginReport Report;
         public static bool isfirst = true;
         /// <summary>
         /// 获取Linux时间戳
@@ -40,6 +42,7 @@ namespace bilibili.Helpers
             {
                 //https://secure.bilibili.com/login?act=getkey&rnd=4928
                 //https://passport.bilibili.com/login?act=getkey&rnd=4928
+                Report("正在加密密码");
                 HttpBaseProtocolFilter httpBaseProtocolFilter = new HttpBaseProtocolFilter();
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
@@ -56,6 +59,7 @@ namespace bilibili.Helpers
                 CryptographicKey cryptographicKey = asymmetricKeyAlgorithmProvider.ImportPublicKey(WindowsRuntimeBufferExtensions.AsBuffer(numArray), 0);
                 IBuffer buffer = CryptographicEngine.Encrypt(cryptographicKey, WindowsRuntimeBufferExtensions.AsBuffer(Encoding.UTF8.GetBytes(str2)), null);
                 base64String = Convert.ToBase64String(WindowsRuntimeBufferExtensions.ToArray(buffer));
+                Report("完毕。正在登录");
             }
             catch (Exception)
             {

@@ -9,11 +9,7 @@ using Windows.UI.Xaml.Navigation;
 using bilibili.Http;
 using bilibili.Methods;
 using bilibili.Models;
-using System.Collections.Generic;
-using bilibili.Helpers;
-using Windows.UI;
 using Windows.UI.Xaml.Media;
-using bilibili.UI;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -68,13 +64,6 @@ namespace bilibili.Views
             }
         }
 
-        private void listview_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            var item = listview.SelectedItem as Times;
-            if (item != null)
-                Frame.Navigate(typeof(Detail), item.ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-        }
-
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (this.ActualWidth < 640)
@@ -86,6 +75,11 @@ namespace bilibili.Views
                 int i = Convert.ToInt32(this.ActualWidth / 400);
                 width.Width = (this.ActualWidth / i) - 8 * i - 16;
             }
+        }
+
+        private void listview_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(Detail), (e.ClickedItem as Times).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
     }
 

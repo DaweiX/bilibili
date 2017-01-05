@@ -81,7 +81,7 @@
                             <Button Background="{ThemeResource bili_Theme}" Foreground="White" Grid.Column="1" Content="放送播报" HorizontalAlignment="Stretch" Tag="2" Margin="4,0,4,0" Click="Button_Click"/>
                             <Button Background="{ThemeResource bili_Theme}" Foreground="White" Grid.Column="2" Content="番剧索引" HorizontalAlignment="Stretch" Tag="3" Margin="4,0,4,0" Click="Button_Click"/>
                         </Grid>
-                        <GridView x:Name="list_lastupdate" HorizontalAlignment="Center" Grid.Row="2" Style="{StaticResource GridViewStyle1}" Tapped="list_lastupdate_Tapped">
+                        <GridView x:Name="list_lastupdate" HorizontalAlignment="Center" Grid.Row="2" SelectionMode="None" Style="{StaticResource GridViewStyle1}" IsItemClickEnabled="True" ItemClick="list_lastupdate_ItemClick">
                             <GridView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -106,7 +106,7 @@
                             </GridView.ItemTemplate>
                         </GridView>
                         <Border x:Name="width" Height="0"/>
-                        <GridView Grid.Row="3" x:Name="list_commandbangumi" HorizontalAlignment="Center" Tapped="list_commandbangumi_Tapped" ShowsScrollingPlaceholders="True" ItemContainerStyle="{StaticResource grid}">
+                        <GridView Grid.Row="3" x:Name="list_commandbangumi" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_commandbangumi_ItemClick" SelectionMode="None" ShowsScrollingPlaceholders="True" ItemContainerStyle="{StaticResource grid}">
                             <GridView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Width="{Binding ElementName=width,Path=Width}">

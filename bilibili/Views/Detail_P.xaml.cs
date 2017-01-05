@@ -22,6 +22,7 @@ using Windows.Foundation;
 using Windows.Networking.BackgroundTransfer;
 using bilibili.Dialogs;
 using Windows.UI.Xaml.Controls.Primitives;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -60,10 +61,19 @@ namespace bilibili.Views
                 BitmapImage bmp = new BitmapImage();
                 bmp.UriSource = new Uri(details.Pic);
                 pic.Source = bmp;
+                pic_blur.Source = bmp;
+                if (AnimationExtensions.IsBlurSupported)
+                {
+                    pic_blur.Blur(duration: 3000, value: 20).Start();
+                }
                 title.Text = details.Title;
                 up.Content = details.Upzhu;
                 desc.Text = details.Desc;
-                count.Text = "播放：" + details.View + "\t" + "收藏：" + details.Fav + "\t" + "弹幕：" + details.Danmu + "\t" + "硬币：" + details.Coins + "\t" + "评论：" + details.Reply;
+                c_play.Text = "播放：" + details.View + '\t';
+                c_fav.Text = "收藏：" + details.Fav + '\t';
+                c_danmaku.Text = "弹幕：" + details.Danmu + '\t';
+                c_coin.Text = "硬币：" + details.Coins + '\t';
+                c_comment.Text = "评论：" + details.Reply + '\t';
                 time.Text = details.Time;
                 if (details.IsFav == "1")
                 {

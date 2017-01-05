@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:m="using:bilibili.Models"
+    xmlns:controls="using:bilibili.Controls"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:DataType="m:Folder" x:Key="ThreePic">
@@ -49,18 +50,16 @@
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
-        <ScrollViewer>
+        <ScrollViewer x:Name="scrollviewer" ViewChanged="ScrollViewer_ViewChanged">
             <StackPanel>
-                <Grid>
-                    <Image x:Name="img" HorizontalAlignment="Stretch" Stretch="Uniform" VerticalAlignment="Top"/>
-                    <StackPanel Margin="12" Orientation="Horizontal" SizeChanged="StackPanel_SizeChanged">
-                        <Image x:Name="Face" Height="120" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Tapped="Face_Tapped"/>
-                        <StackPanel Margin="8,0,0,0">
-                            <TextBlock x:Name="userName" FontSize="26" Text="用户名" FontWeight="Light"/>
-                            <TextBlock x:Name="sign" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
-                        </StackPanel>
+                <Image x:Name="img" HorizontalAlignment="Stretch" Stretch="Uniform" VerticalAlignment="Top"/>
+                <StackPanel Orientation="Horizontal" SizeChanged="StackPanel_SizeChanged">
+                    <Image x:Name="Face" Height="120" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Tapped="Face_Tapped"/>
+                    <StackPanel Margin="8,0,0,0">
+                        <TextBlock x:Name="userName" FontSize="26" Text="用户名" FontWeight="Light"/>
+                        <TextBlock x:Name="sign" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
                     </StackPanel>
-                </Grid>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="8">
                     <Image x:Name="level" Width="40"/>
                     <TextBlock x:Name="exp_current" Margin="4,0,4,0"/>
@@ -79,47 +78,41 @@
                     <TextBlock x:Name="txt_fans"/>
                 </StackPanel>-->
                 <StackPanel Margin="8 4">
-                    <StackPanel Orientation="Horizontal">
-                        <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
-                        <HyperlinkButton x:Name="fav" Content="收藏" Style="{StaticResource HyperlinkButtonStyle2}" Click="fav_Click" FontSize="20" Margin="8,0,0,0"/>
-                    </StackPanel>
+                    <controls:Header Content="收藏"/>
                     <GridView x:Name="folderlist" IsItemClickEnabled="True" Style="{StaticResource GridViewStyle1}" ItemClick="folderlist_ItemClick">
                         <GridView.ItemTemplateSelector>
                             <local:MyDataTemplateSelector ThreePic="{StaticResource ThreePic}" TwoPic="{StaticResource TwoPic}" OnePic="{StaticResource OnePic}"/>
                         </GridView.ItemTemplateSelector>
                     </GridView>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="8 0">
-                    <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
-                    <HyperlinkButton Content="追番" Style="{StaticResource HyperlinkButtonStyle2}" Click="Button_Click" FontSize="20" Margin="8,0,0,0"/>
-                </StackPanel>
-                <GridView x:Name="conlist" Margin="0,8,0,0" Style="{StaticResource GridViewStyle1}" Tapped="conlist_Tapped">
-                    <GridView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Width="128" Height="224">
-                                <Image Source="{Binding Cover}" Width="128"/>
-                                <TextBlock Text="{Binding Title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
-                                <TextBlock Text="{Binding New}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="13"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </GridView.ItemTemplate>
-                    <GridView.ItemContainerStyle>
-                        <Style TargetType="GridViewItem">
-                            <Setter Property="Margin" Value="4"/>
-                            <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
-                        </Style>
-                    </GridView.ItemContainerStyle>
-                    <GridView.Template>
-                        <ControlTemplate>
-                            <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
-                                <StackPanel Orientation="Horizontal">
-                                    <ItemsPresenter/>
-                                    <HyperlinkButton Content="查看全部→" Click="Button_Click" Margin="4"/>
+                    <controls:Header Content="追番"/>
+                    <GridView x:Name="conlist" Style="{StaticResource GridViewStyle1}" Tapped="conlist_Tapped">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Width="128" Height="224">
+                                    <Image Source="{Binding Cover}" Width="128"/>
+                                    <TextBlock Text="{Binding Title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
+                                    <TextBlock Text="{Binding New}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="13"/>
                                 </StackPanel>
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </GridView.Template>
-                </GridView>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                        <GridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="Margin" Value="4"/>
+                                <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                            </Style>
+                        </GridView.ItemContainerStyle>
+                        <GridView.Template>
+                            <ControlTemplate>
+                                <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ItemsPresenter/>
+                                        <HyperlinkButton Content="查看全部→" Click="Button_Click" Margin="4"/>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </GridView.Template>
+                    </GridView>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>

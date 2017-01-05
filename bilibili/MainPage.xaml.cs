@@ -15,7 +15,6 @@ using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Background;
 using System.Diagnostics;
-using bilibili.UI;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -108,6 +107,7 @@ namespace bilibili
                 timer.Interval = new TimeSpan(0, 0, 1);
                 timer.Tick += Timer_Tick;
             }
+            SettingHelper.Devicetype = SettingHelper.GetDeviceType();
         }
 
         private async Task RegisterBackgroundTask(Type EntryPoint, string name, IBackgroundTrigger trigger, IBackgroundCondition condition)

@@ -13,6 +13,7 @@
                 <StackPanel>
                     <ToggleSwitch x:Name="night" Toggled="night_Toggled" Header="夜间模式"/>
                     <ToggleSwitch x:Name="m_top" Toggled="top_Toggled" Header="隐藏状态栏"/>
+                    <ToggleSwitch x:Name="banner" Toggled="banner_Toggled" Header="首页加载头部"/>
                     <ComboBox x:Name="cb_Theme" Width="150" Header="主题色选择" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Theme}" SelectionChanged="cb_Theme_SelectionChanged">
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
@@ -57,10 +58,6 @@
                             </StackPanel>
                         </ComboBoxItem>
                     </ComboBox>
-                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Visibility="Collapsed">
-                        <TextBlock x:Name="cache" Text="清理缓存" VerticalAlignment="Center"/>
-                        <Button Content="清理" Width="60" Margin="100,0,0,0" Click="ClearCache_Click"/>
-                    </StackPanel>
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="弹幕">
@@ -104,17 +101,16 @@
                 <StackPanel>
                     <ToggleSwitch x:Name="downstyle" Toggled="downstyle_Toggled" Header="允许使用流量下载"/>
                     <ToggleSwitch x:Name="danmaku" Toggled="danmaku_Toggled" Header="下载视频同时下载弹幕" IsOn="True"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <TextBlock x:Name="cache" Text="清理缓存(施工中)" VerticalAlignment="Center"/>
+                        <Button Content="清理" Width="60" Margin="100,0,0,0" Click="ClearCache_Click" IsEnabled="False"/>
+                    </StackPanel>
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="通知">
                 <StackPanel>
                     <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="主磁贴更新" IsOn="True"/>
                     <ToggleSwitch x:Name="toast" Toggled="toast_Toggled" Header="推送通知" IsOn="True"/>
-                </StackPanel>
-            </PivotItem>
-            <PivotItem Header="关于">
-                <StackPanel Margin="0,8,0,0">
-                    <HyperlinkButton Click="about_Click" Margin="0,12,0,12">关于</HyperlinkButton>
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="播放">
@@ -127,6 +123,35 @@
                         <ComboBoxItem Tag="3">高清</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
+            </PivotItem>
+            <PivotItem Header="关于" Margin="0">
+                <Grid x:Name="grid" Background="Black">
+                    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                        <StackPanel>
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩客户端一号机 1st edition version 1.57</TextBlock>
+                                <HyperlinkButton HorizontalAlignment="Center" Click="HyperlinkButton_Click">联系我</HyperlinkButton>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">企划</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原画</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">演出</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">摄影师</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">特别鸣谢</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">Fiddler</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,4,0,0">BUAA-Mobile</TextBlock>
+                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,4,0,0">BiliBili UWP (弹幕)</TextBlock>
+                            </StackPanel>
+                            <RelativePanel Height="{Binding ElementName=grid,Path=ActualHeight}">
+                                <TextBlock Foreground="White" Margin="0,0,8,12" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">©2016 DaweiX</TextBlock>
+                            </RelativePanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
             </PivotItem>
         </Pivot>
     </Grid>

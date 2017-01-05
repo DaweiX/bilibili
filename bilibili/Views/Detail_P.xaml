@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+
     <Page.Resources>
         <MenuFlyout x:Name="flyout">
             <MenuFlyoutItem Click="reply_Click">回复</MenuFlyoutItem>
@@ -16,6 +17,40 @@
         </MenuFlyout>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="title.(RelativePanel.RightOf)" Value=""/>
+                        <Setter Target="pic.(RelativePanel.Below)" Value="title"/>
+                        <Setter Target="publish.(RelativePanel.Below)" Value="pic"/>
+                        <Setter Target="publish.Margin" Value="0,24,0,0"/>
+                        <Setter Target="count.(RelativePanel.Below)" Value="publish"/>
+                        <Setter Target="count1.(RelativePanel.Orientation)" Value="Horizontal"/>
+                        <Setter Target="count2.(RelativePanel.Orientation)" Value="Horizontal"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="pic.(RelativePanel.Below)" Value=""/>
+                        <Setter Target="pic.Margin" Value="0,0,16,0"/>
+                        <Setter Target="title.(RelativePanel.RightOf)" Value="pic"/>
+                        <Setter Target="publish.(RelativePanel.RightOf)" Value="pic"/>
+                        <Setter Target="publish.(RelativePanel.Below)" Value="title"/>
+                        <Setter Target="count.(RelativePanel.RightOf)" Value="pic"/>
+                        <Setter Target="count.(RelativePanel.Below)" Value="publish"/>
+                        <Setter Target="count1.(RelativePanel.Orientation)" Value="Vertical"/>
+                        <Setter Target="count2.(RelativePanel.Orientation)" Value="Vertical"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
@@ -26,34 +61,46 @@
             <PivotItem Header="详情" Margin="0">
                 <Grid>
                     <ScrollViewer>
-                        <StackPanel Margin="8,0,8,56">
-                            <TextBlock x:Name="title" FontSize="24" TextWrapping="Wrap" Text="标题"/>
-                            <Image x:Name="pic" Width="320" Height="200" Tapped="pic_Tapped" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="3" Source="ms-appx:///Assets//SplashScreen.scale-200.png">
-                                <FlyoutBase.AttachedFlyout>
-                                    <MenuFlyout Placement="Right">
-                                        <MenuFlyoutItem Click="Save_Click">保存封面</MenuFlyoutItem>
-                                    </MenuFlyout>
-                                </FlyoutBase.AttachedFlyout>
-                            </Image>
-                            <StackPanel Orientation="Horizontal">
-                                <HyperlinkButton x:Name="up" Click="up_Click"/>
-                                <TextBlock Text="发表于" Foreground="{ThemeResource bili_Fontcolor_Second}" Margin="2,0,2,0"/>
-                                <TextBlock x:Name="time"/>
-                            </StackPanel>
-                            <TextBlock x:Name="count" TextWrapping="WrapWholeWords"/>
+                        <StackPanel Margin="8,0,0,56">
+                            <Grid>
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Image x:Name="pic_blur" HorizontalAlignment="Stretch" Stretch="UniformToFill" Height="200"/>
+                                    <Rectangle Fill="{ThemeResource bili_PageBackground}" Stretch="UniformToFill" Opacity="0.6" Height="200"/>
+                                </Grid>
+                                <RelativePanel VerticalAlignment="Top">
+                                    <TextBlock x:Name="title" FontSize="24" TextWrapping="Wrap" Text="标题" FontWeight="Light"/>
+                                    <Image x:Name="pic" Width="320" Height="200" Tapped="pic_Tapped" RelativePanel.AlignLeftWithPanel="True" Source="ms-appx:///Assets//SplashScreen.scale-200.png">
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout Placement="Right">
+                                                <MenuFlyoutItem Click="Save_Click">保存封面</MenuFlyoutItem>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
+                                    </Image>
+                                    <StackPanel x:Name="publish" Orientation="Horizontal" Margin="0,12,0,0">
+                                        <HyperlinkButton x:Name="up" Click="up_Click"/>
+                                        <TextBlock Text="发表于"/>
+                                        <TextBlock x:Name="time"/>
+                                    </StackPanel>
+                                    <StackPanel x:Name="count">
+                                        <StackPanel x:Name="count1">
+                                            <TextBlock x:Name="c_play"/>
+                                            <TextBlock x:Name="c_fav"/>
+                                            <TextBlock x:Name="c_danmaku"/>
+                                        </StackPanel>
+                                        <StackPanel x:Name="count2">
+                                            <TextBlock x:Name="c_coin"/>
+                                            <TextBlock x:Name="c_comment"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </RelativePanel>
+                            </Grid>
                             <StackPanel Margin="0,8,0,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                                    <TextBlock Text="摘要" FontSize="20" Margin="8,0,0,0"/>
-                                </StackPanel>
+                                <controls:Header Content="摘要"/>
                                 <TextBlock x:Name="desc" MaxLines="3" TextWrapping="Wrap" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                                 <HyperlinkButton x:Name="more" HorizontalAlignment="Right" Click="MoreDesc_Click">展开</HyperlinkButton>
                             </StackPanel>
                             <StackPanel Margin="0,8,0,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                                    <TextBlock Text="标签" FontSize="20" Margin="8,0,0,0"/>
-                                </StackPanel>
+                                <controls:Header Content="标签"/>
                                 <GridView x:Name="list_tags" Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
                                     <GridView.ItemContainerTransitions>
                                         <TransitionCollection>
@@ -69,7 +116,7 @@
                                     </GridView.ItemTemplate>
                                     <GridView.ItemContainerStyle>
                                         <Style TargetType="GridViewItem">
-                                            <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
+                                            <Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
                                             <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                         </Style>
                                     </GridView.ItemContainerStyle>
@@ -81,10 +128,7 @@
                                 </GridView>
                             </StackPanel>
                             <StackPanel Margin="0,8,0,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <Border Width="8" Height="32" Background="{ThemeResource bili_Theme}" HorizontalAlignment="Left"/>
-                                    <TextBlock Text="播放！" FontSize="20" Margin="8,0,0,0"/>
-                                </StackPanel>
+                                <controls:Header Content="播放！"/>
                                 <ListView x:Name="ReadyList" Visibility="Collapsed" Tapped="ReadyList_Tapped" IsMultiSelectCheckBoxEnabled="True">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
