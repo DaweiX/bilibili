@@ -143,5 +143,30 @@ namespace bilibili.Helpers
                 }
             }
         }
+        /// <summary>
+        /// 获取存储文件夹
+        /// </summary>
+        public async static Task<StorageFolder> GetMyFolderAsync()
+        {
+            StorageFolder folder = null;
+            string path = SettingHelper.GetValue("_path").ToString();
+            StorageFolder defaultfolder = await KnownFolders.VideosLibrary.CreateFolderAsync("哔哩哔哩", CreationCollisionOption.OpenIfExists);
+            if (!string.IsNullOrEmpty(path))
+            {
+                try
+                {
+                    folder = await StorageFolder.GetFolderFromPathAsync(path);
+                }
+                catch
+                {
+                    folder = defaultfolder;
+                }
+            }
+            else
+            {
+                folder = defaultfolder;
+            }
+            return folder;
+        }
     }
 }

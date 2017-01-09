@@ -32,6 +32,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        <controls:MyPopup x:Name="popup"/>
         <Pivot>
             <PivotItem x:Name="mainitem" Header="标题" Margin="0">
                 <ScrollViewer>
@@ -185,6 +186,5 @@
                 <AppBarToggleButton x:Name="directly" Label="点击剧集直接播放" Click="directly_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
-        <controls:MessagePopup x:Name="messagepop" VerticalAlignment="Top" Grid.Row="1"/>
     </Grid>
 </Page>

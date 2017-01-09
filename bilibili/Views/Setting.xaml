@@ -7,6 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="using:bilibili.Controls"
     mc:Ignorable="d">
+    <Page.Resources>
+        <local:BoolToVisibility x:Key="cvt"/>
+    </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Pivot>
             <PivotItem Header="外观">
@@ -101,9 +104,11 @@
                 <StackPanel>
                     <ToggleSwitch x:Name="downstyle" Toggled="downstyle_Toggled" Header="允许使用流量下载"/>
                     <ToggleSwitch x:Name="danmaku" Toggled="danmaku_Toggled" Header="下载视频同时下载弹幕" IsOn="True"/>
+                    <ToggleSwitch x:Name="path" Header="自定义存储位置" Toggled="path_Toggled"/>
+                    <TextBlock x:Name="txt_path" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="Gray"/>
                     <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                         <TextBlock x:Name="cache" Text="清理缓存(施工中)" VerticalAlignment="Center"/>
-                        <Button Content="清理" Width="60" Margin="100,0,0,0" Click="ClearCache_Click" IsEnabled="False"/>
+                        <Button Content="清理" Width="60" Margin="100,0,0,0" Click="ClearCache_Click"/>
                     </StackPanel>
                 </StackPanel>
             </PivotItem>
@@ -111,6 +116,10 @@
                 <StackPanel>
                     <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="主磁贴更新" IsOn="True"/>
                     <ToggleSwitch x:Name="toast" Toggled="toast_Toggled" Header="推送通知" IsOn="True"/>
+                    <StackPanel Visibility="{Binding ElementName=toast,Path=IsOn,Converter={StaticResource cvt} }">
+                        <ToggleSwitch Header="番剧更新" x:Name="t_bangumi" Toggled="t_bangumi_Toggled"/>
+                        <ToggleSwitch Header="新消息" x:Name="t_message" Toggled="t_message_Toggled"/>
+                    </StackPanel>
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="播放">
@@ -120,7 +129,7 @@
                     <ComboBox x:Name="quality" Header="默认清晰度选择" SelectedIndex="1" SelectionChanged="quality_SelectionChanged">
                         <ComboBoxItem Tag="1">流畅</ComboBoxItem>
                         <ComboBoxItem Tag="2">清晰</ComboBoxItem>
-                        <ComboBoxItem Tag="3">高清</ComboBoxItem>
+                        <ComboBoxItem Tag="3" Visibility="Collapsed">高清</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
             </PivotItem>
@@ -129,7 +138,7 @@
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <StackPanel>
                             <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩客户端一号机 1st edition version 1.57</TextBlock>
+                                <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩一号机内测版 1st edition version 1.58</TextBlock>
                                 <HyperlinkButton HorizontalAlignment="Center" Click="HyperlinkButton_Click">联系我</HyperlinkButton>
                                 <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
                                 <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>

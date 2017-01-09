@@ -56,7 +56,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-        <controls:MessagePopup x:Name="messagepop" VerticalAlignment="Top"/>
+        <controls:MyPopup x:Name="popup"/>
         <Pivot x:Name="pivot" SelectionChanged="Pivot_SelectionChanged" Grid.Row="1">
             <PivotItem Header="详情" Margin="0">
                 <Grid>
@@ -180,12 +180,12 @@
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
+                                <Grid Tapped="Grid_Tapped">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Tapped="Grid_Tapped">
+                                    <StackPanel Grid.Column="0">
                                         <Image Height="60" Width="60" Source="{Binding Avatar}"/>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE19f;" VerticalAlignment="Center"/>

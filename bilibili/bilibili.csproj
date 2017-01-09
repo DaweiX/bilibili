@@ -113,6 +113,9 @@
     <Compile Include="Controls\MyFlipControl.xaml.cs">
       <DependentUpon>MyFlipControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MyPopup.xaml.cs">
+      <DependentUpon>MyPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\OrientedSize.cs" />
     <Compile Include="Controls\VideoLoading.xaml.cs">
       <DependentUpon>VideoLoading.xaml</DependentUpon>
@@ -350,6 +353,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MyFlipControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MyPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

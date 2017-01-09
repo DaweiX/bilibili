@@ -19,14 +19,9 @@
                     <SolidColorBrush Color="Black" Opacity="0.6"/>
                 </Pivot.Background>
                 <PivotItem Header="弹幕设定">
-                    <StackPanel>
-                            <ComboBox x:Name="cb_font" Header="弹幕字体" Foreground="White" SelectionChanged="ComboBox_SelectionChanged">
-                                <ComboBoxItem>默认</ComboBoxItem>
-                                <ComboBoxItem>宋体</ComboBoxItem>
-                                <ComboBoxItem>等线</ComboBoxItem>
-                                <ComboBoxItem>幼圆</ComboBoxItem>
-                                <ComboBoxItem>楷体</ComboBoxItem>
-                        </ComboBox>
+                    <ScrollViewer>
+                        <StackPanel>
+                            <ComboBox x:Name="cb_font" Header="弹幕字体" Foreground="White" SelectionChanged="ComboBox_SelectionChanged"/>
                             <TextBlock Text="弹幕速度" Foreground="White" Margin="0,8,0,0"/>
                             <Slider x:Name="sli_speed" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
                             <TextBlock Text="弹幕间距" Foreground="White"/>
@@ -44,9 +39,10 @@
                                 </CheckBox>
                             </Grid>
                         </StackPanel>
+                    </ScrollViewer>
                 </PivotItem>
                 <PivotItem Header="视频信息">
-                    <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White"/>
+                    <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White" Margin="0,8,0,0"/>
                 </PivotItem>
             </Pivot>
         </SplitView.Pane>

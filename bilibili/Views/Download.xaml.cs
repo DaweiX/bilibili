@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Navigation;
 using bilibili.Models;
 using Windows.UI.Notifications;
 using Windows.Storage.Pickers;
+using bilibili.Helpers;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -38,7 +39,7 @@ namespace bilibili.Views
             {
                 try
                 {
-                    StorageFolder folder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");
+                    StorageFolder folder = await DownloadHelper.GetMyFolderAsync();
                     foreach (StorageFolder folder1 in await folder.GetFoldersAsync())
                     {
                         try

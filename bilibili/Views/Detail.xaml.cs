@@ -193,7 +193,7 @@ namespace bilibili.Views
                 CachedFileManager.DeferUpdates(file);
                 await FileIO.WriteBufferAsync(file, buffer);
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-                messagepop.Show("保存成功", 3000);
+                await popup.Show("保存成功！");
             }
         }
 
@@ -203,7 +203,7 @@ namespace bilibili.Views
             more.Content = desc.MaxLines == 3 ? "展开" : "收起";
         }
 
-        private void Share_Click(object sender, RoutedEventArgs e)
+        private async void Share_Click(object sender, RoutedEventArgs e)
         {
             MenuFlyoutItem item = sender as MenuFlyoutItem;
             switch (item.Tag.ToString())
@@ -214,7 +214,7 @@ namespace bilibili.Views
                         pack.SetText(string.Format("http://bangumi.bilibili.com/anime/{0}", sid));
                         Clipboard.SetContent(pack);
                         Clipboard.Flush();
-                        messagepop.Show("已将链接复制到剪贴板", 3000);
+                        await popup.Show("已将链接复制到剪贴板");
                     }
                     break;
                 case "1":
@@ -253,7 +253,7 @@ namespace bilibili.Views
                             addfav.Label = "取消订阅";
                         }
                         else
-                            messagepop.Show("订阅失败！" + json["message"].ToString());
+                            await popup.Show("订阅失败！" + json["message"].ToString());
                     }
                 }
                 else if (addfav.Label == "取消订阅")
@@ -269,7 +269,7 @@ namespace bilibili.Views
                             addfav.Label = "订阅";
                         }
                         else
-                            messagepop.Show("取消订阅失败！" + json["message"].ToString());
+                            await popup.Show("取消订阅失败！" + json["message"].ToString());
                     }
                 }
             }
@@ -352,7 +352,7 @@ namespace bilibili.Views
                     await tile.UpdateAsync();
                     pin.Icon = new SymbolIcon(Symbol.UnPin);
                     pin.Label = "取消固定";
-                    await new ContentDialog { Content = "固定成功！", SecondaryButtonText = "确定" }.ShowAsync();
+                    await popup.Show("固定成功");
                 }
                 isPinned = true;
             }
@@ -374,7 +374,7 @@ namespace bilibili.Views
                 {
                     pin.Icon = new SymbolIcon(Symbol.Pin);
                     pin.Label = "固定磁贴";
-                    await new ContentDialog { Content = "已取消固定", SecondaryButtonText = "确定" }.ShowAsync();
+                    await popup.Show("已取消固定");
                     try
                     {
                         StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(sid + ".bmp");

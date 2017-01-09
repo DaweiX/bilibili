@@ -89,8 +89,8 @@ namespace bilibili
             if (args.Kind == ActivationKind.ToastNotification)
             {
                 var toastArgs = args as ToastNotificationActivatedEventArgs;
-                string aid = toastArgs.Argument;
-                if (!string.IsNullOrEmpty(aid))
+                string arg = toastArgs.Argument;
+                if (!string.IsNullOrEmpty(arg))
                 {
                     Frame rootFrame = Window.Current.Content as Frame;
                     if (rootFrame == null)
@@ -98,7 +98,7 @@ namespace bilibili
                         rootFrame = new Frame();
                         Window.Current.Content = rootFrame;
                     }
-                    rootFrame.Navigate(typeof(MainPage), "t" + aid);
+                    rootFrame.Navigate(typeof(MainPage), "t" + arg);
                     Window.Current.Activate();
                     return;
                 }
@@ -165,7 +165,7 @@ namespace bilibili
                     rootFrame = new Frame();
                     Window.Current.Content = rootFrame;
                 }
-                rootFrame.Navigate(typeof(Views.Video), type + path);
+                rootFrame.Navigate(typeof(MainPage), type + path);
                 Window.Current.Activate();
                 return;
             }

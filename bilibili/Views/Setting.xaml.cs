@@ -7,6 +7,8 @@ using Windows.UI.ViewManagement;
 using Windows.UI;
 using Windows.UI.Notifications;
 using Windows.System;
+using Windows.Storage.Pickers;
+using Windows.UI.Xaml.Data;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -72,6 +74,25 @@ namespace bilibili.Views
             {
                 toast.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast"));
             }
+            if (toast.IsOn)
+            {
+                if (SettingHelper.ContainsKey("_toast_m"))
+                {
+                    t_message.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast_m"));
+                }
+                else
+                {
+                    t_message.IsOn = true;
+                }
+                if (SettingHelper.ContainsKey("_toast_b"))
+                {
+                    t_bangumi.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast_b"));
+                }
+                else
+                {
+                    t_bangumi.IsOn = true;
+                }
+            }
             if (SettingHelper.ContainsKey("_banner"))
             {
                 banner.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_banner"));
@@ -128,6 +149,24 @@ namespace bilibili.Views
                 {
                     if (word.Length > 0) list_kill.Items.Add(word);
                 }
+            }
+            if (SettingHelper.ContainsKey("_path"))
+            {
+                if (!string.IsNullOrEmpty(SettingHelper.GetValue("_path").ToString()))
+                {
+                    path.IsOn = true;
+                    txt_path.Text = SettingHelper.GetValue("_path").ToString();
+                }
+                else
+                {
+                    path.IsOn = false;
+                    txt_path.Text = @"视频库\哔哩哔哩";
+                }
+            }
+            else
+            {
+                path.IsOn = false;
+                txt_path.Text = @"视频库\哔哩哔哩";
             }
         }
 
@@ -231,9 +270,8 @@ namespace bilibili.Views
         private async void ClearCache_Click(object sender, RoutedEventArgs e)
         {
             int size = 0;
-            var a = await ApplicationData.Current.LocalCacheFolder.GetBasicPropertiesAsync();
             var b = await ApplicationData.Current.TemporaryFolder.GetBasicPropertiesAsync();
-            size = (int)(a.Size / 1024)+ (int)(b.Size / 1024);
+            size = (int)(b.Size / 1024);
             cache.Text = "清理缓存" + "[" + size.ToString() + "MB" + "]";
         }
 
@@ -351,6 +389,55 @@ namespace bilibili.Views
         private async void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("mailto:DaweiX@outlook.com"));
+        }
+
+        private async void path_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (path.IsOn == false)
+            {
+                SettingHelper.SetValue("_path", string.Empty);
+                txt_path.Text = @"视频库\哔哩哔哩";
+                return;
+            }
+            StorageFolder folder;
+            FolderPicker picker = new FolderPicker();
+            picker.SuggestedStartLocation = PickerLocationId.VideosLibrary;
+            picker.FileTypeFilter.Add(".mp4");
+            picker.FileTypeFilter.Add(".flv");
+            folder = await picker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                string path = folder.Path;
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
+                SettingHelper.SetValue("_path", path);
+                txt_path.Text = path;
+            }
+            else
+            {
+                path.IsOn = false;
+            }
+        }
+
+        private void t_bangumi_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_toast_b", t_bangumi.IsOn);
+        }
+
+        private void t_message_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_toast_m", t_message.IsOn);
+        }
+    }
+    public class BoolToVisibility : IValueConverter
+    {
+        object IValueConverter.Convert(object value, Type targetType, object parameter, string language)
+        {
+            return (bool)value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
         }
     }
 }

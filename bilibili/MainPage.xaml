@@ -32,6 +32,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <controls:MyPopup x:Name="popup"/>
         <Grid x:Name="grid_top" Background="{ThemeResource bili_Theme}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
@@ -127,7 +128,6 @@
                             </TransitionCollection>
                         </Frame.ContentTransitions>
                     </Frame>
-                    <controls:MessagePopup x:Name="messagepop" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,60"/>
                 </Grid>
             </SplitView.Content>
         </SplitView>

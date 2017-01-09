@@ -97,7 +97,7 @@ namespace bilibili.Views
             }
            else
             {
-                messagepop.Show("视频不存在或已被删除");
+                await popup.Show("视频不存在或已被删除");
             }
             //if (UserHelper.favList.FindIndex(o => o.Num == aid) != -1)
             //{
@@ -231,7 +231,7 @@ namespace bilibili.Views
                 CachedFileManager.DeferUpdates(file);
                 await FileIO.WriteBufferAsync(file, buffer);
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-                messagepop.Show("保存成功", 3000);
+                await popup.Show("保存成功！");
             }
         }
         /// <summary>
@@ -249,16 +249,16 @@ namespace bilibili.Views
                     string result = await BaseService.SendPostAsync(url, message);
                     if (result == "OK")
                     {
-                        messagepop.Show("投币成功！", 3000);
+                        await popup.Show("投币成功！");
                     }
                     else
                     {
-                        messagepop.Show("投币失败！" + result, 3000);
+                        await popup.Show("投币失败！" + result);
                     }
                 }
                 catch (Exception ex)
                 {
-                    messagepop.Show("错误:" + ex.Message, 3000);
+                    await popup.Show("错误:" + ex.Message);
                 }
             }
         }
@@ -292,7 +292,7 @@ namespace bilibili.Views
                                         btn_addfav.Label = "取消收藏";
                                     }
                                     else
-                                        messagepop.Show("收藏失败！" + json["message"].ToString());
+                                        await popup.Show("收藏失败！" + json["message"].ToString());
                                 }
                             }
                         }
@@ -312,7 +312,9 @@ namespace bilibili.Views
                             btn_addfav.Label = "收藏";
                         }
                         else
-                            messagepop.Show("取消收藏失败！" + json["message"].ToString());
+                        {
+                            await popup.Show("取消收藏失败！" + json["message"].ToString());
+                        }
                     }
                 }
             }
@@ -331,10 +333,6 @@ namespace bilibili.Views
             {
                 string result = await BaseService.SendPostAsync(url, args, "http://app.bilibili.com");
                 JsonObject json = JsonObject.Parse(result);
-                if (json["code"].ToString() == "0")
-                {
-                    await new ContentDialog { Content = "今天分享视频的5经验到手了！！！", IsSecondaryButtonEnabled = true, SecondaryButtonText = "了解" }.ShowAsync();
-                }
             }
             catch
             {
@@ -351,7 +349,7 @@ namespace bilibili.Views
                             pack.SetText(string.Format("http://www.bilibili.com/av{0}", aid));
                             Clipboard.SetContent(pack);
                             Clipboard.Flush();
-                            messagepop.Show("已将链接复制到剪贴板", 3000);
+                            await popup.Show("已将链接复制到剪贴板");
                         }
                         break;
                     case "1":
@@ -398,7 +396,7 @@ namespace bilibili.Views
                         }
                         else
                         {
-                            messagepop.Show("评论失败:" + result, 3000);
+                            await popup.Show("评论失败:" + result);
                         }
                     }
                     //回复评论
@@ -427,12 +425,12 @@ namespace bilibili.Views
                 }
                 catch (Exception ex)
                 {
-                    messagepop.Show("评论时发生错误:" + ex.Message, 3000);
+                    await popup.Show("评论时发生错误:" + ex.Message);
                 }
             }
             else
             {
-                messagepop.Show("请先登录", 3000);
+                await popup.Show("请先登录");
             }
         }
 
@@ -471,7 +469,7 @@ namespace bilibili.Views
                     VideoURL url = await ContentServ.GetVedioURL(cid, 2, VideoFormat.mp4);
                     string name = StringDeal.RemoveSpecial(title.Text);
                     string part = StringDeal.RemoveSpecial(item.Part);
-                    StorageFolder folder = await KnownFolders.VideosLibrary.CreateFolderAsync("哔哩哔哩", CreationCollisionOption.OpenIfExists);
+                    StorageFolder folder = await DownloadHelper.GetMyFolderAsync();
                     StorageFolder f1 = await folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists);
                     var download = await DownloadHelper.Download(url.Url, part + ".mp4", f1);
                     if (SettingHelper.ContainsKey("_downdanmu"))
@@ -504,11 +502,11 @@ namespace bilibili.Views
                     //如果await，那么执行完第一个StartAsync()后即退出循环.GetCurrentDownloadsAsync()方法同样会遇到此问题.(Download页)
                     IAsyncOperationWithProgress<DownloadOperation, DownloadOperation> start = download.StartAsync();
                     i++;
-                    messagepop.Show(i.ToString() + "个视频已加入下载队列");
+                    await popup.Show(i.ToString() + "个视频已加入下载队列");
                 }
                 catch (Exception err)
                 {
-                    messagepop.Show(err.Message);
+                    await popup.Show(err.Message);
                 }
             }         
         }
@@ -553,7 +551,7 @@ namespace bilibili.Views
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
             flyout.ShowAt(listview, e.GetPosition(listview));
-            var r = (sender as StackPanel).DataContext as Reply;
+            var r = (sender as Grid).DataContext as Reply;
             reply = r;
         }
 
@@ -567,13 +565,13 @@ namespace bilibili.Views
                 {
                     if (json["code"].ToString() == "0")
                     {
-                        messagepop.Show("赞同成功");
+                        await popup.Show("赞同成功");
                     }
                 }
             }
-            catch
+            catch(Exception err)
             {
-               // messagepop.Show("赞同成功");
+                await popup.Show("失败：" + err.Message);
             }
         }
 

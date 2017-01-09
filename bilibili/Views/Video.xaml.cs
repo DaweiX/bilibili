@@ -48,13 +48,16 @@ namespace bilibili.Views
         bool? isRepeat = null;
         DispatcherTimer timer_repeat = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         List<VideoInfo> infos = new List<VideoInfo>();
+        StorageFile file = null;
         List<string> strs = new List<string>();
         bool isShowDanmu = false;
         List<DanmuModel> DanmuPool;
         bool isInited = false;
+        bool? isLocal = null;
         bool isMouseMoving = false;
         DeviceType type;
         int Index = 0;
+        bool isPropInit = false;
         public Video()
         {
             this.InitializeComponent();
@@ -68,7 +71,6 @@ namespace bilibili.Views
             timer_danmaku.Tick += Timer_danmaku_Tick;
             timer.Start();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Landscape; //横向屏幕
-            SettingInit();
             if (!WebStatusHelper.IsOnline())
             {
                 txt_mydanmu.PlaceholderText = "没有联网哦，不能发弹幕";
@@ -81,6 +83,7 @@ namespace bilibili.Views
                 MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved; MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved;
                 CoreWindow.GetForCurrentThread().KeyDown += Video_KeyDown;
             }
+            SettingInit();
         }
 
         private void SettingInit()
@@ -187,6 +190,9 @@ namespace bilibili.Views
             }
         }
 
+        /// <summary>
+        /// 显示弹幕
+        /// </summary>
         private void Timer_danmaku_Tick(object sender, object e)
         {
             bool isKill = false;
@@ -223,6 +229,9 @@ namespace bilibili.Views
             }
         }
 
+        /// <summary>
+        /// 退出前逻辑
+        /// </summary>
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.None;
@@ -234,6 +243,9 @@ namespace bilibili.Views
             displayRq.RequestRelease();     //撤销常亮请求  
         }
 
+        /// <summary>
+        /// 动态刷新基本信息
+        /// </summary>
         private async void Timer_Tick(object sender, object e)
         {
             switch(WebStatusHelper.GetConnType())
@@ -261,36 +273,16 @@ namespace bilibili.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            infos = e.Parameter as List<VideoInfo>;
-            if (infos == null)                  //读取本地视频
+            if (e.Parameter.GetType() == typeof(string))
             {
-                left.Visibility = right.Visibility = Visibility.Collapsed;
+                //文件关联
                 string a = e.Parameter.ToString();
-                StorageFile file0 = e.Parameter as StorageFile;
-                //文件选取
-                if (file0 != null)
-                {
-                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file0);
-                    status.Text += "正在读取弹幕...";
-                    var danmupool = await GetDanmu(file0);
-                    if (danmupool != null)
-                    {
-                        DanmuPool = danmupool;
-                        status.Text += "完毕";
-                    }
-                    status.Text += Environment.NewLine + "正在读取视频...";
-                    txt_title.Text = file0.DisplayName;
-                    var stream = await file0.OpenAsync(FileAccessMode.Read);
-                    media.SetSource(stream, file0.ContentType);
-                    status.Text += "完毕";
-                    await Task.Delay(500);
-                    return;
-                }
-                //文件关联(有点问题)
                 if (a[0] == '@')
                 {
+                    isLocal = true;
+                    left.Visibility = right.Visibility = Visibility.Collapsed;
                     string path = e.Parameter.ToString().Substring(1);
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                    file = await StorageFile.GetFileFromPathAsync(path);
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
                     status.Text += "正在读取弹幕...";
                     var danmupool = await GetDanmu(file);
@@ -307,35 +299,72 @@ namespace bilibili.Views
                     await Task.Delay(500);
                     return;
                 }
-                //下载列表
-                else
+            }
+            //读取本地视频
+            if (e.Parameter.GetType() == typeof(StorageFile))                 
+            {
+                isLocal = true;
+                left.Visibility = right.Visibility = Visibility.Collapsed;
+                file = e.Parameter as StorageFile;
+                if (file != null)
                 {
-                    MyVideo myVideo = e.Parameter as MyVideo;
-                    if (myVideo != null)
+                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                    status.Text += "正在读取弹幕...";
+                    var danmupool = await GetDanmu(file);
+                    if (danmupool != null)
                     {
-                        part = myVideo.Part;
-                        folder = myVideo.Folder;
-                        StorageFolder myfolder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");
-                        myfolder = await myfolder.GetFolderAsync(folder);
-                        StorageFile file = await myfolder.GetFileAsync(part + ".mp4");
-                        Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
-                        status.Text += "正在读取弹幕...";
-                        var danmupool = await GetDanmu(file);
-                        if (danmupool != null)
+                        DanmuPool = danmupool;
+                        if (DanmuPool.Count > 0)
                         {
-                            DanmuPool = danmupool;
-                            status.Text += DanmuPool.Count.ToString() + "完毕";
+                            status.Text += DanmuPool.Count.ToString() + "条";
                         }
-                        status.Text += Environment.NewLine + "正在读取视频...";
-                        txt_title.Text = part;
-                        var stream = await file.OpenAsync(FileAccessMode.Read);
-                        media.SetSource(stream, file.ContentType);
-                        status.Text += "完毕";
-                        await Task.Delay(500);
-                        return;
+                        else
+                        {
+                            status.Text += "完毕";
+                        }
                     }
+                    status.Text += Environment.NewLine + "正在读取视频...";
+                    txt_title.Text = file.DisplayName;
+                    var stream = await file.OpenAsync(FileAccessMode.Read);
+                    media.SetSource(stream, file.ContentType);
+                    status.Text += "完毕";
+                    await Task.Delay(500);
+                    return;
+                }             
+            }
+            //下载列表
+            if (e.Parameter.GetType() == typeof(MyVideo))
+            {
+                MyVideo myVideo = e.Parameter as MyVideo;
+                if (myVideo != null)
+                {
+                    isLocal = true;
+                    left.Visibility = right.Visibility = Visibility.Collapsed;
+                    part = myVideo.Part;
+                    folder = myVideo.Folder;
+                    StorageFolder myfolder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");
+                    myfolder = await myfolder.GetFolderAsync(folder);
+                    file = await myfolder.GetFileAsync(part + ".mp4");
+                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                    status.Text += "正在读取弹幕...";
+                    var danmupool = await GetDanmu(file);
+                    if (danmupool != null)
+                    {
+                        DanmuPool = danmupool;
+                        status.Text += DanmuPool.Count.ToString() + "完毕";
+                    }
+                    status.Text += Environment.NewLine + "正在读取视频...";
+                    txt_title.Text = part;
+                    var stream = await file.OpenAsync(FileAccessMode.Read);
+                    media.SetSource(stream, file.ContentType);
+                    status.Text += "完毕";
+                    await Task.Delay(500);
+                    return;
                 }
             }
+            //读取在线视频信息
+            isLocal = false;
+            infos = e.Parameter as List<VideoInfo>;
             Index = Convert.ToInt32(infos[0].Cid) + 1;
             if (Index == 1) 
                 left.Visibility = Visibility.Collapsed;
@@ -395,7 +424,7 @@ namespace bilibili.Views
             else
                 txt_total.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
             sli_main.Maximum = ts.TotalSeconds;
-            await Task.Delay(3000);
+            await Task.Delay(500);
             ReverseVisibility();
         }
 
@@ -450,7 +479,7 @@ namespace bilibili.Views
             if (isInited)
             {
                 border.Opacity = 1 - sli_light.Value;
-                SettingHelper.SetValue("_light", sli_light.Value.ToString());
+                SettingHelper.SetValue("_light", sli_light.Value);
             }
         }
 
@@ -645,17 +674,17 @@ namespace bilibili.Views
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        async Task<List<DanmuModel>> GetDanmu(StorageFile file)
+        async Task<List<DanmuModel>> GetDanmu(StorageFile videofile)
         {
             try
             {
                 XmlDocument doc = new XmlDocument();
-                StorageFolder folder = await file.GetParentAsync();
-                file = await folder.GetFileAsync(file.DisplayName + ".xml");
-                if (file != null)
+                StorageFolder folder = await videofile.GetParentAsync();
+                videofile = await folder.GetFileAsync(videofile.DisplayName + ".xml");
+                if (videofile != null)
                 {
                     string xml = string.Empty;
-                    using (Stream file0 = await file.OpenStreamForReadAsync())
+                    using (Stream file0 = await videofile.OpenStreamForReadAsync())
                     {
                         using (StreamReader read = new StreamReader(file0))
                         {
@@ -742,26 +771,48 @@ namespace bilibili.Views
             ReverseVisibility();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             ham.IsPaneOpen = !ham.IsPaneOpen;
-            if (SettingHelper.ContainsKey("_space"))
+            if (isPropInit == false)
             {
-                sli_space.Value = int.Parse(SettingHelper.GetValue("_space").ToString());
-            }
-            if (SettingHelper.ContainsKey("_speed"))
-            {
-                sli_speed.Value = int.Parse(SettingHelper.GetValue("_speed").ToString());
-            }
-            if (SettingHelper.ContainsKey("_fontsize"))
-            {
-                sli_fontsize.Value = int.Parse(SettingHelper.GetValue("_fontsize").ToString());
-            }
-            if (info.Text.Length == 0 && URL != null) 
-            {
-                info.Text = "视频大小:" + (int.Parse(URL.Size) / 1024 / 1024).ToString() + "MB" + Environment.NewLine +
-                      "视频长宽:" + media.NaturalVideoWidth.ToString() + "×" + media.NaturalVideoHeight.ToString();
-            }
+                if (SettingHelper.ContainsKey("_space"))
+                {
+                    sli_space.Value = int.Parse(SettingHelper.GetValue("_space").ToString());
+                }
+                if (SettingHelper.ContainsKey("_speed"))
+                {
+                    sli_speed.Value = int.Parse(SettingHelper.GetValue("_speed").ToString());
+                }
+                if (SettingHelper.ContainsKey("_fontsize"))
+                {
+                    sli_fontsize.Value = int.Parse(SettingHelper.GetValue("_fontsize").ToString());
+                }
+                cb_font.Items.Add("默认");
+                cb_font.Items.Add("宋体");
+                cb_font.Items.Add("等线");
+                cb_font.Items.Add("楷体");
+                if (SettingHelper.GetDeviceType() == DeviceType.PC)
+                {
+                    cb_font.Items.Add("幼圆");
+                }
+                if (isLocal == false)
+                {
+                    info.Text = "视频大小:" + (int.Parse(URL.Size) / 1024 / 1024).ToString() + "MB" + Environment.NewLine +
+                         "视频尺寸:" + media.NaturalVideoWidth.ToString() + "×" + media.NaturalVideoHeight.ToString() + Environment.NewLine +
+                         "最高清晰度:" + URL.Acceptquality.Count.ToString();
+                }
+                else if (isLocal == true)
+                {
+                    var property = await file.GetBasicPropertiesAsync();
+                    var property2 = await file.Properties.GetVideoPropertiesAsync();
+                    info.Text = "视频大小:" + (property.Size / Math.Pow(1024, 2)).ToString("0.0") + "M" + Environment.NewLine +
+                        "修改时间:" + property.DateModified.ToLocalTime().ToString() + Environment.NewLine +
+                        "视频尺寸:" + property2.Width.ToString() + "×" + property2.Height.ToString() + Environment.NewLine +
+                        "比特率:" + property2.Bitrate.ToString();
+                }
+                isPropInit = true;
+            }         
         }
 
         private void rgb_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
@@ -877,9 +928,13 @@ namespace bilibili.Views
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string font = string.Empty;
-            font = (cb_font.SelectedItem as ComboBoxItem).Content.ToString();
-   //         if (SettingHelper.ContainsKey("_danmufont"))
-            danmaku.Setfont(font);
+            font = cb_font.SelectedItem.ToString();
+            //         if (SettingHelper.ContainsKey("_danmufont"))
+            //要改，还是初始化的问题
+            if (danmaku != null)
+            {
+                danmaku.Setfont(font);
+            }
         }
 
         private void Repeat_Click(object sender, RoutedEventArgs e)

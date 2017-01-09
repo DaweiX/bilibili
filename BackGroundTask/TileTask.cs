@@ -18,7 +18,29 @@ namespace BackgroundTask
             var deferral = taskInstance.GetDeferral();
             List<Feed_Bangumi> list0 = await GetPulls();
             UpdateTile(list0);
-            SendToast(list0);
+            //这块写得有点难看
+            if (Helper.ContainsKey("_toast_m"))
+            {
+                if ((bool)Helper.GetValue("_toast_m"))
+                {
+                    SendToast();
+                }
+            }
+            else
+            {
+                SendToast();
+            }
+            if (Helper.ContainsKey("_toast_b"))
+            {
+                if ((bool)Helper.GetValue("_toast_b"))
+                {
+                    SendToast(list0);
+                }
+            }
+            else
+            {
+                SendToast(list0);
+            }
             deferral.Complete();
         }
 

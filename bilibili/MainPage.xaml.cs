@@ -77,13 +77,17 @@ namespace bilibili
                     {
                         mainframe.Navigate(typeof(Views.Detail_P), arg.Substring(1));
                     }
-                    else if (arg[0] == 's') 
+                    else if (arg[0] == 's')
                     {
                         mainframe.Navigate(typeof(Views.Detail), arg.Substring(1));
                     }
                     else if (arg[0] == 'm')
                     {
-                        mainframe.Navigate(typeof(Views.Message), arg.Substring(1));
+                        mainframe.Navigate(typeof(Views.Message), arg.Substring(2));
+                    }
+                    else if (arg[0] == '@' || arg[0] == '#')
+                    {
+                        mainframe.Navigate(typeof(Views.Video), arg);
                     }
                 }
                 else
@@ -97,7 +101,8 @@ namespace bilibili
                     {
                         if ((bool)SettingHelper.GetValue("_pull") == true)
                         {
-                            await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
+                            await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", null);
+                            await popup.Show("登录成功");
                         }
                     }
                 }
@@ -106,11 +111,12 @@ namespace bilibili
             {
                 timer.Interval = new TimeSpan(0, 0, 1);
                 timer.Tick += Timer_Tick;
+                await popup.Show("没有网络连接");
             }
             SettingHelper.Devicetype = SettingHelper.GetDeviceType();
         }
 
-        private async Task RegisterBackgroundTask(Type EntryPoint, string name, IBackgroundTrigger trigger, IBackgroundCondition condition)
+        private async Task RegisterBackgroundTask(Type EntryPoint, string name, IBackgroundCondition condition)
         {
             var status = await BackgroundExecutionManager.RequestAccessAsync();
             if (status == BackgroundAccessStatus.Unspecified || status == BackgroundAccessStatus.DeniedByUser)
@@ -125,7 +131,7 @@ namespace bilibili
                 }
             }
             var builder = new BackgroundTaskBuilder { Name = name, TaskEntryPoint = EntryPoint.FullName, IsNetworkRequested = false };
-            builder.SetTrigger(trigger);
+            builder.SetTrigger(new TimeTrigger(15, false));
             if (condition != null)
             {
                 builder.AddCondition(condition);
@@ -307,7 +313,7 @@ namespace bilibili
                     {
                         e.Handled = true;
                         isExit = true;
-                        messagepop.Show("再次点击后退键退出", 2000);
+                        await popup.Show("再次点击后退键退出");
                         await Task.Delay(2000);
                         isExit = false;
                     }
@@ -440,7 +446,7 @@ namespace bilibili
             }
         }
 
-        private void MainList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private async void MainList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             if (ham.DisplayMode == SplitViewDisplayMode.Overlay)
                 ham.IsPaneOpen = false;          
@@ -467,7 +473,7 @@ namespace bilibili
                             }
                             else
                             {
-                                messagepop.Show("请先登录");
+                                await popup.Show("请先登录");
                             }
                         }
                         break;
@@ -479,7 +485,7 @@ namespace bilibili
                             }
                             else
                             {
-                                messagepop.Show("请先登录");
+                                await popup.Show("请先登录");
                             }
                         }
                         break;
@@ -491,7 +497,7 @@ namespace bilibili
                             }
                             else
                             {
-                                messagepop.Show("请先登录");
+                                await popup.Show("请先登录");
                             }
                         }
                         break;
