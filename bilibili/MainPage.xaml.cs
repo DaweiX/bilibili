@@ -102,7 +102,6 @@ namespace bilibili
                         if ((bool)SettingHelper.GetValue("_pull") == true)
                         {
                             await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", null);
-                            await popup.Show("登录成功");
                         }
                     }
                 }
@@ -239,8 +238,9 @@ namespace bilibili
                         await ApiHelper.login(p, u, false);
                     }
                 }
-                if (ApiHelper.IsLogin()) 
+                if (ApiHelper.IsLogin())
                 {
+                    await popup.Show("登录成功");
                     ApiHelper.accesskey = SettingHelper.GetValue("_accesskey").ToString();
                     string url = "http://api.bilibili.com/myinfo?appkey=422fd9d7289a1dd9&access_key=" + SettingHelper.GetValue("_accesskey").ToString();
                     url += ApiHelper.GetSign(url);

@@ -48,7 +48,7 @@ namespace bilibili.Views
                             {
                                 var pro = await file.GetBasicPropertiesAsync();
                                 if (file != null && file.FileType == ".mp4" && pro.Size != 0) 
-                                    donelist.Items.Add(new MyVideo { Part = file.DisplayName, Folder = folder1.DisplayName });
+                                    donelist.Items.Add(new LocalVideo { Part = file.DisplayName, Folder = folder1.DisplayName });
                             }
                         }
                         catch { }
@@ -378,7 +378,7 @@ namespace bilibili.Views
 
         private void donelist_ItemClick(object sender, ItemClickEventArgs e)
         {
-            MyVideo mv = e.ClickedItem as MyVideo;
+            LocalVideo mv = e.ClickedItem as LocalVideo;
             if (mv != null)
             {
                 Frame.Navigate(typeof(Video), mv);

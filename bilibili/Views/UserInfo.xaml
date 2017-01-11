@@ -90,8 +90,8 @@
                             <DataTemplate>
                                 <StackPanel Width="128" Height="224">
                                     <Image Source="{Binding Cover}" Width="128"/>
-                                    <TextBlock Text="{Binding Title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
-                                    <TextBlock Text="{Binding New}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="13"/>
+                                    <TextBlock Text="{Binding Bangumi_title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
+                                    <TextBlock Text="{Binding Newest_ep_index}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="13"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridView.ItemTemplate>

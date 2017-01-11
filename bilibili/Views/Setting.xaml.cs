@@ -154,8 +154,10 @@ namespace bilibili.Views
             {
                 if (!string.IsNullOrEmpty(SettingHelper.GetValue("_path").ToString()))
                 {
+                    path.Toggled -= path_Toggled;
                     path.IsOn = true;
                     txt_path.Text = SettingHelper.GetValue("_path").ToString();
+                    path.Toggled += path_Toggled;
                 }
                 else
                 {

@@ -77,7 +77,7 @@ namespace bilibili.Models
         public string Title { get; set;}
         public string Pic { get; set; }
     }
-    class MyVideo
+    class LocalVideo
     {
         public string Part { get; set; }
         public string Folder { get; set; }

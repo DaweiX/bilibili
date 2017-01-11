@@ -333,9 +333,9 @@ namespace bilibili.Views
                 }             
             }
             //下载列表
-            if (e.Parameter.GetType() == typeof(MyVideo))
+            if (e.Parameter.GetType() == typeof(LocalVideo))
             {
-                MyVideo myVideo = e.Parameter as MyVideo;
+                LocalVideo myVideo = e.Parameter as LocalVideo;
                 if (myVideo != null)
                 {
                     isLocal = true;

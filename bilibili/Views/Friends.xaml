@@ -29,10 +29,10 @@
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel Margin="12" Grid.Column="1" VerticalAlignment="Bottom">
-                                <TextBlock x:Name="birth" Text="生日："/>
-                                <TextBlock x:Name="regdate" Text="注册日期："/>
-                                <TextBlock x:Name="sex" Text="性别："/>
-                                <TextBlock x:Name="addr" Text="地址："/>
+                                <TextBlock x:Name="birth"/>
+                                <TextBlock x:Name="regdate"/>
+                                <TextBlock x:Name="sex"/>
+                                <TextBlock x:Name="addr"/>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="4">
@@ -45,6 +45,7 @@
                             <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
                             <TextBlock x:Name="con" Text="追番" FontSize="20" Margin="8,0,0,0"/>
                         </StackPanel>
+                        <TextBlock x:Name="txt_private" Margin="8" Visibility="Collapsed" Foreground="{ThemeResource bili_Fontcolor_Second}" Text="TA没有公开订阅的番剧"/>
                         <GridView x:Name="conlist" Margin="0,8,0,0" Style="{StaticResource GridViewStyle1}" Tapped="conlist_Tapped">
                             <GridView.ItemTemplate>
                                 <DataTemplate>
@@ -114,20 +115,22 @@
             <PivotItem Margin="0" Header="TA的关注">
                 <Grid Margin="0 8">
                     <Border x:Name="width"/>
-                    <GridView x:Name="list_concern" IsItemClickEnabled="True" ItemClick="list_concern_ItemClick" SizeChanged="StackPanel_SizeChanged">
-                        <GridView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Width="{Binding Width,ElementName=width}">
-                                    <Ellipse Width="60" Height="60">
-                                        <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{Binding Face}"/>
-                                        </Ellipse.Fill>
-                                    </Ellipse>
-                                    <TextBlock Text="{Binding Uname}" Margin="4,0,0,0" VerticalAlignment="Center" TextWrapping="WrapWholeWords"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                    </GridView>
+                    <ScrollViewer x:Name="scroll_friend">
+                        <GridView x:Name="list_concern" IsItemClickEnabled="True" ItemClick="list_concern_ItemClick" Margin="8,0,0,0">
+                            <GridView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Width="{Binding Width,ElementName=width}" MinWidth="300">
+                                        <Ellipse Width="60" Height="60">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding Face}"/>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <TextBlock Text="{Binding Uname}" Margin="4,0,0,0" VerticalAlignment="Center" TextWrapping="WrapWholeWords"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                        </GridView>
+                    </ScrollViewer>
                 </Grid>
             </PivotItem>
         </Pivot>

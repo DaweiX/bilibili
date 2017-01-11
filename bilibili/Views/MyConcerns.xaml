@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:DataType="m:Concern" x:Key="TemplateGrid">
+        <DataTemplate x:DataType="m:ConcernItem" x:Key="TemplateGrid">
             <Grid Width="{Binding Width,ElementName=width}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -16,20 +16,22 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Image Source="{x:Bind Cover}" Stretch="UniformToFill"/>
+                <TextBlock Grid.Row="1" Text="{x:Bind Bangumi_title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
                 <TextBlock Grid.Row="1" Text="{x:Bind Title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
-                <TextBlock Grid.Row="2" Text="{x:Bind New}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="13"/>
+                <TextBlock Grid.Row="2" Text="{x:Bind Newest_ep_index}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="13"/>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:DataType="m:Concern" x:Key="TemplateList">
+        <DataTemplate x:DataType="m:ConcernItem" x:Key="TemplateList">
             <Grid Width="{Binding Width,ElementName=width}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <Image Source="{x:Bind sqCover}" Height="100"/>
-                <TextBlock Grid.Column="1" Text="{x:Bind Title}" FontSize="13" Margin="4,2,0,0" TextWrapping="Wrap"/>
-                <TextBlock Grid.Column="2" Text="{x:Bind New}" Foreground="Gray" Margin="4" FontSize="13"/>
+                <Image Source="{x:Bind SquareCover}" Height="100"/>
+                <TextBlock Grid.Column="1" Text="{x:Bind Bangumi_title}" FontSize="13" Margin="4,2,0,0" TextWrapping="Wrap"/>
+                <TextBlock Grid.Row="1" Text="{x:Bind Title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
+                <TextBlock Grid.Column="2" Text="{x:Bind Newest_ep_index}" Foreground="Gray" Margin="4" FontSize="13"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>

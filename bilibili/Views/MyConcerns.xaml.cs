@@ -2,11 +2,14 @@
 using bilibili.Models;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
-using System;
 using bilibili.Methods;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Navigation;
 using bilibili.Helpers;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Text.RegularExpressions;
+using bilibili.Http.ContentService;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -18,29 +21,22 @@ namespace bilibili.Views
     public sealed partial class MyConcerns : Page
     {
         bool isGrid;
-        bool isConcernLoad = false;
+        bool? isMySelf = null;
         int page = 1;
+        string mid = string.Empty;
+        string url = string.Empty;
         public MyConcerns()
         {
             this.InitializeComponent();         
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (!isConcernLoad)
-            {
-                if (e.Parameter == null)
-                {
-                    load(string.Empty);
-                }
-                else
-                {
-                    load(e.Parameter.ToString());
-                }
-            }            
+            mid = e.Parameter.ToString();
+            await load(mid); 
         }
 
-        async void load(string mid)
+        async Task load(string mid)
         {
             if (SettingHelper.Devicetype == DeviceType.PC)
             {
@@ -52,28 +48,19 @@ namespace bilibili.Views
                 isGrid = false;
                 conlist.ItemTemplate = this.Resources["TemplateList"] as DataTemplate;
             }
-            if (mid.Length == 0)
+            isMySelf = mid == UserHelper.mid ? true : false;
+            List<ConcernItem> list = await UserRelated.GetConcernBangumiAsync(mid, 1, (bool)isMySelf);
+            foreach (var item in list)
             {
-                foreach (var item in await ContentServ.GetConAsync(1))
-                {
-                    conlist.Items.Add(item);
-                }
+                conlist.Items.Add(item);
             }
-            else
-            {
-                foreach (var item in await ContentServ.GetFriendsCons(mid, 1)) 
-                {
-                    conlist.Items.Add(item);
-                }
-            }
-            if (conlist.Items.Count < 30)
+            if (conlist.Items.Count < 20)
             {
                 var text1 = Load.FindChildOfType<TextBlock>(conlist);
                 text1.Text = "加载完毕！";
 
             }
             con.Text += conlist.Items.Count == 0 ? "（暂无订阅）" : "";
-            isConcernLoad = true;
         }
 
         private void Reflesh_Click(object sender, RoutedEventArgs e)
@@ -113,13 +100,13 @@ namespace bilibili.Views
                     int count0 = view.Items.Count;
                     page++;
                     isLoading = true;
-                    List<Concern> temps = await ContentServ.GetConAsync(page);
-                    text.Visibility = Visibility.Collapsed;
-                    foreach (var item in temps)
+                    List<ConcernItem> list = await UserRelated.GetConcernBangumiAsync(mid, page, (bool)isMySelf);
+                    foreach (var item in list)
                     {
                         view.Items.Add(item);
                     }
-                    if (temps.Count < 30)
+                    text.Visibility = Visibility.Collapsed;
+                    if (list.Count < 20)
                     {
                         LoadingDone = true;
                         text.Text = "装填完毕！";
@@ -132,7 +119,7 @@ namespace bilibili.Views
 
         private void conlist_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail), (e.ClickedItem as Concern).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail), (e.ClickedItem as ConcernItem).Season_id, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         private void conlist_SizeChanged(object sender, SizeChangedEventArgs e)

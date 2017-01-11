@@ -135,6 +135,7 @@
     </Compile>
     <Compile Include="Http\BaseService.cs" />
     <Compile Include="Http\ContentService.cs" />
+    <Compile Include="Http\ContentService\UserRelated.cs" />
     <Compile Include="Http\URLs.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

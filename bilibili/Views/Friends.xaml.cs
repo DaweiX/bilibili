@@ -1,13 +1,14 @@
-﻿using bilibili.Http;
+﻿using bilibili.Http.ContentService;
 using bilibili.Models;
 using System;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Newtonsoft.Json;
+using bilibili.Methods;
+using System.Collections.Generic;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -19,38 +20,84 @@ namespace bilibili.Views
     public sealed partial class Friends : Page
     {
         string mid = string.Empty;
-        User user = new User();
+        int page = 1;
+        Site_UserInfo user = new Site_UserInfo();
+        Site_UserSettings sets = new Site_UserSettings();
         public Friends()
         {
             this.InitializeComponent();
+            toutu.SizeChanged += toutu_SizeChanged;
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             mid = e.Parameter.ToString();
-            user = await ContentServ.GetUserinfoAsync(mid);
-            Face.ImageSource = new BitmapImage { UriSource = new Uri(user.Face) };
-            level.Source = new BitmapImage { UriSource = new Uri("ms-appx:///Assets//Others//lv" + user.Current_level + ".png", UriKind.Absolute) };
-            exp_current.Text = user.Current_exp;
-            toutu.Source = new BitmapImage(new Uri("http://i0.hdslb.com/" + user.Toutu));
-            birth.Text += user.BirthDay;
-            regdate.Text += user.RegTime;
-            sex.Text += user.Sex;
-            addr.Text += user.Place.Length > 0 ? user.Place : "未知";
-            if (user.Current_level == "6")
-                bar.Value = 100;
-            else
+            user = await UserRelated.GetBasicInfoAsync(mid);
+            sets = await UserRelated.GetUserSettingAsync(mid);
+            Models.UserInfo info = user.Data;
+            if (user.Status == true)
             {
-                bar.Value = int.Parse(user.Current_exp);
-                bar.Maximum = int.Parse(user.Next_exp);
-                exp_total.Text = user.Next_exp;
-            }         
-            userName.Text = user.Name;
-            user.Sign = user.Sign;
-            list_concern.ItemsSource = await ContentServ.GetFriendsAsync(mid);//以后得改
-            list_videos.ItemsSource = await ContentServ.GetMyVideoAsync(mid, 1);
-            conlist.ItemsSource = await ContentServ.GetFriendsCons(mid, 1);
+                Face.ImageSource = new BitmapImage { UriSource = new Uri(info.Face) };
+                level.Source = new BitmapImage { UriSource = new Uri("ms-appx:///Assets//Others//lv" + info.Level_Info.Current_level + ".png", UriKind.Absolute) };
+                exp_current.Text = info.Level_Info.Current_exp;
+                toutu.Source = new BitmapImage(new Uri("http://i0.hdslb.com/" + info.Toutu));
+                if (!string.IsNullOrWhiteSpace(info.BirthDay))
+                {
+                    birth.Text = "生日：" + info.BirthDay;
+                }
+                if (!string.IsNullOrWhiteSpace(info.RegTime))
+                {
+                    regdate.Text += "注册日期：" + StringDeal.LinuxToData(info.RegTime);
+                }
+                if (!string.IsNullOrWhiteSpace(info.Sex))
+                {
+                    sex.Text += "性别：" + info.Sex;
+                }
+                if (!string.IsNullOrWhiteSpace(info.Place)) 
+                {
+                    addr.Text = "地址：" + info.Place;
+                }
+                if (info.Level_Info.Current_level == "6")
+                    bar.Value = 100;
+                else
+                {
+                    bar.Value = int.Parse(info.Level_Info.Current_exp);
+                    bar.Maximum = int.Parse(info.Level_Info.Next_exp);
+                    exp_total.Text = info.Level_Info.Next_exp;
+                }
+                userName.Text = info.Name;
+                sign.Text = info.Sign;
+            }
+            if (sets.Status != true)
+            {
+                toutu.SizeChanged -= toutu_SizeChanged;
+            }
+            list_videos.ItemsSource = await UserRelated.GetMyVideoAsync(mid, 1);
+            List<ConcernItem> concerns = await UserRelated.GetConcernBangumiAsync(mid, 1, false);
+            if (concerns != null)
+            {
+                if (concerns[0].Title == "PRIVATE")
+                {
+                    txt_private.Visibility = Visibility.Visible;
+                    conlist.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    conlist.ItemsSource = concerns;
+                }
+            }
+            List<Friend> list = await UserRelated.GetFriendsAsync(mid, page);
+            foreach (var item in list)
+            {
+                list_concern.Items.Add(item);
+            }
+            if (list.Count >= 30)
+            {
+                scroll_friend.ViewChanged += ScrollViewer_ViewChanged;
+            }
         }
+
+       
 
         private void list_concern_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -69,7 +116,7 @@ namespace bilibili.Views
         {
             if (conlist.SelectedItem != null)
             {
-                Frame.Navigate(typeof(Detail), (conlist.SelectedItem as Concern).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Detail), (conlist.SelectedItem as ConcernItem).Season_id, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
             }
         }
 
@@ -80,14 +127,34 @@ namespace bilibili.Views
 
         private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            width.Width = Methods.WidthFit.GetWidth(ActualWidth, 400, 200);
+            width.Width = WidthFit.GetWidth(ActualWidth, 600, 400);
         }
 
         private void toutu_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             BitmapImage bmp = new BitmapImage();
-            bmp.UriSource = ActualWidth > 600 ? new Uri("http://i0.hdslb.com/" + user.Toutu, UriKind.Absolute) : new Uri("http://i0.hdslb.com/" + user.Toutu_s, UriKind.Absolute);
+            bmp.UriSource = ActualWidth > 600 ? new Uri("http://i0.hdslb.com/" + sets.Data.Toutu.l_img, UriKind.Absolute) : new Uri("http://i0.hdslb.com/" + sets.Data.Toutu.S_img, UriKind.Absolute);
             toutu.Source = bmp;
+        }
+
+        bool isLoading = false;
+        private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (!isLoading)
+            {
+                isLoading = true;
+                page++;
+                List<Friend> list = await UserRelated.GetFriendsAsync(mid, page);
+                foreach (var item in list)
+                {
+                    list_concern.Items.Add(item);
+                }
+                if (list.Count < 30)
+                {
+                    scroll_friend.ViewChanged -= ScrollViewer_ViewChanged;
+                }
+                isLoading = false;
+            }           
         }
     }
 }

@@ -218,7 +218,7 @@ namespace bilibili.Views
             Button btn = sender as Button;
             switch (btn.Tag.ToString())
             {
-                case "1": Frame.Navigate(typeof(MyConcerns), null, new SlideNavigationTransitionInfo());break;
+                case "1": Frame.Navigate(typeof(MyConcerns), UserHelper.mid, new SlideNavigationTransitionInfo());break;
                 case "2": Frame.Navigate(typeof(Timeline), null, new SlideNavigationTransitionInfo()); break;
                 case "3": Frame.Navigate(typeof(Bangumi), null, new SlideNavigationTransitionInfo()); break;
             }
