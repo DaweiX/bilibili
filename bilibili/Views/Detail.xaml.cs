@@ -144,7 +144,22 @@ namespace bilibili.Views
                 {
                     list_season.ItemsSource = aa.Related;
                 }
-            } 
+            }
+            if (aa.isFinish == false)
+            {
+                string day = string.Empty;
+                switch(aa.WeekDay)
+                {
+                    case "1": day = "一"; break;
+                    case "2": day = "二"; break;
+                    case "3": day = "三"; break;
+                    case "4": day = "四"; break;
+                    case "5": day = "五"; break;
+                    case "6": day = "六"; break;
+                    case "0": day = "日"; break;
+                }
+                txt_update.Text = day == string.Empty ? string.Empty : "每周" + day + "更新";
+            }
             //HyperlinkButton btn = new HyperlinkButton();
             //btn.Command=ne
             //if (UserHelper.concernList.FindIndex(o => o.ID == sid) != -1)

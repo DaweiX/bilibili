@@ -40,6 +40,14 @@ namespace bilibili.Views
             {
                 pc_fullscreen.Visibility = Visibility.Collapsed;
             }
+            if (SettingHelper.ContainsKey("_topbar"))
+            {
+                m_top.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_topbar"));
+            }
+            else
+            {
+                m_top.IsOn = true;
+            }
             if (SettingHelper.ContainsKey("_nighttheme"))
             {
                 night.IsOn = SettingHelper.GetValue("_nighttheme").ToString() == "light" ? false : true;
@@ -170,21 +178,35 @@ namespace bilibili.Views
                 path.IsOn = false;
                 txt_path.Text = @"视频库\哔哩哔哩";
             }
+            if (SettingHelper.ContainsKey("_speed"))
+            {
+                sli_speed.Value = int.Parse(SettingHelper.GetValue("_speed").ToString());
+            }
+            if (SettingHelper.ContainsKey("_fontsize"))
+            {
+                sli_fontsize.Value = int.Parse(SettingHelper.GetValue("_fontsize").ToString());
+            }
+            cb_font.Items.Add("默认");
+            cb_font.Items.Add("宋体");
+            cb_font.Items.Add("等线");
+            cb_font.Items.Add("楷体");
+            if (SettingHelper.GetDeviceType() == DeviceType.PC)
+            {
+                cb_font.Items.Add("幼圆");
+            }
+            if (SettingHelper.ContainsKey("_danmufont"))
+            {
+                cb_font.SelectedIndex = int.Parse(SettingHelper.GetValue("_danmufont").ToString());
+            }
+            else
+            {
+                cb_font.SelectedIndex = 0;
+            }
         }
 
         private void night_Toggled(object sender, RoutedEventArgs e)
         {
             ChangeDark?.Invoke(night.IsOn);
-        }
-
-        private void uri_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void sli_space_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
@@ -202,20 +224,18 @@ namespace bilibili.Views
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 StatusBar sb = StatusBar.GetForCurrentView();
-                if (!string.IsNullOrEmpty(m_top.IsOn.ToString()))
-                {           
-                    SettingHelper.SetValue("_topbar", m_top.IsOn);
-                    if ((bool)SettingHelper.GetValue("_topbar") == false) 
-                    {
-                        await sb.ShowAsync();
-                        sb.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
-                        sb.BackgroundOpacity = 1;
-                    }
-                    else if ((bool)SettingHelper.GetValue("_topbar") == true)
-                    {
-                        await sb.HideAsync();
-                    }
+                SettingHelper.SetValue("_topbar", m_top.IsOn);
+                if ((bool)SettingHelper.GetValue("_topbar") == false)
+                {
+                    await sb.ShowAsync();
+                    sb.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
+                    sb.BackgroundOpacity = 1;
                 }
+                else if ((bool)SettingHelper.GetValue("_topbar") == true)
+                {
+                    await sb.HideAsync();
+                }
+
             }
         }
 
@@ -310,7 +330,12 @@ namespace bilibili.Views
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            string font = string.Empty;
+            font = cb_font.SelectedItem.ToString();
+            if (danmaku != null)
+            {
+                SettingHelper.SetValue("_danmufont", cb_font.SelectedIndex);
+            }
         }
 
         private void quality_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -428,6 +453,11 @@ namespace bilibili.Views
         private void t_message_Toggled(object sender, RoutedEventArgs e)
         {
             SettingHelper.SetValue("_toast_m", t_message.IsOn);
+        }
+
+        private async void regex_Click(object sender, RoutedEventArgs e)
+        {
+            await new Dialogs.RegexTip().ShowAsync();
         }
     }
     public class BoolToVisibility : IValueConverter

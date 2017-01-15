@@ -17,8 +17,17 @@ namespace bilibili.Http
         {
             HttpClient client = new HttpClient();
             Uri uri = new Uri(url);
-            HttpResponseMessage msg = await client.GetAsync(uri);
-            return await msg.Content.ReadAsStringAsync();
+            try
+            {
+                HttpResponseMessage msg = await client.GetAsync(uri);
+                return await msg.Content.ReadAsStringAsync();
+            }
+            catch
+            {
+                //The host name in the certificate is invalid or does not match
+                return null;
+            }
+
         }
         /// <summary>
         /// 获得Json数据

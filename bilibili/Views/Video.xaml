@@ -330,6 +330,7 @@
                                                     </MenuFlyout.MenuFlyoutPresenterStyle>
                                                     <MenuFlyoutItem Tag="0" Click="full_Click" Foreground="White">保持比例</MenuFlyoutItem>
                                                     <MenuFlyoutItem Tag="1" Click="full_Click" Foreground="White">拉伸占满</MenuFlyoutItem>
+                                                    <MenuFlyoutItem x:Name="menu_full" Tag="2" Click="full_Click" Foreground="White" Visibility="Collapsed">全屏切换</MenuFlyoutItem>
                                                 </MenuFlyout>
                                             </Button.Flyout>
                                         </Button>

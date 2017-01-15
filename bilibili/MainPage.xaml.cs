@@ -101,8 +101,14 @@ namespace bilibili
                     {
                         if ((bool)SettingHelper.GetValue("_pull") == true)
                         {
-                            await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", null);
+                            var task = await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
+                            task.Progress += A_Progress;
                         }
+                    }
+                    else
+                    {
+                        var task = await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
+                        task.Progress += A_Progress;
                     }
                 }
             }
@@ -115,12 +121,12 @@ namespace bilibili
             SettingHelper.Devicetype = SettingHelper.GetDeviceType();
         }
 
-        private async Task RegisterBackgroundTask(Type EntryPoint, string name, IBackgroundCondition condition)
+        private async Task<BackgroundTaskRegistration> RegisterBackgroundTask(Type EntryPoint, string name,IBackgroundTrigger trigger, IBackgroundCondition condition)
         {
             var status = await BackgroundExecutionManager.RequestAccessAsync();
-            if (status == BackgroundAccessStatus.Unspecified || status == BackgroundAccessStatus.DeniedByUser)
+            if (status == BackgroundAccessStatus.DeniedByUser)
             {
-                return;
+                return null;
             }
             foreach (var item in BackgroundTaskRegistration.AllTasks)
             {
@@ -130,27 +136,19 @@ namespace bilibili
                 }
             }
             var builder = new BackgroundTaskBuilder { Name = name, TaskEntryPoint = EntryPoint.FullName, IsNetworkRequested = false };
-            builder.SetTrigger(new TimeTrigger(15, false));
+            builder.SetTrigger(trigger);
             if (condition != null)
             {
                 builder.AddCondition(condition);
             }
-            builder.Register();
-            BackgroundTaskRegistration a = builder.Register();
-            Debug.WriteLine("---------Register---------");
-            a.Progress += A_Progress;
-            a.Completed += A_Completed;
-            return;
+            BackgroundTaskRegistration task = builder.Register();
+            //await popup.Show(string.Format("----Register{0}-----", task.Name));
+            return task;
         }
 
-        private void A_Completed(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
+        private async void A_Progress(BackgroundTaskRegistration sender, BackgroundTaskProgressEventArgs args)
         {
-            Debug.WriteLine("---------Completed!---------");
-        }
-
-        private void A_Progress(BackgroundTaskRegistration sender, BackgroundTaskProgressEventArgs args)
-        {
-            Debug.WriteLine("---------Processing...---------");
+            await popup.Show("---------Processing...---------");
         }
 
         private async void Timer_Tick(object sender, object e)

@@ -221,29 +221,29 @@ namespace bilibili.Http
             if (json.ContainsKey("data"))
             {
                 List<Pages> pages = new List<Pages>();
-        JsonObject json2 = json["data"].GetObject();
-                details.Desc = json2.ContainsKey("desc") ? json2["desc"].GetString() : "";
-                if (json2.ContainsKey("aid"))
-                    details.Aid = json2["aid"].ToString();
-                if (json2.ContainsKey("ctime"))
-                    details.Time = StringDeal.LinuxToData(json2["ctime"].ToString());
-                if (json2.ContainsKey("title"))
-                    details.Title = StringDeal.delQuotationmarks(json2["title"].ToString());
-                if (json2.ContainsKey("pic"))
-                    details.Pic = StringDeal.delQuotationmarks(json2["pic"].ToString());
-                if (json2.ContainsKey("duration"))
-                    details.Duration = Convert.ToInt32(json2["duration"].ToString());
-                if (json2.ContainsKey("req_user"))
+                json = json["data"].GetObject();
+                details.Desc = json.ContainsKey("desc") ? json["desc"].GetString() : "";
+                if (json.ContainsKey("aid"))
+                    details.Aid = json["aid"].ToString();
+                if (json.ContainsKey("ctime"))
+                    details.Time = StringDeal.LinuxToData(json["ctime"].ToString());
+                if (json.ContainsKey("title"))
+                    details.Title = StringDeal.delQuotationmarks(json["title"].ToString());
+                if (json.ContainsKey("pic"))
+                    details.Pic = StringDeal.delQuotationmarks(json["pic"].ToString());
+                if (json.ContainsKey("duration"))
+                    details.Duration = Convert.ToInt32(json["duration"].ToString());
+                if (json.ContainsKey("req_user"))
                 {
-                    JsonObject j = json2["req_user"].GetObject();
+                    JsonObject j = json["req_user"].GetObject();
                     if (j.ContainsKey("favorite"))
                     {
                         details.IsFav = j["favorite"].ToString();
                     }
                 }
-                if (json2.ContainsKey("pages"))
+                if (json.ContainsKey("pages"))
                 {
-                    JsonArray array = json2["pages"].GetArray();
+                    JsonArray array = json["pages"].GetArray();
                     foreach (var item in array)
                     {
                         Pages page = new Pages();
@@ -257,37 +257,45 @@ namespace bilibili.Http
                     details.Ps = pages;
 
                 }
-                if (json2.ContainsKey("owner"))
+                if (json.ContainsKey("owner"))
                 {
-                    JsonObject json2_owner = json2["owner"].GetObject();
-                    if (json2_owner.ContainsKey("name"))
-                        details.Upzhu = StringDeal.delQuotationmarks(json2_owner["name"].ToString());
-                    if (json2_owner.ContainsKey("mid"))
-                        details.Mid = json2_owner["mid"].ToString();
+                    JsonObject json_owner = json["owner"].GetObject();
+                    if (json_owner.ContainsKey("name"))
+                        details.Upzhu = StringDeal.delQuotationmarks(json_owner["name"].ToString());
+                    if (json_owner.ContainsKey("mid"))
+                        details.Mid = json_owner["mid"].ToString();
                 }
-                if (json2.ContainsKey("stat"))
+                if (json.ContainsKey("stat"))
                 {
-                    JsonObject json2_stat = json2["stat"].GetObject();
-                    if (json2_stat.ContainsKey("view"))
-                        details.View = json2_stat["view"].ToString();
-                    if (json2_stat.ContainsKey("danmaku"))
-                        details.Danmu = json2_stat["danmaku"].ToString();
-                    if (json2_stat.ContainsKey("share"))
-                        details.Share = json2_stat["share"].ToString();
-                    if (json2_stat.ContainsKey("favorite"))
-                        details.Fav = json2_stat["favorite"].ToString();
-                    if (json2_stat.ContainsKey("coin"))
-                        details.Coins = json2_stat["coin"].ToString();
-                    if (json2_stat.ContainsKey("reply"))
-                        details.Reply = json2_stat["reply"].ToString();
+                    JsonObject json_stat = json["stat"].GetObject();
+                    if (json_stat.ContainsKey("view"))
+                        details.View = json_stat["view"].ToString();
+                    if (json_stat.ContainsKey("danmaku"))
+                        details.Danmu = json_stat["danmaku"].ToString();
+                    if (json_stat.ContainsKey("share"))
+                        details.Share = json_stat["share"].ToString();
+                    if (json_stat.ContainsKey("favorite"))
+                        details.Fav = json_stat["favorite"].ToString();
+                    if (json_stat.ContainsKey("coin"))
+                        details.Coins = json_stat["coin"].ToString();
+                    if (json_stat.ContainsKey("reply"))
+                        details.Reply = json_stat["reply"].ToString();
                 }
-                if (json2.ContainsKey("tags"))
+                if (json.ContainsKey("season"))
+                {
+                    JsonObject json2 = json["season"].GetObject();
+                    if (json2.ContainsKey("title"))
+                        details.BangumiTitle = json2["title"].GetString();
+                    if (json2.ContainsKey("season_id"))
+                        details.Sid = json2["season_id"].GetString();
+                }
+                if (json.ContainsKey("tags"))
                 {
                     //可能出现tags=(null)
                     try
                     {
-                        var a = json2["tags"].GetArray();
-                        foreach (var item in json2["tags"].GetArray())
+                        var a = json["tags"].GetArray();
+                        foreach (var item in json["tags"].GetArray())
                         {
                             details.Tags.Add(item.GetString());
                         }
@@ -554,11 +562,11 @@ namespace bilibili.Http
                     if (json.ContainsKey("play_count"))
                         season.View = StringDeal.delQuotationmarks(json["play_count"].ToString());
                     if (json.ContainsKey("weekday"))
-                        season.WeekDay = json["weekday"].ToString()[0];
+                        season.WeekDay = json["weekday"].GetString();
                     if (json.ContainsKey("pub_time"))
                         season.Time = json["pub_time"].GetString().Split(' ')[0];
                     if (json.ContainsKey("is_finish"))
-                        season.isFinish = json["is_finish"].ToString() == "0" ? false : true;
+                        season.isFinish = json["is_finish"].ToString() == "0" ? true : false;
                     if (json.ContainsKey("squareCover"))
                         season.SquareCover = json["squareCover"].GetString();
                     if (json.ContainsKey("user_season"))
@@ -1182,51 +1190,51 @@ namespace bilibili.Http
         /// <summary>
         /// 获取相关视频
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        //public static async Task<List<Basic>> GetRelatesAsync(string aid)
-        //{
-        //    string url = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=" + aid;
-        //    List<Basic> relates = new List<Basic>();
-        //    JsonObject json = await BaseService.GetJson(url);
-        //    if (json.ContainsKey("data"))
-        //    {
-        //        json = json["data"].GetObject();
-        //        if(json.ContainsKey("relates"))
-        //        {
-        //            JsonArray array = json["relates"].GetArray();
-        //            foreach (var item in array)
-        //            {
-        //                Basic basic = new Basic();
-        //                JsonObject temp = item.GetObject();
-        //                if (temp.ContainsKey("aid"))
-        //                    basic.ID = temp["aid"].ToString();
-        //                if (temp.ContainsKey("title"))
-        //                    basic.Title = temp["title"].GetString();
-        //                if (temp.ContainsKey("pic"))
-        //                    basic.Cover = temp["pic"].GetString();
-        //                if (temp.ContainsKey("owner"))
-        //                {
-        //                    json = temp["owner"].GetObject();
-        //                    if (json.ContainsKey("name"))
-        //                        basic.Owner = json["name"].GetString();
-        //                }
-        //                if (temp.ContainsKey("stat"))
-        //                {
-        //                    json = temp["stat"].GetObject();
-        //                    if (json.ContainsKey("danmaku"))
-        //                        basic.Danmaku = json["danmaku"].ToString();
-        //                    if (json.ContainsKey("view"))
-        //                        basic.View = json["view"].ToString();
-        //                    if (json.ContainsKey("favorite"))
-        //                        basic.Favorite = json["favorite"].ToString();
-        //                }
-        //                relates.Add(basic);
-        //            }
-        //        }
-        //    }
-        //    return relates;
-        //}
+        /// <param name = "url" ></ param >
+        /// < returns ></ returns >
+        public static async Task<List<RelateVideo>> GetRelatesAsync(string aid)
+        {
+            string url = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=" + aid;
+            List<RelateVideo> relates = new List<RelateVideo>();
+            JsonObject json = await BaseService.GetJson(url);
+            if (json.ContainsKey("data"))
+            {
+                json = json["data"].GetObject();
+                if (json.ContainsKey("relates"))
+                {
+                    JsonArray array = json["relates"].GetArray();
+                    foreach (var item in array)
+                    {
+                        RelateVideo basic = new RelateVideo();
+                        JsonObject temp = item.GetObject();
+                        if (temp.ContainsKey("aid"))
+                            basic.ID = temp["aid"].ToString();
+                        if (temp.ContainsKey("title"))
+                            basic.Title = temp["title"].GetString();
+                        if (temp.ContainsKey("pic"))
+                            basic.Cover = temp["pic"].GetString();
+                        if (temp.ContainsKey("owner"))
+                        {
+                            json = temp["owner"].GetObject();
+                            if (json.ContainsKey("name"))
+                                basic.Owner = json["name"].GetString();
+                        }
+                        if (temp.ContainsKey("stat"))
+                        {
+                            json = temp["stat"].GetObject();
+                            if (json.ContainsKey("danmaku"))
+                                basic.Danmaku = json["danmaku"].ToString();
+                            if (json.ContainsKey("view"))
+                                basic.View = json["view"].ToString();
+                            if (json.ContainsKey("favorite"))
+                                basic.Favorite = json["favorite"].ToString();
+                        }
+                        relates.Add(basic);
+                    }
+                }
+            }
+            return relates;
+        }
         /// <summary>
         /// 获取通知条数(需登录)
         /// </summary>

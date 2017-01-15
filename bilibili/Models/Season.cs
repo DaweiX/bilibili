@@ -47,7 +47,7 @@ namespace bilibili.Models
         public string Title { get; set; }
         public string Brief { get; set; }
         public List<string> Tags { get; set; }
-        public char WeekDay { get; set; }
+        public string WeekDay { get; set; }
         public string Time { get; set; }
         public string View { get; set; }
         public bool isFinish { get; set; }

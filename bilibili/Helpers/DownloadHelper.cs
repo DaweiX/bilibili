@@ -149,7 +149,11 @@ namespace bilibili.Helpers
         public async static Task<StorageFolder> GetMyFolderAsync()
         {
             StorageFolder folder = null;
-            string path = SettingHelper.GetValue("_path").ToString();
+            string path = string.Empty;
+            if (SettingHelper.ContainsKey("_path"))
+            {
+                path = SettingHelper.GetValue("_path").ToString();
+            }
             StorageFolder defaultfolder = await KnownFolders.VideosLibrary.CreateFolderAsync("哔哩哔哩", CreationCollisionOption.OpenIfExists);
             if (!string.IsNullOrEmpty(path))
             {

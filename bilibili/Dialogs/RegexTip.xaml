@@ -1,0 +1,64 @@
+﻿<ContentDialog
+    x:Class="bilibili.Dialogs.RegexTip"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="小贴士"
+    SecondaryButtonText="我知道啦">
+    <!--(?<=av/)\d*-->
+    <!--(?=exp)-->
+    <ScrollViewer>
+        <StackPanel>
+            <RichTextBlock TextWrapping="Wrap" IsTextSelectionEnabled="True">
+                <Paragraph>本程序使用正则表达式引擎屏蔽弹幕，提供高度定制化的弹幕屏蔽体验。</Paragraph>
+                <Paragraph Margin="0 8">确定的词汇
+                    <Span Foreground="{ThemeResource bili_Fontcolor_Second}">直接输入即可,最常用</Span>
+                    <LineBreak/>
+                    <Run Foreground="{ThemeResource bili_Theme}">X哥</Run>
+                    <LineBreak/>
+                    <Run Foreground="Red">X哥</Run>
+                </Paragraph>
+                <Paragraph>前接某词
+                    <Span Foreground="{ThemeResource bili_Fontcolor_Second}">(?&lt;=前接词)屏蔽词</Span>
+                    <LineBreak/>
+                    <Run Foreground="{ThemeResource bili_Theme}">(?&lt;=这是)X哥</Run>
+                    <LineBreak/>
+                    <Run Foreground="{ThemeResource bili_Fontcolor_Second}">这是</Run>
+                    <Run Foreground="Red">X哥</Run>
+                </Paragraph>
+                <Paragraph Margin="0 8">后接某词
+                    <Run Foreground="{ThemeResource bili_Fontcolor_Second}">屏蔽词(?=后接词)</Run>
+                    <LineBreak/>
+                    <Run Foreground="{ThemeResource bili_Theme}">X哥(?=战斗过的)</Run>
+                    <LineBreak/>
+                    <Run Foreground="Red">X哥</Run>
+                    <Run Foreground="{ThemeResource bili_Fontcolor_Second}">战斗过的</Run>
+                </Paragraph>
+                <Paragraph>日期
+                    <Span Foreground="{ThemeResource bili_Fontcolor_Second}">{n,m}:重复次数区间</Span>
+                    <LineBreak/>
+                    <Run Foreground="{ThemeResource bili_Theme}">\d{4}\.\d{1,2}\.\d{0,2}}</Run>
+                    <LineBreak/>
+                    <Run Foreground="Red">2015.2.24（一种可能）</Run>
+                </Paragraph>
+                <Paragraph>匹配符
+                    <LineBreak/>
+                    <Run xml:space="preserve">.       除换行符外的任意字符</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">\w    字母、数字、下划线或汉字</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">\d    数字</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">\s    任意空白符（空格、回车、Tab等）</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">^     字符串的开始</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">$     字符串的结尾</Run>
+                </Paragraph>
+            </RichTextBlock>
+        </StackPanel>
+    </ScrollViewer>
+</ContentDialog>

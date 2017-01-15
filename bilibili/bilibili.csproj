@@ -130,6 +130,9 @@
     <Compile Include="Dialogs\DelFavFolder.xaml.cs">
       <DependentUpon>DelFavFolder.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\RegexTip.xaml.cs">
+      <DependentUpon>RegexTip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SendReply.xaml.cs">
       <DependentUpon>SendReply.xaml</DependentUpon>
     </Compile>
@@ -374,6 +377,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DelFavFolder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\RegexTip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

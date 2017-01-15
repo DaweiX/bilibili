@@ -97,8 +97,6 @@ namespace bilibili.Views
             }
         }
 
-       
-
         private void list_concern_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (e.ClickedItem as Friend != null)
@@ -140,7 +138,8 @@ namespace bilibili.Views
         bool isLoading = false;
         private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            if (!isLoading)
+            if (isLoading) return;
+            if (scroll_friend.VerticalOffset > scroll_friend.ScrollableHeight - 50) 
             {
                 isLoading = true;
                 page++;

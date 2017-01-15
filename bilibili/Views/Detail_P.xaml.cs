@@ -89,6 +89,12 @@ namespace bilibili.Views
                 {
                     ReadyList.Items.Add(item);
                 }
+                if (!string.IsNullOrEmpty(details.Sid))
+                {
+                    bangumi.Content = details.BangumiTitle;
+                    bangumi.Click += Bangumi_Click;
+                    stk_bangumi.Visibility = Visibility.Visible;
+                }
                 //if (UserHelper.concernList.FindIndex(o => o.ID == cid) != -1)
                 //{
                 //    btn_addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
@@ -99,6 +105,11 @@ namespace bilibili.Views
             {
                 await popup.Show("视频不存在或已被删除");
             }
+        }
+
+        private void Bangumi_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Detail), details.Sid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         async Task<bool> load(int page, string aid)
@@ -198,7 +209,7 @@ namespace bilibili.Views
             {
                 if (aid.Length > 0) 
                 {
-                   // list_relates.ItemsSource = await ContentServ.GetRelatesAsync(aid);
+                     list_relates.ItemsSource = await ContentServ.GetRelatesAsync(aid);
                 }
                 else
                 {
@@ -525,7 +536,7 @@ namespace bilibili.Views
 
         private void list_relates_ItemClick(object sender, ItemClickEventArgs e)
         {
-           // Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Basic).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as RelateVideo).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         private void up_Click(object sender, RoutedEventArgs e)

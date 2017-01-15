@@ -11,6 +11,7 @@ using bilibili.Models;
 using Windows.UI.Notifications;
 using Windows.Storage.Pickers;
 using bilibili.Helpers;
+using Windows.System.Display;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -25,7 +26,7 @@ namespace bilibili.Views
         static bool Isnowlistloaded = false;
         List<DownloadOperation> activeDownloads;
         CancellationTokenSource cts;
-
+        DisplayRequest displayRq = null;
         public Download()
         {
             cts = new CancellationTokenSource();
@@ -61,6 +62,14 @@ namespace bilibili.Views
             {
                 await DiscoverDownloadsAsync();
             }        
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            if (displayRq != null)
+            {
+                displayRq.RequestRelease();
+            }
         }
 
         private async Task DiscoverDownloadsAsync()
@@ -145,9 +154,10 @@ namespace bilibili.Views
                     ((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Size = download.Progress.BytesReceived.ToString();
                     ((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Status = download.Progress.Status.ToString();
                     ((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Progress = ((double)download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100;
-                    if ((int)((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Progress == 100)
+                    if ((int)((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Progress == 100 && download.Progress.BytesReceived > 0)
                     {
                         Sendtoast("下载完成", ((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Name);
+                        list_now.Items.Remove(test);
                     }
                 }
             }
@@ -332,12 +342,13 @@ namespace bilibili.Views
                     try
                     {
 
-                        StorageFolder DowFolder = KnownFolders.VideosLibrary;
-                        StorageFile file = await DowFolder.GetFileAsync(item.DownOpration.ResultFile.Name);
-                        await file.DeleteAsync(StorageDeleteOption.Default);
-                        list_now.Items.RemoveAt(list_now.Items.IndexOf(item));
+                        StorageFolder DowFolder = await DownloadHelper.GetMyFolderAsync();
+                        StorageFile file0 = item.DownOpration.ResultFile as StorageFile;
+                        StorageFolder folder = await DowFolder.GetFolderAsync(file0.DisplayName);
+                        await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                        list_now.Items.Remove(item);
                     }
-                    catch (Exception)
+                    catch (Exception err)
                     {
                         
                     }
@@ -382,6 +393,19 @@ namespace bilibili.Views
             if (mv != null)
             {
                 Frame.Navigate(typeof(Video), mv);
+            }
+        }
+
+        private void display_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if ((bool)display.IsChecked)
+            {
+                displayRq = new DisplayRequest();
+                displayRq.RequestActive();
+            }
+            else
+            {
+                displayRq.RequestRelease();
             }
         }
     }

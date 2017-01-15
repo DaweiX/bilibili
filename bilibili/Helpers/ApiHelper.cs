@@ -20,11 +20,12 @@ namespace bilibili.Helpers
     {
         public static string appkey = "422fd9d7289a1dd9";
         public static string accesskey = string.Empty;
-        public static string code = string.Empty;
-        public static string password, username, e_password = string.Empty;
+        public static int code = 233;
+        public static string Password, Username, e_password = string.Empty;
         public delegate void LoginReport(string message);
         public static event LoginReport Report;
         public static bool isfirst = true;
+        static bool isTryOnce = false;
         /// <summary>
         /// 获取Linux时间戳
         /// </summary>
@@ -35,7 +36,7 @@ namespace bilibili.Helpers
             return ts;
         }
 
-        public static async Task<string> GetEncryptedPassword(string passWord,string uname)
+        public static async Task<string> GetEncryptedPassword(string password,string uname)
         {
             string base64String;
             try
@@ -67,7 +68,7 @@ namespace bilibili.Helpers
             catch (Exception)
             {
                 //throw;
-                base64String = passWord;
+                base64String = password;
             }
             return base64String;
         }
@@ -141,12 +142,14 @@ namespace bilibili.Helpers
             //}
             JsonObject json = await BaseService.GetJson(url);
             if (json.ContainsKey("code"))
-                code = json["code"].ToString();
+                code = (int)json["code"].GetNumber();
+            if (code != 0)
+                return false;
             if (json.ContainsKey("access_key"))
                 accesskey1 = json["access_key"].GetString();
             if (json.ContainsKey("mid"))
                 mid = json["mid"].ToString();
-            if (accesskey1 != string.Empty && code == "0")
+            if (accesskey1 != string.Empty && code == 0)
             {
                 accesskey = accesskey1;
                 SettingHelper.SetValue("_accesskey", accesskey);
@@ -167,7 +170,8 @@ namespace bilibili.Helpers
             {
                 ls.Add(item.Name);
             }
-            if (!ls.Contains("DedeUserID") || !ls.Contains("DedeUserID__ckMd5"))
+            //if (!ls.Contains("DedeUserID") || !ls.Contains("DedeUserID__ckMd5"))
+            if (!ls.Contains("DedeUserID")) 
             {
                 return false;
             }
@@ -182,61 +186,65 @@ namespace bilibili.Helpers
         /// <param name="password"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        public async static Task<bool> login(string pwd, string uname, bool isFirst = true)
+        public async static Task login(string pwd, string uname, bool isFirst = true)
         {
-            if (IsLogin()) return true;
-            username = uname;
-            password = pwd;
+            string url = string.Empty;
+            Password = pwd;
+            Username = uname;
+            if (IsLogin()) return;
             isfirst = isFirst;
-            HttpResponseMessage message = new HttpResponseMessage();
-            string url = "http://api.bilibili.com/login/sso?gourl=http%3A%2F%2Fwww.bilibili.com&access_key=" + accesskey + "&appkey=" + appkey + "&platform=android&scale=xhdpi";
+            //string url = "http://api.bilibili.com/login/sso?gourl=http%3A%2F%2Fwww.bilibili.com&access_key=" + accesskey + "&appkey=" + appkey + "&platform=android&scale=xhdpi";
+            //"http://api.bilibili.com/login/sso?&access_key=" + model.access_key + "&appkey=422fd9d7289a1dd9&platform=wp"
             if (!string.IsNullOrEmpty(SettingHelper.GetValue("_accesskey").ToString()))
             {
-                url += GetSign(url);
-                message = await new HttpClient().GetAsync(new Uri(url));
                 accesskey = SettingHelper.GetValue("_accesskey").ToString();
+                url = "http://api.bilibili.com/login/sso?&access_key=" + accesskey + "&appkey=" + appkey + "&platform=wp";
+                await BaseService.SentGetAsync(url);
             }
             else
             {
-                bool key = await GetAccessKey(password, username);
+                bool key = await GetAccessKey(pwd, uname);
                 if (key)
                 {
-                    message = await new HttpClient().GetAsync(new Uri(url));
+                    url = "http://api.bilibili.com/login/sso?&access_key=" + accesskey + "&appkey=" + appkey + "&platform=wp";
+                    await BaseService.SentGetAsync(url);
                 }
             }
-            message.EnsureSuccessStatusCode();
             HttpBaseProtocolFilter hb = new HttpBaseProtocolFilter();
-            HttpCookieCollection cookieCollection = hb.CookieManager.GetCookies(new Uri("http://www.bilibili.com/"));
+            HttpCookieCollection cookieCollection = hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
             List<string> ls = new List<string>();
             foreach (HttpCookie item in cookieCollection)
             {
                 ls.Add(item.Name);
             }
+            //if (ls.Contains("DedeUserID"))
             if (ls.Contains("DedeUserID"))
             {
                 SettingHelper.SetValue("_accesskey", accesskey);
                 hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
                 SettingHelper.SetValue("_accesskey", accesskey);
-                SettingHelper.SetValue("_username", username);
+                SettingHelper.SetValue("_username", uname);
                 SettingHelper.SetValue("_epassword", e_password);
-                return true;
+                code = 0;
+                return;
             }
             else
             {
                 try
                 {
-                    if (await GetAccessKey(password, uname))
+                    if (isTryOnce == false)
                     {
-                        if (await login(password, uname))
+                        if (await GetAccessKey(pwd, uname))
                         {
-                            return true;
+                            isTryOnce = true;
+                            await login(pwd, uname);
+                            return;
                         }
-                    }
-                    return false;
+                    }                 
                 }
-                catch
+                catch(Exception e)
                 {
-                    return false;
+                    return;
                 }
             }
         }

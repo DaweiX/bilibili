@@ -61,7 +61,7 @@
             <PivotItem Header="详情" Margin="0">
                 <Grid>
                     <ScrollViewer>
-                        <StackPanel Margin="8,0,0,56">
+                        <StackPanel Margin="0,0,0,56" x:Name="stk_header">
                             <Grid>
                                 <Grid HorizontalAlignment="Stretch">
                                     <Image x:Name="pic_blur" HorizontalAlignment="Stretch" Stretch="UniformToFill" Height="200"/>
@@ -94,12 +94,16 @@
                                     </StackPanel>
                                 </RelativePanel>
                             </Grid>
-                            <StackPanel Margin="0,8,0,0">
+                            <StackPanel Margin="8,8,0,0">
                                 <controls:Header Content="摘要"/>
                                 <TextBlock x:Name="desc" MaxLines="3" TextWrapping="Wrap" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                                 <HyperlinkButton x:Name="more" HorizontalAlignment="Right" Click="MoreDesc_Click">展开</HyperlinkButton>
                             </StackPanel>
-                            <StackPanel Margin="0,8,0,0">
+                            <StackPanel Margin="8,8,0,0" Orientation="Horizontal" x:Name="stk_bangumi" Visibility="Collapsed">
+                                <TextBlock Text="所属番剧："/>
+                                <HyperlinkButton x:Name="bangumi"/>
+                            </StackPanel>
+                            <StackPanel Margin="8,8,0,0">
                                 <controls:Header Content="标签"/>
                                 <GridView x:Name="list_tags" Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
                                     <GridView.ItemContainerTransitions>
@@ -127,7 +131,7 @@
                                     </GridView.ItemsPanel>
                                 </GridView>
                             </StackPanel>
-                            <StackPanel Margin="0,8,0,0">
+                            <StackPanel Margin="8,8,0,0">
                                 <controls:Header Content="播放！"/>
                                 <ListView x:Name="ReadyList" Visibility="Collapsed" Tapped="ReadyList_Tapped" IsMultiSelectCheckBoxEnabled="True">
                                     <ListView.ItemTemplate>

@@ -152,4 +152,14 @@ namespace bilibili.Models
         public string Reply { get; set; }
         public string Aid { get; set; }
     }
+    class RelateVideo
+    {
+        public string ID { get; set; }
+        public string Title { get; set; }
+        public string View { get; set; }
+        public string Danmaku {  get; set; }
+        public string Favorite { get; set; }
+        public string Owner { get; set; }
+        public string Cover { get; set; }
+    }
 }

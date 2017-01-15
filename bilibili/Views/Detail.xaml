@@ -47,13 +47,16 @@
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Image x:Name="pic" Height="214" Width="160" Tapped="pic_Tapped" Source="ms-appx:///Assets//SplashScreen.scale-200.png">
-                                    <FlyoutBase.AttachedFlyout>
-                                        <MenuFlyout Placement="Right">
-                                            <MenuFlyoutItem Click="Save_Click">保存封面</MenuFlyoutItem>
-                                        </MenuFlyout>
-                                    </FlyoutBase.AttachedFlyout>
-                                </Image>
+                                <StackPanel>
+                                    <Image x:Name="pic" Height="214" Width="160" Tapped="pic_Tapped" Source="ms-appx:///Assets//SplashScreen.scale-200.png">
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout Placement="Right">
+                                                <MenuFlyoutItem Click="Save_Click">保存封面</MenuFlyoutItem>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
+                                    </Image>
+                                    <TextBlock FontSize="14" x:Name="txt_update" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                </StackPanel>
                                 <StackPanel Grid.Column="1" Margin="12,32,0,0">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock x:Name="up"/>

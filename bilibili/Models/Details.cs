@@ -59,6 +59,8 @@ namespace bilibili.Models
         public string Time { get; set; }
         public string IsFav { get; set; }
         public string Mid { get; set; }
+        public string Sid { get; set; }
+        public string BangumiTitle { get; set; }
     }
 
     class Pages

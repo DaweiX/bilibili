@@ -108,7 +108,6 @@ namespace bilibili.Views
                             {
                                 if (!isTopicLoaded)
                                 {
-                                    bar.Visibility = Visibility.Visible;
                                     //string url = "http://api.bilibili.com/x/web-show/res/loc?jsonp=jsonp&pf=0&id=23";
                                     //List<Models.Topic> MyList = await ContentServ.GetTopicListAsync(url);
                                     //foreach (var item in MyList)
@@ -125,14 +124,12 @@ namespace bilibili.Views
                                             header_Home.navi += Header_navi;
                                         }
                                     }
-                                    bar.Visibility = Visibility.Collapsed;
                                     isTopicLoaded = true;
                                 }
                             }
                             break;
                         case 1:
                             {
-                                bar.Visibility = Visibility.Visible;
 
                                 if (!await addcomment(cursor))
                                 {
@@ -145,16 +142,13 @@ namespace bilibili.Views
                                     list_lastupdate.ItemsSource = await ContentServ.GetLastUpdateAsync();
                                 }
                                 header_bangumi.navi += Header_navi;
-                                bar.Visibility = Visibility.Collapsed;
                             }
                             break;
                         case 2:
                             {
                                 if (!isFriendsLoaded)
                                 {
-                                    bar.Visibility = Visibility.Collapsed;
                                     await loadfriends();
-                                    bar.Visibility = Visibility.Visible;
                                     isFriendsLoaded = true;
                                 }
                             }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Data.Json;
 using Windows.Data.Xml.Dom;
+using Windows.Foundation;
 using Windows.UI.Notifications;
 
 namespace BackgroundTask
@@ -14,8 +16,14 @@ namespace BackgroundTask
     {
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            //Helper.SetValue("_toastquene", "");
+            Helper.SetValue("_toastquene", "");
             var deferral = taskInstance.GetDeferral();
+            await MyTask();
+            deferral.Complete();
+        }
+
+        private async Task<string> deal()
+        {
             List<Feed_Bangumi> list0 = await GetPulls();
             UpdateTile(list0);
             //这块写得有点难看
@@ -41,7 +49,19 @@ namespace BackgroundTask
             {
                 SendToast(list0);
             }
-            deferral.Complete();
+            return null;
+        }
+
+        private IAsyncOperation<string> MyTask()
+        {
+            try
+            {
+                return AsyncInfo.Run(token => deal());
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
         }
 
         private async Task<List<Feed_Bangumi>> GetPulls()
@@ -71,6 +91,18 @@ namespace BackgroundTask
                             {
                                 feed.Status = json2["status"].ToString();
                             }
+                            if (json2.ContainsKey("aid"))
+                            {
+                                feed.Aid = json2["aid"].ToString();
+                            }
+                            if (json2.ContainsKey("create"))
+                            {
+                                feed.Time = json2["create"].GetString();
+                            }
+                            if (json2.ContainsKey("pic"))
+                            {
+                                feed.Pic = json2["pic"].GetString();
+                            }
                         }
                         if (json.ContainsKey("source"))
                         {
@@ -78,18 +110,6 @@ namespace BackgroundTask
                             if (json2.ContainsKey("new_ep"))
                             {
                                 json2 = json2["new_ep"].GetObject();
-                                if (json2.ContainsKey("av_id"))
-                                {
-                                    feed.Aid = json2["av_id"].GetString();
-                                }
-                                if (json2.ContainsKey("cover"))
-                                {
-                                    feed.Pic = json2["cover"].GetString();
-                                }
-                                if (json2.ContainsKey("update_time"))
-                                {
-                                    feed.Time = json2["update_time"].GetString();
-                                }
                                 if (json2.ContainsKey("index"))
                                 {
                                     feed.New_ep = json2["index"].GetString();
@@ -99,7 +119,11 @@ namespace BackgroundTask
                         }
                     }
                     string temp = string.Empty;
-                    string OldQuene = Helper.GetValue("_toastquene").ToString();
+                    string OldQuene = string.Empty;
+                    if (Helper.ContainsKey("_toastquene"))
+                    {
+                        OldQuene = Helper.GetValue("_toastquene").ToString();
+                    }
                     foreach (var item in list)
                     {
                         temp += item.Aid + " ";
@@ -170,11 +194,15 @@ namespace BackgroundTask
         private void SendToast(List<Feed_Bangumi> list)
         {
             if (Helper.GetValue("_toast") == null)
-                return;
+            {
+                Helper.SetValue("_toast", true);
+            }
             if ((bool)Helper.GetValue("_toast") == false)
                 return;
             if (Helper.GetValue("_toastquene") == null)
-                return;
+            {
+                Helper.SetValue("_toastquene", string.Empty);
+            }
             string UnpulledQuene = Helper.GetValue("_toastquene").ToString();
             foreach (var feed in list)
             {
@@ -272,6 +300,7 @@ namespace BackgroundTask
             {
                 get
                 {
+                    if (new_ep == string.Empty) return string.Empty;
                     if (status == "0") return "更新到" + new_ep + "话";
                     else if (status == "1") return new_ep + "话全";
                     else return "最新话" + new_ep;

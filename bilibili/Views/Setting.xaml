@@ -13,7 +13,7 @@
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Pivot>
             <PivotItem Header="外观">
-                <StackPanel>
+                <StackPanel Margin=" 0,8,0,0">
                     <ToggleSwitch x:Name="night" Toggled="night_Toggled" Header="夜间模式"/>
                     <ToggleSwitch x:Name="m_top" Toggled="top_Toggled" Header="隐藏状态栏"/>
                     <ToggleSwitch x:Name="banner" Toggled="banner_Toggled" Header="首页加载头部"/>
@@ -65,13 +65,15 @@
             </PivotItem>
             <PivotItem Header="弹幕">
                 <ScrollViewer>
-                    <StackPanel>
+                    <StackPanel Margin=" 0,8,0,0">
+                        <ComboBox x:Name="cb_font" Header="弹幕字体" SelectionChanged="ComboBox_SelectionChanged"/>
                         <Slider x:Name="sli_speed" Header="弹幕速度" Width="200" HorizontalAlignment="Left" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
                         <Slider Maximum="3" x:Name="sli_space" Header="弹幕间距" Width="200" HorizontalAlignment="Left" ValueChanged="sli_space_ValueChanged"/>
                         <Slider Maximum="3" x:Name="sli_fontsize" Header="弹幕字号" Width="200" HorizontalAlignment="Left" ValueChanged="sli_fontsize_ValueChanged"/>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="弹幕屏蔽关键字"/>
-                            <HyperlinkButton Content="删除" Margin="40,0,0,0" Click="delword_Click"/>
+                            <HyperlinkButton Content="删除" Margin="40,0,40,0" Click="delword_Click"/>
+                            <HyperlinkButton Content="提示" Click="regex_Click"/>
                         </StackPanel>
                         <GridView Margin="0 4" x:Name="list_kill" IsItemClickEnabled="True" ItemClick="list_kill_ItemClick">
                             <GridView.ItemContainerTransitions>
@@ -81,7 +83,8 @@
                             </GridView.ItemContainerTransitions>
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
-                                    <Setter Property="Background" Value="{ThemeResource bili_Theme}"/>
+                                    <Setter Property="BorderBrush" Value="{ThemeResource bili_Theme}"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                     <Setter Property="Padding" Value="2"/>
                                 </Style>
@@ -101,7 +104,7 @@
                 </ScrollViewer>
             </PivotItem>
             <PivotItem Header="下载">
-                <StackPanel>
+                <StackPanel Margin=" 0,8,0,0">
                     <ToggleSwitch x:Name="downstyle" Toggled="downstyle_Toggled" Header="允许使用流量下载"/>
                     <ToggleSwitch x:Name="danmaku" Toggled="danmaku_Toggled" Header="下载视频同时下载弹幕" IsOn="True"/>
                     <ToggleSwitch x:Name="path" Header="自定义存储位置" Toggled="path_Toggled"/>
@@ -113,17 +116,17 @@
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="通知">
-                <StackPanel>
+                <StackPanel Margin=" 0,8,0,0">
                     <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="主磁贴更新" IsOn="True"/>
                     <ToggleSwitch x:Name="toast" Toggled="toast_Toggled" Header="推送通知" IsOn="True"/>
-                    <StackPanel Visibility="{Binding ElementName=toast,Path=IsOn,Converter={StaticResource cvt} }">
+                    <StackPanel Visibility="{Binding ElementName=toast,Path=IsOn,Converter={StaticResource cvt} }" BorderBrush="LightGray" BorderThickness="1" Padding="8">
                         <ToggleSwitch Header="番剧更新" x:Name="t_bangumi" Toggled="t_bangumi_Toggled"/>
                         <ToggleSwitch Header="新消息" x:Name="t_message" Toggled="t_message_Toggled"/>
                     </StackPanel>
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="播放">
-                <StackPanel>
+                <StackPanel Margin=" 0,8,0,0">
                     <ToggleSwitch x:Name="direct" Header="点击剧集直接播放" Toggled="direct_Toggled"/>
                     <ToggleSwitch x:Name="pc_fullscreen" Header="自动全屏" Toggled="fullscreen_Toggled"/>
                     <ComboBox x:Name="quality" Header="默认清晰度选择" SelectedIndex="1" SelectionChanged="quality_SelectionChanged">
@@ -138,7 +141,7 @@
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <StackPanel>
                             <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩一号机内测版 1st edition version 1.60</TextBlock>
+                                <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩一号机内测版 1st edition version 1.62</TextBlock>
                                 <HyperlinkButton HorizontalAlignment="Center" Click="HyperlinkButton_Click">联系我</HyperlinkButton>
                                 <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
                                 <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>

@@ -80,7 +80,8 @@ namespace bilibili.Views
             type = SettingHelper.GetDeviceType();
             if (type == DeviceType.PC)
             {
-                MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved; MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved;
+                menu_full.Visibility = Visibility.Visible;
+                MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved;
                 CoreWindow.GetForCurrentThread().KeyDown += Video_KeyDown;
             }
             SettingInit();
@@ -90,10 +91,15 @@ namespace bilibili.Views
         {
             if (SettingHelper.ContainsKey("_autofull"))
             {
-                if ((bool)SettingHelper.GetValue("_autofull") != false)
+                if ((bool)SettingHelper.GetValue("_autofull") == true)
                 {
                     ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
                 }
+            }
+            else
+            {
+                ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                SettingHelper.SetValue("_autofull", true);
             }
             if (SettingHelper.ContainsKey("_vol"))
             {
@@ -106,6 +112,30 @@ namespace bilibili.Views
             else
             {
                 sli_light.Value = 1;
+            }
+            if (SettingHelper.ContainsKey("_space"))
+            {
+                sli_space.Value = int.Parse(SettingHelper.GetValue("_space").ToString());
+            }
+            if (SettingHelper.ContainsKey("_speed"))
+            {
+                sli_speed.Value = int.Parse(SettingHelper.GetValue("_speed").ToString());
+            }
+            if (SettingHelper.ContainsKey("_fontsize"))
+            {
+                sli_fontsize.Value = int.Parse(SettingHelper.GetValue("_fontsize").ToString());
+            }
+            cb_font.Items.Add("默认");
+            cb_font.Items.Add("宋体");
+            cb_font.Items.Add("等线");
+            cb_font.Items.Add("楷体");
+            if (SettingHelper.GetDeviceType() == DeviceType.PC)
+            {
+                cb_font.Items.Add("幼圆");
+            }
+            if (SettingHelper.ContainsKey("_danmufont"))
+            {
+                cb_font.SelectedIndex = int.Parse(SettingHelper.GetValue("_danmufont").ToString());
             }
         }
 
@@ -451,13 +481,25 @@ namespace bilibili.Views
         private void full_Click(object sender, RoutedEventArgs e)
         {
             MenuFlyoutItem item = sender as MenuFlyoutItem;
-            if (item.Tag.ToString() == "0") 
+            string tag = item.Tag.ToString();
+            if (tag == "0")
             {
                 media.Stretch = Stretch.Uniform;
             }
-            else
+            else if (tag == "1") 
             {
                 media.Stretch = Stretch.Fill;
+            }
+            else if (tag == "2")
+            {
+                if (ApplicationView.GetForCurrentView().IsFullScreenMode)
+                {
+                    ApplicationView.GetForCurrentView().ExitFullScreenMode();
+                }
+                else
+                {
+                    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                }
             }
         }
         /// <summary>
@@ -476,11 +518,8 @@ namespace bilibili.Views
         /// </summary>
         private void sli_light_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
-            if (isInited)
-            {
-                border.Opacity = 1 - sli_light.Value;
-                SettingHelper.SetValue("_light", sli_light.Value);
-            }
+            border.Opacity = 1 - sli_light.Value;
+            SettingHelper.SetValue("_light", sli_light.Value);
         }
 
         private void border_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
@@ -733,7 +772,7 @@ namespace bilibili.Views
                 icon.Symbol = Symbol.Play;
                 double actual = X / this.ActualWidth;
                 //横跨屏幕的TimeSpan:90s（一分半）
-                sli_main.Value += actual * 150;
+                sli_main.Value += actual * 90;
                 TimeSpan time = new TimeSpan(0, 0, (int)sli_main.Value);
                 string posttime = string.Empty;
                 if (time.Hours > 0)
@@ -776,26 +815,6 @@ namespace bilibili.Views
             ham.IsPaneOpen = !ham.IsPaneOpen;
             if (isPropInit == false)
             {
-                if (SettingHelper.ContainsKey("_space"))
-                {
-                    sli_space.Value = int.Parse(SettingHelper.GetValue("_space").ToString());
-                }
-                if (SettingHelper.ContainsKey("_speed"))
-                {
-                    sli_speed.Value = int.Parse(SettingHelper.GetValue("_speed").ToString());
-                }
-                if (SettingHelper.ContainsKey("_fontsize"))
-                {
-                    sli_fontsize.Value = int.Parse(SettingHelper.GetValue("_fontsize").ToString());
-                }
-                cb_font.Items.Add("默认");
-                cb_font.Items.Add("宋体");
-                cb_font.Items.Add("等线");
-                cb_font.Items.Add("楷体");
-                if (SettingHelper.GetDeviceType() == DeviceType.PC)
-                {
-                    cb_font.Items.Add("幼圆");
-                }
                 if (isLocal == false)
                 {
                     info.Text = "视频大小:" + (int.Parse(URL.Size) / 1024 / 1024).ToString() + "MB" + Environment.NewLine +
@@ -929,10 +948,9 @@ namespace bilibili.Views
         {
             string font = string.Empty;
             font = cb_font.SelectedItem.ToString();
-            //         if (SettingHelper.ContainsKey("_danmufont"))
-            //要改，还是初始化的问题
             if (danmaku != null)
             {
+                SettingHelper.SetValue("_danmufont", cb_font.SelectedIndex);
                 danmaku.Setfont(font);
             }
         }

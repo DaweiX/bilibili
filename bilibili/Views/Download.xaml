@@ -36,7 +36,7 @@
             <PivotItem Header="正在下载" Margin="0">
                 <Grid>
                     <TextBlock x:Name="txt" Margin="0,-24,0,0" Text="当前没有下载项" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <ListView x:Name="list_now" Margin="0,0,0,56">
+                    <ListView x:Name="list_now" Margin="0,0,0,4">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Padding="8">
@@ -67,11 +67,14 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                     <CommandBar>
-                        <AppBarButton x:Name="high" Label="高优先级" Icon="Upload" Click="high_Click"/>
-                        <AppBarButton x:Name="del" Label="删除" Icon="Delete" Click="del_Click"/>
+                        <AppBarButton Visibility="Collapsed" x:Name="high" Label="高优先级" Icon="Upload" Click="high_Click"/>
+                        <AppBarButton Visibility="Collapsed" x:Name="del" Label="删除" Icon="Delete" Click="del_Click"/>
                         <AppBarButton x:Name="pause" Label="暂停" Icon="Pause" Click="pause_Click"/>
                         <AppBarButton x:Name="resume" Label="继续" Icon="Play" Click="play_Click"/>
                         <AppBarButton Icon="List" Label="选择" Click="AppBarButton_Click"/>
+                        <CommandBar.SecondaryCommands>
+                            <AppBarToggleButton x:Name="display" Label="保持屏幕常亮" Click="display_Click"/>
+                        </CommandBar.SecondaryCommands>
                     </CommandBar>
                 </Grid>
             </PivotItem>
