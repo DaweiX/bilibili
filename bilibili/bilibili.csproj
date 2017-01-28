@@ -97,9 +97,18 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation\AnimationExtensions.cs" />
+    <Compile Include="Animation\AnimationSet.cs" />
+    <Compile Include="Animation\AnimationTools.cs" />
+    <Compile Include="Animation\CompositionEffectBase.cs" />
+    <Compile Include="Animation\Effects\BlurEffects.cs" />
+    <Compile Include="Animation\Effects\ScaleEffects.cs" />
+    <Compile Include="Animation\Root\Blur.cs" />
+    <Compile Include="Animation\Root\Scale.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Area.cs" />
     <Compile Include="Controls\Comment.xaml.cs">
       <DependentUpon>Comment.xaml</DependentUpon>
     </Compile>
@@ -117,10 +126,14 @@
       <DependentUpon>MyPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\OrientedSize.cs" />
+    <Compile Include="Controls\PullToRefreshPanel.cs" />
     <Compile Include="Controls\VideoLoading.xaml.cs">
       <DependentUpon>VideoLoading.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\WrapPanel.cs" />
+    <Compile Include="Dialogs\AccountRecord.xaml.cs">
+      <DependentUpon>AccountRecord.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\AddFav.xaml.cs">
       <DependentUpon>AddFav.xaml</DependentUpon>
     </Compile>
@@ -129,6 +142,9 @@
     </Compile>
     <Compile Include="Dialogs\DelFavFolder.xaml.cs">
       <DependentUpon>DelFavFolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ExpRecord.xaml.cs">
+      <DependentUpon>ExpRecord.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\RegexTip.xaml.cs">
       <DependentUpon>RegexTip.xaml</DependentUpon>
@@ -139,7 +155,6 @@
     <Compile Include="Http\BaseService.cs" />
     <Compile Include="Http\ContentService.cs" />
     <Compile Include="Http\ContentService\UserRelated.cs" />
-    <Compile Include="Http\URLs.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -165,6 +180,12 @@
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\WebStatusHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test\ListAnimation.xaml.cs">
+      <DependentUpon>ListAnimation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Test\Test.xaml.cs">
+      <DependentUpon>Test.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BangList.xaml.cs">
       <DependentUpon>BangList.xaml</DependentUpon>
     </Compile>
@@ -189,23 +210,11 @@
     <Compile Include="Views\Friends.xaml.cs">
       <DependentUpon>Friends.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\InitPage.xaml.cs">
+      <DependentUpon>InitPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Live.xaml.cs">
       <DependentUpon>Live.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Ad.xaml.cs">
-      <DependentUpon>Ad.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Dance.xaml.cs">
-      <DependentUpon>Dance.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Fashion.xaml.cs">
-      <DependentUpon>Fashion.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Game.xaml.cs">
-      <DependentUpon>Game.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Guichu.xaml.cs">
-      <DependentUpon>Guichu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\History.xaml.cs">
       <DependentUpon>History.xaml</DependentUpon>
@@ -225,29 +234,8 @@
     <Compile Include="Views\Partition.xaml.cs">
       <DependentUpon>Partition.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PartViews\Bangumi.xaml.cs">
-      <DependentUpon>Bangumi.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Cartoon.xaml.cs">
-      <DependentUpon>Cartoon.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Entertain.xaml.cs">
-      <DependentUpon>Entertain.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Life.xaml.cs">
-      <DependentUpon>Life.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Movies.xaml.cs">
-      <DependentUpon>Movies.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Music.xaml.cs">
-      <DependentUpon>Music.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Soap.xaml.cs">
-      <DependentUpon>Soap.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PartViews\Tech.xaml.cs">
-      <DependentUpon>Tech.xaml</DependentUpon>
+    <Compile Include="Views\PartViews\Part.xaml.cs">
+      <DependentUpon>Part.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RankPage.xaml.cs">
       <DependentUpon>RankPage.xaml</DependentUpon>
@@ -291,6 +279,7 @@
     <Content Include="Assets\Images\33_hide.png" />
     <Content Include="Assets\Images\logo.png" />
     <Content Include="Assets\Images\NoAvatar.png" />
+    <Content Include="Assets\Images\splash.png" />
     <Content Include="Assets\NewStoreLogo.scale-100.png" />
     <Content Include="Assets\NewStoreLogo.scale-125.png" />
     <Content Include="Assets\NewStoreLogo.scale-150.png" />
@@ -336,8 +325,11 @@
     <Content Include="Assets\Square71x71Logo.scale-200.png" />
     <Content Include="Assets\Square71x71Logo.scale-400.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Notes\SettingKeys.txt" />
+    <Content Include="Notes\ThemeColor.txt" />
+    <Content Include="Notes\Version.txt" />
     <Content Include="Properties\Default.rd.xml" />
-    <None Include="备忘.json" />
+    <None Include="Notes\备忘.json" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -368,6 +360,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\AccountRecord.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\AddFav.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -377,6 +373,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DelFavFolder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ExpRecord.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -395,6 +395,14 @@
     <Page Include="StyleDic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Test\ListAnimation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Test\Test.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -432,27 +440,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\InitPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Live.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Ad.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Dance.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Fashion.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Game.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Guichu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -480,35 +472,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PartViews\Bangumi.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Cartoon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Entertain.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Life.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Movies.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Music.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Soap.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PartViews\Tech.xaml">
+    <Page Include="Views\PartViews\Part.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

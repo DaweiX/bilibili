@@ -13,8 +13,8 @@ using Windows.UI.Xaml.Media;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
-using Windows.ApplicationModel.Background;
-using System.Diagnostics;
+using bilibili.Animation.Effects;
+using bilibili.Animation.Root;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -27,7 +27,6 @@ namespace bilibili
     {
         //public delegate void ShowStatus(string message);
         //public event ShowStatus Showstatus;
-        DispatcherTimer timer = new DispatcherTimer();
         bool currentTheme;
         bool isExit = false;
         public MainPage()
@@ -67,97 +66,79 @@ namespace bilibili
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (WebStatusHelper.IsOnline())
+            mainframe.Navigate(typeof(Views.Partition));
+            string arg = e.Parameter.ToString();
+            //处理跳转参数
+            if (!string.IsNullOrEmpty(arg))
             {
-                //处理跳转参数
-                string arg = e.Parameter.ToString();
-                if (!string.IsNullOrEmpty(arg))
+                if (arg[0] == '@' || arg[0] == '#')
                 {
-                    if (arg[0] == 't')
-                    {
-                        mainframe.Navigate(typeof(Views.Detail_P), arg.Substring(1));
-                    }
-                    else if (arg[0] == 's')
-                    {
-                        mainframe.Navigate(typeof(Views.Detail), arg.Substring(1));
-                    }
-                    else if (arg[0] == 'm')
-                    {
-                        mainframe.Navigate(typeof(Views.Message), arg.Substring(2));
-                    }
-                    else if (arg[0] == '@' || arg[0] == '#')
-                    {
-                        mainframe.Navigate(typeof(Views.Video), arg);
-                    }
+                    mainframe.Navigate(typeof(Views.Video), arg);
                 }
                 else
                 {
-                    mainframe.Navigate(typeof(Views.Partition));
-                }
-                bool isLogin = await autologin();
-                if (isLogin)
-                {                    
-                    if (SettingHelper.GetValue("_pull") != null)
+                    if (WebStatusHelper.IsOnline())
                     {
-                        if ((bool)SettingHelper.GetValue("_pull") == true)
+                        if (arg[0] == 't')
                         {
-                            var task = await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
-                            task.Progress += A_Progress;
+                            mainframe.Navigate(typeof(Views.Detail_P), arg.Substring(1));
+                        }
+                        else if (arg[0] == 's')
+                        {
+                            mainframe.Navigate(typeof(Views.Detail), arg.Substring(1));
+                        }
+                        else if (arg[0] == 'm')
+                        {
+                            mainframe.Navigate(typeof(Views.Message), arg.Substring(2));
                         }
                     }
                     else
                     {
-                        var task = await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
-                        task.Progress += A_Progress;
+                        await popup.Show("没有网络连接");
                     }
-                }
+                }               
             }
             else
             {
-                timer.Interval = new TimeSpan(0, 0, 1);
-                timer.Tick += Timer_Tick;
-                await popup.Show("没有网络连接");
-            }
-            SettingHelper.Devicetype = SettingHelper.GetDeviceType();
-        }
-
-        private async Task<BackgroundTaskRegistration> RegisterBackgroundTask(Type EntryPoint, string name,IBackgroundTrigger trigger, IBackgroundCondition condition)
-        {
-            var status = await BackgroundExecutionManager.RequestAccessAsync();
-            if (status == BackgroundAccessStatus.DeniedByUser)
-            {
-                return null;
-            }
-            foreach (var item in BackgroundTaskRegistration.AllTasks)
-            {
-                if (item.Value.Name == name) 
+                if (!WebStatusHelper.IsOnline())
                 {
-                    item.Value.Unregister(true);
+                    await popup.Show("没有网络连接");
                 }
             }
-            var builder = new BackgroundTaskBuilder { Name = name, TaskEntryPoint = EntryPoint.FullName, IsNetworkRequested = false };
-            builder.SetTrigger(trigger);
-            if (condition != null)
+            if (ApiHelper.IsLogin())
             {
-                builder.AddCondition(condition);
+                await ShowStatus();
             }
-            BackgroundTaskRegistration task = builder.Register();
-            //await popup.Show(string.Format("----Register{0}-----", task.Name));
-            return task;
         }
 
-        private async void A_Progress(BackgroundTaskRegistration sender, BackgroundTaskProgressEventArgs args)
+        private async Task ShowStatus()
         {
-            await popup.Show("---------Processing...---------");
-        }
-
-        private async void Timer_Tick(object sender, object e)
-        {
-            if (WebStatusHelper.IsOnline())
+            await popup.Show("登录成功");
+            ApiHelper.accesskey = SettingHelper.GetValue("_accesskey").ToString();
+            string url = "http://api.bilibili.com/myinfo?appkey=422fd9d7289a1dd9&access_key=" + SettingHelper.GetValue("_accesskey").ToString();
+            url += ApiHelper.GetSign(url);
+            JsonObject json = await BaseService.GetJson(url);
+            if (json.ContainsKey("mid"))
+                UserHelper.mid = json["mid"].ToString();
+            if (json.ContainsKey("face"))
+                face.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(StringDeal.delQuotationmarks((json["face"].ToString())))) };
+            if (json.ContainsKey("uname"))
+                uname.Text = StringDeal.delQuotationmarks(json["uname"].ToString());
+            if (json.ContainsKey("level_info"))
             {
-                if (await autologin() == true)
+                JsonObject json2 = JsonObject.Parse(json["level_info"].ToString());
+                if (json2.ContainsKey("current_level"))
                 {
-                    timer.Stop();
+                    switch (json2["current_level"].ToString())
+                    {
+                        case "0": rank.Text = "普通用户"; break;
+                        case "1": rank.Text = "注册会员"; break;
+                        case "2": rank.Text = "正式会员"; break;
+                        case "3": rank.Text = "字幕君"; break;
+                        case "4": rank.Text = "VIP用户"; break;
+                        case "5": rank.Text = "职人"; break;
+                        case "6": rank.Text = "站长大人"; break;
+                    }
                 }
             }
         }
@@ -208,74 +189,6 @@ namespace bilibili
                 }
             }
         }
-        /// <summary>
-        /// 自动登录
-        /// </summary>
-        async Task<bool> autologin()
-        {
-            try
-            {
-                if (!SettingHelper.ContainsKey("_accesskey"))
-                {
-                    SettingHelper.SetValue("_accesskey", string.Empty);
-                }
-                if (SettingHelper.ContainsKey("_autologin")) 
-                {
-                    if (bool.Parse(SettingHelper.GetValue("_autologin").ToString()) == true)
-                    {
-                        string p = string.Empty;
-                        string u = string.Empty;
-                        if (!string.IsNullOrEmpty(SettingHelper.GetValue("_epassword").ToString()))
-                        {
-                            p = SettingHelper.GetValue("_epassword").ToString();
-                        }
-                        if (!string.IsNullOrEmpty(SettingHelper.GetValue("_username").ToString()))
-                        {
-                            u = SettingHelper.GetValue("_username").ToString();
-                        }
-                        await ApiHelper.login(p, u, false);
-                    }
-                }
-                if (ApiHelper.IsLogin())
-                {
-                    await popup.Show("登录成功");
-                    ApiHelper.accesskey = SettingHelper.GetValue("_accesskey").ToString();
-                    string url = "http://api.bilibili.com/myinfo?appkey=422fd9d7289a1dd9&access_key=" + SettingHelper.GetValue("_accesskey").ToString();
-                    url += ApiHelper.GetSign(url);
-                    JsonObject json = await BaseService.GetJson(url);
-                    if (json.ContainsKey("mid"))
-                        UserHelper.mid = json["mid"].ToString();
-                    if (json.ContainsKey("face"))
-                        face.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(StringDeal.delQuotationmarks((json["face"].ToString())))) };
-                    if (json.ContainsKey("uname"))
-                        uname.Text = StringDeal.delQuotationmarks(json["uname"].ToString());
-                    if (json.ContainsKey("level_info"))
-                    {
-                        JsonObject json2 = JsonObject.Parse(json["level_info"].ToString());
-                        if (json2.ContainsKey("current_level"))
-                        {
-                            switch(json2["current_level"].ToString())
-                            {
-                                case "0": rank.Text = "普通用户"; break;
-                                case "1": rank.Text = "注册会员";break;
-                                case "2": rank.Text = "正式会员"; break;
-                                case "3": rank.Text = "字幕君"; break;
-                                case "4": rank.Text = "VIP用户"; break;
-                                case "5": rank.Text = "职人"; break;
-                                case "6": rank.Text = "站长大人"; break;
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-
-            catch 
-            {
-                return false;
-            }
-        }
-
         //async void topShowOrHide()
         //{
         //    if (_appSettings.Values["_topbar"].ToString() == "False")
@@ -333,7 +246,7 @@ namespace bilibili
                 mainframe.Navigate(typeof(Views.Search), SearchBox.Text, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
-        private void mainframe_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        private void mainframe_Navigated(object sender, NavigationEventArgs e)
         {
             //bilibili.Views.PartViews.Bangumi, bilibili, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
             Sets.SelectedIndex = -1;
@@ -358,10 +271,10 @@ namespace bilibili
                     break;
                 case "Detail":
                     txt_head.Text = "番剧详情";
-                    if (!ApiHelper.IsLogin())
-                    {
-                        (mainframe.Content as Views.Detail).trylogin += Detail_trylogin;
-                    }
+                    //if (!ApiHelper.IsLogin())
+                    //{
+                    //    (mainframe.Content as Views.Detail).trylogin += Detail_trylogin;
+                    //}
                     break;
                 case "Detail_P":
                     (mainframe.Content as Views.Detail_P).pageNavi += DetailPNavi;
@@ -412,17 +325,9 @@ namespace bilibili
             }
         }
 
-        private async void Detail_trylogin()
-        {
-            if (await autologin() == true)
-            {
-                timer.Stop();
-            }
-        }
-
         private async void reportlogin()
         {
-            await autologin();
+            await ShowStatus();
         }
 
         private void DetailPNavi(string text)
@@ -563,6 +468,10 @@ namespace bilibili
             if (string.IsNullOrWhiteSpace(SearchBox.Text))
             {
                 SearchBox.ItemsSource = null;
+                return;
+            }
+            if (!WebStatusHelper.IsOnline())
+            {
                 return;
             }
             string url = "http://api.bilibili.com/suggest?_device=wp&appkey=" + ApiHelper.appkey + "&bangumi_acc_num=0&bangumi_num=0&build=429001&func=suggest&main_ver=v3&mobi_app=win&special_acc_num=0&special_num=0&suggest_type=accurate&term=" + SearchBox.Text + "&topic_acc_num=0&topic_num=0&upuser_acc_num=0&upuser_num=0&_hwid=0100d4c50200c2a6&platform=uwp_mobile";

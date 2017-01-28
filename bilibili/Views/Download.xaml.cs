@@ -84,15 +84,15 @@ namespace bilibili.Views
                     List<Task> tasks = new List<Task>();
                     foreach (DownloadOperation download in downloads)
                     {
-                        list_now.Items.Add(new HandleModel
+                        list_now.Items.Add(new DownloadHelper.DownloadHandler
                         {
                             Name = download.ResultFile.Name,
                             DownOpration = download,
-                            Progress = (download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100,
+                            Process = (float)((download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100),
                             Size = download.Progress.BytesReceived.ToString(),
                         });
                     }
-                    foreach (HandleModel model in list_now.Items)
+                    foreach (DownloadHelper.DownloadHandler model in list_now.Items)
                     {
                         tasks.Add(HandleDownloadAsync(model));
                     }
@@ -107,7 +107,7 @@ namespace bilibili.Views
             catch{ }
         }
 
-        private async Task HandleDownloadAsync(HandleModel model)
+        private async Task HandleDownloadAsync(DownloadHelper.DownloadHandler model)
         {
             var download = model.DownOpration;
             try
@@ -141,8 +141,8 @@ namespace bilibili.Views
         {
             try
             {
-                HandleModel test = null;
-                foreach (HandleModel item in list_now.Items)
+                DownloadHelper.DownloadHandler test = null;
+                foreach (DownloadHelper.DownloadHandler item in list_now.Items)
                 {
                     if (item.DownOpration.Guid == download.Guid)
                     {
@@ -151,12 +151,12 @@ namespace bilibili.Views
                 }
                 if (list_now.Items.Contains(test))
                 {
-                    ((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Size = download.Progress.BytesReceived.ToString();
-                    ((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Status = download.Progress.Status.ToString();
-                    ((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Progress = ((double)download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100;
-                    if ((int)((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Progress == 100 && download.Progress.BytesReceived > 0)
+                    ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Size = download.Progress.BytesReceived.ToString();
+                    ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Status = download.Progress.Status.ToString();
+                    ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Process = (float)(download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100;
+                    if (download.Progress.BytesReceived == download.Progress.TotalBytesToReceive && download.Progress.BytesReceived > 0) 
                     {
-                        Sendtoast("下载完成", ((HandleModel)list_now.Items[list_now.Items.IndexOf(test)]).Name);
+                        Sendtoast("下载完成", ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Name);
                         list_now.Items.Remove(test);
                     }
                 }
@@ -220,94 +220,13 @@ namespace bilibili.Views
             }
         }
 
-        public class HandleModel : INotifyPropertyChanged
-        {
-            public CancellationTokenSource cts = new CancellationTokenSource();
-            public event PropertyChangedEventHandler PropertyChanged;
-            protected void thisPropertyChanged(string name)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-            private DownloadOperation downOpration;
-            public DownloadOperation DownOpration
-            {
-                get { return downOpration; }
-                set
-                {
-                    downOpration = value;
-                }
-            }
-            public string Name { get; set; }
-            private double progress;
-            public double Progress
-            {
-                get { return progress; }
-                set
-                {
-                    progress = value;
-                    thisPropertyChanged("Progress");
-                }
-            }
-
-            private string size;
-            public string Size
-            {
-                get { return size; }
-                set
-                {
-                    size = (Convert.ToDouble(value) / 1024 / 1024).ToString("0.0") + "M/" + ((double)downOpration.Progress.TotalBytesToReceive / 1024 / 1024).ToString("0.0") + "M";
-                    thisPropertyChanged("Size");
-                }
-            }
-            public string Guid { get { return downOpration.Guid.ToString(); } }
-            public string status;
-            public string Status
-            {
-                get { thisPropertyChanged("Status"); return status; }
-                set
-                {
-                    switch (downOpration.Progress.Status)
-                    {
-                        case BackgroundTransferStatus.Idle:
-                            status = "空闲中";
-                            break;
-                        case BackgroundTransferStatus.Running:
-                            status = "下载中";
-                            break;
-                        case BackgroundTransferStatus.PausedByApplication:
-                            status = "已暂停";
-                            break;
-                        case BackgroundTransferStatus.PausedCostedNetwork:
-                            status = "使用数据流量，暂停下载";
-                            break;
-                        case BackgroundTransferStatus.PausedNoNetwork:
-                            status = "网络断开";
-                            break;
-                        case BackgroundTransferStatus.Completed:
-                            status = "完成";
-                            break;
-                        case BackgroundTransferStatus.Canceled:
-                            status = "取消";
-                            break;
-                        case BackgroundTransferStatus.Error:
-                            status = "下载错误";
-                            break;
-                        case BackgroundTransferStatus.PausedSystemPolicy:
-                            status = "因系统资源受限暂停";
-                            break;
-                    }
-                    thisPropertyChanged("Status");
-                }
-            }
-        }
-
         private void pause_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             try
             {
                 if (list_now.SelectedItems.Count > 0)
                 {
-                    foreach (HandleModel item in list_now.SelectedItems)
+                    foreach (DownloadHelper.DownloadHandler item in list_now.SelectedItems)
                     {
                         item.DownOpration.Pause();
                     }
@@ -322,7 +241,7 @@ namespace bilibili.Views
             {
                 if (list_now.SelectedItems.Count > 0)
                 {
-                    foreach (HandleModel item in list_now.SelectedItems)
+                    foreach (DownloadHelper.DownloadHandler item in list_now.SelectedItems)
                     {
                         item.DownOpration.Resume();
                     }
@@ -335,7 +254,7 @@ namespace bilibili.Views
         {
             if (list_now.SelectedItems.Count != 0)
             {
-                foreach (HandleModel item in list_now.SelectedItems)
+                foreach (DownloadHelper.DownloadHandler item in list_now.SelectedItems)
                 {
                     item.cts.Cancel(false);
                     item.cts.Dispose();
@@ -350,7 +269,7 @@ namespace bilibili.Views
                     }
                     catch (Exception err)
                     {
-                        
+                        string a = err.Message;
                     }
                 }
             }
@@ -362,7 +281,7 @@ namespace bilibili.Views
             {
                 if (list_now.SelectedItems.Count > 0)
                 {
-                    foreach (HandleModel item in list_now.SelectedItems)
+                    foreach (DownloadHelper.DownloadHandler item in list_now.SelectedItems)
                     {
                         item.DownOpration.Priority = BackgroundTransferPriority.High;
                         //ListViewItem list = list_now.Items[list_now.Items.IndexOf(item)] as ListViewItem;
@@ -389,6 +308,7 @@ namespace bilibili.Views
 
         private void donelist_ItemClick(object sender, ItemClickEventArgs e)
         {
+            if (donelist.SelectionMode == ListViewSelectionMode.Multiple) return;
             LocalVideo mv = e.ClickedItem as LocalVideo;
             if (mv != null)
             {
@@ -407,6 +327,11 @@ namespace bilibili.Views
             {
                 displayRq.RequestRelease();
             }
+        }
+
+        private void Select_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            donelist.SelectionMode = donelist.SelectionMode == ListViewSelectionMode.None ? ListViewSelectionMode.Multiple : ListViewSelectionMode.None;
         }
     }
 }

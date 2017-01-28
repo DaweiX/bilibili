@@ -21,6 +21,12 @@ namespace bilibili.Views
         public RankPage()
         {
             this.InitializeComponent();
+            ContentServ.report += Report;
+        }
+
+        private async void Report(string status)
+        {
+            await popup.Show(status);
         }
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)

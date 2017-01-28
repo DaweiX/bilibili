@@ -1,0 +1,36 @@
+﻿<Page
+    x:Class="bilibili.Test.Test"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Test"
+    xmlns:c="using:bilibili.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <c:PullToRefreshPanel x:Name="panel" RefreshRequested="PullToRefreshPanel_RefreshRequested">
+        <c:PullToRefreshPanel.PullToRefreshContent>
+            <Grid>
+                <TextBlock HorizontalAlignment="Center" FontSize="20" Text="下拉刷新"/>
+            </Grid>
+        </c:PullToRefreshPanel.PullToRefreshContent>
+        <c:PullToRefreshPanel.ReleaseToRefreshContent>
+            <Grid>
+                <TextBlock HorizontalAlignment="Center" FontSize="20" Text="松开刷新"/>
+            </Grid>
+        </c:PullToRefreshPanel.ReleaseToRefreshContent>
+        <c:PullToRefreshPanel.Content>
+            <Grid>
+                <ListView x:Name="list" ContainerContentChanging="list_ContainerContentChanging">
+                    <ListView.Template>
+                        <ControlTemplate>
+                            <ScrollViewer>
+                                <ItemsPresenter Width="200"/>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ListView.Template>
+                </ListView>
+            </Grid>
+        </c:PullToRefreshPanel.Content>
+    </c:PullToRefreshPanel>
+</Page>

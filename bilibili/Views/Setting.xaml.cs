@@ -12,6 +12,9 @@ using Windows.UI.Xaml.Data;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
+/*-----------------------------------
+     键值说明：Notes/SettingKeys
+------------------------------------*/
 namespace bilibili.Views
 {
     /// <summary>
@@ -39,15 +42,8 @@ namespace bilibili.Views
             else if (type == DeviceType.Mobile)
             {
                 pc_fullscreen.Visibility = Visibility.Collapsed;
-            }
-            if (SettingHelper.ContainsKey("_topbar"))
-            {
-                m_top.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_topbar"));
-            }
-            else
-            {
-                m_top.IsOn = true;
-            }
+                pc_cursor.Visibility = Visibility.Collapsed;
+            }            
             if (SettingHelper.ContainsKey("_nighttheme"))
             {
                 night.IsOn = SettingHelper.GetValue("_nighttheme").ToString() == "light" ? false : true;
@@ -66,21 +62,25 @@ namespace bilibili.Views
             {
                 quality.SelectedIndex = Convert.ToInt32(SettingHelper.GetValue("_quality").ToString()) - 1;
             }
+            else
+            {
+                quality.SelectedIndex = 1;
+            }
             if (SettingHelper.ContainsKey("_pull"))
             {
                 background.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_pull"));
             }
-            if (SettingHelper.ContainsKey("_autofull"))
-            {
-                pc_fullscreen.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_autofull"));
-            }
             else
             {
-                pc_fullscreen.IsOn = true;
-            }
+                background.IsOn = true;
+            }          
             if (SettingHelper.ContainsKey("_toast"))
             {
                 toast.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast"));
+            }
+            else
+            {
+                toast.IsOn = true;
             }
             if (toast.IsOn)
             {
@@ -101,14 +101,6 @@ namespace bilibili.Views
                     t_bangumi.IsOn = true;
                 }
             }
-            if (SettingHelper.ContainsKey("_banner"))
-            {
-                banner.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_banner"));
-            }
-            else
-            {
-                banner.IsOn = false;
-            }
             if (SettingHelper.ContainsKey("_autokill"))
             {
                 autokill.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_autokill"));
@@ -116,6 +108,10 @@ namespace bilibili.Views
             else
             {
                 autokill.IsOn = true;
+            }
+            if (SettingHelper.ContainsKey("_isdanmaku"))
+            {
+                danmakuinit.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_isdanmaku"));
             }
             if (SettingHelper.ContainsKey("_Theme"))
             {
@@ -152,7 +148,7 @@ namespace bilibili.Views
             }
             if (SettingHelper.ContainsKey("_words"))
             {
-                string[] words = SettingHelper.GetValue("_words").ToString().Split(',');
+                string[] words = SettingHelper.GetValue("_words").ToString().Split(' ');
                 foreach (string word in words) 
                 {
                     if (word.Length > 0) list_kill.Items.Add(word);
@@ -178,13 +174,25 @@ namespace bilibili.Views
                 path.IsOn = false;
                 txt_path.Text = @"视频库\哔哩哔哩";
             }
+            if (SettingHelper.ContainsKey("_space"))
+            {
+                sli_space.Value = int.Parse(SettingHelper.GetValue("_space").ToString());
+            }
             if (SettingHelper.ContainsKey("_speed"))
             {
                 sli_speed.Value = int.Parse(SettingHelper.GetValue("_speed").ToString());
             }
+            else
+            {
+                sli_space.Value = 8;
+            }
             if (SettingHelper.ContainsKey("_fontsize"))
             {
                 sli_fontsize.Value = int.Parse(SettingHelper.GetValue("_fontsize").ToString());
+            }
+            else
+            {
+                sli_fontsize.Value = 1;
             }
             cb_font.Items.Add("默认");
             cb_font.Items.Add("宋体");
@@ -201,6 +209,49 @@ namespace bilibili.Views
             else
             {
                 cb_font.SelectedIndex = 0;
+            }
+            if(SettingHelper.ContainsKey("_videoformat"))
+            {
+                cb_format.SelectedIndex = int.Parse(SettingHelper.GetValue("_videoformat").ToString());
+            }
+            else
+            {
+                cb_format.SelectedIndex = 0;
+            }
+            if (SettingHelper.ContainsKey("_backtaskcost"))
+            {
+                backtaskcost.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_backtaskcost"));
+            }
+            //根据平台分化的设置项
+            if (type == DeviceType.PC)
+            {
+                if (SettingHelper.ContainsKey("_cursor"))
+                {
+                    pc_cursor.IsOn = (bool)(SettingHelper.GetValue("_cursor"));
+                }
+                else
+                {
+                    pc_cursor.IsOn = true;
+                }
+                if (SettingHelper.ContainsKey("_autofull"))
+                {
+                    pc_fullscreen.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_autofull"));
+                }
+                else
+                {
+                    pc_fullscreen.IsOn = true;
+                }
+            }
+            else if (type == DeviceType.Mobile)
+            {
+                if (SettingHelper.ContainsKey("_topbar"))
+                {
+                    m_top.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_topbar"));
+                }
+                else
+                {
+                    m_top.IsOn = true;
+                }
             }
         }
 
@@ -315,7 +366,7 @@ namespace bilibili.Views
 
         private void background_Toggled(object sender, RoutedEventArgs e)
         {
-            SettingHelper.SetValue("_pull", background.IsOn);
+            SettingHelper.SetValue("_tile", background.IsOn);
             if (background.IsOn == false)
             {
                 var updater = TileUpdateManager.CreateTileUpdaterForApplication();
@@ -363,7 +414,7 @@ namespace bilibili.Views
             string word = txt_word.Text;
             if (!string.IsNullOrEmpty(word) && !oldstring.Contains(word)) 
             {
-                oldstring += word + ",";
+                oldstring += word + " ";
                 list_kill.Items.Add(word);
                 SettingHelper.SetValue("_words", oldstring);
                 txt_word.Text = string.Empty;
@@ -376,11 +427,13 @@ namespace bilibili.Views
             if (!isWordEditting)
             {
                 btn.Content = "退出删除";
+                list_kill.Visibility = Visibility.Visible;
                 isWordEditting = true;
             }
             else
             {
-                btn.Content = "删除";
+                btn.Content = "管理";
+                list_kill.Visibility = Visibility.Collapsed;
                 isWordEditting = false;
             }
         }
@@ -406,11 +459,6 @@ namespace bilibili.Views
         private void autokill_Toggled(object sender, RoutedEventArgs e)
         {
             SettingHelper.SetValue("_autokill", autokill.IsOn);
-        }
-
-        private void banner_Toggled(object sender, RoutedEventArgs e)
-        {
-            SettingHelper.SetValue("_banner", banner.IsOn);
         }
 
         private async void HyperlinkButton_Click(object sender, RoutedEventArgs e)
@@ -458,6 +506,37 @@ namespace bilibili.Views
         private async void regex_Click(object sender, RoutedEventArgs e)
         {
             await new Dialogs.RegexTip().ShowAsync();
+        }
+
+        private void ComboBoxItem_Tapped_1(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            ComboBoxItem item = sender as ComboBoxItem;
+            SettingHelper.SetValue("_videoformat", item.Tag.ToString());
+        }
+
+        private void cursor_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_cursor", pc_cursor.IsOn);
+        }
+
+        private void danmakuinit_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_isdanmaku", danmakuinit.IsOn);
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListView list = sender as ListView;
+            switch (list.SelectedIndex)
+            {
+                case 0: Frame.Navigate(typeof(Test.Test)); break;
+                case 1: Frame.Navigate(typeof(Test.ListAnimation)); break;
+            }
+        }
+
+        private void backtaskcost_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_backtaskcost", backtaskcost.IsOn);
         }
     }
     public class BoolToVisibility : IValueConverter

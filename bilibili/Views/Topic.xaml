@@ -5,6 +5,7 @@
     xmlns:local="using:bilibili.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="using:bilibili.Controls"
     mc:Ignorable="d"
     SizeChanged="Page_SizeChanged">
     <Page.Resources>
@@ -12,6 +13,7 @@
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Border x:Name="width"/>
+        <c:MyPopup x:Name="popup"/>
         <GridView x:Name="list_topic" Tag="0" Visibility="Collapsed" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
             <GridView.ItemTemplate>
                 <DataTemplate>

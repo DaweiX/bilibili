@@ -53,13 +53,26 @@
         <ScrollViewer x:Name="scrollviewer" ViewChanged="ScrollViewer_ViewChanged">
             <StackPanel>
                 <Image x:Name="img" HorizontalAlignment="Stretch" Stretch="Uniform" VerticalAlignment="Top"/>
-                <StackPanel Margin="8,0,0,0" Orientation="Horizontal" SizeChanged="StackPanel_SizeChanged">
+                <Grid Margin="8,0,0,0" SizeChanged="StackPanel_SizeChanged">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
                     <Image x:Name="Face" Height="120" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Tapped="Face_Tapped"/>
-                    <StackPanel>
+                    <StackPanel Grid.Column="1">
                         <TextBlock x:Name="userName" FontSize="26" Text="用户名" FontWeight="Light"/>
                         <TextBlock x:Name="sign" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
                     </StackPanel>
-                </StackPanel>
+                    <AppBarButton Grid.Column="2" Icon="More" Label="更多" Margin="0,0,12,0" ToolTipService.ToolTip="更多" HorizontalAlignment="Right">
+                        <AppBarButton.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Click="record_Click" Tag="0">登录记录</MenuFlyoutItem>
+                                <MenuFlyoutItem Click="record_Click" Tag="1">经验记录</MenuFlyoutItem>
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                </Grid>
                 <StackPanel Orientation="Horizontal" Margin="8">
                     <Image x:Name="level" Width="40"/>
                     <TextBlock x:Name="exp_current" Margin="4,0,4,0"/>
@@ -79,13 +92,13 @@
                 </StackPanel>-->
                 <StackPanel Margin="8 4">
                     <controls:Header Content="收藏"/>
-                    <GridView x:Name="folderlist" IsItemClickEnabled="True" Style="{StaticResource GridViewStyle1}" ItemClick="folderlist_ItemClick">
+                    <GridView x:Name="folderlist" IsItemClickEnabled="True" Style="{StaticResource GridViewStyle1}" ItemClick="folderlist_ItemClick" SelectionMode="None">
                         <GridView.ItemTemplateSelector>
                             <local:MyDataTemplateSelector ThreePic="{StaticResource ThreePic}" TwoPic="{StaticResource TwoPic}" OnePic="{StaticResource OnePic}"/>
                         </GridView.ItemTemplateSelector>
                     </GridView>
                     <controls:Header Content="追番"/>
-                    <GridView x:Name="conlist" Style="{StaticResource GridViewStyle1}" Tapped="conlist_Tapped">
+                    <GridView x:Name="conlist" Style="{StaticResource GridViewStyle1}" IsItemClickEnabled="True" ItemClick="conlist_ItemClick" SelectionMode="None">
                         <GridView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Width="128" Height="224">

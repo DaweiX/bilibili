@@ -13,7 +13,7 @@
         <Pivot>
             <PivotItem Header="本地视频" Margin="0">
                 <Grid>
-                    <ListView x:Name="donelist" ItemContainerStyle="{StaticResource listcontainerstyle}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="donelist_ItemClick">
+                    <ListView x:Name="donelist" SelectionMode="None" IsItemClickEnabled="True" ItemClick="donelist_ItemClick">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Part}"/>
@@ -28,7 +28,7 @@
                         </ListView.Template>
                     </ListView>
                     <CommandBar>
-                        <AppBarButton Icon="List" Label="选择"/>
+                        <AppBarButton Icon="List" Label="选择" Click="Select_Click"/>
                         <AppBarButton x:Name="local" Icon="NewFolder" Label="本地视频" Click="local_Click"/>
                     </CommandBar>
                 </Grid>
@@ -49,10 +49,14 @@
                                     <ProgressBar Grid.Row="1" x:Name="bar" Value="{Binding Progress}" Foreground="{StaticResource bili_Theme}" Margin="0,12,0,12"/>
                                     <StackPanel Orientation="Horizontal" Grid.Row="2">
                                         <TextBlock Text="{Binding Size}"/>
+                                        <TextBlock>
+                                            <Run>/</Run>
+                                            <Run Text="{Binding TotalSize,Mode=OneTime}"/>
+                                        </TextBlock>
                                         <TextBlock Text="{Binding Status}" Margin="40,0,40,0"/>
                                         <TextBlock Margin="8,0,0,0">
-                                        <Run Text="{Binding Progress}"/>
-                                        <Run>%</Run>
+                                            <Run Text="{Binding Progress}"/>
+                                            <Run>%</Run>
                                         </TextBlock>
                                     </StackPanel>
                                 </Grid>
@@ -61,7 +65,7 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="Margin" Value="0,4,0,4"/>
-                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             </Style>
                         </ListView.ItemContainerStyle>

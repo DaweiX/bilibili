@@ -50,7 +50,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <controls:MessagePopup Grid.Row="0" VerticalAlignment="Top" x:Name="popup"/>
+        <controls:MyPopup x:Name="popup"/>
         <Pivot x:Name="mainpivot" SelectionChanged="mainpivot_SelectionChanged">
             <PivotItem Margin="0" Header="推荐">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -76,9 +76,9 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Button Background="{ThemeResource bili_Theme}" Foreground="White" Content="订阅番剧" HorizontalAlignment="Stretch" Margin="4,0,4,0" Tag="1" Click="Button_Click"/>
-                            <Button Background="{ThemeResource bili_Theme}" Foreground="White" Grid.Column="1" Content="放送播报" HorizontalAlignment="Stretch" Tag="2" Margin="4,0,4,0" Click="Button_Click"/>
-                            <Button Background="{ThemeResource bili_Theme}" Foreground="White" Grid.Column="2" Content="番剧索引" HorizontalAlignment="Stretch" Tag="3" Margin="4,0,4,0" Click="Button_Click"/>
+                            <Button Content="订阅番剧" HorizontalAlignment="Stretch" Margin="4,0,4,0" Tag="1" Click="Button_Click"/>
+                            <Button Grid.Column="1" Content="放送播报" HorizontalAlignment="Stretch" Tag="2" Margin="4,0,4,0" Click="Button_Click"/>
+                            <Button Grid.Column="2" Content="番剧索引" HorizontalAlignment="Stretch" Tag="3" Margin="4,0,4,0" Click="Button_Click"/>
                         </Grid>
                         <GridView x:Name="list_lastupdate" HorizontalAlignment="Center" Grid.Row="2" SelectionMode="None" Style="{StaticResource GridViewStyle1}" IsItemClickEnabled="True" ItemClick="list_lastupdate_ItemClick">
                             <GridView.ItemTemplate>
@@ -184,10 +184,10 @@
                             </GridView.ItemsPanel>
                         </GridView>
                         <StackPanel Grid.Row="2" Pivot.SlideInAnimationGroup="GroupOne">
-                            <Button Tapped="Random_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="White" Margin="0,4,0,0">运气不错</Button>
-                            <Button HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="White" Margin="0,4,0,0" Click="rank_Click">排行榜</Button>
-                            <Button Tag="0" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="White" Margin="0,4,0,0">话题中心</Button>
-                            <Button Tag="1" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Background="{ThemeResource bili_Theme}" Foreground="White" Margin="0,4,0,0">活动中心</Button>
+                            <Button Tapped="Random_Tapped" HorizontalAlignment="Stretch" Margin="0,4,0,0">运气不错</Button>
+                            <Button HorizontalAlignment="Stretch" Margin="0,4,0,0" Click="rank_Click">排行榜</Button>
+                            <Button Tag="0" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Margin="0,4,0,0">话题中心</Button>
+                            <Button Tag="1" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Margin="0,4,0,0">活动中心</Button>
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

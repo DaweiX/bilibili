@@ -1,0 +1,47 @@
+﻿应用设置键值说明文档	V1.0	By DaweiX
+
+含义		|		键名		|		类型
+
+外观//////////////////////
+
+夜间模式		 _nighttheme			bool
+隐藏状态栏		 _topbar				bool
+首页加载头部	 _banner				bool
+应用主题		 _Theme					string
+
+弹幕//////////////////////
+
+弹幕字体		_danmufont				int
+弹幕速度		_speed					int
+弹幕间距		_space					int
+弹幕自号		_fontsize				int
+自动屏蔽		_autokill				bool
+默认关闭弹幕	_isdanmaku				bool
+屏蔽关键词		_words					string
+
+下载//////////////////////
+
+允许流量		_downloadcost			enum
+下载弹幕		_downdanmu				bool
+自定义路径		_path					string
+
+通知//////////////////////
+
+磁贴更新		_tile					bool
+推送通知		_toast					bool
+	-番剧更新	_toast_b				bool
+	-新消息		_toast_m				bool
+非WiFi下禁止	_backtaskcost			bool
+
+视频//////////////////////
+
+直接播放		_isdirect				bool
+自动全屏		_autofull				bool
+隐藏指针		_cursor					bool
+视频清晰度		_quality				1，2，3
+视频格式		_videoformat			0，1
+
+播放//////////////////////
+
+音量			_vol					double
+亮度			_light					double

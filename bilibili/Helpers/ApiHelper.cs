@@ -98,7 +98,6 @@ namespace bilibili.Helpers
         /// 获取指定参数的请求字符串
         /// </summary>
         /// <param name="order">排列顺序</param>
-        /// <returns></returns>
         public static string GetUrl(int tid, int page, int pagesize, Order order = Order._default)
         {
             return "http://api.bilibili.com/list?_device=wp&_ulv=10000&build=424000&platform=android&appkey=422fd9d7289a1dd9&tid=" + tid.ToString() + "&page=" + page.ToString() + "&pagesize=" + pagesize.ToString() + "&order=" + order.ToString().Remove(0, 1) + "&ver=2&rnd=" + new Random().Next(1000, 9999).ToString();
@@ -163,6 +162,7 @@ namespace bilibili.Helpers
         /// <returns></returns>
         public static bool IsLogin()
         {
+            if (!WebStatusHelper.IsOnline()) return false;
             HttpBaseProtocolFilter hb = new HttpBaseProtocolFilter();
             HttpCookieCollection cookieCollection = hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
             List<string> ls = new List<string>();
@@ -170,8 +170,7 @@ namespace bilibili.Helpers
             {
                 ls.Add(item.Name);
             }
-            //if (!ls.Contains("DedeUserID") || !ls.Contains("DedeUserID__ckMd5"))
-            if (!ls.Contains("DedeUserID")) 
+            if (!ls.Contains("DedeUserID") || !ls.Contains("DedeUserID__ckMd5")) 
             {
                 return false;
             }
@@ -217,8 +216,7 @@ namespace bilibili.Helpers
             {
                 ls.Add(item.Name);
             }
-            //if (ls.Contains("DedeUserID"))
-            if (ls.Contains("DedeUserID"))
+            if (!ls.Contains("DedeUserID") || !ls.Contains("DedeUserID__ckMd5"))
             {
                 SettingHelper.SetValue("_accesskey", accesskey);
                 hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
@@ -244,6 +242,7 @@ namespace bilibili.Helpers
                 }
                 catch(Exception e)
                 {
+                    string a = e.Message;
                     return;
                 }
             }
@@ -269,6 +268,7 @@ namespace bilibili.Helpers
             SettingHelper.SetValue("_islogin", false);
             SettingHelper.SetValue("_autologin", false);
             SettingHelper.SetValue("_accesskey", string.Empty);
+            SettingHelper.SetValue("_toastquene", string.Empty);
         }
     }
 }

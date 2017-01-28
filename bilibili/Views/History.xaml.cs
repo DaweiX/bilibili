@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.Data.Json;
+using System;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -18,7 +19,6 @@ namespace bilibili.Views
     public sealed partial class History : Page
     {
         int page = 1;
-        bool isDone = false;
         public History()
         {
             this.InitializeComponent();
@@ -46,7 +46,7 @@ namespace bilibili.Views
                 {
                     var text = Load.FindChildOfType<TextBlock>(hslist);
                     text.Text = "没有更多历史项";
-                    isDone = true;
+                    hslist.ContainerContentChanging -= hslist_ContainerContentChanging;
                 }
             }
             catch { }
@@ -58,30 +58,15 @@ namespace bilibili.Views
             var text = Load.FindChildOfType<TextBlock>(hslist);
             scroll.ViewChanged += async (s, a) =>
             {
-                if (scroll.VerticalOffset == scroll.ScrollableHeight && isDone == false) 
+                if (scroll.VerticalOffset == scroll.ScrollableHeight) 
                 {
-                    int count0 = hslist.Items.Count;
                     //滑动到底部了    
                     text.Visibility = Visibility.Visible;
                     page++;
                     await load(page);
-                    if (hslist.Items.Count == count0)
-                    {
-                        text.Text = "没有更多历史项！";
-                        return;
-                    }
                     text.Visibility = Visibility.Collapsed;
                 }
             };
-        }
-
-        private void hslist_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            Models.History item = hslist.SelectedItem as Models.History;
-            if (item != null)
-            {
-                Frame.Navigate(typeof(Detail_P), item.Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-            }
         }
 
         private async void clear_Click(object sender, RoutedEventArgs e)
@@ -98,6 +83,16 @@ namespace bilibili.Views
                     hslist.Items.Clear();
                 }
             }
+        }
+
+        private void hslist_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Models.History).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+        }
+
+        private async void hslist_RefreshRequested(object sender, System.EventArgs e)
+        {
+            await new ContentDialog { Content = "233" }.ShowAsync();
         }
     }
 }

@@ -55,13 +55,6 @@ namespace bilibili.Views
 
         private async void mainpivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TextBlock txt = this.FindName(string.Format("h{0}", mainpivot.SelectedIndex)) as TextBlock;
-            for (int i = 0; i < mainpivot.Items.Count; i++)
-            {
-                TextBlock temp = this.FindName(string.Format("h{0}", i)) as TextBlock;
-                temp.Foreground = new SolidColorBrush(Colors.LightGray);
-            }
-            txt.Foreground = new SolidColorBrush(Colors.White);
             switch(mainpivot.SelectedIndex)
             {
                 case 0:

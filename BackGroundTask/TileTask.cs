@@ -7,6 +7,7 @@ using Windows.ApplicationModel.Background;
 using Windows.Data.Json;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation;
+using Windows.Networking.Connectivity;
 using Windows.UI.Notifications;
 
 namespace BackgroundTask
@@ -16,7 +17,7 @@ namespace BackgroundTask
     {
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            Helper.SetValue("_toastquene", "");
+            //Helper.SetValue("_toastquene", "");
             var deferral = taskInstance.GetDeferral();
             await MyTask();
             deferral.Complete();
@@ -56,10 +57,30 @@ namespace BackgroundTask
         {
             try
             {
-                return AsyncInfo.Run(token => deal());
+                if (!Helper.ContainsKey("_downloadcost"))
+                {
+                    return AsyncInfo.Run(token => deal());
+                }
+                else
+                {
+                    if ((bool)Helper.GetValue("_downloadcost"))
+                    {
+                        ConnectionProfile profile = NetworkInformation.GetInternetConnectionProfile();
+                        if (!profile.IsWlanConnectionProfile)
+                        {
+                            return null;
+                        }
+                        else
+                        {
+                            return AsyncInfo.Run(token => deal());
+                        }
+                    }
+                    else return AsyncInfo.Run(token => deal());
+                }
             }
             catch(Exception e)
             {
+                string a = e.Message;
                 return null;
             }
         }
@@ -67,7 +88,7 @@ namespace BackgroundTask
         private async Task<List<Feed_Bangumi>> GetPulls()
         {
             List<Feed_Bangumi> list = new List<Feed_Bangumi>();
-            string url = "http://api.bilibili.com/x/feed/pull?type=0&_device=wp&_ulv=10000&build=424000&platform=android&appkey=" + Helper.appkey + "&access_key=" + Helper.GetValue("_accesskey").ToString() + "&pn=1&ps=20&rnd=" + new Random().Next(1000, 2000).ToString();
+            string url = "http://api.bilibili.com/x/feed/pull?type=0&_device=wp&_ulv=10000&build=424000&platform=android&appkey=" + Helper.appkey + "&access_key=" + Helper.GetValue("_accesskey").ToString() + "&pn=1&ps=30&rnd=" + new Random().Next(1000, 2000).ToString();
             url += Helper.GetSign(url);
             JsonObject json = await Helper.GetJson(url);
             if (json.ContainsKey("data"))
@@ -104,6 +125,10 @@ namespace BackgroundTask
                                 feed.Pic = json2["pic"].GetString();
                             }
                         }
+                        if (json.ContainsKey("src_id"))
+                        {
+                            feed.Sid = json["src_id"].ToString();
+                        }
                         if (json.ContainsKey("source"))
                         {
                             JsonObject json2 = json["source"].GetObject();
@@ -114,11 +139,15 @@ namespace BackgroundTask
                                 {
                                     feed.New_ep = json2["index"].GetString();
                                 }
-                                list.Add(feed);
                             }
                         }
+                        var test = list.Find(o => o.Sid == feed.Sid);
+                        if (test == null)
+                        {
+                            list.Add(feed);
+                        }
                     }
-                    string temp = string.Empty;
+                    //string temp = string.Empty;
                     string OldQuene = string.Empty;
                     if (Helper.ContainsKey("_toastquene"))
                     {
@@ -126,17 +155,17 @@ namespace BackgroundTask
                     }
                     foreach (var item in list)
                     {
-                        temp += item.Aid + " ";
-                        if (OldQuene.Contains(item.Aid))
+                        //temp += item.Sid + " ";
+                        if (OldQuene.Contains(item.Sid))
                             continue;
-                        OldQuene += item.Aid + ",";
+                        OldQuene += item.Sid + ",";
                     }
-                    foreach (var str in Regex.Match(OldQuene, @"\d*(?=@)").Groups) 
-                    {
-                        string value = str.ToString();
-                        if (!temp.Contains(value))//最新的推送列表里没有该番剧的信息，它将被删除
-                            OldQuene = OldQuene.Replace(value + "@,", "");
-                    }
+                    //foreach (var str in Regex.Match(OldQuene, @"\d*(?=@)").Groups) 
+                    //{
+                    //    string value = str.ToString();
+                    //    if (!temp.Contains(value))//最新的推送列表里没有该番剧的信息，它将被删除
+                    //        OldQuene = OldQuene.Replace(value + "@,", "");
+                    //}
                     Helper.SetValue("_toastquene", OldQuene);
                     return list;
                 }
@@ -176,6 +205,10 @@ namespace BackgroundTask
 </toast>";
         private void UpdateTile(List<Feed_Bangumi> list)
         {
+            if (Helper.ContainsKey("_tile"))
+            {
+                if ((bool)Helper.GetValue("_tile") == false) return;   
+            }
             var updater = TileUpdateManager.CreateTileUpdaterForApplication();
             updater.EnableNotificationQueue(true);
             updater.Clear();
@@ -206,11 +239,31 @@ namespace BackgroundTask
             string UnpulledQuene = Helper.GetValue("_toastquene").ToString();
             foreach (var feed in list)
             {
-                if (UnpulledQuene.Contains(feed.Aid + "@"))
-                    continue;
-                //Helper.SetValue("_toastarg", feed.Aid);
-                PullToast(feed.Aid, feed.Title, feed.New_ep, feed.Pic);
-                UnpulledQuene = UnpulledQuene.Replace(feed.Aid, feed.Aid + "@");//后接@表示已推送过
+                if (UnpulledQuene.Contains(feed.Sid))
+                {
+                    string a = Regex.Match(UnpulledQuene,feed.Sid + @":\d+").Value;
+                    if (string.IsNullOrEmpty(a))
+                    {
+                        //之前没有推送过该番剧
+                        PullToast(feed.Aid, feed.Title, feed.New_ep, feed.Pic);
+                        UnpulledQuene = UnpulledQuene.Replace(feed.Sid, feed.Sid + ":" + feed.Aid);
+                    }
+                    else
+                    {
+                        //之前已经推送过
+                        string aid = a.Split(':')[1];
+                        if (feed.Aid == aid)
+                        {
+                            //还是之前的选集
+                            continue;
+                        }
+                        else
+                        {
+                            PullToast(feed.Aid, feed.Title, feed.New_ep, feed.Pic);
+                            UnpulledQuene = UnpulledQuene.Replace(a, feed.Sid + ":" + feed.Aid);
+                        }
+                    }
+                }
             }
             Helper.SetValue("_toastquene", UnpulledQuene);
         }
@@ -312,6 +365,7 @@ namespace BackgroundTask
                 get { return status; }
                 set { status = value; }
             }
+            public string Sid { get; set; }
         }
     }
 }

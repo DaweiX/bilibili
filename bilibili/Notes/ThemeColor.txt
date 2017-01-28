@@ -1,0 +1,9 @@
+﻿应用主题色说明文档	V1.0	By DaweiX
+
+	含义			|			键名			|		亮主题颜色		|		暗主题颜色
+主题背景色				 ThemeBackground				White					Black
+页面背景色				 bili_PageBackground			f1f1f1					1d1d1d
+列表项背景色			 bili_ListBackground			White					1d1d1d
+主要字体色（用于Dic）	 bili_Fontcolor_Main			Black					White
+次要字体色				 bili_Fontcolor_Second			b3b3b3					LightGray
+命令栏颜色				 CommandBarColor				CCCCCC					696969

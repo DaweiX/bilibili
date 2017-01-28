@@ -67,7 +67,7 @@ namespace bilibili
                     // 当导航堆栈尚未还原时，导航到第一页，
                     // 并通过将所需信息作为导航参数传入来配置
                     // 参数
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(Views.InitPage), e.Arguments);
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
@@ -98,41 +98,41 @@ namespace bilibili
                         rootFrame = new Frame();
                         Window.Current.Content = rootFrame;
                     }
-                    rootFrame.Navigate(typeof(MainPage), "t" + arg);
+                    rootFrame.Navigate(typeof(Views.InitPage), "t" + arg);
                     Window.Current.Activate();
                     return;
                 }
             }
-            if (args.Kind == ActivationKind.Protocol)
-            {
-                ProtocolActivatedEventArgs urlArgs = args as ProtocolActivatedEventArgs;
-                string sid = Regex.Match(urlArgs.Uri.AbsoluteUri, @"(?<=anime/)\d*").Value;
-                string aid = Regex.Match(urlArgs.Uri.AbsoluteUri, @"(?<=/video/av)\d*").Value;
-                if (!string.IsNullOrEmpty(sid))
-                {
-                    Frame rootFrame = Window.Current.Content as Frame;
-                    if (rootFrame == null)
-                    {
-                        rootFrame = new Frame();
-                        Window.Current.Content = rootFrame;
-                    }
-                    rootFrame.Navigate(typeof(Views.Detail), sid);
-                    Window.Current.Activate();
-                    return;
-                }
-                if (!string.IsNullOrEmpty(aid))
-                {
-                    Frame rootFrame = Window.Current.Content as Frame;
-                    if (rootFrame == null)
-                    {
-                        rootFrame = new Frame();
-                        Window.Current.Content = rootFrame;
-                    }
-                    rootFrame.Navigate(typeof(Views.Detail_P), aid);
-                    Window.Current.Activate();
-                    return;
-                }
-            }
+            //if (args.Kind == ActivationKind.Protocol)
+            //{
+            //    ProtocolActivatedEventArgs urlArgs = args as ProtocolActivatedEventArgs;
+            //    string sid = Regex.Match(urlArgs.Uri.AbsoluteUri, @"(?<=anime/)\d*").Value;
+            //    string aid = Regex.Match(urlArgs.Uri.AbsoluteUri, @"(?<=/video/av)\d*").Value;
+            //    if (!string.IsNullOrEmpty(sid))
+            //    {
+            //        Frame rootFrame = Window.Current.Content as Frame;
+            //        if (rootFrame == null)
+            //        {
+            //            rootFrame = new Frame();
+            //            Window.Current.Content = rootFrame;
+            //        }
+            //        rootFrame.Navigate(typeof(Views.Detail), sid);
+            //        Window.Current.Activate();
+            //        return;
+            //    }
+            //    if (!string.IsNullOrEmpty(aid))
+            //    {
+            //        Frame rootFrame = Window.Current.Content as Frame;
+            //        if (rootFrame == null)
+            //        {
+            //            rootFrame = new Frame();
+            //            Window.Current.Content = rootFrame;
+            //        }
+            //        rootFrame.Navigate(typeof(Views.Detail_P), aid);
+            //        Window.Current.Activate();
+            //        return;
+            //    }
+            //}
             if (args.Kind == ActivationKind.ToastNotification)
             {
                 string aid=args.ToString();
@@ -165,7 +165,7 @@ namespace bilibili
                     rootFrame = new Frame();
                     Window.Current.Content = rootFrame;
                 }
-                rootFrame.Navigate(typeof(MainPage), type + path);
+                rootFrame.Navigate(typeof(Views.InitPage), type + path);
                 Window.Current.Activate();
                 return;
             }

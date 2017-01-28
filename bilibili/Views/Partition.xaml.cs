@@ -29,13 +29,15 @@ namespace bilibili.Views
         {
             this.InitializeComponent();
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Required;
-            if(!WebStatusHelper.IsOnline())
-            {
-                popup.Show("没有网络连接", 3000);
-            }
             comment.Navi += Comment_Navi;
             comment.Info += Comment_Info;
             comment.live += Comment_live;
+            ContentServ.report += Report;
+        }
+
+        private async void Report(string status)
+        {
+            await popup.Show(status);
         }
 
         private void Comment_live(string tid)
@@ -45,50 +47,29 @@ namespace bilibili.Views
 
         private void Comment_Info(string aid)
         {
-            Frame.Navigate(typeof(Detail_P), aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), aid, new DrillInNavigationTransitionInfo());
         }
 
         private void Comment_Navi(string content)
         {
+            byte num = 0;
             switch (content)
             {
-                case "番剧": Frame.Navigate(typeof(PartViews.Bangumi), null, new DrillInNavigationTransitionInfo()); break;
-                case "动画": Frame.Navigate(typeof(PartViews.Cartoon), null, new DrillInNavigationTransitionInfo()); break;
-                case "生活": Frame.Navigate(typeof(PartViews.Life), null, new DrillInNavigationTransitionInfo()); break;
-                case "电影": Frame.Navigate(typeof(PartViews.Movies), null, new DrillInNavigationTransitionInfo()); break;
-                case "娱乐": Frame.Navigate(typeof(PartViews.Entertain), null, new DrillInNavigationTransitionInfo()); break;
-                case "鬼畜": Frame.Navigate(typeof(PartViews.Guichu), null, new DrillInNavigationTransitionInfo()); break;
-                case "电视剧": Frame.Navigate(typeof(PartViews.Soap), null, new DrillInNavigationTransitionInfo()); break;
-                case "广告": Frame.Navigate(typeof(PartViews.Ad), null, new DrillInNavigationTransitionInfo()); break;
-                case "舞蹈": Frame.Navigate(typeof(PartViews.Dance), null, new DrillInNavigationTransitionInfo()); break;
-                case "游戏": Frame.Navigate(typeof(PartViews.Game), null, new DrillInNavigationTransitionInfo()); break;
-                case "科技": Frame.Navigate(typeof(PartViews.Tech), null, new DrillInNavigationTransitionInfo()); break;
-                case "时尚": Frame.Navigate(typeof(PartViews.Fashion), null, new DrillInNavigationTransitionInfo()); break;
-                case "音乐": Frame.Navigate(typeof(PartViews.Music), null, new DrillInNavigationTransitionInfo()); break;
+                case "广告": num = 0; break;
+                case "番剧": num = 1; break;
+                case "动画": num = 2; break;
+                case "舞蹈": num = 3; break;
+                case "娱乐": num = 4; break;
+                case "时尚": num = 5; break;
+                case "游戏": num = 6; break;
+                case "鬼畜": num = 7; break;
+                case "生活": num = 8; break;
+                case "电影": num = 9; break;
+                case "音乐": num = 10; break;
+                case "电视剧": num = 11; break;
+                case "科技": num = 12; break;
             }
-        }
-
-        private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
-        {
-            HyperlinkButton btn = sender as HyperlinkButton;
-            string tag = btn.Tag.ToString();
-            string content = btn.Content.ToString();
-            switch(btn.Content.ToString())
-            {
-                case ">番剧": Frame.Navigate(typeof(PartViews.Bangumi), null, new DrillInNavigationTransitionInfo());break;
-                case ">动画": Frame.Navigate(typeof(PartViews.Cartoon), null, new DrillInNavigationTransitionInfo()); break;
-                case ">生活": Frame.Navigate(typeof(PartViews.Life), null, new DrillInNavigationTransitionInfo()); break;
-                case ">电影": Frame.Navigate(typeof(PartViews.Movies), null, new DrillInNavigationTransitionInfo()); break;
-                case ">娱乐": Frame.Navigate(typeof(PartViews.Entertain), null, new DrillInNavigationTransitionInfo()); break;
-                case ">鬼畜": Frame.Navigate(typeof(PartViews.Guichu), null, new DrillInNavigationTransitionInfo()); break;
-                case ">电视剧": Frame.Navigate(typeof(PartViews.Soap), null, new DrillInNavigationTransitionInfo()); break;
-                case ">广告": Frame.Navigate(typeof(PartViews.Ad), null, new DrillInNavigationTransitionInfo()); break;
-                case ">舞蹈": Frame.Navigate(typeof(PartViews.Dance), null, new DrillInNavigationTransitionInfo()); break;
-                case ">游戏": Frame.Navigate(typeof(PartViews.Game), null, new DrillInNavigationTransitionInfo()); break;
-                case ">科技": Frame.Navigate(typeof(PartViews.Tech), null, new DrillInNavigationTransitionInfo()); break;
-                case ">时尚": Frame.Navigate(typeof(PartViews.Fashion), null, new DrillInNavigationTransitionInfo()); break;
-                case ">音乐": Frame.Navigate(typeof(PartViews.Music), null, new DrillInNavigationTransitionInfo()); break;
-            }
+            Frame.Navigate(typeof(PartViews.Part), num, new DrillInNavigationTransitionInfo());
         }
 
         //private void Refesh_Click(object sender, RoutedEventArgs e)
@@ -116,14 +97,8 @@ namespace bilibili.Views
                                     //}
                                     //show_1.show();
                                     await comment.init();
-                                    if (SettingHelper.ContainsKey("_banner"))
-                                    {
-                                        if ((bool)SettingHelper.GetValue("_banner") == true)
-                                        {
-                                            header_Home.init(await ContentServ.GetHomeBanners(), 3.2);
-                                            header_Home.navi += Header_navi;
-                                        }
-                                    }
+                                    header_Home.init(await ContentServ.GetHomeBanners(), 3.2);
+                                    header_Home.navi += Header_navi;
                                     isTopicLoaded = true;
                                 }
                             }
@@ -135,8 +110,7 @@ namespace bilibili.Views
                                 {
                                     await addcomment(cursor);
                                 }
-                                header_bangumi.Visibility = Visibility.Collapsed;
-                                //header_bangumi.init(await ContentServ.GetBangumiBanners(), 6.2 / 3);
+                                header_bangumi.init(await ContentServ.GetBangumiBanners(), 3.2);
                                 if (list_lastupdate.Items.Count == 0)
                                 {
                                     list_lastupdate.ItemsSource = await ContentServ.GetLastUpdateAsync();
@@ -209,10 +183,24 @@ namespace bilibili.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                Report("没有网络连接");
+                return;
+            }
             Button btn = sender as Button;
             switch (btn.Tag.ToString())
             {
-                case "1": Frame.Navigate(typeof(MyConcerns), UserHelper.mid, new SlideNavigationTransitionInfo());break;
+                case "1":
+                    {
+                        if (!ApiHelper.IsLogin())
+                        {
+                            Report("请先登录");
+                            return;
+                        }
+                        Frame.Navigate(typeof(MyConcerns), UserHelper.mid, new SlideNavigationTransitionInfo());
+                    }
+                    break;
                 case "2": Frame.Navigate(typeof(Timeline), null, new SlideNavigationTransitionInfo()); break;
                 case "3": Frame.Navigate(typeof(Bangumi), null, new SlideNavigationTransitionInfo()); break;
             }
@@ -250,7 +238,7 @@ namespace bilibili.Views
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (WebStatusHelper.IsOnline())
-                Frame.Navigate(typeof(Views.Search), SearchBox.Text, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Search), SearchBox.Text, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         private void list_tags_ItemClick(object sender, ItemClickEventArgs e)
@@ -260,6 +248,11 @@ namespace bilibili.Views
 
         private async void Random_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                Report("没有网络连接");
+                return;
+            }
             int aid = 0;
             Details details = new Details();
             do
@@ -267,7 +260,7 @@ namespace bilibili.Views
                 aid = new Random().Next(10000, 5000000);
                 string a = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=";
                 details = await ContentServ.GetDetailsAsync(a + aid);
-            } while (details == null);
+            } while (details == null || details.Aid == null);
             Frame.Navigate(typeof(Detail_P), aid);
         }
 
@@ -276,12 +269,12 @@ namespace bilibili.Views
             Button btn = sender as Button;
             if (btn.Tag.ToString() == "0")
             {
-                Frame.Navigate(typeof(Topic), true, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Topic), true, new DrillInNavigationTransitionInfo());
                 return;
             }
             if (btn.Tag.ToString() == "1")
             {
-                Frame.Navigate(typeof(Topic), false, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Topic), false, new DrillInNavigationTransitionInfo());
                 return;
             }
         }
@@ -292,7 +285,7 @@ namespace bilibili.Views
             var item = gridview.SelectedItem as Content;
             if (item != null)
             {
-                Frame.Navigate(typeof(Detail_P), item.Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Detail_P), item.Num, new DrillInNavigationTransitionInfo());
             }
         }
 
@@ -308,9 +301,8 @@ namespace bilibili.Views
 
         private async void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (string.IsNullOrWhiteSpace(SearchBox.Text))
+            if (!WebStatusHelper.IsOnline())
             {
-                SearchBox.ItemsSource = null;
                 return;
             }
             string url = "http://api.bilibili.com/suggest?_device=wp&appkey=" + ApiHelper.appkey + "&bangumi_acc_num=0&bangumi_num=0&build=429001&func=suggest&main_ver=v3&mobi_app=win&special_acc_num=0&special_num=0&suggest_type=accurate&term=" + SearchBox.Text + "&topic_acc_num=0&topic_num=0&upuser_acc_num=0&upuser_num=0&_hwid=0100d4c50200c2a6&platform=uwp_mobile";

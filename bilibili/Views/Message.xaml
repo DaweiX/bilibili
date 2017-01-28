@@ -12,7 +12,7 @@
         <Pivot x:Name="mainpivot" SelectionChanged="mainpivot_SelectionChanged">
             <PivotItem>
                 <PivotItem.Header>
-                    <TextBlock x:Name="h0" Text="回复我的" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                    <TextBlock x:Name="h0" Text="回复我的"/>
                 </PivotItem.Header>
                 <ListView x:Name="ls_chat" IsItemClickEnabled="True" ItemClick="ls_chat_ItemClick">
                     <ListView.Transitions>
@@ -50,7 +50,7 @@
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
-                    <TextBlock x:Name="h1" Text="我的私信" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                    <TextBlock x:Name="h1" Text="我的私信"/>
                 </PivotItem.Header>
                 <ListView x:Name="ls_wiss">
                     <ListView.Transitions>
@@ -87,7 +87,7 @@
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
-                    <TextBlock x:Name="h2" Text="系统通知" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                    <TextBlock x:Name="h2" Text="系统通知"/>
                 </PivotItem.Header>
                 <ListView x:Name="ls_noti">
                     <ListView.Transitions>
@@ -115,7 +115,7 @@
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
-                    <TextBlock x:Name="h3" Text="赞和@我" Foreground="LightGray" FontSize="20" FontWeight="Light"/>
+                    <TextBlock x:Name="h3" Text="赞和@我"/>
                 </PivotItem.Header>
                 <ListView x:Name="ls_prme" IsItemClickEnabled="True" ItemClick="ls_prme_ItemClick">
                     <ListView.Transitions>

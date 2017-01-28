@@ -61,7 +61,7 @@
                                 </Grid>
                             </Grid>
                             <TextBlock Text="{Binding Name}" FontSize="12" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="3" TextTrimming="WordEllipsis" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
-                            <TextBlock Text="{Binding Title}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Main}" FontWeight="Light"/>
+                            <TextBlock Text="{Binding Title}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="13" FontWeight="Light"/>
                         </StackPanel>
                     </DataTemplate>
                 </GridView.ItemTemplate>

@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using bilibili.Animation.Root;
+using bilibili.Dialogs;
+using bilibili.Helpers;
+using bilibili.Http;
+using bilibili.Methods;
+using bilibili.Models;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Data.Json;
+using Windows.Foundation;
+using Windows.Networking.BackgroundTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
-using bilibili.Helpers;
-using bilibili.Http;
-using bilibili.Methods;
-using bilibili.Models;
-using System.IO;
-using Windows.Foundation;
-using Windows.Networking.BackgroundTransfer;
-using bilibili.Dialogs;
-using Windows.UI.Xaml.Controls.Primitives;
-using Microsoft.Toolkit.Uwp.UI.Animations;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -37,6 +36,8 @@ namespace bilibili.Views
         public event PageNavi pageNavi;
         Details details = new Details();
         bool isReply = false;
+        string quality = string.Empty;
+        VideoFormat format;
         int page = 1;
         static string cid = string.Empty;
         string aid = string.Empty;
@@ -49,7 +50,7 @@ namespace bilibili.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            ReadyList.Visibility = Visibility.Visible;
+            SwitchCommandBar(false);
             desc.Visibility = Visibility.Visible;
             aid = e.Parameter.ToString();
             string url = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=" + aid + "&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey;
@@ -100,6 +101,14 @@ namespace bilibili.Views
                 //    btn_addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
                 //    btn_addfav.Label = "取消收藏";
                 //}
+                if (SettingHelper.ContainsKey("_quality"))
+                {
+                    (FindName("q" + SettingHelper.GetValue("_quality").ToString()) as RadioButton).IsChecked = true;
+                }
+                if (SettingHelper.ContainsKey("_videoformat"))
+                {
+                    (FindName("f" + SettingHelper.GetValue("_videoformat").ToString()) as RadioButton).IsChecked = true;
+                }
             }
            else
             {
@@ -163,30 +172,8 @@ namespace bilibili.Views
             public string Index { get; set; }
         }
 
-        private async void ReadyList_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (ReadyList.SelectionMode != ListViewSelectionMode.Multiple)
-            {
-                List<VideoInfo> list = new List<VideoInfo>();
-                list.Add(new VideoInfo { Title = details.Aid, Cid = ReadyList.SelectedIndex.ToString() });
-                foreach (var item in ReadyList.Items)
-                {
-                    var temp = item as Pages;
-                    list.Add(new VideoInfo { Title = temp.Part, Cid = temp.Cid });
-                }
-                //添加播放历史
-                string url_report = "http://api.bilibili.com/x/history/add?_device=wp&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=411005&platform=android";
-                url_report += ApiHelper.GetSign(url_report);
-                string code = await BaseService.SendPostAsync(url_report, "aid=" + aid);
-                Frame.Navigate(typeof(Video), list, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-            }          
-        } 
-
         private async void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ReadyList.SelectionMode = ListViewSelectionMode.Single;
-            btn_addfav.Visibility = btn_like.Visibility = btn_down.Visibility = btn_share.Visibility = Visibility.Visible;
-            btn_all.Visibility = btn_ok.Visibility = btn_cal.Visibility = Visibility.Collapsed;
             PivotItem item = (PivotItem)pivot.SelectedItem;
             string tag = item.Header.ToString();
             if (tag == "评论" && listview.Items.Count == 0)
@@ -459,62 +446,50 @@ namespace bilibili.Views
 
         private void download_Click(object sender, RoutedEventArgs e)
         {
-            ReadyList.SelectionMode = ListViewSelectionMode.Multiple;
-            btn_addfav.Visibility = btn_like.Visibility = btn_down.Visibility = btn_share.Visibility = Visibility.Collapsed;
-            btn_all.Visibility = btn_ok.Visibility =btn_cal.Visibility = Visibility.Visible;
+            SwitchCommandBar(true);
+        }
+
+        private void SwitchCommandBar(bool isDownload)
+        {
+            ReadyList.SelectionMode = isDownload ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Single;
+            btn_addfav.Visibility = btn_like.Visibility = btn_down.Visibility = btn_share.Visibility = isDownload ? Visibility.Collapsed : Visibility.Visible;
+            btn_all.Visibility = btn_ok.Visibility = btn_cal.Visibility = isDownload ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private async void btn_ok_Click(object sender, RoutedEventArgs e)
         {
             int i = 0;
+            flyout_download.Hide();
             foreach (Pages item in ReadyList.SelectedItems)
             {
                 try
                 {
                     cid = item.Cid;
-                    VideoURL url = await ContentServ.GetVedioURL(cid, 2, VideoFormat.mp4);
+                    VideoURL url = await ContentServ.GetVedioURL(cid, quality, format);
                     string name = StringDeal.RemoveSpecial(title.Text);
                     string part = StringDeal.RemoveSpecial(item.Part);
                     StorageFolder folder = await DownloadHelper.GetMyFolderAsync();
-                    StorageFolder f1 = await folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists);
+                    StorageFolder f1 = await folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists);                   
                     var download = await DownloadHelper.Download(url.Url, part + ".mp4", f1);
-                    if (SettingHelper.ContainsKey("_downdanmu"))
-                    {
-                        if ((bool)SettingHelper.GetValue("_downdanmu") == true)
-                        {
-                            string xml = await BaseService.SentGetAsync("http://comment.bilibili.com/" + cid + ".xml");
-                            StorageFile file = await f1.CreateFileAsync(part + ".xml");
-                            using (Stream file0 = await file.OpenStreamForWriteAsync())
-                            {
-                                using (StreamWriter writer = new StreamWriter(file0))
-                                {
-                                    writer.Write(xml);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        string xml = await BaseService.SentGetAsync("http://comment.bilibili.com/" + cid + ".xml");
-                        StorageFile file = await f1.CreateFileAsync(name + ".xml");
-                        using (Stream file0 = await file.OpenStreamForWriteAsync())
-                        {
-                            using (StreamWriter writer = new StreamWriter(file0))
-                            {
-                                writer.Write(xml);
-                            }
-                        }
-                    }
                     //如果await，那么执行完第一个StartAsync()后即退出循环.GetCurrentDownloadsAsync()方法同样会遇到此问题.(Download页)
                     IAsyncOperationWithProgress<DownloadOperation, DownloadOperation> start = download.StartAsync();
                     i++;
                     await popup.Show(i.ToString() + "个视频已加入下载队列");
+                    if (SettingHelper.ContainsKey("_downdanmu"))
+                    {
+                        if ((bool)SettingHelper.GetValue("_downdanmu") == false)
+                        {
+                            continue;
+                        }
+                    }
+                    await DownloadHelper.DownloadDanmakuAsync(cid, part, f1);
                 }
                 catch (Exception err)
                 {
                     await popup.Show(err.Message);
                 }
-            }         
+            }
+            SwitchCommandBar(false);
         }
 
         private void btn_all_Click(object sender, RoutedEventArgs e)
@@ -524,9 +499,7 @@ namespace bilibili.Views
 
         private void btn_cal_Click(object sender, RoutedEventArgs e)
         {
-            ReadyList.SelectionMode = ListViewSelectionMode.Single;
-            btn_addfav.Visibility = btn_like.Visibility = btn_down.Visibility = btn_share.Visibility = Visibility.Visible;
-            btn_all.Visibility = btn_ok.Visibility = btn_cal.Visibility = Visibility.Collapsed;
+            SwitchCommandBar(false);
         }
 
         private void list_tags_ItemClick(object sender, ItemClickEventArgs e)
@@ -605,6 +578,38 @@ namespace bilibili.Views
         {
             isReply = false;
             stk_reply.Visibility = Visibility.Collapsed;
+        }
+
+        private void quality_Checked(object sender, RoutedEventArgs e)
+        {
+            quality = (sender as RadioButton).Tag.ToString();
+        }
+
+        private void format_Checked(object sender, RoutedEventArgs e)
+        {
+            int arg = int.Parse((sender as RadioButton).Tag.ToString());
+            if (arg == 0) format = VideoFormat.mp4;
+            else if (arg == 1) format = VideoFormat.flv;
+        }
+
+        //列表改成ItemClick后SelectedIndex恒为-1，故此处使用Tapped事件
+        private async void ReadyList_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (ReadyList.SelectionMode == ListViewSelectionMode.Single && ReadyList.SelectedIndex > -1) 
+            {
+                List<VideoInfo> list = new List<VideoInfo>();
+                list.Add(new VideoInfo { Title = details.Aid, Cid = ReadyList.SelectedIndex.ToString() });
+                foreach (var item in ReadyList.Items)
+                {
+                    var temp = item as Pages;
+                    list.Add(new VideoInfo { Title = temp.Part, Cid = temp.Cid });
+                }
+                //添加播放历史
+                string url_report = "http://api.bilibili.com/x/history/add?_device=wp&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=411005&platform=android";
+                url_report += ApiHelper.GetSign(url_report);
+                await BaseService.SendPostAsync(url_report, "aid=" + aid);
+                Frame.Navigate(typeof(Video), list, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            }
         }
     }
 }

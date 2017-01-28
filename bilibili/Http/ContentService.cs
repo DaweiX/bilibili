@@ -18,6 +18,8 @@ namespace bilibili.Http
 {
     class ContentServ
     {
+        public delegate void ReportStatus(string status);
+        public static event ReportStatus report;
         /// <summary>
         /// 
         /// </summary>
@@ -28,6 +30,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Content>> GetContentAsync(int tid, int page, int pagesize = 20, int order = 2)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("无网络连接");
+                return null;
+            }
             string ord = string.Empty;
             switch (order)
             {
@@ -74,8 +81,9 @@ namespace bilibili.Http
                 }
                 return contentList;
             }
-            catch
+            catch(Exception e)
             {
+                report(e.Message);
                 return null;
             }
         }
@@ -127,6 +135,7 @@ namespace bilibili.Http
         /// <returns></returns>
         public async static Task<List<KeyWord>> GetHotSearchAsync()
         {
+            if (!WebStatusHelper.IsOnline()) return null;
             List<KeyWord> hots = new List<KeyWord>();
             string url = "http://s.search.bilibili.com/main/hotword?appkey=" + ApiHelper.appkey + "&build=427000&platform=wp";
             url += ApiHelper.GetSign(url);
@@ -212,12 +221,20 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<Details> GetDetailsAsync(string url)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             Details details = new Details();
             details.Tags = new List<string>();
             JsonObject json = await BaseService.GetJson(url);
             if (json.ContainsKey("code"))
                 if (json["code"].ToString() == "-404")
+                {
+                    report("该视频不存在或已被删除");
                     return null;
+                }
             if (json.ContainsKey("data"))
             {
                 List<Pages> pages = new List<Pages>();
@@ -300,7 +317,10 @@ namespace bilibili.Http
                             details.Tags.Add(item.GetString());
                         }
                     }
-                    catch { }
+                    catch (Exception e)
+                    {
+                        report(e.Message);
+                    }
                 }
             }
             return details;
@@ -319,6 +339,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<SearchResult>> GetSearchResultAsync(string keyword, int page, string pagesize = "20")
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             try
             {
                 string url = "http://api.bilibili.com/search?_device=wp&_ulv=10000&build=424000&platform=android&appkey=" + ApiHelper.appkey + "&main_ver=v3&page=" + page.ToString() + "&pagesize=" + pagesize + "&search_type=video&source_type=0&keyword=" + keyword;
@@ -367,6 +392,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Live>> GetCommentLiveAsync()
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             List<Live> list = new List<Live>();
             string url = "http://live.bilibili.com/AppIndex/home?_device=wp&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=411005&platform=android&scale=xxhdpi&rnd=" + new Random().Next(1000, 3000).ToString();
             url += ApiHelper.GetSign(url);
@@ -424,9 +454,10 @@ namespace bilibili.Http
                     }
                 }
             }
-            catch
+            catch(Exception e)
             {
-
+                report(e.Message);
+                return null;
             }
             return list;
         }
@@ -438,6 +469,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<SearchResult_Bangumi>> GetBangumisAsync(string keyword, int page, string pagesize = "20")
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             try
             {
                 string url = "http://api.bilibili.com/search?_device=wp&_ulv=10000&build=424000&platform=android&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&main_ver=v3&page=" + page.ToString() + "&pagesize=" + pagesize + "&search_type=bangumi&source_type=0&keyword=" + keyword;
@@ -470,8 +506,9 @@ namespace bilibili.Http
                 }
                 return contentList;
             }
-            catch
+            catch (Exception e)
             {
+                report(e.Message);
                 return null;
             }
         }
@@ -483,6 +520,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<UpForSearch>> GetUpsAsync(string keyword, int page, string pagesize = "20")
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             string url = "http://app.bilibili.com/x/v2/search/type?keyword=" + keyword + "&pn=" + page.ToString() + "&ps=20&type=2&appkey=" + ApiHelper.appkey + "&build=429001&mobi_app=win&platform=android";
             url += ApiHelper.GetSign(url);
             List<UpForSearch> upList = new List<UpForSearch>();
@@ -533,6 +575,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<Season> GetSeasonResultAsync(string sid)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             string url = "http://bangumi.bilibili.com/api/season_v2?_device=wp&build=424000&platform=android&access_key=" + ApiHelper.accesskey + "&appkey=422fd9d7289a1dd9&ts=" + ApiHelper.GetLinuxTS().ToString() + "&type=bangumi&season_id=" + sid;
             url += ApiHelper.GetSign(url);
             JsonObject json = new JsonObject();
@@ -654,7 +701,7 @@ namespace bilibili.Http
             }
             catch (Exception e)
             {
-                await new MessageDialog(e.Message).ShowAsync();
+                report(e.Message);
                 return null;
             }
         }
@@ -666,17 +713,24 @@ namespace bilibili.Http
       /// <param name="quality"></param>
       /// <param name="format"></param>
       /// <returns></returns>
-        public static async Task<VideoURL> GetVedioURL(string cid, int quality, VideoFormat format)
+        public static async Task<VideoURL> GetVedioURL(string cid, string quality, VideoFormat format)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             #region XML
-            VideoURL URL = new VideoURL { Acceptformat = new List<string>(), Acceptquality = new List<int>() };
+            VideoURL URL = new VideoURL { Acceptformat = new List<string>(), Acceptquality = new List<string>() };
             JsonObject json = new JsonObject();
-            string url = string.Format("http://interface.bilibili.com/playurl?_device=uwp&cid={0}&quality={1}&otype=xml&appkey={2}&_buvid=A7A15F70-8D92-4441-B941-0E4EF9F21B6319763infoc&_hwid=03008e90050092d8&platform=uwp_desktop&type=mp4&access_key={3}&mid={4}&ts={5}", cid, quality.ToString(), ApiHelper.appkey, ApiHelper.accesskey, UserHelper.mid, ApiHelper.GetLinuxTS().ToString());
+            string url = string.Format("http://interface.bilibili.com/playurl?_device=uwp&cid={0}&quality={1}&otype=xml&appkey={2}&_buvid=A7A15F70-8D92-4441-B941-0E4EF9F21B6319763infoc&_hwid=03008e90050092d8&platform=uwp_desktop&type={3}&access_key={4}&mid={5}&ts={6}", cid, quality, ApiHelper.appkey, format.ToString(), ApiHelper.accesskey, UserHelper.mid, ApiHelper.GetLinuxTS().ToString());
             url += ApiHelper.GetSign(url);
             XmlDocument doc = await XmlDocument.LoadFromUriAsync(new Uri(url));
             URL.Url = doc.GetElementsByTagName("url")[0].InnerText;
             URL.Size = doc.GetElementsByTagName("size")[0].InnerText;
             URL.Length = doc.GetElementsByTagName("length")[0].InnerText;
+            URL.Acceptquality = doc.GetElementsByTagName("accept_quality")[0].InnerText.Split(',').ToList();
+            URL.Acceptformat = doc.GetElementsByTagName("accept_format")[0].InnerText.Split(',').ToList();
             #endregion
             #region JSON
             //XmlElement ele = durl as XmlElement;
@@ -750,6 +804,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Tags>> GetTagsAsync(string url)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             List<Tags> tagList = new List<Tags>();
             JsonObject json = new JsonObject();
             json = await BaseService.GetJson(url);
@@ -776,9 +835,14 @@ namespace bilibili.Http
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static async Task<List<Models.Bangumi>> GetBansByTagAsync(string url)
+        public static async Task<List<Bangumi>> GetBansByTagAsync(string url)
         {
-            List<Models.Bangumi> banList = new List<Models.Bangumi>();
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
+            List<Bangumi> banList = new List<Bangumi>();
             JsonObject json = new JsonObject();
             json = await BaseService.GetJson(url);
             if (json.ContainsKey("result"))
@@ -789,7 +853,7 @@ namespace bilibili.Http
                     var a = json2["list"].GetArray();
                     foreach (var item in a)
                     {
-                        Models.Bangumi ban = new Models.Bangumi();
+                        Bangumi ban = new Bangumi();
                         JsonObject temp = item.GetObject();
                         if (temp.ContainsKey("cover"))
                             ban.Cover = temp["cover"].GetString();
@@ -819,6 +883,10 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<LastUpdate>> GetLastUpdateAsync()
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                return null;
+            }
             List<LastUpdate> list = new List<LastUpdate>();
             string url = "http://bangumi.bilibili.com/api/app_index_page";
             try
@@ -881,6 +949,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Topic>> GetTopicListAsync(int page)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             string url = string.Format("http://api.bilibili.com/topic/getlist?access_key={0}&appkey={1}&build=424000&mobi_app=android&page={2}&pagesize=20&platform=android&ts={3}", ApiHelper.accesskey, ApiHelper.appkey, page.ToString(), ApiHelper.GetLinuxTS().ToString());
             url += ApiHelper.GetSign(url);
             List<Topic> list = new List<Topic>();
@@ -912,6 +985,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Event>> GetEventListAsync(int page)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             string url = string.Format("http://api.bilibili.com/event/getlist?appkey={0}&build=422000&mobi_app=android&page={1}&pagesize=20&platform=android&ts={2}", ApiHelper.appkey, page.ToString(), ApiHelper.GetLinuxTS().ToString());
             url += ApiHelper.GetSign(url);
             List<Event> list = new List<Event>();
@@ -945,6 +1023,10 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Reply>> GetReplysAsync(string url)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                return null;
+            }
             List<Reply> reList = new List<Reply>();
             JsonObject json = new JsonObject();
             json = await BaseService.GetJson(url);
@@ -1116,6 +1198,16 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Content>> GetFavAsync(string fid, int page, int pagesize)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
+            if (!ApiHelper.IsLogin())
+            {
+                report("请先登录");
+                return null;
+            }
             List<Content> mylist = new List<Content>();
             string url = "http://api.bilibili.com/x/favourite/video?_device=android&_ulv=10000&platform=android&build=424000&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey + "&pn=" + page.ToString() + "&ps=" + pagesize.ToString() + "&fid=" + fid + "&order=ftime&rnd=" + new Random().Next(1000, 3000).ToString();
             url += ApiHelper.GetSign(url);
@@ -1241,6 +1333,14 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<Count> GetCountAsync()
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                return null;
+            }
+            if (!ApiHelper.IsLogin())
+            {
+                return null;
+            }
             try
             {
                 Count count = new Count();
@@ -1274,6 +1374,14 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Chat>> GetChatsAsync()
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                return null;
+            }
+            if (!ApiHelper.IsLogin())
+            {
+                return null;
+            }
             try
             {
                 List<Chat> chats = new List<Chat>();
@@ -1324,6 +1432,14 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Notify>> GetNotiAsync()
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                return null;
+            }
+            if (!ApiHelper.IsLogin())
+            {
+                return null;
+            }
             try
             {
                 List<Notify> notis = new List<Notify>();
@@ -1359,6 +1475,14 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Wisper>> GetWisperAsync()
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                return null;
+            }
+            if (!ApiHelper.IsLogin())
+            {
+                return null;
+            }
             try
             {
                 List<Wisper> wiss = new List<Wisper>();
@@ -1400,6 +1524,10 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<HotBangumi>> GetHotBangumiAsync(string url)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                return null;
+            }
             try
             {
                 List<HotBangumi> hots = new List<HotBangumi>();
@@ -1438,6 +1566,16 @@ namespace bilibili.Http
         /// </summary>
         public static async Task<List<History>> GetHistoryAsync(string url)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
+            if (!ApiHelper.IsLogin())
+            {
+                report("请先登录");
+                return null;
+            }
             try
             {
                 List<History> hs = new List<History>();
@@ -1475,6 +1613,16 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Folder>> GetFavFolders()
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
+            if (!ApiHelper.IsLogin())
+            {
+                report("请先登录");
+                return null;
+            }
             List<Folder> myFolder = new List<Folder>();
             string url_folder = "http://api.bilibili.com/x/app/favourite/folder?_device=android&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=427000&platform=android&vmid=" + UserHelper.mid + "&rnd=" + new Random().Next(1000, 2000).ToString();
             url_folder += ApiHelper.GetSign(url_folder);
@@ -1613,6 +1761,16 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<CoinHs>> GetCoinHistoryAsync()
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
+            if (!ApiHelper.IsLogin())
+            {
+                report("请先登录");
+                return null;
+            }
             try
             {
                 List<CoinHs> list = new List<CoinHs>();
@@ -1660,6 +1818,10 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Friend>> GetFriendsAsync(string mid)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                return null;
+            }
             string url = "http://space.bilibili.com/ajax/friend/getAttentionList?mid=" + mid + "&page=1&rnd=" + new Random().Next(1000, 3000).ToString();
             JsonObject json = await BaseService.GetJson(url);
             if (json.ContainsKey("data"))
@@ -1702,6 +1864,11 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Rank>> GetRankItemsAsync(string tid)
         {
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
             List<Rank> list = new List<Rank>();
             string url = "http://www.bilibili.com/index/rank/all-03-" + tid + ".json";
             JsonObject json = await BaseService.GetJson(url);
@@ -1747,31 +1914,40 @@ namespace bilibili.Http
         public static async Task<List<FlipItem>> GetBangumiBanners()
         {
             List<FlipItem> items = new List<FlipItem>();
-            string url = "http://bangumi.bilibili.com/jsonp/slideshow/34.ver";
+            string url = "https://bangumi.bilibili.com/api/app_index_page_v4_2?access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=411005&mobi_app=android&platform=android&ts=" + ApiHelper.GetLinuxTS().ToString();
+            url += ApiHelper.GetSign(url);
             JsonObject json = await BaseService.GetJson(url);
             if (json["code"].ToString() == "0")
             {
                 if (json.ContainsKey("result"))
                 {
-                    JsonArray array = json["result"].GetArray();
-                    foreach (var temp in array)
+                    json = json["result"].GetObject();
+                    if (json.ContainsKey("ad"))
                     {
-                        FlipItem item = new FlipItem();
-                        json = temp.GetObject();
-                        if (json.ContainsKey("img"))
+                        json = json["ad"].GetObject();
+                        if (json.ContainsKey("head"))
                         {
-                            item.Img = json["img"].GetString();
+                            JsonArray array = json["head"].GetArray();
+                            foreach (var temp in array)
+                            {
+                                FlipItem item = new FlipItem();
+                                json = temp.GetObject();
+                                if (json.ContainsKey("img"))
+                                {
+                                    item.Img = json["img"].GetString();
+                                }
+                                if (json.ContainsKey("link"))
+                                {
+                                    item.Link = json["link"].GetString();
+                                }
+                                if (json.ContainsKey("title"))
+                                {
+                                    item.Title = json["title"].GetString();
+                                }
+                                items.Add(item);
+                            }
                         }
-                        if (json.ContainsKey("link"))
-                        {
-                            item.Link = json["link"].GetString();
-                        }
-                        if (json.ContainsKey("title"))
-                        {
-                            item.Title = json["title"].GetString();
-                        }
-                        items.Add(item);
-                    }
+                    }               
                 }
                 return items;
             }

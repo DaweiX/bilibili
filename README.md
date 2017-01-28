@@ -7,9 +7,9 @@
 ###主要功能：  
 * 视频分类查询、播放  
 * 番剧订阅、播放、放送表、分类索引  
-* 用户信息（基本信息、硬币记录、订阅、收藏、关注的人）  
+* 用户信息（基本信息、记录(账号\经验\硬币)、订阅、收藏(支持收藏夹管理、设置)、关注的人）  
 * 话题、活动浏览  
-* 弹幕浏览、发送（弹幕显示仍待完善)  
+* 弹幕浏览、发送  
   
 ###现有bug及待加功能：  
 ####现有bug：  
@@ -19,18 +19,14 @@
 ####待加功能：  
 * 观看直播  
 * 取关、互粉等  
-* 视频清晰度选择（完善中）  
-* 上一次进度跳转    
-* 自定义下载路径（施工中） 
+* 视频flv格式选择    
+* 上一次进度跳转  
 * 黑科技  
   
 ###引用及参考：  
 * [https://github.com/xiaoyaocz/BILIBILI-UWP](cycz：Bilibili-UWP)：基本弹幕实现  
 * [www.telerik.com/fiddler](Fiddler)：请求APi获取  
-* [Bilibili API-wiki](https://github.com/Qixingchen/MD-BiliBili/wiki/API:-%E6%A6%82%E8%A7%88): 非官方Api文档  
-* MicroSoft MSDN（C#、UWP）  
-
-
+* [Bilibili API-wiki](https://github.com/Qixingchen/MD-BiliBili/wiki/API:-%E6%A6%82%E8%A7%88): 非官方Api文档    
   
 ###备注：  
 * 运行时系统版本要求：  

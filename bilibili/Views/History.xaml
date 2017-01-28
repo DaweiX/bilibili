@@ -5,6 +5,7 @@
     xmlns:local="using:bilibili.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="using:bilibili.Controls"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource bili_PageBackground}">
@@ -14,13 +15,15 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="1">
             <ListView Grid.Row="1" x:Name="hslist" 
-                  Tapped="hslist_Tapped"
-                  ContainerContentChanging="hslist_ContainerContentChanging"
-                  ItemContainerStyle="{StaticResource listcontainerstyle}">
+                  IsItemClickEnabled="True" ItemClick ="hslist_ItemClick"
+                  ContainerContentChanging="hslist_ContainerContentChanging">
                 <ListView.Template>
                     <ControlTemplate TargetType="ItemsControl">
                         <ScrollViewer>
-                            <ItemsPresenter Margin="0,8,0,56"/>
+                            <StackPanel>
+                                <ItemsPresenter Margin="0,8,0,56"/>
+                                <TextBlock Margin="0,8,0,56"/>
+                            </StackPanel>
                         </ScrollViewer>
                     </ControlTemplate>
                 </ListView.Template>

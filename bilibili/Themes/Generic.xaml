@@ -1,12 +1,40 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:bilibili.Controls">
+    xmlns:m="using:bilibili.Models"
+    xmlns:c="using:bilibili.Controls">
 
-    <Style TargetType="controls:Header">
+    <DataTemplate x:Key="gv_itemtemplete">
+        <Grid Width="{Binding Width,ElementName=width}" Background="{ThemeResource bili_ListBackground}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Image Source="{Binding Pic}"/>
+            <TextBlock Text="{Binding Title}" Grid.Row="1" Margin="4,2,0,0" TextWrapping="WrapWholeWords" MaxLines="2" FontSize="13" VerticalAlignment="Bottom"/>
+            <Grid Grid.Row="2" Padding="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                    <Image Source="ms-appx:///Assets//Icons//play.png" Height="10"/>
+                    <TextBlock Text="{Binding Play}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                    <Image Source="ms-appx:///Assets//Icons//comment.png" Height="10"/>
+                    <TextBlock Text="{Binding Comment}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </DataTemplate>
+
+    <!-- Default style for bilibili.Controls.Header -->
+    <Style TargetType="c:Header">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="controls:Header">
+                <ControlTemplate TargetType="c:Header">
                     <RelativePanel x:Name="panel">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup>
@@ -30,6 +58,78 @@
                         <Border x:Name="border" Background="{ThemeResource bili_Theme}" Height="{TemplateBinding BorderHeight}" Width="{TemplateBinding BorderWidth}"/>
                         <TextBlock x:Name="txt" Text="{TemplateBinding Content}" FontSize="18"/>
                     </RelativePanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Default style for bilibili.Controls.Area -->
+    <Style TargetType="c:Area">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="c:Area">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid Padding="{TemplateBinding Padding}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <HyperlinkButton x:Name="h1">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Background="{ThemeResource bili_Theme}" Height="{TemplateBinding BorderHeight}" Width="{TemplateBinding BorderWidth}"/>
+                                    <TextBlock Text="{TemplateBinding Header}" FontSize="18" Margin="8,2,0,0"/>
+                                </StackPanel>
+                            </HyperlinkButton>
+                            <HyperlinkButton x:Name="refresh" Grid.Column="1" HorizontalAlignment="Right" Margin="5 0" Foreground="{ThemeResource bili_Theme}">
+                                <Grid>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE117;" Margin="5" FontSize="16" FontWeight="ExtraBold" Foreground="{ThemeResource bili_Theme}"/>
+                                </Grid>
+                            </HyperlinkButton>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="c:PullToRefreshPanel">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="c:PullToRefreshPanel">
+                    <Border x:Name="root"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Border.Background>
+                            <SolidColorBrush Color="Black" Opacity="0"/>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid x:Name="header">
+                                <Grid.RenderTransform>
+                                    <CompositeTransform x:Name="HeaderTransform"/>
+                                </Grid.RenderTransform>
+                                <ContentPresenter x:Name="releaseContent" VerticalAlignment="Bottom" Content="{TemplateBinding ReleaseToRefreshContent}"/>
+                                <ContentPresenter x:Name="pullContent" VerticalAlignment="Bottom" Content="{TemplateBinding PullToRefreshContent}"/>
+                            </Grid>
+                            <ContentPresenter x:Name="content" Grid.Row="1" Content="{TemplateBinding Content}">
+                                <ContentPresenter.RenderTransform>
+                                    <CompositeTransform x:Name="ContentTransform"/>
+                                </ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                    <!--<ScrollViewer x:Name="scroll">-->
+                       
+                    <!--</ScrollViewer>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

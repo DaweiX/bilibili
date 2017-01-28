@@ -13,69 +13,72 @@
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Pivot>
             <PivotItem Header="外观">
-                <StackPanel Margin=" 0,8,0,0">
-                    <ToggleSwitch x:Name="night" Toggled="night_Toggled" Header="夜间模式"/>
-                    <ToggleSwitch x:Name="m_top" Toggled="top_Toggled" Header="隐藏状态栏"/>
-                    <ToggleSwitch x:Name="banner" Toggled="banner_Toggled" Header="首页加载头部"/>
-                    <ComboBox x:Name="cb_Theme" Width="150" Header="主题色选择" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Theme}" SelectionChanged="cb_Theme_SelectionChanged">
-                        <ComboBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#E273A9" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#DF85A0" Text="少女粉"/>
-                            </StackPanel>
-                        </ComboBoxItem>
-                        <ComboBoxItem >
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#F44336" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#F44336" Text="姨妈红"/>
-                            </StackPanel>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#FFB007" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#FFB007" Text="咸蛋黄"/>
-                            </StackPanel>
-                        </ComboBoxItem>
-                        <ComboBoxItem >
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#7BB33A" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#7BB33A" Text="早苗绿"/>
-                            </StackPanel>
-                        </ComboBoxItem>
-                        <ComboBoxItem >
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#18BDFB" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#18BDFB" Text="胖次蓝"/>
-                            </StackPanel>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#B92CBF" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#B92CBF" Text="基佬紫"/>
-                            </StackPanel>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="#FF6633" Margin="0,0,5,0"/>
-                                <TextBlock Foreground="#FF6633" Text="那个橙"/>
-                            </StackPanel>
-                        </ComboBoxItem>
-                    </ComboBox>
-                </StackPanel>
+                <ScrollViewer>
+                    <StackPanel Margin="0 8">
+                        <ToggleSwitch x:Name="night" Toggled="night_Toggled" Header="夜间模式"/>
+                        <ToggleSwitch x:Name="m_top" Toggled="top_Toggled" Header="隐藏状态栏"/>
+                        <ComboBox x:Name="cb_Theme" Width="150" Header="主题色选择" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Theme}" SelectionChanged="cb_Theme_SelectionChanged">
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="16" Height="16" Fill="#E273A9" Margin="0,0,5,0"/>
+                                    <TextBlock Foreground="#DF85A0" Text="少女粉"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem >
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="16" Height="16" Fill="#F44336" Margin="0,0,5,0"/>
+                                    <TextBlock Foreground="#F44336" Text="姨妈红"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="16" Height="16" Fill="#FFB007" Margin="0,0,5,0"/>
+                                    <TextBlock Foreground="#FFB007" Text="咸蛋黄"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem >
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="16" Height="16" Fill="#7BB33A" Margin="0,0,5,0"/>
+                                    <TextBlock Foreground="#7BB33A" Text="早苗绿"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem >
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="16" Height="16" Fill="#18BDFB" Margin="0,0,5,0"/>
+                                    <TextBlock Foreground="#18BDFB" Text="胖次蓝"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="16" Height="16" Fill="#B92CBF" Margin="0,0,5,0"/>
+                                    <TextBlock Foreground="#B92CBF" Text="基佬紫"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="16" Height="16" Fill="#FF6633" Margin="0,0,5,0"/>
+                                    <TextBlock Foreground="#FF6633" Text="那个橙"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                </ScrollViewer>
             </PivotItem>
             <PivotItem Header="弹幕">
                 <ScrollViewer>
-                    <StackPanel Margin=" 0,8,0,0">
+                    <StackPanel Margin="0 8">
                         <ComboBox x:Name="cb_font" Header="弹幕字体" SelectionChanged="ComboBox_SelectionChanged"/>
-                        <Slider x:Name="sli_speed" Header="弹幕速度" Width="200" HorizontalAlignment="Left" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
+                        <Slider x:Name="sli_speed" Header="弹幕速度" Width="200" HorizontalAlignment="Left" Maximum="10" Margin="0,8,0,0" Value="8" ValueChanged="sli_speed_ValueChanged"/>
                         <Slider Maximum="3" x:Name="sli_space" Header="弹幕间距" Width="200" HorizontalAlignment="Left" ValueChanged="sli_space_ValueChanged"/>
                         <Slider Maximum="3" x:Name="sli_fontsize" Header="弹幕字号" Width="200" HorizontalAlignment="Left" ValueChanged="sli_fontsize_ValueChanged"/>
+                        <ToggleSwitch x:Name="autokill" Header="自动屏蔽" Toggled="autokill_Toggled" OffContent="播放中需手动开启屏蔽"/>
+                        <ToggleSwitch x:Name="danmakuinit" Header="默认关闭弹幕" Toggled="danmakuinit_Toggled"/>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="弹幕屏蔽关键字"/>
-                            <HyperlinkButton Content="删除" Margin="40,0,40,0" Click="delword_Click"/>
+                            <HyperlinkButton Content="管理" Margin="40,0,40,0" Click="delword_Click"/>
                             <HyperlinkButton Content="提示" Click="regex_Click"/>
                         </StackPanel>
-                        <GridView Margin="0 4" x:Name="list_kill" IsItemClickEnabled="True" ItemClick="list_kill_ItemClick">
+                        <GridView Margin="0 4" x:Name="list_kill" Visibility="Collapsed" IsItemClickEnabled="True" ItemClick="list_kill_ItemClick">
                             <GridView.ItemContainerTransitions>
                                 <TransitionCollection>
                                     <EntranceThemeTransition/>
@@ -95,75 +98,95 @@
                                 </ItemsPanelTemplate>
                             </GridView.ItemsPanel>
                         </GridView>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,16">
                             <TextBox x:Name="txt_word" Width="240" HorizontalAlignment="Left"/>
                             <Button x:Name="addword" Content="添加" Margin="8 0" Width="80" Click="addword_Click"/>
                         </StackPanel>
-                        <ToggleSwitch x:Name="autokill" Header="自动屏蔽" Toggled="autokill_Toggled" OffContent="播放中需手动开启屏蔽"/>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
             <PivotItem Header="下载">
-                <StackPanel Margin=" 0,8,0,0">
-                    <ToggleSwitch x:Name="downstyle" Toggled="downstyle_Toggled" Header="允许使用流量下载"/>
-                    <ToggleSwitch x:Name="danmaku" Toggled="danmaku_Toggled" Header="下载视频同时下载弹幕" IsOn="True"/>
-                    <ToggleSwitch x:Name="path" Header="自定义存储位置" Toggled="path_Toggled"/>
-                    <TextBlock x:Name="txt_path" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="Gray"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                        <TextBlock x:Name="cache" Text="清理缓存(施工中)" VerticalAlignment="Center"/>
-                        <Button Content="清理" Width="60" Margin="100,0,0,0" Click="ClearCache_Click"/>
+                <ScrollViewer>
+                    <StackPanel Margin="0 8">
+                        <ToggleSwitch x:Name="downstyle" Toggled="downstyle_Toggled" Header="允许使用流量下载"/>
+                        <ToggleSwitch x:Name="danmaku" Toggled="danmaku_Toggled" Header="下载视频同时下载弹幕" IsOn="True"/>
+                        <ToggleSwitch x:Name="path" Header="自定义存储位置" Toggled="path_Toggled"/>
+                        <TextBlock x:Name="txt_path" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="Gray"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <TextBlock x:Name="cache" Text="清理缓存(施工中)" VerticalAlignment="Center"/>
+                            <Button Content="清理" Width="60" Margin="100,0,0,0" Click="ClearCache_Click"/>
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
+                </ScrollViewer>
             </PivotItem>
             <PivotItem Header="通知">
-                <StackPanel Margin=" 0,8,0,0">
-                    <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="主磁贴更新" IsOn="True"/>
-                    <ToggleSwitch x:Name="toast" Toggled="toast_Toggled" Header="推送通知" IsOn="True"/>
-                    <StackPanel Visibility="{Binding ElementName=toast,Path=IsOn,Converter={StaticResource cvt} }" BorderBrush="LightGray" BorderThickness="1" Padding="8">
-                        <ToggleSwitch Header="番剧更新" x:Name="t_bangumi" Toggled="t_bangumi_Toggled"/>
-                        <ToggleSwitch Header="新消息" x:Name="t_message" Toggled="t_message_Toggled"/>
+                <ScrollViewer>
+                    <StackPanel Margin="0 8">
+                        <ToggleSwitch x:Name="background" Toggled="background_Toggled" Header="主磁贴更新"/>
+                        <ToggleSwitch x:Name="toast" Toggled="toast_Toggled" Header="推送通知"/>
+                        <StackPanel Visibility="{Binding ElementName=toast,Path=IsOn,Converter={StaticResource cvt} }" BorderBrush="LightGray" BorderThickness="1" Padding="8">
+                            <ToggleSwitch Header="番剧更新" x:Name="t_bangumi" Toggled="t_bangumi_Toggled"/>
+                            <ToggleSwitch Header="新消息" x:Name="t_message" Toggled="t_message_Toggled"/>
+                        </StackPanel>
+                        <ToggleSwitch x:Name="backtaskcost" Toggled="backtaskcost_Toggled" Header="仅使用WiFi" Margin="0,4,0,0"/>
                     </StackPanel>
-                </StackPanel>
+                </ScrollViewer>
             </PivotItem>
             <PivotItem Header="播放">
-                <StackPanel Margin=" 0,8,0,0">
-                    <ToggleSwitch x:Name="direct" Header="点击剧集直接播放" Toggled="direct_Toggled"/>
-                    <ToggleSwitch x:Name="pc_fullscreen" Header="自动全屏" Toggled="fullscreen_Toggled"/>
-                    <ComboBox x:Name="quality" Header="默认清晰度选择" SelectedIndex="1" SelectionChanged="quality_SelectionChanged">
-                        <ComboBoxItem Tag="1">流畅</ComboBoxItem>
-                        <ComboBoxItem Tag="2">清晰</ComboBoxItem>
-                        <ComboBoxItem Tag="3" Visibility="Collapsed">高清</ComboBoxItem>
-                    </ComboBox>
-                </StackPanel>
+                <ScrollViewer>
+                    <StackPanel Margin="0 8">
+                        <ToggleSwitch x:Name="direct" Header="点击剧集直接播放" Toggled="direct_Toggled"/>
+                        <ToggleSwitch x:Name="pc_fullscreen" Header="自动全屏" Toggled="fullscreen_Toggled"/>
+                        <ToggleSwitch x:Name="pc_cursor" Header="全屏时隐藏鼠标指针" Toggled="cursor_Toggled"/>
+                        <ComboBox x:Name="quality" Header="首选清晰度" SelectionChanged="quality_SelectionChanged">
+                            <ComboBoxItem Tag="1">低清</ComboBoxItem>
+                            <ComboBoxItem Tag="2">高清</ComboBoxItem>
+                            <ComboBoxItem Tag="3" Visibility="Collapsed">原画</ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox x:Name="cb_format" Margin="0,8,0,0" Header="首选视频格式">
+                            <ComboBoxItem Tapped="ComboBoxItem_Tapped_1" Tag="0">mp4</ComboBoxItem>
+                            <ComboBoxItem Tapped="ComboBoxItem_Tapped_1" Tag="1" IsEnabled="False">flv</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                </ScrollViewer>
             </PivotItem>
             <PivotItem Header="关于" Margin="0">
-                <Grid x:Name="grid" Background="Black">
+                <Grid x:Name="grid">
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <StackPanel>
                             <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Foreground="White" Margin="0,20,0,0">哔哩哔哩一号机内测版 1st edition version 1.62</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" Margin="0,20,0,0">哔哩哔哩一号机内测版 1st edition version 1.68</TextBlock>
                                 <HyperlinkButton HorizontalAlignment="Center" Click="HyperlinkButton_Click">联系我</HyperlinkButton>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">企划</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">原画</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">演出</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">摄影师</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,40,0,0">特别鸣谢</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0">Fiddler</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,4,0,0">BUAA-Mobile</TextBlock>
-                                <TextBlock Foreground="White" HorizontalAlignment="Center" Margin="0,4,0,0">BiliBili UWP (弹幕)</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">企划</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">原画</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">演出</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">摄影师</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,12,0,0">DaweiX</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">特别鸣谢</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">Fiddler</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,4,0,0">BUAA-Mobile</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,4,0,0">BiliBili UWP (弹幕)</TextBlock>
                             </StackPanel>
                             <RelativePanel Height="{Binding ElementName=grid,Path=ActualHeight}">
-                                <TextBlock Foreground="White" Margin="0,0,8,12" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">©2016 DaweiX</TextBlock>
+                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" Margin="0,0,8,12" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">©2017 DaweiX</TextBlock>
                             </RelativePanel>
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
+            </PivotItem>
+            <PivotItem Header="实验室">
+                <!--<ComboBox SelectionChanged="ComboBox_SelectionChanged_1">
+                    <ComboBoxItem>Area模板化控件</ComboBoxItem>
+                </ComboBox>-->
+                <ListView SelectionChanged="ListView_SelectionChanged">
+                    <ListViewItem>下拉刷新控件</ListViewItem>
+                    <ListViewItem>列表动画效果</ListViewItem>
+                </ListView>
             </PivotItem>
         </Pivot>
     </Grid>

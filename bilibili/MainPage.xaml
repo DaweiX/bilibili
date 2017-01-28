@@ -32,10 +32,10 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <controls:MyPopup x:Name="popup"/>
+        <controls:MyPopup Grid.Row="1" x:Name="popup"/>
         <Grid x:Name="grid_top" Background="{ThemeResource bili_Theme}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
@@ -59,17 +59,21 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <StackPanel x:Name="stk" Orientation="Horizontal" Tapped="face_Tapped" Height="48" Background="{ThemeResource bili_Theme}">
-                            <Ellipse x:Name="face" Width="40" Height="40" Margin="4,0,0,0">
+                        <Grid Tapped="face_Tapped" Height="48" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="52"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Ellipse x:Name="face" Width="40" Height="40" Margin="4,0,0,0" HorizontalAlignment="Left">
                                 <Ellipse.Fill>
                                     <ImageBrush ImageSource="ms-appx:///Assets//Images//NoAvatar.png"/>
                                 </Ellipse.Fill>
                             </Ellipse>
-                            <StackPanel Margin="12,8,0,0">
-                                <TextBlock Text="尚未登录" x:Name="uname" Foreground="White"/>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="请登录" x:Name="uname" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                                 <TextBlock x:Name="rank" FontSize="12" Foreground="LightGray"/>
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
                         <ListBox Grid.Row="1" Style="{StaticResource ham}" Tapped="MainList_Tapped" x:Name="MainList">
                             <ListBoxItem Tag="index" Margin="0,8,0,0">
                                 <StackPanel Orientation="Horizontal">

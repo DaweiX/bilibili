@@ -37,20 +37,22 @@ namespace bilibili.Views
         VideoURL URL = null;
         bool isX = false;
         DispatcherTimer timer_danmaku = new DispatcherTimer();
+        DispatcherTimer timer_repeat = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+        DispatcherTimer timer = new DispatcherTimer();
         DisplayRequest displayRq = new DisplayRequest();
         string part = string.Empty;
         string folder = string.Empty;
+        string quality = "2";
+        VideoFormat format = VideoFormat.mp4;
         string cid = string.Empty;
         string aid = string.Empty;
-        DispatcherTimer timer = new DispatcherTimer();
         int R_1, R_2;
         string danmakuMode = "1";
         bool? isRepeat = null;
-        DispatcherTimer timer_repeat = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         List<VideoInfo> infos = new List<VideoInfo>();
         StorageFile file = null;
         List<string> strs = new List<string>();
-        bool isShowDanmu = false;
+        bool isHideDanmu = false;
         List<DanmuModel> DanmuPool;
         bool isInited = false;
         bool? isLocal = null;
@@ -58,6 +60,7 @@ namespace bilibili.Views
         DeviceType type;
         int Index = 0;
         bool isPropInit = false;
+        bool lightinit = false;
         public Video()
         {
             this.InitializeComponent();
@@ -113,6 +116,8 @@ namespace bilibili.Views
             {
                 sli_light.Value = 1;
             }
+            lightinit = true;
+            border.Opacity = 1 - sli_light.Value;
             if (SettingHelper.ContainsKey("_space"))
             {
                 sli_space.Value = int.Parse(SettingHelper.GetValue("_space").ToString());
@@ -121,9 +126,17 @@ namespace bilibili.Views
             {
                 sli_speed.Value = int.Parse(SettingHelper.GetValue("_speed").ToString());
             }
+            else
+            {
+                sli_space.Value = 8;
+            }
             if (SettingHelper.ContainsKey("_fontsize"))
             {
                 sli_fontsize.Value = int.Parse(SettingHelper.GetValue("_fontsize").ToString());
+            }
+            else
+            {
+                sli_fontsize.Value = 1;
             }
             cb_font.Items.Add("默认");
             cb_font.Items.Add("宋体");
@@ -136,6 +149,29 @@ namespace bilibili.Views
             if (SettingHelper.ContainsKey("_danmufont"))
             {
                 cb_font.SelectedIndex = int.Parse(SettingHelper.GetValue("_danmufont").ToString());
+            }
+            if (SettingHelper.ContainsKey("_quality"))
+            {
+                quality = SettingHelper.GetValue("_quality").ToString();
+            }
+            if (SettingHelper.ContainsKey("_isdanmaku"))
+            {
+                if ((bool)SettingHelper.GetValue("_isdanmaku")) 
+                {
+                    kill_all.IsChecked = true;
+                    isHideDanmu = true;
+                    stk.Visibility = Visibility.Collapsed;
+                }
+            }
+            cb_quality.SelectedIndex = 1;
+            cb_format.SelectedIndex = 0;
+            if (SettingHelper.ContainsKey("_quality"))
+            {
+                cb_quality.SelectedIndex = int.Parse(SettingHelper.GetValue("_quality").ToString()) - 1;
+            }
+            if (SettingHelper.ContainsKey("_videoformat"))
+            {
+                cb_format.SelectedIndex = int.Parse(SettingHelper.GetValue("_videoformat").ToString());
             }
         }
 
@@ -168,16 +204,17 @@ namespace bilibili.Views
                         {
                             media.Pause();
                             danmaku.IsPauseDanmaku(true);
-                            icon.Symbol = Symbol.Play;
+                            pause.Icon = new SymbolIcon(Symbol.Play);
                         }
                         else if (media.CurrentState == MediaElementState.Paused)
                         {
                             media.Play();
                             danmaku.ClearStaticDanmu();
                             danmaku.IsPauseDanmaku(false);
-                            icon.Symbol = Symbol.Pause;
+                            pause.Icon = new SymbolIcon(Symbol.Pause);
                         }
-                    }break;
+                    }
+                    break;
                 case VirtualKey.Left:
                     {
                         sli_main.Value -= 5;
@@ -225,7 +262,6 @@ namespace bilibili.Views
         /// </summary>
         private void Timer_danmaku_Tick(object sender, object e)
         {
-            bool isKill = false;
             if (media.CurrentState == MediaElementState.Playing)
             {
                 if (DanmuPool != null)
@@ -238,20 +274,16 @@ namespace bilibili.Views
                             {
                                 if (Regex.IsMatch(item.Message, word) && word.Length > 0) 
                                 {
-                                    isKill = true;
-                                    break;
+                                    return;
                                 }
                             }
-                            if (isKill == false) 
+                            if (item.Mode == "1")
                             {
-                                if (item.Mode == "1")
-                                {
-                                    danmaku.AddBasic(item, false);
-                                }
-                                if (item.Mode == "4" || item.Mode == "5")
-                                {
-                                    danmaku.AddTop(item, false);
-                                }
+                                danmaku.AddBasic(item, false);
+                            }
+                            if (item.Mode == "4" || item.Mode == "5")
+                            {
+                                danmaku.AddTop(item, false);
                             }
                         }
                     }
@@ -265,7 +297,10 @@ namespace bilibili.Views
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.None;
-            ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            if (ApplicationView.GetForCurrentView().IsFullScreenMode)
+            {
+                ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            }
             media.Stop();
             media.Source = null;
             GC.Collect();
@@ -287,6 +322,11 @@ namespace bilibili.Views
             }
             txt_now.Text = DateTime.Now.Hour.ToString("00") + " ：" + DateTime.Now.Minute.ToString("00");
             txt_bat.Text = ((double)Battery.AggregateBattery.GetReport().RemainingCapacityInMilliwattHours / (double)Battery.AggregateBattery.GetReport().FullChargeCapacityInMilliwattHours * 100).ToString("00") + "%";
+            if (SettingHelper.ContainsKey("_cursor"))
+            {
+                if ((bool)SettingHelper.GetValue("_cursor") == false)
+                    return;
+            }
             await HideCursor();
         }
 
@@ -413,12 +453,7 @@ namespace bilibili.Views
             cid = infos[index].Cid;
             aid = infos[0].Title;
             status.Text = "获取视频地址...";
-            int quality = 2;
-            if (SettingHelper.ContainsKey("_quality"))
-            {
-                quality = int.Parse(SettingHelper.GetValue("_quality").ToString());
-            }
-            URL = await ContentServ.GetVedioURL(cid, quality, VideoFormat.mp4);
+            URL = await ContentServ.GetVedioURL(cid, quality, format);
             string url = URL.Url;
             status.Text += (URL == null) ? "失败" : "完毕";
             if (URL == null) return;
@@ -434,6 +469,9 @@ namespace bilibili.Views
             }
             media.Source = new Uri(url);
             txt_title.Text = infos[index].Title;
+            if (URL.Acceptquality.Contains("1")) q1.Visibility = Visibility.Visible;
+            if (URL.Acceptquality.Contains("2")) q2.Visibility = Visibility.Visible;
+            if (URL.Acceptquality.Contains("3")) q3.Visibility = Visibility.Visible;
             status.Text += Environment.NewLine + "正在缓冲视频...";
             loading.Visibility = Visibility.Visible;
         }
@@ -447,7 +485,14 @@ namespace bilibili.Views
         {
             status.Visibility = Visibility.Collapsed;
             media.Visibility = Visibility.Visible;
-            timer_danmaku.Start();
+            if (isLocal == true)
+            {
+                cb_format.Visibility = cb_quality.Visibility = Visibility.Collapsed;
+            }
+            if (!isHideDanmu)
+            {
+                timer_danmaku.Start();
+            }
             TimeSpan ts = new TimeSpan(0, 0, (int)media.NaturalDuration.TimeSpan.TotalSeconds);
             if (ts.Hours == 0)
                 txt_total.Text = ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
@@ -455,7 +500,7 @@ namespace bilibili.Views
                 txt_total.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
             sli_main.Maximum = ts.TotalSeconds;
             await Task.Delay(500);
-            ReverseVisibility();
+            grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = Visibility.Collapsed;
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
@@ -464,14 +509,14 @@ namespace bilibili.Views
             {
                 media.Pause();
                 danmaku.IsPauseDanmaku(true);
-                icon.Symbol = Symbol.Play;
+                pause.Icon = new SymbolIcon(Symbol.Play);
             }
             else if (media.CurrentState == MediaElementState.Paused)
             {
                 media.Play();
                 danmaku.ClearStaticDanmu();
                 danmaku.IsPauseDanmaku(false);
-                icon.Symbol = Symbol.Pause;
+                pause.Icon = new SymbolIcon(Symbol.Pause);
             }
         }
 
@@ -510,7 +555,7 @@ namespace bilibili.Views
             if (isInited)
             {
                 media.Volume = sli_vol.Value * 0.1;
-                SettingHelper.SetValue("_vol", sli_vol.Value.ToString());
+                SettingHelper.SetValue("_vol", sli_vol.Value);
             }
         }
         /// <summary>
@@ -518,8 +563,11 @@ namespace bilibili.Views
         /// </summary>
         private void sli_light_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
-            border.Opacity = 1 - sli_light.Value;
-            SettingHelper.SetValue("_light", sli_light.Value);
+            if(lightinit)
+            {
+                border.Opacity = 1 - sli_light.Value;
+                SettingHelper.SetValue("_light", sli_light.Value);
+            }
         }
 
         private void border_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
@@ -745,8 +793,8 @@ namespace bilibili.Views
         /// </summary>
         private void DanmuSwitch_Click(object sender, RoutedEventArgs e)
         {
-            isShowDanmu = !isShowDanmu;
-            if (isShowDanmu)
+            isHideDanmu = !isHideDanmu;
+            if (isHideDanmu)
             {
                 timer_danmaku.Stop();
                 danmaku.ClearDanmu();
@@ -762,14 +810,14 @@ namespace bilibili.Views
         /// </summary>
         private void border_ManipulationDelta(object sender, Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
         {
-            e.Handled = true;
+            //e.Handled = true;
             double Y = e.Delta.Translation.Y;
             double X = e.Delta.Translation.X;
             if (Math.Abs(X) > (Math.Abs(Y) + 5))
             {
                 isX = true;
                 media.Pause();
-                icon.Symbol = Symbol.Play;
+                pause.Icon = new SymbolIcon(Symbol.Play);
                 double actual = X / this.ActualWidth;
                 //横跨屏幕的TimeSpan:90s（一分半）
                 sli_main.Value += actual * 90;
@@ -796,11 +844,11 @@ namespace bilibili.Views
 
         private void border_ManipulationCompleted(object sender, Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs e)
         {
-            e.Handled = true;
+            //e.Handled = true;
             if (isX)
             {
                 media.Play();
-                icon.Symbol = Symbol.Pause;
+                pause.Icon = new SymbolIcon(Symbol.Pause);
             }
         }
 
@@ -825,10 +873,11 @@ namespace bilibili.Views
                 {
                     var property = await file.GetBasicPropertiesAsync();
                     var property2 = await file.Properties.GetVideoPropertiesAsync();
+                    var property3 = await file.Properties.GetMusicPropertiesAsync();
                     info.Text = "视频大小:" + (property.Size / Math.Pow(1024, 2)).ToString("0.0") + "M" + Environment.NewLine +
                         "修改时间:" + property.DateModified.ToLocalTime().ToString() + Environment.NewLine +
                         "视频尺寸:" + property2.Width.ToString() + "×" + property2.Height.ToString() + Environment.NewLine +
-                        "比特率:" + property2.Bitrate.ToString();
+                        "总比特率:" + (property2.Bitrate / 1000).ToString() + "kbps";
                 }
                 isPropInit = true;
             }         
@@ -849,14 +898,14 @@ namespace bilibili.Views
             {
                 media.Pause();
                 danmaku.IsPauseDanmaku(true);
-                icon.Symbol = Symbol.Play;
+                pause.Icon = new SymbolIcon(Symbol.Play);
             }
             else if (media.CurrentState == MediaElementState.Paused)
             {
                 media.Play();
                 danmaku.IsPauseDanmaku(false);
                 danmaku.ClearStaticDanmu();
-                icon.Symbol = Symbol.Pause;
+                pause.Icon = new SymbolIcon(Symbol.Pause);
             }
         }
 
@@ -920,7 +969,7 @@ namespace bilibili.Views
             {
                 foreach (var word in txt_word.Text.Split(' '))
                 {
-                    if (word.Length < 0) continue;
+                    if (word.Length == 0) continue;
                     strs.Add(word);
                 }
             }
@@ -928,7 +977,7 @@ namespace bilibili.Views
             {
                 if (SettingHelper.ContainsKey("_words"))
                 {
-                    string[] words = SettingHelper.GetValue("_words").ToString().Split(',');
+                    string[] words = SettingHelper.GetValue("_words").ToString().Split(' ');
                     foreach (string word in words)
                     {
                         if (word.Length > 0) strs.Add(word);
@@ -955,6 +1004,35 @@ namespace bilibili.Views
             }
         }
 
+        private async void ComboBoxItem_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            ComboBoxItem item = sender as ComboBoxItem;
+            quality = item.Tag.ToString();
+            await read(Index);
+        }
+
+        private async void ComboBoxItem_Tapped_1(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            ComboBoxItem item = sender as ComboBoxItem;
+            switch(item.Tag.ToString())
+            {
+                case "mp4": format = VideoFormat.mp4;break;
+                //case "hdmp4": format = VideoFormat.hdmp4; break;
+                case "flv": format = VideoFormat.flv; break;
+            }
+            await read(Index);
+        }
+
+        private void hidepane_Click(object sender, RoutedEventArgs e)
+        {
+            ham.IsPaneOpen = false;
+        }
+
+        private void rating_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            media.PlaybackRate = rating.Value;
+        }
+
         private void Repeat_Click(object sender, RoutedEventArgs e)
         {
             switch(isRepeat)
@@ -962,19 +1040,19 @@ namespace bilibili.Views
                 case null:
                     R_1 = (int)media.Position.TotalMilliseconds;
                     isRepeat = true;
-                    symbol.Symbol = Symbol.ZoomIn;
+                    repeat.Icon = new SymbolIcon(Symbol.ZoomIn);
                     break;
                 case true:
                     R_2 = (int)media.Position.TotalMilliseconds;
                     media.Position = TimeSpan.FromMilliseconds(R_1);
                     isRepeat = false;
                     timer_repeat.Start();
-                    symbol.Symbol = Symbol.ZoomOut;
+                    repeat.Icon = new SymbolIcon(Symbol.ZoomOut);
                     break;
                 case false:
                     isRepeat = null;
                     timer_repeat.Stop();
-                    symbol.Symbol = Symbol.RepeatAll;
+                    repeat.Icon = new SymbolIcon(Symbol.RepeatAll);
                     break;
             }
         }

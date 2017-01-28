@@ -111,16 +111,6 @@ namespace bilibili.Views
             Frame.Navigate(typeof(MyConcerns), UserHelper.mid, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
         }
 
-        private void conlist_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            GridView ctrl = sender as GridView;
-            var item = ctrl.SelectedItem;
-            if (item != null)
-            {
-                Frame.Navigate(typeof(Detail), (item as ConcernItem).Season_id, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-            }
-        }
-
         private async void coin_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             if (ApiHelper.IsLogin())
@@ -177,7 +167,28 @@ namespace bilibili.Views
             }
         }
 
-        private void fav_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void conlist_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(Detail), (e.ClickedItem as ConcernItem).Season_id, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+        }
+
+        private async void record_Click(object sender, RoutedEventArgs e)
+        {
+            if (ApiHelper.IsLogin())
+            {
+                MenuFlyoutItem item = sender as MenuFlyoutItem;
+                if (item.Tag.ToString() == "0")
+                {
+                    await new Dialogs.AccountRecord().ShowAsync();
+                }
+                else if (item.Tag.ToString() == "1")
+                {
+                    await new Dialogs.ExpRecord().ShowAsync();
+                }
+            }
+        }
+
+        private void fav_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(FavCollection), null, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
         }

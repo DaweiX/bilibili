@@ -10,7 +10,7 @@
     d:DesignWidth="400">
 
     <Grid>
-        <Popup x:Name="pop" VerticalOffset="68" HorizontalAlignment="Right" FlowDirection="RightToLeft">
+        <Popup x:Name="pop" VerticalOffset="20" HorizontalAlignment="Right" FlowDirection="RightToLeft">
             <Popup.ChildTransitions>
                 <TransitionCollection>
                     <EdgeUIThemeTransition Edge="Left"/>

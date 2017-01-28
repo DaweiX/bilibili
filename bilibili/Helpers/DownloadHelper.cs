@@ -1,5 +1,7 @@
-﻿using System;
+﻿using bilibili.Http;
+using System;
 using System.ComponentModel;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Networking.BackgroundTransfer;
@@ -37,18 +39,15 @@ namespace bilibili.Helpers
             try
             {
                 BackgroundDownloader downloader = new BackgroundDownloader();
-                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(KnownFolders.VideosLibrary);
-                StorageFile file = await folder.CreateFileAsync(name, CreationCollisionOption.GenerateUniqueName);
+                //获取文件夹权限（可选）
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
+                StorageFile file = await folder.CreateFileAsync(name, CreationCollisionOption.OpenIfExists);
                 DownloadOperation download = downloader.CreateDownload(new Uri(url), file);
                 if (SettingHelper.ContainsKey("_downloadcost"))
                 {
                     if (SettingHelper.GetValue("_downloadcost").ToString() == "wifionly")
                     {
                         download.CostPolicy = BackgroundTransferCostPolicy.UnrestrictedOnly;
-                    }
-                    else if (SettingHelper.GetValue("_downloadcost").ToString() == "wifidata") 
-                    {
-                        download.CostPolicy = BackgroundTransferCostPolicy.Default;
                     }
                 }
                 return download;
@@ -74,36 +73,32 @@ namespace bilibili.Helpers
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
             DownloadOperation mydownload;
-            public DownloadOperation MyDownload
+            public DownloadOperation DownOpration
             {
                 get { return mydownload; }
                 set { mydownload = value; }
             }
-            double process;
-            public double Process
-            {
-                get { return process; }
-                set { process = value; }
-            }
+            public double Process { get; set; }
             string size;
             public string Size
             {
                 get { return size; }
                 set
                 {
-                    size = (Convert.ToDouble(value) / Math.Pow(1024, 2)).ToString("0.0") + "M/t/" + (Convert.ToDouble(mydownload.Progress.TotalBytesToReceive) / Math.Pow(1024, 2)).ToString("0.0") + "M";
+                    size = (Convert.ToDouble(value) / Math.Pow(1024, 2)).ToString("0.0") + "M";
                     MyPropertyChanged("Size");
                 }
+            }
+            public string Name { get; set; }
+            public string TotalSize
+            {
+                get { return (mydownload.Progress.TotalBytesToReceive / Math.Pow(1024, 2)).ToString("0.0") + "M"; }
             }
             public string Guid { get { return mydownload.Guid.ToString(); } }
             string status;
             public string Status
             {
-                get
-                {
-                    //MyPropertyChanged("Status");
-                    return status;
-                }
+                get { return status; }
                 set
                 {
                     switch(mydownload.Progress.Status)
@@ -136,7 +131,7 @@ namespace bilibili.Helpers
                             status = "因系统问题暂停";
                             break;
                         default:
-                            status = "Wait...";
+                            status = "等待...";
                             break;
                     }
                     MyPropertyChanged("Status");
@@ -171,6 +166,22 @@ namespace bilibili.Helpers
                 folder = defaultfolder;
             }
             return folder;
+        }
+
+        /// <summary>
+        /// 下载弹幕文档
+        /// </summary>
+        public async static Task DownloadDanmakuAsync(string cid, string name, StorageFolder folder)
+        {
+            string xml = await BaseService.SentGetAsync("http://comment.bilibili.com/" + cid + ".xml");
+            StorageFile file = await folder.CreateFileAsync(name + ".xml");
+            using (Stream file0 = await file.OpenStreamForWriteAsync())
+            {
+                using (StreamWriter writer = new StreamWriter(file0))
+                {
+                    await writer.WriteAsync(xml);
+                }
+            }
         }
     }
 }

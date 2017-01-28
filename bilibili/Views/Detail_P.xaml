@@ -27,7 +27,7 @@
                         <Setter Target="title.(RelativePanel.RightOf)" Value=""/>
                         <Setter Target="pic.(RelativePanel.Below)" Value="title"/>
                         <Setter Target="publish.(RelativePanel.Below)" Value="pic"/>
-                        <Setter Target="publish.Margin" Value="0,24,0,0"/>
+                        <Setter Target="publish.Margin" Value="8,24,0,0"/>
                         <Setter Target="count.(RelativePanel.Below)" Value="publish"/>
                         <Setter Target="count1.(RelativePanel.Orientation)" Value="Horizontal"/>
                         <Setter Target="count2.(RelativePanel.Orientation)" Value="Horizontal"/>
@@ -76,12 +76,12 @@
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                     </Image>
-                                    <StackPanel x:Name="publish" Orientation="Horizontal" Margin="0,12,0,0">
+                                    <StackPanel x:Name="publish" Orientation="Horizontal" Margin="8,12,0,0">
                                         <HyperlinkButton x:Name="up" Click="up_Click"/>
                                         <TextBlock Text="发表于"/>
                                         <TextBlock x:Name="time"/>
                                     </StackPanel>
-                                    <StackPanel x:Name="count">
+                                    <StackPanel x:Name="count" Margin="8,0,0,0">
                                         <StackPanel x:Name="count1">
                                             <TextBlock x:Name="c_play"/>
                                             <TextBlock x:Name="c_fav"/>
@@ -133,7 +133,7 @@
                             </StackPanel>
                             <StackPanel Margin="8,8,0,0">
                                 <controls:Header Content="播放！"/>
-                                <ListView x:Name="ReadyList" Visibility="Collapsed" Tapped="ReadyList_Tapped" IsMultiSelectCheckBoxEnabled="True">
+                                <ListView x:Name="ReadyList" Tapped="ReadyList_Tapped">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Part}"/>
@@ -144,7 +144,35 @@
                         </StackPanel>
                     </ScrollViewer>
                     <CommandBar>
-                        <AppBarButton x:Name="btn_ok" Icon="Accept" Label="确定" Click="btn_ok_Click" Visibility="Collapsed"/>
+                        <AppBarButton Icon="Accept" x:Name="btn_ok" Label="确定" Visibility="Collapsed">
+                            <AppBarButton.Flyout>
+                                <Flyout x:Name="flyout_download">
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="{ThemeResource CommandBarColor}" Opacity="0.9"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
+                                    <StackPanel Padding="4">
+                                        <TextBlock Text="视频格式"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="f0" GroupName="format" Tag="0" Checked="format_Checked">MP4</RadioButton>
+                                            <RadioButton x:Name="f1" GroupName="format" Tag="1" Checked="format_Checked">FLV</RadioButton>
+                                        </StackPanel>
+                                        <TextBlock Text="清晰度"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="q1" GroupName="quality" Tag="1" Click="quality_Checked">低清</RadioButton>
+                                            <RadioButton x:Name="q2" GroupName="quality" Tag="2" Click="quality_Checked">高清</RadioButton>
+                                            <RadioButton x:Name="q3" GroupName="quality" IsEnabled="False" Tag="3" Click="quality_Checked">原画</RadioButton>
+                                        </StackPanel>
+                                        <Button Content="确定" Click="btn_ok_Click"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>                       
                         <AppBarButton x:Name="btn_all" Icon="SelectAll" Label="全选" Click="btn_all_Click" Visibility="Collapsed"/>
                         <AppBarButton x:Name="btn_cal" Icon="Cancel" Label="取消" Click="btn_cal_Click" Visibility="Collapsed"/>
                         <AppBarButton x:Name="btn_down" Icon="Download" Label="下载" Click="download_Click"/>

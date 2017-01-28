@@ -86,7 +86,7 @@ namespace bilibili.Models
     class VideoURL
     {
         public List<string> Acceptformat { get; set; }
-        public List<int> Acceptquality { get; set; }
+        public List<string> Acceptquality { get; set; }
         public string Url { get; set; }
         public string BackupUrl { get; set; }
         public string Length { get; set; }

@@ -11,16 +11,16 @@
             <SolidColorBrush x:Key="bili_Theme" Color="#e273a9"/>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="ThemeBackground" Color="White"/>
                     <SolidColorBrush x:Key="bili_PageBackground" Color="#f1f1f1"/>
-                    <SolidColorBrush x:Key="bili_ControlBackground" Color="LightGray"/>
                     <SolidColorBrush x:Key="bili_ListBackground" Color="White"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Main" Color="Black"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Second" Color="#b3b3b3"/>
                     <Color x:Key="CommandBarColor">#CCCCCC</Color>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="ThemeBackground" Color="Black"/>
                     <SolidColorBrush x:Key="bili_PageBackground" Color="#1d1d1d"/>
-                    <SolidColorBrush x:Key="bili_ControlBackground" Color="DarkGray"/>
                     <SolidColorBrush x:Key="bili_ListBackground" Color="#1d1d1d"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Main" Color="White"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Second" Color="LightGray"/>

@@ -1,14 +1,13 @@
 ﻿using bilibili.Http.ContentService;
+using bilibili.Methods;
 using bilibili.Models;
 using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using Newtonsoft.Json;
-using bilibili.Methods;
-using System.Collections.Generic;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -20,13 +19,17 @@ namespace bilibili.Views
     public sealed partial class Friends : Page
     {
         string mid = string.Empty;
-        int page = 1;
         Site_UserInfo user = new Site_UserInfo();
         Site_UserSettings sets = new Site_UserSettings();
+        bool isloaded_video = false;
+        bool isloaded_friend = false;
         public Friends()
         {
             this.InitializeComponent();
             toutu.SizeChanged += toutu_SizeChanged;
+            pivot.SelectionChanged += pivot_SelectionChanged;
+            scroll_friend.ViewChanged += ScrollViewer_ViewChanged;
+            scroll_myvideo.ViewChanged += scroll_myvideo_ViewChanged;
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -72,7 +75,6 @@ namespace bilibili.Views
             {
                 toutu.SizeChanged -= toutu_SizeChanged;
             }
-            list_videos.ItemsSource = await UserRelated.GetMyVideoAsync(mid, 1);
             List<ConcernItem> concerns = await UserRelated.GetConcernBangumiAsync(mid, 1, false);
             if (concerns != null)
             {
@@ -86,15 +88,6 @@ namespace bilibili.Views
                     conlist.ItemsSource = concerns;
                 }
             }
-            List<Friend> list = await UserRelated.GetFriendsAsync(mid, page);
-            foreach (var item in list)
-            {
-                list_concern.Items.Add(item);
-            }
-            if (list.Count >= 30)
-            {
-                scroll_friend.ViewChanged += ScrollViewer_ViewChanged;
-            }
         }
 
         private void list_concern_ItemClick(object sender, ItemClickEventArgs e)
@@ -107,7 +100,7 @@ namespace bilibili.Views
 
         private void list_videos_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Content).Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as MyVideo).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         private void conlist_Tapped(object sender, TappedRoutedEventArgs e)
@@ -123,7 +116,7 @@ namespace bilibili.Views
             Frame.Navigate(typeof(MyConcerns), mid, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
         }
 
-        private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void GridView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             width.Width = WidthFit.GetWidth(ActualWidth, 600, 400);
         }
@@ -142,7 +135,7 @@ namespace bilibili.Views
             if (scroll_friend.VerticalOffset > scroll_friend.ScrollableHeight - 50) 
             {
                 isLoading = true;
-                page++;
+                int page = list_concern.Items.Count / 30 + 1;
                 List<Friend> list = await UserRelated.GetFriendsAsync(mid, page);
                 foreach (var item in list)
                 {
@@ -154,6 +147,61 @@ namespace bilibili.Views
                 }
                 isLoading = false;
             }           
+        }
+        bool isloading_myvideo = false;
+        private async void scroll_myvideo_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (isloading_myvideo) return;
+            if (scroll_myvideo.VerticalOffset > scroll_myvideo.ScrollableHeight - 50)
+            {
+                isloading_myvideo = true;
+                int page = list_videos.Items.Count / 20 + 1;
+                List<MyVideo> list = await UserRelated.GetMyVideoAsync(mid, page);
+                foreach (var item in list)
+                {
+                    list_videos.Items.Add(item);
+                }
+                if (list.Count < 20)
+                {
+                    scroll_myvideo.ViewChanged -= scroll_myvideo_ViewChanged;
+                }
+                isloading_myvideo = false;
+            }
+        }
+
+        private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isloaded_friend && isloaded_video)
+            {
+                pivot.SelectionChanged -= pivot_SelectionChanged;
+                return;
+            }
+            if (pivot.SelectedIndex == 1 && !isloaded_video) 
+            {
+                List<MyVideo> myvideos = await UserRelated.GetMyVideoAsync(mid, 1);
+                for (int i = 0; i < myvideos.Count; i++)
+                {
+                    list_videos.Items.Add(myvideos[i]);
+                }
+                if (myvideos.Count < 20)
+                {
+                    scroll_myvideo.ViewChanged -= scroll_myvideo_ViewChanged;
+                }
+                isloaded_video = true;
+            }
+            if (pivot.SelectedIndex == 2 && !isloaded_friend) 
+            {
+                List<Friend> list = await UserRelated.GetFriendsAsync(mid, 1);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    list_concern.Items.Add(list[i]);
+                }
+                if (list.Count < 30)
+                {
+                    scroll_friend.ViewChanged -= ScrollViewer_ViewChanged;
+                }
+                isloaded_friend = true;
+            }
         }
     }
 }

@@ -26,7 +26,7 @@
                     <LineBreak/>
                     <Run Foreground="{ThemeResource bili_Theme}">(?&lt;=这是)X哥</Run>
                     <LineBreak/>
-                    <Run Foreground="{ThemeResource bili_Fontcolor_Second}">这是</Run>
+                    <Run Foreground="{ThemeResource bili_Fontcolor_Second}">有个人叫X哥，这是</Run>
                     <Run Foreground="Red">X哥</Run>
                 </Paragraph>
                 <Paragraph Margin="0 8">后接某词
@@ -35,28 +35,38 @@
                     <Run Foreground="{ThemeResource bili_Theme}">X哥(?=战斗过的)</Run>
                     <LineBreak/>
                     <Run Foreground="Red">X哥</Run>
-                    <Run Foreground="{ThemeResource bili_Fontcolor_Second}">战斗过的</Run>
+                    <Run Foreground="{ThemeResource bili_Fontcolor_Second}">战斗过的，X哥是……</Run>
                 </Paragraph>
                 <Paragraph>日期
-                    <Span Foreground="{ThemeResource bili_Fontcolor_Second}">{n,m}:重复次数区间</Span>
+                    <Span Foreground="{ThemeResource bili_Fontcolor_Second}">如下示例可匹配99%的刷日期弹幕</Span>
                     <LineBreak/>
-                    <Run Foreground="{ThemeResource bili_Theme}">\d{4}\.\d{1,2}\.\d{0,2}}</Run>
+                    <Run Foreground="{ThemeResource bili_Theme}">\d{2,4}.*\d{1,2}.*\d{0,2}</Run>
                     <LineBreak/>
                     <Run Foreground="Red">2015.2.24（一种可能）</Run>
                 </Paragraph>
                 <Paragraph>匹配符
                     <LineBreak/>
-                    <Run xml:space="preserve">.       除换行符外的任意字符</Run>
+                    <Run xml:space="preserve">.           除换行符外的任意字符</Run>
                     <LineBreak/>
-                    <Run xml:space="preserve">\w    字母、数字、下划线或汉字</Run>
+                    <Run xml:space="preserve">\w        字母、数字、下划线或汉字</Run>
                     <LineBreak/>
-                    <Run xml:space="preserve">\d    数字</Run>
+                    <Run xml:space="preserve">\d        数字</Run>
                     <LineBreak/>
-                    <Run xml:space="preserve">\s    任意空白符（空格、回车、Tab等）</Run>
+                    <Run xml:space="preserve">\s        任意空白符（空格、回车、Tab等）</Run>
                     <LineBreak/>
-                    <Run xml:space="preserve">^     字符串的开始</Run>
+                    <Run xml:space="preserve">^         字符串的开始</Run>
                     <LineBreak/>
-                    <Run xml:space="preserve">$     字符串的结尾</Run>
+                    <Run xml:space="preserve">$         字符串的结尾</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">+         重复一次或多次</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">*          重复零次或多次</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">?          重复零次或一次</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">{n}       重复n次</Run>
+                    <LineBreak/>
+                    <Run xml:space="preserve">{n,m}   重复n到m次</Run>
                 </Paragraph>
             </RichTextBlock>
         </StackPanel>

@@ -21,6 +21,12 @@ namespace bilibili.Views
         public Topic()
         {
             this.InitializeComponent();
+            ContentServ.report += Report;
+        }
+
+        private async void Report(string status)
+        {
+            await popup.Show(status);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -42,18 +48,24 @@ namespace bilibili.Views
             {
                 list_topic.Visibility = Visibility.Visible;
                 List<Models.Topic> topic = await ContentServ.GetTopicListAsync(1);
-                foreach (var item in topic)
+                if (topic != null)
                 {
-                    list_topic.Items.Add(item);
+                    foreach (var item in topic)
+                    {
+                        list_topic.Items.Add(item);
+                    }
                 }
             }
             if(isTopic == false)
             {
                 list_event.Visibility = Visibility.Visible;
                 List<Models.Event> events = await ContentServ.GetEventListAsync(1);
-                foreach (var item in events)
+                if (events != null)
                 {
-                    list_event.Items.Add(item);
+                    foreach (var item in events)
+                    {
+                        list_event.Items.Add(item);
+                    }
                 }
             }
         }

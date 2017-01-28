@@ -5,6 +5,7 @@
     xmlns:local="using:bilibili.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="using:bilibili.Controls"
     mc:Ignorable="d"
     SizeChanged="Page_SizeChanged">
     <Page.Resources>
@@ -31,6 +32,7 @@
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Border x:Name="width"/>
+        <c:MyPopup x:Name="popup"/>
         <Pivot x:Name="mainpivot" SelectionChanged="mainpivot_SelectionChanged">
             <PivotItem Header="番剧" Tag="13" Margin="0,4,0,0">
                 <GridView x:Name="list13" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>

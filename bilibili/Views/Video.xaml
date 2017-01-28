@@ -7,44 +7,70 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    x:Name="page">
+    x:Name="page"
+    Background="Black">
     <Page.Resources>
         <local:SecToString x:Key="cvt"/>
         <local:PositionCVT x:Key="cvt2"/>
     </Page.Resources>
     <SplitView x:Name="ham" FlowDirection="RightToLeft" OpenPaneLength="300" DisplayMode="Overlay" PaneBackground="{x:Null}">
         <SplitView.Pane>
-            <Pivot FlowDirection="LeftToRight">
-                <Pivot.Background>
-                    <SolidColorBrush Color="Black" Opacity="0.6"/>
-                </Pivot.Background>
-                <PivotItem Header="弹幕设定">
-                    <ScrollViewer>
-                        <StackPanel>
-                            <ComboBox x:Name="cb_font" Header="弹幕字体" Foreground="White" SelectionChanged="ComboBox_SelectionChanged"/>
-                            <TextBlock Text="弹幕速度" Foreground="White" Margin="0,8,0,0"/>
-                            <Slider x:Name="sli_speed" Maximum="10" Value="8" ValueChanged="sli_speed_ValueChanged"/>
-                            <TextBlock Text="弹幕间距" Foreground="White"/>
-                            <Slider Maximum="2" x:Name="sli_space" ValueChanged="sli_space_ValueChanged"/>
-                            <TextBlock Text="弹幕字号" Foreground="White"/>
-                            <Slider Maximum="3" x:Name="sli_fontsize" ValueChanged="sli_fontsize_ValueChanged"/>
-                            <TextBlock Text="屏蔽关键字(请以空格分隔关键词)" Foreground="White" Margin="0,8,0,4"/>
-                            <TextBox x:Name="txt_word"/>
-                            <Grid Margin="0 4">
-                                <Button Content="执行" Click="Kill_Click" HorizontalAlignment="Left" Background="{ThemeResource bili_Theme}" Foreground="White"/>
-                                <CheckBox x:Name="wordInclude" HorizontalAlignment="Right">
-                                    <CheckBox.Content>
-                                        <TextBlock Foreground="White" Text="忽略全局关键词"/>
-                                    </CheckBox.Content>
-                                </CheckBox>
-                            </Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="48"/>
+                </Grid.RowDefinitions>
+                <Grid.Background>
+                    <SolidColorBrush Color="Black" Opacity="0.8"/>
+                </Grid.Background>
+                <Pivot FlowDirection="LeftToRight">
+                    <PivotItem Header="弹幕设定">
+                        <ScrollViewer>
+                            <StackPanel Margin="0,8,0,0">
+                                <ComboBox x:Name="cb_font" Header="弹幕字体" Foreground="White" SelectionChanged="ComboBox_SelectionChanged"/>
+                                <TextBlock Text="弹幕速度" Foreground="White" Margin="0,8,0,8"/>
+                                <Slider x:Name="sli_speed" Maximum="10" ValueChanged="sli_speed_ValueChanged" Width="200" HorizontalAlignment="Left"/>
+                                <TextBlock Text="弹幕间距" Foreground="White"/>
+                                <Slider Maximum="2" x:Name="sli_space" ValueChanged="sli_space_ValueChanged" Width="200" HorizontalAlignment="Left"/>
+                                <TextBlock Text="弹幕字号" Foreground="White"/>
+                                <Slider Maximum="3" x:Name="sli_fontsize" ValueChanged="sli_fontsize_ValueChanged" Width="200" HorizontalAlignment="Left"/>
+                                <TextBlock Text="屏蔽关键字(请以空格分隔关键词)" Foreground="White" Margin="0,8,0,4"/>
+                                <TextBox x:Name="txt_word"/>
+                                <Grid Margin="0 4">
+                                    <Button Content="执行" Click="Kill_Click" HorizontalAlignment="Left" Background="{ThemeResource bili_Theme}" Style="{StaticResource DefaultButtonStyle}" Foreground="White"/>
+                                    <CheckBox x:Name="wordInclude" HorizontalAlignment="Right">
+                                        <CheckBox.Content>
+                                            <TextBlock Foreground="White" Text="忽略全局关键词"/>
+                                        </CheckBox.Content>
+                                    </CheckBox>
+                                </Grid>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </PivotItem>
+                    <PivotItem Header="视频信息">
+                        <StackPanel Margin="0,8,0,0">
+                            <ComboBox x:Name="cb_quality" Header="清晰度更改" Foreground="White">
+                                <ComboBoxItem x:Name="q1" Tapped="ComboBoxItem_Tapped" Tag="1" Visibility="Collapsed">低清</ComboBoxItem>
+                                <ComboBoxItem x:Name="q2" Tapped="ComboBoxItem_Tapped" Tag="2" Visibility="Collapsed">高清</ComboBoxItem>
+                                <ComboBoxItem x:Name="q3" Tapped="ComboBoxItem_Tapped" Tag="3" Visibility="Collapsed" IsEnabled="False">原画(flv,暂不可用)</ComboBoxItem>
+                            </ComboBox>
+                            <ComboBox x:Name="cb_format" Margin="0,8,0,0" Header="视频格式更改" Foreground="White">
+                                <ComboBoxItem Tapped="ComboBoxItem_Tapped_1" Tag="mp4">mp4</ComboBoxItem>
+                                <ComboBoxItem Tapped="ComboBoxItem_Tapped_1" Tag="flv" Visibility="Collapsed" IsEnabled="False">flv</ComboBoxItem>
+                            </ComboBox>
+                            <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White" Margin="0,8,0,0"/>
                         </StackPanel>
-                    </ScrollViewer>
-                </PivotItem>
-                <PivotItem Header="视频信息">
-                    <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White" Margin="0,8,0,0"/>
-                </PivotItem>
-            </Pivot>
+                    </PivotItem>
+                </Pivot>
+                <AppBarButton Width="300" Grid.Row="1" Background="{x:Null}" Foreground="White" Click="hidepane_Click">
+                    <AppBarButton.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="折叠" Margin="20 0"/>
+                            <SymbolIcon Symbol="Forward"/>
+                        </StackPanel>
+                    </AppBarButton.Content>
+                </AppBarButton>
+            </Grid>
         </SplitView.Pane>
         <SplitView.Content>
             <Grid FlowDirection="LeftToRight">
@@ -53,9 +79,6 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Grid.Background>
-                    <SolidColorBrush Color="Black" x:Name="color"/>
-                </Grid.Background>
                 <StackPanel x:Name="loading" Grid.RowSpan="3" Canvas.ZIndex="100" VerticalAlignment="Center" Visibility="Collapsed"  Width="80" HorizontalAlignment="Center">
                     <controls:VideoLoading/>
                     <Grid>
@@ -63,7 +86,13 @@
                         <TextBlock Text="{Binding Text,ElementName=txt_load}" HorizontalAlignment="Center" FontSize="22" Foreground="White"/>
                     </Grid>
                 </StackPanel>
-                <Border x:Name="border" Grid.RowSpan="3" Canvas.ZIndex="99" Tapped="border_Tapped" DoubleTapped="border_DoubleTapped" ManipulationMode="TranslateX,TranslateY" Background="Black" Opacity="0" ManipulationDelta="border_ManipulationDelta" ManipulationCompleted="border_ManipulationCompleted"/>
+                <Border x:Name="border" Grid.RowSpan="3" Canvas.ZIndex="99" 
+                        Tapped="border_Tapped" 
+                        DoubleTapped="border_DoubleTapped" 
+                        ManipulationMode="TranslateX,TranslateY" 
+                        Background="Black" Opacity="0" 
+                        ManipulationDelta="border_ManipulationDelta" 
+                        ManipulationCompleted="border_ManipulationCompleted"/>
                     <controls:MessagePopup Grid.RowSpan="3" x:Name="messagepop" Canvas.ZIndex="80" Foreground="White" Height="40"/>
                 <controls:Danmaku x:Name="danmaku" Grid.RowSpan="3" Canvas.ZIndex="80"/>
                 <Grid x:Name="grid_top" Canvas.ZIndex="100">
@@ -80,16 +109,13 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button VerticalAlignment="Stretch" Click="back_Click" Background="{x:Null}">
+                        <Button Height="48" Width="48" Click="back_Click" Background="{x:Null}" Style="{StaticResource DefaultButtonStyle}">
                             <Button.Content>
                                 <SymbolIcon Symbol="Back" Foreground="White"/>
                             </Button.Content>
                         </Button>
                         <TextBlock x:Name="txt_title" Grid.Column="1" VerticalAlignment="Center" Foreground="{ThemeResource bili_Theme}"/>
                         <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0" Orientation="Horizontal">
-                            <!--<ComboBox x:Name="quality" Background="{x:Null}">
-                                <ComboBoxItem>流畅</ComboBoxItem>
-                            </ComboBox>-->
                             <TextBlock x:Name="txt_web" Foreground="White" FontSize="12"/>
                             <TextBlock x:Name="txt_bat" Foreground="White" Margin="4,0,4,0" FontSize="12"/>
                             <TextBlock x:Name="txt_now" Foreground="White" FontSize="12"/>
@@ -109,7 +135,7 @@
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Orientation="Horizontal">
-                                <Button Background="{x:Null}">
+                                <Button Background="{x:Null}" Style="{StaticResource DefaultButtonStyle}">
                                     <Button.Content>
                                         <Ellipse x:Name="rec" Width="24" Height="24" HorizontalAlignment="Right" Grid.Column="1" Fill="White"/>
                                     </Button.Content>
@@ -119,7 +145,7 @@
                                                 <Style TargetType="FlyoutPresenter">
                                                     <Setter Property="Background">
                                                         <Setter.Value>
-                                                            <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                            <SolidColorBrush Color="Black" Opacity="0.8"/>
                                                         </Setter.Value>
                                                     </Setter>
                                                 </Style>
@@ -148,9 +174,18 @@
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
-                                <Button x:Name="SendMode" Content="滚动" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕模式">
+                                <Button x:Name="SendMode" Content="滚动" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕模式" Style="{StaticResource DefaultButtonStyle}">
                                     <Button.Flyout>
                                         <MenuFlyout>
+                                            <MenuFlyout.MenuFlyoutPresenterStyle>
+                                                <Style TargetType="MenuFlyoutPresenter">
+                                                    <Setter Property="Background">
+                                                        <Setter.Value>
+                                                            <SolidColorBrush Color="Black" Opacity="0.8"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </MenuFlyout.MenuFlyoutPresenterStyle>
                                             <MenuFlyoutItem Tag="1" Foreground="White" Click="MenuFlyoutItem_Click">滚动</MenuFlyoutItem>
                                             <MenuFlyoutItem Tag="4" Foreground="White" Click="MenuFlyoutItem_Click">顶部</MenuFlyoutItem>
                                             <MenuFlyoutItem Tag="5" Foreground="White" Click="MenuFlyoutItem_Click">底部</MenuFlyoutItem>
@@ -159,21 +194,17 @@
                                 </Button>
                             </StackPanel>
                             <TextBox x:Name="txt_mydanmu" Grid.Column="1" VerticalAlignment="Center" Foreground="White" Background="{x:Null}" PlaceholderText="蓄势待发的弹幕君..." BorderThickness="0.5" BorderBrush="White"/>
-                            <Button x:Name="send" Grid.Column="3" Width="60" Click="send_Click" Background="{x:Null}" ToolTipService.ToolTip="发送弹幕">
-                                <Button.Content>
-                                    <SymbolIcon Symbol="Send" Foreground="White"/>
-                                </Button.Content>
-                            </Button>
+                            <AppBarButton x:Name="send" Grid.Column="3" Height="48" Click="send_Click" Foreground="White" Background="{x:Null}" ToolTipService.ToolTip="发送弹幕" Icon="Send"/>
                         </Grid>
                     </Grid>
                 </Grid>
                 <Grid x:Name="grid_center" Grid.Row="1" Canvas.ZIndex="100">
-                    <Button x:Name="left" VerticalAlignment="Center" Width="52" Height="52" Background="Black" HorizontalAlignment="Left" Tag="0" Click="SwitchP_Click" ToolTipService.ToolTip="上一分段">
+                    <Button x:Name="left" VerticalAlignment="Center" Width="52" Height="52" Background="Black" HorizontalAlignment="Left" Tag="0" Click="SwitchP_Click" ToolTipService.ToolTip="上一分段" Style="{StaticResource DefaultButtonStyle}">
                         <Button.Content>
                             <SymbolIcon Symbol="Previous" Foreground="White"/>
                         </Button.Content>
                     </Button>
-                    <Button x:Name="right" VerticalAlignment="Center" Width="52" Height="52" Background="Black" HorizontalAlignment="Right" Tag="1" Click="SwitchP_Click" ToolTipService.ToolTip="下一分段">
+                    <Button x:Name="right" VerticalAlignment="Center" Width="52" Height="52" Background="Black" HorizontalAlignment="Right" Tag="1" Click="SwitchP_Click" ToolTipService.ToolTip="下一分段" Style="{StaticResource DefaultButtonStyle}">
                         <Button.Content>
                             <SymbolIcon Symbol="Next" Foreground="White"/>
                         </Button.Content>
@@ -204,25 +235,18 @@
                     </StackPanel>
                     <Grid Grid.Column="1">
                         <Slider Margin="0,8,0,0" x:Name="sli_main" Value="{Binding ElementName=media,Path=Position,Mode=TwoWay,Converter={StaticResource cvt2}}" Style="{StaticResource SliderStyle1}" Canvas.ZIndex="62" ThumbToolTipValueConverter="{StaticResource cvt}"/>
-                        <ProgressBar x:Name="pro_down" Foreground="{ThemeResource bili_Theme}" Opacity="0.6" Canvas.ZIndex="61"/>
+                        <ProgressBar x:Name="pro_down" Foreground="{ThemeResource bili_Theme}" Opacity="0.8" Canvas.ZIndex="61"/>
                     </Grid>
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Height="42">
-                        <Button x:Name="pause" VerticalAlignment="Stretch" Click="AppBarButton_Click" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="播放/暂停">
-                            <Button.Content>
-                                <SymbolIcon x:Name="icon" Symbol="Pause"/>
-                            </Button.Content>
-                        </Button>
-                        <Button VerticalAlignment="Stretch" Background="{x:Null}" Foreground="White" ToolTipService.ToolTip="弹幕开关" Margin="4,0,4,0">
-                            <Button.Content>
-                                <SymbolIcon Symbol="Comment"/>
-                            </Button.Content>
-                            <Button.Flyout>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <AppBarButton x:Name="pause" Click="AppBarButton_Click" Width="48" Background="{x:Null}" Foreground="White" Icon="Pause" ToolTipService.ToolTip="播放/暂停"/>
+                        <AppBarButton Background="{x:Null}" Foreground="White" Width="48" ToolTipService.ToolTip="弹幕开关" Margin="4,0,4,0" Icon="Comment">
+                            <AppBarButton.Flyout>
                                 <Flyout>
                                     <Flyout.FlyoutPresenterStyle>
                                         <Style TargetType="FlyoutPresenter">
                                             <Setter Property="Background">
                                                 <Setter.Value>
-                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                    <SolidColorBrush Color="Black" Opacity="0.8"/>
                                                 </Setter.Value>
                                             </Setter>
                                         </Style>
@@ -252,78 +276,65 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </Flyout>
-                            </Button.Flyout>
-                        </Button>
-                        <Button VerticalAlignment="Stretch" Background="{x:Null}" ToolTipService.ToolTip="锚点循环" Click="Repeat_Click">
-                            <Button.Content>
-                                <SymbolIcon x:Name="symbol" Symbol="RepeatAll" Foreground="White"/>
-                            </Button.Content>
-                        </Button>
-                        <Button VerticalAlignment="Stretch" Background="{x:Null}" ToolTipService.ToolTip="播放器设定">
-                            <Button.Content>
-                                <SymbolIcon Symbol="Setting" Foreground="White"/>
-                            </Button.Content>
-                            <Button.Flyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarButton x:Name="repeat" Foreground="White" Width="48" Background="{x:Null}" ToolTipService.ToolTip="锚点循环" Click="Repeat_Click" Icon="RepeatAll"/>
+                        <AppBarButton Background="{x:Null}" VerticalAlignment="Stretch" Foreground="White" Width="48" ToolTipService.ToolTip="播放设定" Icon="Setting">
+                            <AppBarButton.Flyout>
                                 <Flyout>
                                     <Flyout.FlyoutPresenterStyle>
                                         <Style TargetType="FlyoutPresenter">
                                             <Setter Property="Background">
                                                 <Setter.Value>
-                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                    <SolidColorBrush Color="Black" Opacity="0.8"/>
                                                 </Setter.Value>
                                             </Setter>
                                         </Style>
                                     </Flyout.FlyoutPresenterStyle>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="vol" Foreground="White" Background="{x:Null}" ToolTipService.ToolTip="音量调节">
-                                            <Button.Content>
-                                                <SymbolIcon Symbol="Volume"/>
-                                            </Button.Content>
-                                            <Button.Flyout>
+                                    <StackPanel Orientation="Horizontal" Height="48">
+                                        <AppBarButton x:Name="vol" Foreground="White" Background="{x:Null}" ToolTipService.ToolTip="音量调节" Icon="Volume" Width="48">
+                                            <AppBarButton.Flyout>
                                                 <Flyout>
                                                     <Flyout.FlyoutPresenterStyle>
                                                         <Style TargetType="FlyoutPresenter">
                                                             <Setter Property="Background">
                                                                 <Setter.Value>
-                                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                                    <SolidColorBrush Color="Black" Opacity="0.8"/>
                                                                 </Setter.Value>
                                                             </Setter>
                                                         </Style>
                                                     </Flyout.FlyoutPresenterStyle>
                                                     <Slider x:Name="sli_vol" Width="200" Maximum="10" Value="10" ValueChanged="sli_vol_ValueChanged"/>
                                                 </Flyout>
-                                            </Button.Flyout>
-                                        </Button>
-                                        <Button x:Name="light" Background="{x:Null}" Margin="4,0,4,0" Foreground="White" ToolTipService.ToolTip="亮度调节">
-                                            <Button.Content>
+                                            </AppBarButton.Flyout>
+                                        </AppBarButton>
+                                        <AppBarButton x:Name="light" Background="{x:Null}" Width="48" Margin="4 0" Foreground="White" ToolTipService.ToolTip="亮度调节">
+                                            <AppBarButton.Icon>
                                                 <FontIcon Glyph="&#xE706;"/>
-                                            </Button.Content>
+                                            </AppBarButton.Icon>
                                             <Button.Flyout>
                                                 <Flyout>
                                                     <Flyout.FlyoutPresenterStyle>
                                                         <Style TargetType="FlyoutPresenter">
                                                             <Setter Property="Background">
                                                                 <Setter.Value>
-                                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                                    <SolidColorBrush Color="Black" Opacity="0.8"/>
                                                                 </Setter.Value>
                                                             </Setter>
                                                         </Style>
                                                     </Flyout.FlyoutPresenterStyle>
-                                                    <Slider x:Name="sli_light" Width="200" Maximum="1" SmallChange="0.01" StepFrequency="0.01" Minimum="0.3" ValueChanged="sli_light_ValueChanged"/>
+                                                    <Slider x:Name="sli_light" Width="200" Maximum="1" SmallChange="0.01" StepFrequency="0.01" Minimum="0.01" ValueChanged="sli_light_ValueChanged"/>
                                                 </Flyout>
                                             </Button.Flyout>
-                                        </Button>
-                                        <Button x:Name="full" Margin="4,0,4,0" Background="{x:Null}" Foreground="White">
-                                            <Button.Content>
-                                                <SymbolIcon Symbol="FullScreen"/>
-                                            </Button.Content>
-                                            <Button.Flyout>
+                                        </AppBarButton>
+                                        <AppBarButton x:Name="full" Background="{x:Null}" Foreground="White" Width="48" Icon="FullScreen">
+                                            <AppBarButton.Flyout>
                                                 <MenuFlyout>
                                                     <MenuFlyout.MenuFlyoutPresenterStyle>
                                                         <Style TargetType="MenuFlyoutPresenter">
                                                             <Setter Property="Background">
                                                                 <Setter.Value>
-                                                                    <SolidColorBrush Color="Black" Opacity="0.6"/>
+                                                                    <SolidColorBrush Color="Black" Opacity="0.8"/>
                                                                 </Setter.Value>
                                                             </Setter>
                                                         </Style>
@@ -332,17 +343,29 @@
                                                     <MenuFlyoutItem Tag="1" Click="full_Click" Foreground="White">拉伸占满</MenuFlyoutItem>
                                                     <MenuFlyoutItem x:Name="menu_full" Tag="2" Click="full_Click" Foreground="White" Visibility="Collapsed">全屏切换</MenuFlyoutItem>
                                                 </MenuFlyout>
-                                            </Button.Flyout>
-                                        </Button>
+                                            </AppBarButton.Flyout>
+                                        </AppBarButton>
+                                        <AppBarButton Background="{x:Null}" Foreground="White" Width="48" ToolTipService.ToolTip="播放倍率" Icon="View">
+                                            <AppBarButton.Flyout>
+                                                <Flyout>
+                                                    <Flyout.FlyoutPresenterStyle>
+                                                        <Style TargetType="FlyoutPresenter">
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <SolidColorBrush Color="Black" Opacity="0.8"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </Flyout.FlyoutPresenterStyle>
+                                                    <Slider x:Name="rating" Maximum="3" SmallChange="0.1" StepFrequency="0.1" Minimum="0.1" Width="200" ValueChanged="rating_ValueChanged"/>
+                                                </Flyout>
+                                            </AppBarButton.Flyout>
+                                        </AppBarButton>
                                     </StackPanel>
                                 </Flyout>
-                            </Button.Flyout>
-                        </Button>
-                        <Button VerticalAlignment="Stretch" Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项">
-                            <Button.Content>
-                                <SymbolIcon Symbol="More" Foreground="White"/>
-                            </Button.Content>
-                        </Button>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarButton Foreground="White" Width="48" Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项" Icon="More"/>
                     </StackPanel>
                 </Grid>
             </Grid>

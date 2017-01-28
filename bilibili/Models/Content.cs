@@ -149,7 +149,7 @@ namespace bilibili.Models
         public string Coins { get; set; }
         public string Copyright { get; set; }
         public string Description { get; set; }
-        public string Duration { get; set; }
+        public string Length { get; set; }
         public string Favorites { get; set; }
         public string Pic { get; set; }
         public string Title { get; set; }
