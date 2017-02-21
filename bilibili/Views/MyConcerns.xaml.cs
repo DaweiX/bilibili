@@ -38,7 +38,7 @@ namespace bilibili.Views
 
         async Task load(string mid)
         {
-            if (SettingHelper.Devicetype == DeviceType.PC)
+            if (SettingHelper.DeviceType == DeviceType.PC)
             {
                 isGrid = true;
                 conlist.ItemTemplate = this.Resources["TemplateGrid"] as DataTemplate;
@@ -49,18 +49,22 @@ namespace bilibili.Views
                 conlist.ItemTemplate = this.Resources["TemplateList"] as DataTemplate;
             }
             isMySelf = mid == UserHelper.mid ? true : false;
-            List<ConcernItem> list = await UserRelated.GetConcernBangumiAsync(mid, 1, (bool)isMySelf);
-            foreach (var item in list)
+            var concern = await UserRelated.GetConcernBangumiAsync(mid, 1, (bool)isMySelf);
+            if (concern != null)
             {
-                conlist.Items.Add(item);
-            }
-            if (conlist.Items.Count < 20)
-            {
-                var text1 = Load.FindChildOfType<TextBlock>(conlist);
-                text1.Text = "加载完毕！";
+                var list = concern.Result;
+                foreach (var item in list)
+                {
+                    conlist.Items.Add(item);
+                }
+                if (conlist.Items.Count < 20)
+                {
+                    var text1 = Load.FindChildOfType<TextBlock>(conlist);
+                    text1.Text = "加载完毕！";
 
+                }
+                con.Text += conlist.Items.Count == 0 ? "（暂无订阅）" : "";
             }
-            con.Text += conlist.Items.Count == 0 ? "（暂无订阅）" : "";
         }
 
         private void Reflesh_Click(object sender, RoutedEventArgs e)
@@ -100,18 +104,22 @@ namespace bilibili.Views
                     int count0 = view.Items.Count;
                     page++;
                     isLoading = true;
-                    List<ConcernItem> list = await UserRelated.GetConcernBangumiAsync(mid, page, (bool)isMySelf);
-                    foreach (var item in list)
+                    var concern = await UserRelated.GetConcernBangumiAsync(mid, page, (bool)isMySelf);
+                    if (concern != null)
                     {
-                        view.Items.Add(item);
-                    }
-                    text.Visibility = Visibility.Collapsed;
-                    if (list.Count < 20)
-                    {
-                        LoadingDone = true;
-                        text.Text = "装填完毕！";
-                        return;
-                    }
+                        var list = concern.Result;
+                        foreach (var item in list)
+                        {
+                            view.Items.Add(item);
+                        }
+                        text.Visibility = Visibility.Collapsed;
+                        if (list.Count < 20)
+                        {
+                            LoadingDone = true;
+                            text.Text = "装填完毕！";
+                            return;
+                        }
+                    }                 
                     isLoading = false;
                 }
             };

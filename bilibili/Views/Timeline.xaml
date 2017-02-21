@@ -5,11 +5,12 @@
     xmlns:local="using:bilibili.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cv="using:bilibili.Converters"
     mc:Ignorable="d"
     SizeChanged="Page_SizeChanged">
     <Page.Resources>
         <CollectionViewSource x:Key="cvs" x:Name="cvsData" IsSourceGrouped="True"/>
-        <local:BoolToForeground x:Key="cvt2"/>
+        <cv:BoolToForeground x:Key="cvt2"/>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Border x:Name="width"/>
@@ -18,7 +19,7 @@
                 <ListView ItemsSource="{Binding Source={StaticResource cvs},Path=CollectionGroups}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource bili_Fontcolor_Main}" Text="{Binding Group.Key}"/>
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Group.Key}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ItemContainerStyle>
@@ -30,7 +31,7 @@
                 </ListView>
             </SemanticZoom.ZoomedOutView>
             <SemanticZoom.ZoomedInView>
-                <GridView x:Name="listview" ItemsSource="{Binding Source={StaticResource cvs}}" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <GridView x:Name="listview" ItemsSource="{Binding Source={StaticResource cvs}}" IsItemClickEnabled="True" SelectionMode="None" ItemClick="listview_ItemClick" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <GridView.GroupStyle>
                         <GroupStyle>
                             <GroupStyle.HeaderTemplate>

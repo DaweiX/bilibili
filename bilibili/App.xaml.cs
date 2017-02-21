@@ -6,10 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using bilibili.Helpers;
-using System.Text.RegularExpressions;
-using Windows.UI.ViewManagement;
-using Windows.UI;
-using Windows.UI.Notifications;
+using bilibili.FrameManager;
 
 namespace bilibili
 {

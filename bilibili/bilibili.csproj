@@ -115,6 +115,9 @@
     <Compile Include="Controls\Danmaku.xaml.cs">
       <DependentUpon>Danmaku.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Expander\ExpandPanel.cs" />
+    <Compile Include="Controls\FlipView\FlipPanel.cs" />
+    <Compile Include="Controls\FlipView\FlipView.cs" />
     <Compile Include="Controls\Header.cs" />
     <Compile Include="Controls\MessagePopup.xaml.cs">
       <DependentUpon>MessagePopup.xaml</DependentUpon>
@@ -131,6 +134,7 @@
       <DependentUpon>VideoLoading.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\WrapPanel.cs" />
+    <Compile Include="Converters\Converters.cs" />
     <Compile Include="Dialogs\AccountRecord.xaml.cs">
       <DependentUpon>AccountRecord.xaml</DependentUpon>
     </Compile>
@@ -149,9 +153,10 @@
     <Compile Include="Dialogs\RegexTip.xaml.cs">
       <DependentUpon>RegexTip.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\SendReply.xaml.cs">
-      <DependentUpon>SendReply.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="FrameManager\FrameDisplayTrigger.cs" />
+    <Compile Include="FrameManager\FrameHelpers.cs" />
+    <Compile Include="FrameManager\FrameManagerBase.cs" />
+    <Compile Include="FrameManager\IframeManager.cs" />
     <Compile Include="Http\BaseService.cs" />
     <Compile Include="Http\ContentService.cs" />
     <Compile Include="Http\ContentService\UserRelated.cs" />
@@ -166,6 +171,7 @@
     <Compile Include="Models\Bangumi.cs" />
     <Compile Include="Models\Content.cs" />
     <Compile Include="Models\Details.cs" />
+    <Compile Include="Models\Pulls.cs" />
     <Compile Include="Models\Rank.cs" />
     <Compile Include="Models\Reply.cs" />
     <Compile Include="Models\SearchResult.cs" />
@@ -180,6 +186,12 @@
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\WebStatusHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test\ExpandPanel.xaml.cs">
+      <DependentUpon>ExpandPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Test\FlipPage.xaml.cs">
+      <DependentUpon>FlipPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Test\ListAnimation.xaml.cs">
       <DependentUpon>ListAnimation.xaml</DependentUpon>
     </Compile>
@@ -231,11 +243,17 @@
     <Compile Include="Views\MyWeb.xaml.cs">
       <DependentUpon>MyWeb.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Partition.xaml.cs">
+    <Compile Include="Views\Partition\Partition.xaml.cs">
       <DependentUpon>Partition.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PartViews\Part.xaml.cs">
       <DependentUpon>Part.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WebShell.xaml.cs">
+      <DependentUpon>WebShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaceHolderPage.xaml.cs">
+      <DependentUpon>PlaceHolderPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RankPage.xaml.cs">
       <DependentUpon>RankPage.xaml</DependentUpon>
@@ -271,8 +289,13 @@
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
+    <Content Include="Assets\Icons\clock.png" />
     <Content Include="Assets\Icons\comment.png" />
+    <Content Include="Assets\Icons\download.png" />
+    <Content Include="Assets\Icons\message.png" />
     <Content Include="Assets\Icons\play.png" />
+    <Content Include="Assets\Icons\star.png" />
+    <Content Include="Assets\Icons\tv.png" />
     <Content Include="Assets\Images\22.png" />
     <Content Include="Assets\Images\22_hide.png" />
     <Content Include="Assets\Images\33.png" />
@@ -384,10 +407,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\SendReply.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -396,13 +415,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Test\ExpandPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Test\FlipPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Test\ListAnimation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Test\Test.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -468,11 +495,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Partition.xaml">
+    <Page Include="Views\Partition\Partition.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PartViews\Part.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WebShell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlaceHolderPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

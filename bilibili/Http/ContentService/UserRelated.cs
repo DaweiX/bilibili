@@ -54,11 +54,12 @@ namespace bilibili.Http.ContentService
         /// <summary>
         /// 获取订阅番剧
         /// </summary>
-        public static async Task<List<ConcernItem>> GetConcernBangumiAsync(string mid, int page, bool isself)
+        public static async Task<Site_Concern> GetConcernBangumiAsync(string mid, int page, bool isself,int pagesize = 20)
         {
+            Site_Concern site = new Site_Concern();
             if (isself == false)
             {
-                string url = "http://space.bilibili.com/ajax/Bangumi/getList?mid=" + mid + "&pagesize=20&page=" + page.ToString();
+                string url = "http://space.bilibili.com/ajax/Bangumi/getList?mid=" + mid + "&pagesize=" + pagesize.ToString() + "&page=" + page.ToString();
                 url += ApiHelper.GetSign(url);
                 string result = await BaseService.SentGetAsync(url);
                 JsonObject json = JsonObject.Parse(result);
@@ -71,7 +72,8 @@ namespace bilibili.Http.ContentService
                         {
                             List<ConcernItem> list = new List<ConcernItem>();
                             list.Add(new ConcernItem { Title = "PRIVATE" });
-                            return list;
+                            site.Result = list;
+                            return site;
                         }
                     }
                     return null;
@@ -83,7 +85,7 @@ namespace bilibili.Http.ContentService
                         json = json["data"].GetObject();
                         if (json.ContainsKey("result"))
                         {
-                            return JsonConvert.DeserializeObject<List<ConcernItem>>(json["result"].ToString());
+                            site.Result = JsonConvert.DeserializeObject<List<ConcernItem>>(json["result"].ToString());
                         }
                     }
                     return null;
@@ -91,12 +93,13 @@ namespace bilibili.Http.ContentService
             }
             else
             {
-                string url = "http://bangumi.bilibili.com/api/get_concerned_season?_device=wp&_ulv=10000&build=430000&platform=android&scale=xhdpi&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey + "&page=" + page.ToString() + "&pagesize=20&ts=" + ApiHelper.GetLinuxTS().ToString();
+                string url = "http://bangumi.bilibili.com/api/get_concerned_season?_device=wp&_ulv=10000&build=430000&platform=android&scale=xhdpi&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey + "&page=" + page.ToString() + "&pagesize=" + pagesize.ToString() + "&ts=" + ApiHelper.GetLinuxTS().ToString();
                 url += ApiHelper.GetSign(url);
                 Site_Concern concern = JsonConvert.DeserializeObject<Site_Concern>(await BaseService.SentGetAsync(url));
                 if (concern.Code == "0")
                 {
-                    return concern.Result;
+                    site = concern;
+                    return site;
                 }
                 return null;
             }

@@ -82,26 +82,4 @@ namespace bilibili.Views
             Frame.Navigate(typeof(Detail), (e.ClickedItem as Times).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
     }
-
-    public class BoolToForeground : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            var b = (bool)value;
-            SolidColorBrush brush = new SolidColorBrush();
-            if (b)
-            {
-                brush.Color = ColorRelated.GetColor();
-                return brush;
-            }
-            else
-            {
-                return Application.Current.Resources["bili_Fontcolor_Main"];
-            }
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return null;
-        }
-    }
 }

@@ -11,7 +11,7 @@
     <Page.Resources>
         <DataTemplate x:DataType="m:Folder" x:Key="ThreePic">
             <StackPanel>
-                <Grid Width="120" Height="120">
+                <Grid Width="{Binding Width,ElementName=width}" Height="{Binding Width,ElementName=width}">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -29,7 +29,7 @@
         </DataTemplate>
         <DataTemplate x:DataType="m:Folder" x:Key="TwoPic">
             <StackPanel>
-                <Grid Width="120" Height="120">
+                <Grid Width="{Binding Width,ElementName=width}" Height="{Binding Width,ElementName=width}">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -42,7 +42,7 @@
         </DataTemplate>
         <DataTemplate x:DataType="m:Folder" x:Key="OnePic">
             <StackPanel>
-                <Grid Width="120" Height="120">
+                <Grid Width="{Binding Width,ElementName=width}" Height="{Binding Width,ElementName=width}">
                     <Image Source="{x:Bind VideoPics.Pic1}" Stretch="UniformToFill" Margin="4"/>
                 </Grid>
                 <TextBlock HorizontalAlignment="Center" Text="{x:Bind Name}" FontSize="13"/>
@@ -50,83 +50,167 @@
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
-        <ScrollViewer x:Name="scrollviewer" ViewChanged="ScrollViewer_ViewChanged">
-            <StackPanel>
-                <Image x:Name="img" HorizontalAlignment="Stretch" Stretch="Uniform" VerticalAlignment="Top"/>
-                <Grid Margin="8,0,0,0" SizeChanged="StackPanel_SizeChanged">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Image x:Name="Face" Height="120" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Tapped="Face_Tapped"/>
-                    <StackPanel Grid.Column="1">
-                        <TextBlock x:Name="userName" FontSize="26" Text="用户名" FontWeight="Light"/>
-                        <TextBlock x:Name="sign" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
-                    </StackPanel>
-                    <AppBarButton Grid.Column="2" Icon="More" Label="更多" Margin="0,0,12,0" ToolTipService.ToolTip="更多" HorizontalAlignment="Right">
-                        <AppBarButton.Flyout>
-                            <MenuFlyout Placement="Bottom">
-                                <MenuFlyoutItem Click="record_Click" Tag="0">登录记录</MenuFlyoutItem>
-                                <MenuFlyoutItem Click="record_Click" Tag="1">经验记录</MenuFlyoutItem>
-                            </MenuFlyout>
-                        </AppBarButton.Flyout>
-                    </AppBarButton>
-                </Grid>
-                <StackPanel Orientation="Horizontal" Margin="8">
-                    <Image x:Name="level" Width="40"/>
-                    <TextBlock x:Name="exp_current" Margin="4,0,4,0"/>
-                    <ProgressBar x:Name="bar" Width="160" Foreground="{ThemeResource bili_Theme}"/>
-                    <TextBlock x:Name="exp_total" Margin="4,0,0,0"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="8 4">
-                    <TextBlock x:Name="coins" Text="硬币："/>
-                    <HyperlinkButton x:Name="coin" Content="硬币记录" Click="coin_Click" Margin="8 0"/>
-                </StackPanel>
-                <!--<StackPanel Orientation="Horizontal" Margin="8 0">
+        <Pivot SelectionChanged="Pivot_SelectionChanged">
+            <PivotItem Header="主页">
+                <ScrollViewer x:Name="scrollviewer" ViewChanged="ScrollViewer_ViewChanged">
+                    <StackPanel>
+                        <Border x:Name="width" Width="128"/>
+                        <Grid SizeChanged="StackPanel_SizeChanged" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Image x:Name="img" Stretch="Uniform" Grid.ColumnSpan="3" Grid.RowSpan="2"/>
+                            <Image x:Name="Face" Height="120" Width="120" HorizontalAlignment="Right" Grid.Row="1" Grid.RowSpan="2" Margin="12 0"/>
+                            <StackPanel Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left">
+                                <TextBlock x:Name="userName" FontSize="26" Text="用户名" FontWeight="Light"/>
+                                <TextBlock x:Name="sign" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,0,20,0">
+                                <!--<Button>
+                            <Button.Content>
+                                <SymbolIcon Symbol="Edit"/>
+                            </Button.Content>
+                        </Button>-->
+                                <Button Width="48" Height="48" Background="Transparent" BorderThickness="0">
+                                    <Button.Content>
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE136;"/>
+                                    </Button.Content>
+                                    <Button.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem Click="record_Click" Tag="0">登录记录</MenuFlyoutItem>
+                                            <MenuFlyoutItem Click="record_Click" Tag="1">经验记录</MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button Width="48" Height="48" Background="Transparent" BorderThickness="0">
+                                    <Button.Content>
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE10A;"/>
+                                    </Button.Content>
+                                    <Button.Flyout>
+                                        <Flyout Placement="Bottom" x:Name="flyout_logout">
+                                            <Grid Padding="8">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Margin="0,0,0,8">确认登出吗？</TextBlock>
+                                                <Button Width="60" Grid.Row="1" Tag="y" Click="Logout_Click">确认</Button>
+                                                <Button Width="60" Grid.Column="1" Grid.Row="1" Tag="n" Click="Logout_Click">手滑了</Button>
+                                            </Grid>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Margin="8">
+                            <Image x:Name="level" Width="40"/>
+                            <TextBlock x:Name="exp_current" Margin="4,0,4,0"/>
+                            <ProgressBar x:Name="bar" Width="160" Foreground="{ThemeResource bili_Theme}"/>
+                            <TextBlock x:Name="exp_total" Margin="4,0,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="8 4">
+                            <TextBlock x:Name="coins"/>
+                            <HyperlinkButton x:Name="coin" Content="硬币记录" Click="coin_Click" Margin="8 0"/>
+                        </StackPanel>
+                        <!--<StackPanel Orientation="Horizontal" Margin="8 0">
                     <Border Width="8" Height="32" Background="{StaticResource bili_Theme}" HorizontalAlignment="Left"/>
                     <HyperlinkButton Content="关注" Style="{StaticResource HyperlinkButtonStyle2}" Click="Button_Click" FontSize="20" Margin="8,0,0,0"/>
                     <TextBlock x:Name="txt_atten"/>
                     <HyperlinkButton Content="粉丝" Style="{StaticResource HyperlinkButtonStyle2}" Click="Button_Click" FontSize="20" Margin="16,0,0,0"/>
                     <TextBlock x:Name="txt_fans"/>
                 </StackPanel>-->
-                <StackPanel Margin="8 4">
-                    <controls:Header Content="收藏"/>
-                    <GridView x:Name="folderlist" IsItemClickEnabled="True" Style="{StaticResource GridViewStyle1}" ItemClick="folderlist_ItemClick" SelectionMode="None">
-                        <GridView.ItemTemplateSelector>
-                            <local:MyDataTemplateSelector ThreePic="{StaticResource ThreePic}" TwoPic="{StaticResource TwoPic}" OnePic="{StaticResource OnePic}"/>
-                        </GridView.ItemTemplateSelector>
-                    </GridView>
-                    <controls:Header Content="追番"/>
-                    <GridView x:Name="conlist" Style="{StaticResource GridViewStyle1}" IsItemClickEnabled="True" ItemClick="conlist_ItemClick" SelectionMode="None">
-                        <GridView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Width="128" Height="224">
-                                    <Image Source="{Binding Cover}" Width="128"/>
-                                    <TextBlock Text="{Binding Bangumi_title}" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="2" FontSize="13"/>
-                                    <TextBlock Text="{Binding Newest_ep_index}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="13"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                        <GridView.ItemContainerStyle>
-                            <Style TargetType="GridViewItem">
-                                <Setter Property="Margin" Value="4"/>
-                                <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
-                            </Style>
-                        </GridView.ItemContainerStyle>
-                        <GridView.Template>
-                            <ControlTemplate>
-                                <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
-                                    <StackPanel Orientation="Horizontal">
-                                        <ItemsPresenter/>
-                                        <HyperlinkButton Content="查看全部→" Click="Button_Click" Margin="4"/>
+                        <controls:Header Content="收藏"/>
+                        <GridView x:Name="folderlist" IsItemClickEnabled="True" Style="{StaticResource GridViewStyle1}" ItemClick="folderlist_ItemClick" SelectionMode="None">
+                            <GridView.ItemTemplateSelector>
+                                <local:MyDataTemplateSelector ThreePic="{StaticResource ThreePic}" TwoPic="{StaticResource TwoPic}" OnePic="{StaticResource OnePic}"/>
+                            </GridView.ItemTemplateSelector>
+                        </GridView>
+                        <StackPanel Orientation="Horizontal">
+                            <controls:Header Content="追番"/>
+                            <TextBlock x:Name="concern_count" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <GridView x:Name="conlist" Style="{StaticResource GridViewStyle1}" IsItemClickEnabled="True" ItemClick="conlist_ItemClick" SelectionMode="None">
+                            <GridView.ItemTemplate>
+                                <DataTemplate x:DataType="m:ConcernItem">
+                                    <StackPanel>
+                                        <Image Source="{x:Bind Cover}" Width="{Binding Width,ElementName=width}"/>
+                                        <TextBlock Text="{x:Bind Bangumi_title}" Margin="4,2,0,0" MaxWidth="{Binding Width,ElementName=width}" FontSize="13"/>
+                                        <TextBlock Text="{x:Bind Newest_ep_index}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="13"/>
                                     </StackPanel>
-                                </ScrollViewer>
-                            </ControlTemplate>
-                        </GridView.Template>
-                    </GridView>
-                </StackPanel>
-            </StackPanel>
-        </ScrollViewer>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="Margin" Value="4"/>
+                                    <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                            <GridView.Template>
+                                <ControlTemplate>
+                                    <ScrollViewer VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ItemsPresenter/>
+                                            <HyperlinkButton Content="查看全部→" Click="Button_Click" Margin="4"/>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </GridView.Template>
+                        </GridView>
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+            <PivotItem Header="投稿">
+
+            </PivotItem>
+            <PivotItem Header="关注的人">
+                <ListView x:Name="list_friends" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_friends_ItemClick" ContainerContentChanging="list_friends_ContainerContentChanging">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="60" Height="60">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding Face}"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <StackPanel Grid.Column="1" Margin="4,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock VerticalAlignment="Bottom" Text="{Binding Uname}" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Margin" Value="4"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.Style>
+                        <Style TargetType="ListView">
+                            <Setter Property="ItemsPanel">
+                                <Setter.Value>
+                                    <ItemsPanelTemplate>
+                                        <ItemsWrapGrid  Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.Style>
+                </ListView>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>

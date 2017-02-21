@@ -6,9 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:bilibili.Controls"
+    xmlns:cv="using:bilibili.Converters"
     mc:Ignorable="d"
-    SizeChanged="Page_SizeChanged"
->
+    SizeChanged="Page_SizeChanged">
+
+    <Page.Resources>
+        <cv:BoolToOrientation x:Key="cvt"/>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
@@ -74,52 +78,30 @@
                                 <TextBlock x:Name="rank" FontSize="12" Foreground="LightGray"/>
                             </StackPanel>
                         </Grid>
-                        <ListBox Grid.Row="1" Style="{StaticResource ham}" Tapped="MainList_Tapped" x:Name="MainList">
-                            <ListBoxItem Tag="index" Margin="0,8,0,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE20a;" FontSize="16" VerticalAlignment="Center"/>
-                                    <TextBlock Margin="24,0,0,0" Text="精彩推荐" FontSize="16" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </ListBoxItem>
-                            <ListBoxItem Tag="history">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE2ad;" FontSize="16" VerticalAlignment="Center"/>
-                                    <TextBlock Margin="24,0,0,0" Text="播放历史" FontSize="16" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </ListBoxItem>
-                            <ListBoxItem Tag="message">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE119;" FontSize="16" VerticalAlignment="Center"/>
-                                    <TextBlock Margin="24,0,0,0" Text="我的消息" FontSize="16" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </ListBoxItem>
-                            <ListBoxItem Tag="me">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE208;" FontSize="16" VerticalAlignment="Center"/>
-                                    <TextBlock Margin="24,0,0,0" Text="我的收藏" FontSize="16" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </ListBoxItem>
-                            <ListBoxItem Tag="download">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE118;" FontSize="16" VerticalAlignment="Center"/>
-                                    <TextBlock Margin="24,0,0,0" Text="离线管理" FontSize="16" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </ListBoxItem>
+                        <ListView x:Name="MainList" Grid.Row="1" IsItemClickEnabled="True" ItemClick="MainList_ItemClick" ItemsSource="{Binding PaneListItems}" ItemContainerStyle="{StaticResource ham}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <BitmapIcon UriSource="{Binding Glyph}" Width="20" Height="20"/>
+                                        <TextBlock Margin="24,0,0,0" Text="{Binding Title}" FontSize="16" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                             <ListBoxItem Tag="night">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon x:Name="fonticon" FontFamily="Segoe MDL2 Assets" Glyph="&#xE708;" FontSize="16"/>
                                     <TextBlock x:Name="txt" Margin="24,0,0,0" Text="夜间模式" FontSize="16" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ListBoxItem>
-                        </ListBox>
-                        <ListBox x:Name="Sets" Grid.Row="2" Style="{StaticResource ham}" SelectionChanged="Sets_SelectionChanged" Padding="0,0,0,8">
-                            <ListBoxItem Tag="sets">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="16" VerticalAlignment="Center"/>
-                                    <TextBlock Margin="24,0,0,0" Text="设置" FontSize="16" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </ListBoxItem>
-                        </ListBox>
+                        </ListView>
+                        <StackPanel x:Name="stk_bottom" Grid.Row="2" Padding="0,0,0,8" Orientation="{Binding ElementName=hambtn,Path=IsChecked,Converter={StaticResource cvt}}">
+                            <Button Width="48" Height="48" Click="night_Click" BorderThickness="0" Background="Transparent" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE708;" FontSize="20"/>
+                            </Button>
+                            <Button Width="48" Height="48" Click="set_Click" BorderThickness="0" Background="Transparent" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="20"/>
+                            </Button>
+                        </StackPanel>
                     </Grid>
                 </ScrollViewer>
             </SplitView.Pane>

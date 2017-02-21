@@ -21,8 +21,8 @@
                     <ControlTemplate TargetType="ItemsControl">
                         <ScrollViewer>
                             <StackPanel>
-                                <ItemsPresenter Margin="0,8,0,56"/>
-                                <TextBlock Margin="0,8,0,56"/>
+                                <ItemsPresenter Margin="0,8,0,0"/>
+                                <TextBlock Margin="0,8,0,56" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </ScrollViewer>
                     </ControlTemplate>

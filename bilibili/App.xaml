@@ -9,22 +9,26 @@
                 <ResourceDictionary Source="StyleDic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="bili_Theme" Color="#e273a9"/>
+            <!--默认字号（大）-->
+            <x:Double x:Key="ControlContentThemeFontSize">14</x:Double>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="ThemeBackground" Color="White"/>
+                    <SolidColorBrush x:Key="SystemControlForegroundBaseHighBrush" Color="Black" />
+                    <SolidColorBrush x:Key="ThemeBackgroundReverse" Color="Black"/>
                     <SolidColorBrush x:Key="bili_PageBackground" Color="#f1f1f1"/>
                     <SolidColorBrush x:Key="bili_ListBackground" Color="White"/>
-                    <SolidColorBrush x:Key="bili_Fontcolor_Main" Color="Black"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Second" Color="#b3b3b3"/>
                     <Color x:Key="CommandBarColor">#CCCCCC</Color>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="ThemeBackground" Color="Black"/>
+                    <SolidColorBrush x:Key="ThemeBackgroundReverse" Color="White"/>
+                    <SolidColorBrush x:Key="SystemControlForegroundBaseHighBrush" Color="#8a8a8a" />
                     <SolidColorBrush x:Key="bili_PageBackground" Color="#1d1d1d"/>
-                    <SolidColorBrush x:Key="bili_ListBackground" Color="#1d1d1d"/>
-                    <SolidColorBrush x:Key="bili_Fontcolor_Main" Color="White"/>
+                    <SolidColorBrush x:Key="bili_ListBackground" Color="#242424"/>
                     <SolidColorBrush x:Key="bili_Fontcolor_Second" Color="LightGray"/>
-                    <Color x:Key="CommandBarColor">#696969</Color>
+                    <Color x:Key="CommandBarColor">#000000</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>

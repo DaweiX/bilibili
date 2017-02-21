@@ -5,11 +5,12 @@
     xmlns:local="using:bilibili.Dialogs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cv="using:bilibili.Converters"
     mc:Ignorable="d"
     Title="经验记录"
     PrimaryButtonText="确定">
     <ContentDialog.Resources>
-        <local:NumToForeground x:Key="cvt"/>
+        <cv:NumToForeground_Dialog x:Key="cvt"/>
     </ContentDialog.Resources>
     <Grid>
         <ScrollViewer>

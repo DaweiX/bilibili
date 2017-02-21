@@ -26,7 +26,7 @@ namespace bilibili.Controls
 
         public async Task init()
         {
-            DeviceType type = SettingHelper.GetDeviceType();
+            DeviceType type = SettingHelper.DeviceType;
             if (type == DeviceType.PC) size = 6;
             else if (type == DeviceType.Mobile) size = 3;
             //直播

@@ -6,70 +6,37 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="using:bilibili.Controls"
+    xmlns:m="using:bilibili.Models"
+    xmlns:cv="using:bilibili.Converters"
     mc:Ignorable="d"
     SizeChanged="Page_SizeChanged">
     <Page.Resources>
-        <local:NumToForeground x:Key="cvt"/>
-        <DataTemplate x:Key="mydatatemplate">
+        <cv:NumToForeground_Rank x:Key="cvt"/>
+        <DataTemplate x:Key="mydatatemplate" x:DataType="m:Rank">
             <Grid Height="90" Width="{Binding Width,ElementName=width}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="{Binding Ranking}" Foreground="{Binding Ranking,Converter={StaticResource cvt}}" FontSize="20" Grid.RowSpan="2" VerticalAlignment="Center" Margin="8,0,8,0"/>
-                <Image Source="{Binding Pic}" Grid.RowSpan="2" Grid.Column="1" Width="120" Height="90"/>
-                <StackPanel Grid.Column="2" Margin="4,0,0,0">
-                    <TextBlock Text="{Binding Title}" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Main}" TextWrapping="Wrap"/>
-                </StackPanel>
-                <TextBlock Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" Text="{Binding Create}" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                <TextBlock Text="{x:Bind Ranking}" Foreground="{x:Bind Ranking,Converter={StaticResource cvt}}" FontSize="20" Grid.RowSpan="3" Margin="2,0,0,0" VerticalAlignment="Center" Width="28"/>
+                <Image Source="{x:Bind Pic}" Grid.RowSpan="3" Grid.Column="1" Width="120" Margin="0,0,4,0"/>
+                <TextBlock Grid.Column="2" Grid.ColumnSpan="2" Text="{x:Bind Title}" MaxLines="2" FontSize="14" TextWrapping="Wrap"/>
+                <TextBlock Grid.Column="2" Grid.Row="1" Text="{x:Bind Author}" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                <TextBlock Grid.Column="2" VerticalAlignment="Bottom" Grid.Row="2" Text="综合评分：" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                <TextBlock Grid.Column="3" VerticalAlignment="Bottom" Grid.Row="2" Text="{x:Bind Pts}" HorizontalAlignment="Left" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Border x:Name="width"/>
         <c:MyPopup x:Name="popup"/>
-        <Pivot x:Name="mainpivot" SelectionChanged="mainpivot_SelectionChanged">
-            <PivotItem Header="番剧" Tag="13" Margin="0,4,0,0">
-                <GridView x:Name="list13" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="动画" Tag="1" Margin="0,4,0,0">
-                <GridView x:Name="list1" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="音乐" Tag="3" Margin="0,4,0,0">
-                <GridView x:Name="list3" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="舞蹈" Tag="129" Margin="0,4,0,0">
-                <GridView x:Name="list129" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="科技" Tag="36" Margin="0,4,0,0">
-                <GridView x:Name="list36" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="游戏" Tag="4" Margin="0,4,0,0">
-                <GridView x:Name="list4" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="生活" Tag="160" Margin="0,4,0,0">
-                <GridView x:Name="list160" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="鬼畜" Tag="119" Margin="0,4,0,0">
-                <GridView x:Name="list119" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="时尚" Tag="155" Margin="0,4,0,0">
-                <GridView x:Name="list155" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="娱乐" Tag="5" Margin="0,4,0,0">
-                <GridView x:Name="list5" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="电影" Tag="23" Margin="0,4,0,0">
-                <GridView x:Name="list23" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-            <PivotItem Header="电视剧" Tag="11" Margin="0,4,0,0">
-                <GridView x:Name="list11" SelectionMode="None" IsItemClickEnabled="True" ItemClick="listview_ItemClick" ItemTemplate="{StaticResource mydatatemplate}"/>
-            </PivotItem>
-        </Pivot>
+        <Pivot x:Name="mainpivot" SelectionChanged="mainpivot_SelectionChanged"/>
     </Grid>
 </Page>

@@ -24,9 +24,9 @@
                         </Grid.RowDefinitions>
                         <Image Source="{Binding Cover}" Width="90" Height="120" Grid.RowSpan="4"/>
                         <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                            <TextBlock Text="{Binding Title}" FontSize="16"/>
-                            <TextBlock Text="{Binding Brief}" TextWrapping="Wrap" Foreground="Gray" FontSize="14" MaxLines="3"/>
-                            <TextBlock Text="{Binding Count}" FontSize="14"/>
+                            <TextBlock Text="{Binding Title}" FontSize="14" Foreground="{ThemeResource ThemeBackgroundReverse}"/>
+                            <TextBlock Text="{Binding Brief}" TextWrapping="Wrap" Foreground="Gray" FontSize="13" MaxLines="3"/>
+                            <TextBlock Text="{Binding Count}" FontSize="13"/>
                         </StackPanel>
                         <TextBlock Text="{Binding Time}" Foreground="Gray" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom"/>
                     </Grid>

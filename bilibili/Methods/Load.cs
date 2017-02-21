@@ -41,7 +41,7 @@ namespace bilibili.Methods
         /// <param name="min">列表项最小宽度</param>
         /// <param name="offset">偏移量</param>
         /// <returns></returns>
-        public static double GetWidth(double width, int max, int min, int offset = 16)
+        public static double GetWidth(double width, int max = 600, int min = 360, int offset = 12)
         {
             if (offset < 0 || offset > 20)
             {

@@ -61,6 +61,7 @@
                         <Setter Property="Margin" Value="4"/>
                         <Setter Property="HorizontalAlignment" Value="Center"/>
                         <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
                     </Style>
                 </GridView.ItemContainerStyle>
             </GridView>

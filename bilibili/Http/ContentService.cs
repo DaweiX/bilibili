@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Data.Json;
-using Windows.UI.Popups;
 using bilibili.Helpers;
 using bilibili.Methods;
 using bilibili.Models;
-using Windows.Web.Http;
 using Windows.Data.Xml.Dom;
 using System.Text.RegularExpressions;
-using System.Net;
-using bilibili.Http;
 
 namespace bilibili.Http
 {
@@ -82,6 +77,111 @@ namespace bilibili.Http
                 return contentList;
             }
             catch(Exception e)
+            {
+                report(e.Message);
+                return null;
+            }
+        }
+
+        public enum SortBy
+        {
+            /// <summary>
+            /// 默认排序方式（上传日期）
+            /// </summary>
+            senddate,
+            view,
+            danmaku,
+            reply,
+            favorite
+        }
+
+        public async static Task<List<Video>> GetVideosAsync(int tid, int page, int pagesize = 20, SortBy sort = SortBy.senddate)
+        {
+            List<Video> list = new List<Video>();
+            try
+            {
+                //http://app.bilibili.com/x/v2/region/show/child/list?rid=51&pn=2&ps=20&order=senddate&appkey=1d8b6e7d45233436&build=434000&mobi_app=android&channel=quewo25
+                if (page == 1)
+                {
+                    string url = "http://app.bilibili.com/x/v2/region/show/child?access_key=" + ApiHelper.accesskey + "&rid=" + tid.ToString() + "&appkey=" + ApiHelper.appkey + "&build=434000&mobi_app=android";
+                    JsonObject json = await BaseService.GetJson(url);
+                    json = json["data"].GetObject();
+                    if (sort == SortBy.senddate)
+                    {
+                        if (json.ContainsKey("new"))
+                        {
+                            JsonArray array = json["new"].GetArray();
+                            for (int i = 0; i < array.Count; i++)
+                            {
+                                Video video = new Video();
+                                JsonObject json2 = array[i].GetObject();
+                                if (json2.ContainsKey("cover"))
+                                    video.Cover = json2["cover"].GetString();
+                                if (json2.ContainsKey("danmaku"))
+                                    video.Danmaku = json2["danmaku"].ToString();
+                                if (json2.ContainsKey("param"))
+                                    video.Aid = json2["param"].GetString();
+                                if (json2.ContainsKey("play"))
+                                    video.Play = json2["play"].ToString();
+                                if (json2.ContainsKey("title"))
+                                    video.Title = json2["title"].GetString();
+                                if (json2.ContainsKey("name"))
+                                    video.Author = json2["name"].GetString();
+                                video.IsNew = true;
+                                list.Add(video);
+                            }
+                        }
+                    }
+                    if (json.ContainsKey("recommend"))
+                    {
+                        JsonArray array = json["recommend"].GetArray();
+                        for (int i = 0; i < array.Count; i++)
+                        {
+                            Video video = new Video();
+                            JsonObject json2 = array[i].GetObject();
+                            if (json2.ContainsKey("cover"))
+                                video.Cover = json2["cover"].GetString();
+                            if (json2.ContainsKey("danmaku"))
+                                video.Danmaku = json2["danmaku"].ToString();
+                            if (json2.ContainsKey("param"))
+                                video.Aid = json2["param"].GetString();
+                            if (json2.ContainsKey("play"))
+                                video.Play = json2["play"].ToString();
+                            if (json2.ContainsKey("title"))
+                                video.Title = json2["title"].GetString();
+                            if (json2.ContainsKey("name"))
+                                video.Author = json2["name"].GetString();
+                            list.Add(video);
+                        }
+                    }                  
+                }
+                else
+                {
+                    string url = "http://app.bilibili.com/x/v2/region/show/child/list?rid=" + tid.ToString() + "&pn=" + page.ToString() + "&ps=" + pagesize.ToString() + "&order=senddate&appkey=" + ApiHelper.appkey + "&build=434000&mobi_app=android";
+                    JsonObject json = await BaseService.GetJson(url);
+                    JsonArray array = json["data"].GetArray();
+                    for (int i = 0; i < array.Count; i++)
+                    {
+                        JsonObject json2 = array[i].GetObject();
+                        Video video = new Video();
+                        if (json2.ContainsKey("cover"))
+                            video.Cover = json2["cover"].GetString();
+                        if (json2.ContainsKey("danmaku"))
+                            video.Danmaku = json2["danmaku"].ToString();
+                        if (json2.ContainsKey("param"))
+                            video.Aid = json2["param"].GetString();
+                        if (json2.ContainsKey("play"))
+                            video.Play = json2["play"].ToString();
+                        if (json2.ContainsKey("title"))
+                            video.Title = json2["title"].GetString();
+                        if (json2.ContainsKey("name"))
+                            video.Author = json2["name"].GetString();           
+                        list.Add(video);
+                    }
+                }
+                return list;
+            }
+            catch (Exception e)
             {
                 report(e.Message);
                 return null;
@@ -219,7 +319,7 @@ namespace bilibili.Http
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static async Task<Details> GetDetailsAsync(string url)
+        public static async Task<Details> GetDetailsAsync(string url, bool isRandom = false)
         {
             if (!WebStatusHelper.IsOnline())
             {
@@ -232,7 +332,10 @@ namespace bilibili.Http
             if (json.ContainsKey("code"))
                 if (json["code"].ToString() == "-404")
                 {
-                    report("该视频不存在或已被删除");
+                    if (isRandom == false)
+                    {
+                        report("该视频不存在或已被删除");
+                    }
                     return null;
                 }
             if (json.ContainsKey("data"))
@@ -1816,13 +1919,14 @@ namespace bilibili.Http
         /// </summary>
         /// <param name="mid"></param>
         /// <returns></returns>
-        public static async Task<List<Friend>> GetFriendsAsync(string mid)
+        public static async Task<Site_Friend> GetFriendsAsync(string mid, int page)
         {
+            Site_Friend site = new Site_Friend();
             if (!WebStatusHelper.IsOnline())
             {
                 return null;
             }
-            string url = "http://space.bilibili.com/ajax/friend/getAttentionList?mid=" + mid + "&page=1&rnd=" + new Random().Next(1000, 3000).ToString();
+            string url = "http://space.bilibili.com/ajax/friend/getAttentionList?mid=" + mid + "&pagesize=30&page=" + page + "&rnd=" + new Random().Next(1000, 3000).ToString();
             JsonObject json = await BaseService.GetJson(url);
             if (json.ContainsKey("data"))
             {
@@ -1830,7 +1934,7 @@ namespace bilibili.Http
                 //这个地方应该能写得更漂亮点
                 if (StringDeal.delQuotationmarks(json["data"].ToString()) == "关注列表中没有值")
                 {
-                    return friends;
+                    site.isEmpty = true;
                 }
                 else
                 {
@@ -1850,9 +1954,14 @@ namespace bilibili.Http
                                 friend.Fid = temp["fid"].ToString();
                             friends.Add(friend);
                         }
-                        return friends;
+                        site.List = friends;
                     }
-                }             
+                    if (json.ContainsKey("results"))
+                    {
+                        site.Result = int.Parse(json["results"].ToString());
+                    }
+                }
+                return site;         
             }
             return null;
         }
@@ -1864,13 +1973,60 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<List<Rank>> GetRankItemsAsync(string tid)
         {
+            string url = string.Empty;
             if (!WebStatusHelper.IsOnline())
             {
                 report("没有网络连接");
                 return null;
             }
             List<Rank> list = new List<Rank>();
-            string url = "http://www.bilibili.com/index/rank/all-03-" + tid + ".json";
+            url = "http://app.bilibili.com/x/v2/rank/region?rid=" + tid + "&pn=1&ps=20&appkey=" + ApiHelper.appkey + "&build=434000&mobi_app=android";
+            JsonObject json = await BaseService.GetJson(url);
+            try
+            {
+                int i = 1;
+                JsonArray array = json["data"].GetArray();
+                foreach (var item in array)
+                {
+                    Rank rank = new Rank();
+                    json = item.GetObject();
+                    if (json.ContainsKey("param"))
+                        rank.Aid = json["param"].GetString();
+                    if (json.ContainsKey("name"))
+                        rank.Author = json["name"].GetString();
+                    if (json.ContainsKey("cover"))
+                        rank.Pic = json["cover"].GetString();
+                    if (json.ContainsKey("pts"))
+                        rank.Pts = json["pts"].ToString();
+                    if (json.ContainsKey("title"))
+                        rank.Title = json["title"].GetString();
+                    rank.Ranking = i.ToString();
+                    i++;
+                    list.Add(rank);
+                }
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 获取排行榜(原创)
+        /// </summary>
+        /// <param name="tid"></param>
+        /// <returns></returns>
+        public static async Task<List<Rank>> GetOriRankItemsAsync()
+        {
+            string url = string.Empty;
+            if (!WebStatusHelper.IsOnline())
+            {
+                report("没有网络连接");
+                return null;
+            }
+            List<Rank> list = new List<Rank>();
+            url = "http://www.bilibili.com/index/rank/origin-03.json";
             JsonObject json = await BaseService.GetJson(url);
             try
             {
@@ -1885,20 +2041,12 @@ namespace bilibili.Http
                         rank.Aid = json["aid"].GetString();
                     if (json.ContainsKey("author"))
                         rank.Author = json["author"].GetString();
-                    if (json.ContainsKey("coins"))
-                        rank.Coins = json["coins"].ToString();
-                    if (json.ContainsKey("duration"))
-                        rank.Duration = json["duration"].GetString();
-                    if (json.ContainsKey("create"))
-                        rank.Create = json["create"].GetString();
                     if (json.ContainsKey("pic"))
                         rank.Pic = json["pic"].GetString();
+                    if (json.ContainsKey("pts"))
+                        rank.Pts = json["pts"].ToString();
                     if (json.ContainsKey("title"))
                         rank.Title = json["title"].GetString();
-                    if (json.ContainsKey("favorites"))
-                        rank.Favorites = json["favorites"].ToString();
-                    if (json.ContainsKey("play"))
-                        rank.Play = json["play"].ToString();
                     rank.Ranking = i.ToString();
                     i++;
                     list.Add(rank);
@@ -2008,22 +2156,66 @@ namespace bilibili.Http
             List<FlipItem> list = new List<FlipItem>();
             try
             {
-                string url = "http://app.bilibili.com/x/banner?plat=4&build=412001";
+                //string url = "http://app.bilibili.com/x/banner?plat=4&build=412001";
+                //JsonObject json = await BaseService.GetJson(url);
+                //if (json.ContainsKey("data"))
+                //{
+                //    JsonArray array = json["data"].GetArray();
+                //    foreach (var temp in array)
+                //    {
+                //        FlipItem item = new FlipItem();
+                //        json = temp.GetObject();
+                //        if (json.ContainsKey("image"))
+                //            item.Img = json["image"].GetString();
+                //        if (json.ContainsKey("title"))
+                //            item.Title = json["title"].GetString();
+                //        if (json.ContainsKey("value"))
+                //            item.Link = json["value"].GetString();
+                //        list.Add(item);
+                //    }
+                //}
+                string url = "http://app.bilibili.com/x/v2/show?access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=434000&mobi_app=android&platform=android&ts=" + ApiHelper.GetLinuxTS().ToString();
+                url += ApiHelper.GetSign(url);
                 JsonObject json = await BaseService.GetJson(url);
-                if (json.ContainsKey("data"))
+                JsonArray array = json["data"].GetArray();
+                for (int i = 0; i < array.Count; i++)
                 {
-                    JsonArray array = json["data"].GetArray();
-                    foreach (var temp in array)
+                    json = array[i].GetObject();
+                    if (json.ContainsKey("banner"))
                     {
-                        FlipItem item = new FlipItem();
-                        json = temp.GetObject();
-                        if (json.ContainsKey("image"))
-                            item.Img = json["image"].GetString();
-                        if (json.ContainsKey("title"))
-                            item.Title = json["title"].GetString();
-                        if (json.ContainsKey("value"))
-                            item.Link = json["value"].GetString();
-                        list.Add(item);
+                        json = json["banner"].GetObject();
+                        if (json.ContainsKey("top"))
+                        {
+                            JsonArray array2 = json["top"].GetArray();
+                            for (int j = 0; j < array2.Count; j++)
+                            {
+                                JsonObject json2 = array2[j].GetObject();
+                                FlipItem item = new FlipItem();
+                                if (json2.ContainsKey("image"))
+                                    item.Img = json2["image"].GetString();
+                                if (json2.ContainsKey("uri"))
+                                    item.Link = json2["uri"].GetString();
+                                if (json2.ContainsKey("title"))
+                                    item.Title = json2["title"].GetString();
+                                list.Add(item);
+                            }
+                        }
+                        if (json.ContainsKey("bottom"))
+                        {
+                            JsonArray array2 = json["bottom"].GetArray();
+                            for (int j = 0; j < array2.Count; j++)
+                            {
+                                JsonObject json2 = array2[j].GetObject();
+                                FlipItem item = new FlipItem();
+                                if (json2.ContainsKey("image"))
+                                    item.Img = json2["image"].GetString();
+                                if (json2.ContainsKey("uri"))
+                                    item.Link = json2["uri"].GetString();
+                                if (json2.ContainsKey("title"))
+                                    item.Title = json2["title"].GetString();
+                                list.Add(item);
+                            }
+                        }
                     }
                 }
             }
@@ -2032,6 +2224,66 @@ namespace bilibili.Http
 
             }
             return list;
+        }
+
+        public static async Task<List<Pulls>> GetPullsAsync(int page, int pagesize = 20)
+        {
+            string url = "http://api.bilibili.com/x/feed/pull?_device=android&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=434000&mobi_app=android&platform=android&pn=" + page.ToString() + "&ps=" + pagesize.ToString() + "&type=0";
+            url += ApiHelper.GetSign(url);
+            JsonObject json = await BaseService.GetJson(url);
+            try
+            {
+                if (!json.ContainsKey("data")) return null;
+                json = json["data"].GetObject();
+                if (!json.ContainsKey("feeds")) return null;
+                JsonArray array = json["feeds"].GetArray();
+                List<Pulls> pulls = new List<Pulls>();
+                for (int i = 0; i < array.Count; i++)
+                {
+                    json = array[i].GetObject();
+                    Pulls pull = new Pulls();
+                    if (json.ContainsKey("type"))
+                        pull.Type = json["type"].ToString();
+                    if (json.ContainsKey("addition"))
+                    {
+                        JsonObject json2 = json["addition"].GetObject();
+                        if (json2.ContainsKey("aid"))
+                            pull.Aid = json2["aid"].ToString();
+                        if (json2.ContainsKey("author"))
+                            pull.Author = json2["author"].GetString();
+                        if (json2.ContainsKey("create"))
+                            pull.Create = json2["create"].GetString();
+                        if (json2.ContainsKey("pic"))
+                            pull.Pic = json2["pic"].GetString();
+                        if (json2.ContainsKey("title"))
+                            pull.Title = json2["title"].GetString();
+                        if (json2.ContainsKey("play"))
+                            pull.Play = json2["play"].ToString();
+                        if (json2.ContainsKey("video_review"))
+                            pull.Danmaku = json2["video_review"].ToString();
+                    }
+                    if (json.ContainsKey("source"))
+                    {
+                        JsonObject json2 = json["source"].GetObject();
+                        if (json2.ContainsKey("avatar"))
+                            pull.Avatar = json2["avatar"].GetString();
+                        if (json2.ContainsKey("title"))
+                            pull.BanTitle = json2["title"].GetString();
+                    }
+                    if (json.ContainsKey("content"))
+                    {
+                        JsonObject json2 = json["content"].GetObject();
+                        if (json2.ContainsKey("index"))
+                            pull.Index = json2["index"].GetString();
+                    }
+                    pulls.Add(pull);
+                }
+                return pulls;
+            }
+            catch 
+            {
+                return null;
+            }
         }
     }
 }

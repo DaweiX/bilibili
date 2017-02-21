@@ -6,41 +6,48 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="using:bilibili.Controls"
+    xmlns:cv="using:bilibili.Converters"
     mc:Ignorable="d"
     SizeChanged="Page_SizeChanged">
     <Page.Resources>
-        <local:StatusToText x:Key="cvt"/>
+        <cv:StatusToText x:Key="cvt"/>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Border x:Name="width"/>
         <c:MyPopup x:Name="popup"/>
-        <GridView x:Name="list_topic" Tag="0" Visibility="Collapsed" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
-            <GridView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Width="{Binding ElementName=width,Path=Width}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <Image Source="{Binding Pic}"/>
-                        <TextBlock  Grid.Row="1" Text="{Binding Name}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="15" Foreground="{ThemeResource bili_Fontcolor_Main}" FontWeight="Light"/>
-                    </Grid>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
-        <GridView x:Name="list_event" Tag="1" Visibility="Collapsed" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
-            <GridView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Width="{Binding ElementName=width,Path=Width}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <Image Source="{Binding Cover}"/>
-                        <TextBlock Grid.Row="1" Text="{Binding Title}" Foreground="{Binding Status,Converter={StaticResource cvt}}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="15" FontWeight="Light"/>
-                    </Grid>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
+        <Pivot>
+            <PivotItem Header="话题" Margin="0">
+                <GridView x:Name="list_topic" Tag="0" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="{Binding ElementName=width,Path=Width}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{Binding Pic}"/>
+                                <TextBlock  Grid.Row="1" Text="{Binding Name}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="15" FontWeight="Light"/>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </PivotItem>
+            <PivotItem Header="活动" Margin="0">
+                <GridView x:Name="list_event" Tag="1" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="{Binding ElementName=width,Path=Width}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{Binding Cover}"/>
+                                <TextBlock Grid.Row="1" Text="{Binding Title}" Foreground="{Binding Status,Converter={StaticResource cvt}}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="15" FontWeight="Light"/>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>

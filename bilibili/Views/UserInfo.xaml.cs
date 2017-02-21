@@ -10,8 +10,8 @@ using bilibili.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using bilibili.Http.ContentService;
+using System.ComponentModel;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -24,7 +24,8 @@ namespace bilibili.Views
     {
         List<Folder> myFolder = new List<Folder>();
         string tl, ts = string.Empty;
-        static bool isLoaded = false;
+        int page_friend = 1;
+        static bool isLoaded;
         public UserInfo()
         {
             this.InitializeComponent();
@@ -49,7 +50,7 @@ namespace bilibili.Views
                         if (json.ContainsKey("face"))
                             Face.Source = new BitmapImage { UriSource = new Uri(StringDeal.delQuotationmarks((json["face"].ToString()))) };
                         if (json.ContainsKey("coins"))
-                            coins.Text += json["coins"].ToString();
+                            coins.Text = "硬币：" + json["coins"].ToString();
                         if (json.ContainsKey("sign"))
                             sign.Text = StringDeal.delQuotationmarks(json["sign"].ToString());
                         if (json.ContainsKey("uname"))
@@ -87,23 +88,48 @@ namespace bilibili.Views
                                 }
                             }
                             UpDateHeader();
+                            int pagesize = 20;
+                            if (SettingHelper.DeviceType == DeviceType.Mobile)
+                            {
+                                pagesize = 3;
+                                width.Width = ActualWidth / 3 - 8;
+                            }
                             myFolder = await ContentServ.GetFavFolders();
                             folderlist.ItemsSource = myFolder;
-                            conlist.ItemsSource = await UserRelated.GetConcernBangumiAsync("", 1, true);
+                            Site_Concern concern = await UserRelated.GetConcernBangumiAsync("", 1, true, pagesize);
+                            if (concern != null)
+                            {
+                                concern_count.Text = concern.Count;
+                                conlist.ItemsSource = concern.Result;
+                            }
                             isLoaded = true;
                         }
                     }
                 }            
             }
-            catch
+            catch(Exception)
             {
                 
             }
         }
 
-        private void Dialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        public class MyClass : INotifyPropertyChanged
         {
-            ApiHelper.logout();
+            private double myWidth;
+            public double MyWidth
+            {
+                get { return myWidth; }
+                set
+                {
+                    myWidth = value;
+                    OnPropertyChanged("MyWidth");
+                }
+            }
+            public event PropertyChangedEventHandler PropertyChanged;
+            protected void OnPropertyChanged(string name)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
 
         private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -120,7 +146,7 @@ namespace bilibili.Views
             }
         }
 
-        private void StackPanel_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpDateHeader();
         }
@@ -134,23 +160,6 @@ namespace bilibili.Views
                 img.Source = bmp;
             }
             Face.Width = Face.Height = ActualWidth > 600 ? 120 : 80;
-        }
-
-        private async void Face_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            if (ApiHelper.IsLogin())
-            {
-                ContentDialog dialog = new ContentDialog
-                {
-                    Content = "确定登出吗？",
-                    IsPrimaryButtonEnabled = true,
-                    IsSecondaryButtonEnabled = true,
-                    PrimaryButtonText = "确定",
-                    SecondaryButtonText = "手滑了",
-                };
-                dialog.PrimaryButtonClick += Dialog_PrimaryButtonClick;
-                await dialog.ShowAsync();
-            }
         }
 
         private void folderlist_ItemClick(object sender, ItemClickEventArgs e)
@@ -186,6 +195,70 @@ namespace bilibili.Views
                     await new Dialogs.ExpRecord().ShowAsync();
                 }
             }
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn.Tag.ToString() == "y")
+            {
+                ApiHelper.logout();
+                Frame.Navigate(typeof(Partition));
+            }
+            flyout_logout.Hide();
+        }
+
+        private void list_friends_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(Friends),(e.ClickedItem as Friend).Fid);
+        }
+
+        bool isFriendLoaded;
+        private async void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Pivot pivot = sender as Pivot;
+            switch(pivot.SelectedIndex)
+            {
+                case 2:
+                    {
+                        if (!isFriendLoaded)
+                        {
+                            var list = await ContentServ.GetFriendsAsync(UserHelper.mid, page_friend);
+                            if (list.isEmpty)
+                            {
+                                //提示：没有关注的人
+                            }
+                            else
+                            {
+                                for (int i = 0; i < list.List.Count; i++)
+                                {
+                                    list_friends.Items.Add(list.List[i]);
+                                }
+                            }
+                            isFriendLoaded = true;
+                        }
+                    };break;
+            }
+        }
+
+        private void list_friends_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            var scroll = Load.FindChildOfType<ScrollViewer>(list_friends);
+            scroll.ViewChanged += async (s, a) =>
+            {
+                if (scroll.VerticalOffset == scroll.ScrollableHeight)
+                {
+                    page_friend++;
+                    var result = await ContentServ.GetFriendsAsync(UserHelper.mid, page_friend);
+                    if (list_friends.Items.Count < result.Result)
+                    {
+                        for (int i = 0; i < result.List.Count; i++)
+                        {
+                            list_friends.Items.Add(result.List[i]);
+                        }
+                    }
+                }
+            };
         }
 
         private void fav_Click(object sender, RoutedEventArgs e)

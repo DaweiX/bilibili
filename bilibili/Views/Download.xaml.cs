@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using bilibili.Helpers;
+using bilibili.Models;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Networking.BackgroundTransfer;
 using Windows.Storage;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using bilibili.Models;
-using Windows.UI.Notifications;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
-using bilibili.Helpers;
 using Windows.System.Display;
+using Windows.UI;
+using Windows.UI.Notifications;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Navigation;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -32,6 +39,17 @@ namespace bilibili.Views
             cts = new CancellationTokenSource();
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
+            if (SettingHelper.DeviceType == DeviceType.PC)
+            {
+                dragarea.Visibility = Visibility.Visible;
+            }
+            StringBuilder builder = new StringBuilder();
+            builder.Append("支持的格式：");
+            for (int i = 0; i < videoExtensions.Count; i++)
+            {
+                builder.Append(videoExtensions[i].Substring(1) + ",");
+            }
+            txt_format.Text = builder.Remove(builder.Length - 1, 1).ToString();
         }     
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -329,9 +347,78 @@ namespace bilibili.Views
             }
         }
 
-        private void Select_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void Select_Click(object sender, RoutedEventArgs e)
         {
             donelist.SelectionMode = donelist.SelectionMode == ListViewSelectionMode.None ? ListViewSelectionMode.Multiple : ListViewSelectionMode.None;
+        }
+
+        //拖动进入目标区域时发生
+        private async void draggrid_DragEnter(object sender, DragEventArgs e)
+        {
+            var deferral = e.GetDeferral();
+            DataPackageView dataview = e.DataView;
+            if (dataview.Contains(StandardDataFormats.StorageItems))
+            {
+                var items = await dataview.GetStorageItemsAsync();
+                if (items != null)
+                {
+                    IStorageItem item = items[0];
+                    if (item.IsOfType(StorageItemTypes.File))
+                    {
+                        e.AcceptedOperation = DataPackageOperation.Link;
+                        StorageFile file = (StorageFile)item;
+                        StorageItemThumbnail img = await file.GetScaledImageAsThumbnailAsync(ThumbnailMode.VideosView);
+                        BitmapImage bmp = new BitmapImage();
+                        bmp.DecodePixelWidth = 150;
+                        bmp.SetSource(img);
+                        e.DragUIOverride.SetContentFromBitmapImage(bmp);
+                        //e.DragUIOverride.Caption = file.DisplayName;
+                        //e.DragUIOverride.IsCaptionVisible = false;    
+                        if (videoExtensions.Contains(file.FileType))
+                        {
+                            dragfile = file;
+                        }
+                    }
+                    else
+                    {
+                        //不用 DataPackageOperation.None 原因：不是约定的用法
+                        deferral.Complete();
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                deferral.Complete();
+                return;
+            }
+            //dragarea.Background.Opacity = 0;
+            deferral.Complete();
+        }
+
+        //拖动离开目标区域时发生
+        private void draggrid_DragLeave(object sender, DragEventArgs e)
+        {
+            //AccessViolationException
+            var deferral = e.GetDeferral();
+            //dragarea.Background.Opacity = 1;
+            deferral.Complete();
+        }
+
+        //目前仅资磁 mp4
+        List<string> videoExtensions => new List<string> { ".mp4" };
+        StorageFile dragfile;
+
+        //拖动操作降落时发生
+        private void draggrid_Drop(object sender, DragEventArgs e)
+        {
+            var deferral = e.GetDeferral();
+            if (dragfile != null)
+            {
+                Frame.Navigate(typeof(Video), dragfile);
+            }
+            //不报告完成的话如何？试一试就知道了，233
+            deferral.Complete();
         }
     }
 }

@@ -6,8 +6,36 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="using:bilibili.Controls"
+    xmlns:m="using:bilibili.Models"
+    xmlns:cv="using:bilibili.Converters"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <cv:BoolToVisibility x:Key="cvt"/>
+        <DataTemplate x:Key="dt_list" x:DataType="m:Video">
+            <Grid Height="90" Width="{Binding Width,ElementName=width}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Image Source="{x:Bind Cover}" Grid.RowSpan="4" Width="120" Margin="0,0,4,0"/>
+                <TextBlock Grid.Column="1" Text="{x:Bind Title}" MaxLines="2" TextWrapping="Wrap" Width="{Binding Width,ElementName=width}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Author}" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                <TextBlock Text="最新" Foreground="{ThemeResource bili_Theme}" Grid.Column="1" Grid.Row="2" Visibility="{x:Bind IsNew,Converter={StaticResource cvt}}" FontSize="12" HorizontalAlignment="Left"/>
+                <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom">
+                    <Image Source="ms-appx:///Assets//Icons//play.png" Height="10"/>
+                    <TextBlock Text="{x:Bind Play}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}" Width="80"/>
+                    <Image Source="ms-appx:///Assets//Icons//comment.png" Height="10"/>
+                    <TextBlock Text="{x:Bind Danmaku}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}"  SizeChanged="Grid_SizeChanged">
         <c:MyPopup x:Name="popup" Margin="0,48,0,0"/>
         <Border x:Name="width"/>

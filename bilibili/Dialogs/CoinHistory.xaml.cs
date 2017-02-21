@@ -20,17 +20,4 @@ namespace bilibili.Dialogs
             list.ItemsSource = await ContentServ.GetCoinHistoryAsync();
         }
     }
-
-    public class NumToForeground : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            var b = int.Parse(value.ToString());
-            return b > 0 ? "Green" : "Red";
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return null;
-        }
-    }
 }

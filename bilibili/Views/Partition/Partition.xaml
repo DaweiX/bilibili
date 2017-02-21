@@ -6,10 +6,9 @@
     xmlns:controls="using:bilibili.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    SizeChanged="Page_SizeChanged">
+    xmlns:m="using:bilibili.Models"
+    mc:Ignorable="d">
     <Page.Resources>
-        <local:WidthToHeight x:Key="cvt2"/>
         <Style x:Key="GridViewStyle1" TargetType="GridView">
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
             <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled"/>
@@ -44,6 +43,105 @@
             <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
             <Setter Property="Margin" Value="4"/>
         </Style>
+        <DataTemplate x:Key="pull_up" x:DataType="m:Pulls">
+            <Grid Width="{Binding Width,ElementName=width}" Padding="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="90"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Ellipse Width="40" Height="40" Margin="0,0,8,0" Grid.RowSpan="2">
+                        <Ellipse.Fill>
+                            <!--ImageSource的x：bind要求转换前的value不能为null（参阅.g.cs文件）-->
+                            <!--解决方案：使用Binding代替 or 为属性设置初始值-->
+                            <ImageBrush ImageSource="{x:Bind Avatar}"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock Grid.Column="1" Text="{x:Bind Author}" TextWrapping="Wrap"/>
+                    <RichTextBlock Grid.Column="1" Grid.Row="1">
+                        <Paragraph>
+                            <Run Text="{x:Bind Create}" Foreground="{ThemeResource bili_Theme}" FontSize="12"/>
+                            <Run Foreground="{ThemeResource bili_Fontcolor_Second}" Text="投递了" FontSize="12"/>
+                        </Paragraph>
+                    </RichTextBlock>
+                </Grid>
+                <Border Grid.Row="1" Margin="2 6" Height="1" HorizontalAlignment="Stretch" Background="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{x:Bind Pic}" Grid.RowSpan="3" Margin="0,0,4,0"/>
+                    <TextBlock Grid.Column="1" Text="{x:Bind Title}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Bind Author}"/>
+                    <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <Image Source="ms-appx:///Assets//Icons//play.png" Height="10"/>
+                        <TextBlock Text="{x:Bind Play}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}" Width="80"/>
+                        <Image Source="ms-appx:///Assets//Icons//comment.png" Height="10"/>
+                        <TextBlock Text="{x:Bind Danmaku}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="pull_bangumi" x:DataType="m:Pulls">
+            <Grid Width="{Binding Width,ElementName=width}" Padding="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="90"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Padding="2" Margin="0,0,8,0" Grid.RowSpan="2" VerticalAlignment="Center" BorderBrush="{ThemeResource bili_Theme}" BorderThickness="1">
+                        <TextBlock Text="番剧" Foreground="{ThemeResource ThemeBackgroundReverse}"/>
+                    </Border>
+                    <TextBlock Grid.Column="1" Text="{x:Bind BanTitle}"/>
+                    <RichTextBlock Grid.Column="1" Grid.Row="1">
+                        <Paragraph>
+                            <Run Text="{x:Bind Create}" Foreground="{ThemeResource bili_Theme}" FontSize="12"/>
+                            <Run Foreground="{ThemeResource bili_Fontcolor_Second}" Text="更新了" FontSize="12"/>
+                            <Run Text="{x:Bind Index}" Foreground="{ThemeResource bili_Theme}" FontSize="12"/>
+                        </Paragraph>
+                    </RichTextBlock>
+                </Grid>
+                <Border Grid.Row="1" Margin="2 6" Height="1" HorizontalAlignment="Stretch" Background="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{x:Bind Pic}" Margin="0,0,4,0"/>
+                    <TextBlock Grid.Column="1" FontSize="14" Text="{x:Bind Title}" TextWrapping="Wrap"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <Image Source="ms-appx:///Assets//Icons//play.png" Height="10"/>
+                        <TextBlock Text="{x:Bind Play}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}" Width="80"/>
+                        <Image Source="ms-appx:///Assets//Icons//comment.png" Height="10"/>
+                        <TextBlock Text="{x:Bind Danmaku}" FontSize="12" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Grid.RowDefinitions>
@@ -62,7 +160,7 @@
             </PivotItem>
             <PivotItem Margin="0" Header="番剧">
                 <ScrollViewer x:Name="scollviewer" DataContextChanged="scollviewer_DataContextChanged">
-                    <Grid x:Name="grid">
+                    <Grid x:Name="grid" SizeChanged="Page_SizeChanged">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
@@ -116,7 +214,7 @@
                                         <Image Source="{Binding Cover}" Width="{Binding ElementName=width,Path=Width}"/>
                                         <StackPanel Grid.Row="1">
                                             <TextBlock Text="{Binding Desc}" FontSize="12" Margin="4,2,0,0" TextWrapping="Wrap" MaxLines="3" TextTrimming="WordEllipsis" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
-                                            <TextBlock Text="{Binding Title}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Main}" FontWeight="Light"/>
+                                            <TextBlock Text="{Binding Title}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="13" FontWeight="Light"/>
                                         </StackPanel>
                                     </Grid>
                                 </DataTemplate>
@@ -125,43 +223,12 @@
                     </Grid>
                 </ScrollViewer>
             </PivotItem>
-            <PivotItem Header="关注">
-                <ListView x:Name="list_friends" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_friends_ItemClick">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Ellipse Width="60" Height="60">
-                                    <Ellipse.Fill>
-                                        <ImageBrush ImageSource="{Binding Face}"/>
-                                    </Ellipse.Fill>
-                                </Ellipse>
-                                <StackPanel Grid.Column="1" Margin="4,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock VerticalAlignment="Bottom" Text="{Binding Uname}" TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Margin" Value="4"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.Style>
-                        <Style TargetType="ListView">
-                            <Setter Property="ItemsPanel">
-                                <Setter.Value>
-                                    <ItemsPanelTemplate>
-                                        <ItemsWrapGrid  Orientation="Horizontal"/>
-                                    </ItemsPanelTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListView.Style>
-                </ListView>
+            <PivotItem Header="关注" Margin="0" SizeChanged="Page_SizeChanged">
+                <GridView x:Name="list_pull" HorizontalAlignment="Center" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_pull_ItemClick" ContainerContentChanging="list_pull_ContainerContentChanging">
+                    <GridView.ItemTemplateSelector>
+                        <local:PullTemplateSelector Pull_bangumi="{StaticResource pull_bangumi}" Pull_up="{StaticResource pull_up}"/>
+                    </GridView.ItemTemplateSelector>
+                </GridView>
             </PivotItem>
             <PivotItem Header="发现">
                 <ScrollViewer>
@@ -171,7 +238,7 @@
                         <GridView Height="160" x:Name="list_hottags" Margin="8" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" Pivot.SlideInAnimationGroup="GroupTwo" IsItemClickEnabled="True" ItemClick="list_tags_ItemClick">
                             <GridView.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" BorderThickness="1" BorderBrush="LightGray" Padding="2">
+                                    <StackPanel Orientation="Horizontal" Padding="2">
                                         <TextBlock Text="{Binding Keyword}"/>
                                         <TextBlock Text="{Binding Status}" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                                     </StackPanel>
@@ -184,10 +251,9 @@
                             </GridView.ItemsPanel>
                         </GridView>
                         <StackPanel Grid.Row="2" Pivot.SlideInAnimationGroup="GroupOne">
-                            <Button Tapped="Random_Tapped" HorizontalAlignment="Stretch" Margin="0,4,0,0">运气不错</Button>
-                            <Button HorizontalAlignment="Stretch" Margin="0,4,0,0" Click="rank_Click">排行榜</Button>
-                            <Button Tag="0" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Margin="0,4,0,0">话题中心</Button>
-                            <Button Tag="1" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Margin="0,4,0,0">活动中心</Button>
+                            <Button BorderThickness="0" Height="40" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" Tapped="Random_Tapped" HorizontalAlignment="Stretch" Margin="0,4,0,0">运气不错</Button>
+                            <Button BorderThickness="0" Height="40" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" HorizontalAlignment="Stretch" Margin="0,4,0,0" Click="rank_Click">排行榜</Button>
+                            <Button BorderThickness="0" Height="40" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" Tag="0" Tapped="Topic_Tapped" HorizontalAlignment="Stretch" Margin="0,4,0,0">话题&amp;活动</Button>
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

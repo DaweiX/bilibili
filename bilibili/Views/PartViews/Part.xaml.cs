@@ -1,6 +1,6 @@
 ﻿using bilibili.Http;
 using bilibili.Methods;
-using bilibili.Models;
+using System.Linq;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -159,7 +159,7 @@ namespace bilibili.Views.PartViews
 
         private void gridview_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Content).Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Models.Video).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
         private void gridview_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -175,7 +175,7 @@ namespace bilibili.Views.PartViews
                     int count0 = gridview.Items.Count;
                     int page = gridview.Items.Count / 20 + 1;
                     isLoading = true;
-                    List<Content> temps = await ContentServ.GetContentAsync(int.Parse(gridview.Tag.ToString()), page);
+                    List<Models.Video> temps = await ContentServ.GetVideosAsync(int.Parse(gridview.Tag.ToString()), page);
                     if (temps == null) return;
                     if (temps.Count < 20) 
                     {
@@ -195,7 +195,7 @@ namespace bilibili.Views.PartViews
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            width.Width = WidthFit.GetWidth(ActualWidth, 260, 160);
+            width.Width = WidthFit.GetWidth(ActualWidth);
         }
 
         private async void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -204,7 +204,7 @@ namespace bilibili.Views.PartViews
             GridView gridview = FindName("gridview" + index.ToString()) as GridView;
             if (gridview.Items.Count == 0)
             {
-                var temp = await ContentServ.GetContentAsync(int.Parse(gridview.Tag.ToString()), 1);
+                var temp = await ContentServ.GetVideosAsync(int.Parse(gridview.Tag.ToString()), 1);
                 if (temp != null)
                 {
                     foreach (var item in temp)
@@ -221,8 +221,7 @@ namespace bilibili.Views.PartViews
             GridView _gridview = new GridView();
             _gridview.IsItemClickEnabled = true;
             _gridview.ItemClick += gridview_ItemClick;
-            _gridview.ItemContainerStyle = (Style)dic["gv_container"];
-            _gridview.ItemTemplate = (DataTemplate)dic["gv_itemtemplete"];
+            _gridview.ItemTemplate = (DataTemplate)Resources["dt_list"];
             _gridview.Template = (ControlTemplate)dic["myControlTemplete"];
             _gridview.ContainerContentChanging += gridview_ContainerContentChanging;
             _gridview.HorizontalAlignment = HorizontalAlignment.Center;
@@ -246,7 +245,7 @@ namespace bilibili.Views.PartViews
             for (int i = 0; i < arglist.Count; i++)
             {
                 KeyValuePair<string, string> arg = arglist[i];
-                PivotItem item = new PivotItem();
+                PivotItem item = new PivotItem { Margin = new Thickness(0) };
                 item.Header = arg.Key;
                 item.Content = GetGridView(arg.Value, "gridview" + index.ToString());
                 list.Add(item);

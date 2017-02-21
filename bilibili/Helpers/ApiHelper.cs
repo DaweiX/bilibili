@@ -50,12 +50,12 @@ namespace bilibili.Helpers
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
                 HttpClient httpClient = new Windows.Web.Http.HttpClient(httpBaseProtocolFilter);
-                //WebClientClass wc = new WebClientClass();
                 string result = await BaseService.SendPostAsync(url, "http://passport.bilibili.com");
                 JsonObject json = JsonObject.Parse(result);
                 json = json["data"].GetObject();
                 string str = json["hash"].GetString();
                 string str1 = json["key"].GetString();
+                //加盐为什么要用密码加？这样的加盐没什么意义，但貌似服务器只认这样的加密方式(lll￢ω￢)
                 string str2 = string.Concat(str, password);
                 string str3 = Regex.Match(str1, "BEGIN PUBLIC KEY-----(?<key>[\\s\\S]+)-----END PUBLIC KEY").Groups["key"].Value.Trim();
                 byte[] numArray = Convert.FromBase64String(str3);
@@ -148,7 +148,7 @@ namespace bilibili.Helpers
                 accesskey1 = json["access_key"].GetString();
             if (json.ContainsKey("mid"))
                 mid = json["mid"].ToString();
-            if (accesskey1 != string.Empty && code == 0)
+            if (accesskey1 != string.Empty)
             {
                 accesskey = accesskey1;
                 SettingHelper.SetValue("_accesskey", accesskey);

@@ -34,7 +34,7 @@ namespace bilibili.Views
 
         void init()
         {
-            var type = SettingHelper.Devicetype;
+            var type = SettingHelper.DeviceType;
             if (type == DeviceType.PC)
             {
                 m_top.Visibility = Visibility.Collapsed;
@@ -198,7 +198,7 @@ namespace bilibili.Views
             cb_font.Items.Add("宋体");
             cb_font.Items.Add("等线");
             cb_font.Items.Add("楷体");
-            if (SettingHelper.GetDeviceType() == DeviceType.PC)
+            if (type == DeviceType.PC)
             {
                 cb_font.Items.Add("幼圆");
             }
@@ -531,24 +531,14 @@ namespace bilibili.Views
             {
                 case 0: Frame.Navigate(typeof(Test.Test)); break;
                 case 1: Frame.Navigate(typeof(Test.ListAnimation)); break;
+                case 2: Frame.Navigate(typeof(Test.FlipPage)); break;
+                case 3: Frame.Navigate(typeof(Test.ExpandPanel)); break;
             }
         }
 
         private void backtaskcost_Toggled(object sender, RoutedEventArgs e)
         {
             SettingHelper.SetValue("_backtaskcost", backtaskcost.IsOn);
-        }
-    }
-    public class BoolToVisibility : IValueConverter
-    {
-        object IValueConverter.Convert(object value, Type targetType, object parameter, string language)
-        {
-            return (bool)value ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        object IValueConverter.ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return null;
         }
     }
 }

@@ -6,9 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:c="using:bilibili.Controls"
+    xmlns:cv="using:bilibili.Converters"
     mc:Ignorable="d">
     <Page.Resources>
-        <local:BoolToVisibility x:Key="cvt"/>
+        <cv:BoolToVisibility x:Key="cvt"/>
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Pivot>
@@ -155,39 +156,41 @@
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <StackPanel>
                             <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" Margin="0,20,0,0">哔哩哔哩一号机内测版 1st edition version 1.68</TextBlock>
+                                <TextBlock Margin="0,20,0,0">哔哩哔哩一号机内测版 1st edition version 1.70</TextBlock>
                                 <HyperlinkButton HorizontalAlignment="Center" Click="HyperlinkButton_Click">联系我</HyperlinkButton>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">企划</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">原画</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">演出</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">摄影师</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,12,0,0">DaweiX</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,40,0,0">特别鸣谢</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,8,0,0">Fiddler</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,4,0,0">BUAA-Mobile</TextBlock>
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" HorizontalAlignment="Center" Margin="0,4,0,0">BiliBili UWP (弹幕)</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,40,0,0">原案</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,40,0,0">企划</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,40,0,0">原画</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,40,0,0">演出</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,8,0,0">DaweiX</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,40,0,0">摄影师</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,12,0,0">DaweiX</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,40,0,0">特别鸣谢</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,8,0,0">Fiddler</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,4,0,0">BUAA-Mobile</TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Margin="0,4,0,0">BiliBili UWP (弹幕)</TextBlock>
                             </StackPanel>
                             <RelativePanel Height="{Binding ElementName=grid,Path=ActualHeight}">
-                                <TextBlock Foreground="{ThemeResource bili_Fontcolor_Main}" Margin="0,0,8,12" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">©2017 DaweiX</TextBlock>
+                                <TextBlock Margin="0,0,8,12" RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">©2017 DaweiX</TextBlock>
                             </RelativePanel>
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="实验室">
-                <!--<ComboBox SelectionChanged="ComboBox_SelectionChanged_1">
+            <!--<PivotItem Header="实验室">
+                --><!--<ComboBox SelectionChanged="ComboBox_SelectionChanged_1">
                     <ComboBoxItem>Area模板化控件</ComboBoxItem>
-                </ComboBox>-->
+                </ComboBox>--><!--
                 <ListView SelectionChanged="ListView_SelectionChanged">
                     <ListViewItem>下拉刷新控件</ListViewItem>
                     <ListViewItem>列表动画效果</ListViewItem>
+                    <ListViewItem>滑动版头</ListViewItem>
+                    <ListViewItem>拓展面板</ListViewItem>
                 </ListView>
-            </PivotItem>
+            </PivotItem>-->
         </Pivot>
     </Grid>
 </Page>

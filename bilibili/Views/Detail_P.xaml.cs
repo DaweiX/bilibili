@@ -571,7 +571,7 @@ namespace bilibili.Views
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            width.Width = WidthFit.GetWidth(ActualWidth, 800, 400, 12);
+            width.Width = WidthFit.GetWidth(ActualWidth);
         }
 
         private void ReplyBack_Click(object sender, RoutedEventArgs e)

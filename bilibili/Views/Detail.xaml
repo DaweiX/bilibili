@@ -73,7 +73,7 @@
                                         <GridView.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
+                                                    <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" FontSize="13"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </GridView.ItemTemplate>
@@ -155,9 +155,9 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate x:DataType="m:Cast">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{x:Bind Actor}" Foreground="{ThemeResource bili_Fontcolor_Main}" IsTextSelectionEnabled="True"/>
+                                                        <TextBlock Text="{x:Bind Actor}" IsTextSelectionEnabled="True"/>
                                                         <TextBlock Text="饰" Margin="8,0,8,0" Foreground="{ThemeResource bili_Theme}"/>
-                                                        <TextBlock Text="{x:Bind Role}" Foreground="{ThemeResource bili_Fontcolor_Main}" IsTextSelectionEnabled="True"/>
+                                                        <TextBlock Text="{x:Bind Role}" IsTextSelectionEnabled="True"/>
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>

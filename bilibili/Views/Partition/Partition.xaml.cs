@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using bilibili.Http;
 using bilibili.Models;
 using bilibili.Helpers;
@@ -12,6 +10,7 @@ using Windows.UI.Xaml.Data;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.Data.Json;
+using bilibili.Methods;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -97,7 +96,7 @@ namespace bilibili.Views
                                     //}
                                     //show_1.show();
                                     await comment.init();
-                                    header_Home.init(await ContentServ.GetHomeBanners(), 3.2);
+                                    header_Home.init(await ContentServ.GetHomeBanners());
                                     header_Home.navi += Header_navi;
                                     isTopicLoaded = true;
                                 }
@@ -110,7 +109,7 @@ namespace bilibili.Views
                                 {
                                     await addcomment(cursor);
                                 }
-                                header_bangumi.init(await ContentServ.GetBangumiBanners(), 3.2);
+                                header_bangumi.init(await ContentServ.GetBangumiBanners());
                                 if (list_lastupdate.Items.Count == 0)
                                 {
                                     list_lastupdate.ItemsSource = await ContentServ.GetLastUpdateAsync();
@@ -122,7 +121,7 @@ namespace bilibili.Views
                             {
                                 if (!isFriendsLoaded)
                                 {
-                                    await loadfriends();
+                                    await loadpulls(1);
                                     isFriendsLoaded = true;
                                 }
                             }
@@ -138,7 +137,7 @@ namespace bilibili.Views
                             break;
                     }
                 }
-                catch
+                catch(Exception)
                 {
                     
                 }
@@ -158,11 +157,21 @@ namespace bilibili.Views
                 Frame.Navigate(typeof(MyWeb), arg, new DrillInNavigationTransitionInfo());
             }
         }
-
-        async Task<bool> loadfriends()
+        bool isPullLoadingDone = false;
+        async Task loadpulls(int page)
         {
-            list_friends.ItemsSource = await ContentServ.GetFriendsAsync(UserHelper.mid);
-            return true;
+            isloadingpull = true;
+            List<Pulls> list = await ContentServ.GetPullsAsync(page);
+            foreach (var item in list)
+            {
+                list_pull.Items.Add(item);
+            }
+            if (list.Count < 20)
+            {
+                list_pull.ContainerContentChanging -= list_pull_ContainerContentChanging;
+                isPullLoadingDone = true;
+            }
+            isloadingpull = false;
         }
 
         //番剧推荐
@@ -226,24 +235,23 @@ namespace bilibili.Views
 
         private void list_friends_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Friends), (e.ClickedItem as Friend).Fid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Friends), (e.ClickedItem as Friend).Fid, new DrillInNavigationTransitionInfo());
         }
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            double i = ActualWidth;
-            width.Width = Methods.WidthFit.GetWidth(i, 400, 280);
+            width.Width = WidthFit.GetWidth(ActualWidth);
         }
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (WebStatusHelper.IsOnline())
-                Frame.Navigate(typeof(Search), SearchBox.Text, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Search), SearchBox.Text, new DrillInNavigationTransitionInfo());
         }
 
         private void list_tags_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Search), (e.ClickedItem as KeyWord).Keyword, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Search), (e.ClickedItem as KeyWord).Keyword, new DrillInNavigationTransitionInfo());
         }
 
         private async void Random_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
@@ -259,7 +267,7 @@ namespace bilibili.Views
             {
                 aid = new Random().Next(10000, 5000000);
                 string a = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=";
-                details = await ContentServ.GetDetailsAsync(a + aid);
+                details = await ContentServ.GetDetailsAsync(a + aid, true);
             } while (details == null || details.Aid == null);
             Frame.Navigate(typeof(Detail_P), aid);
         }
@@ -267,36 +275,7 @@ namespace bilibili.Views
         private void Topic_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             Button btn = sender as Button;
-            if (btn.Tag.ToString() == "0")
-            {
-                Frame.Navigate(typeof(Topic), true, new DrillInNavigationTransitionInfo());
-                return;
-            }
-            if (btn.Tag.ToString() == "1")
-            {
-                Frame.Navigate(typeof(Topic), false, new DrillInNavigationTransitionInfo());
-                return;
-            }
-        }
-
-        private void gridview_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            GridView gridview = sender as GridView;
-            var item = gridview.SelectedItem as Content;
-            if (item != null)
-            {
-                Frame.Navigate(typeof(Detail_P), item.Num, new DrillInNavigationTransitionInfo());
-            }
-        }
-
-        private void scollviewer2_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
-        {
-
-        }
-
-        private void list_live_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-
+            Frame.Navigate(typeof(WebShell));
         }
 
         private async void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -371,16 +350,42 @@ namespace bilibili.Views
                 Frame.Navigate(typeof(MyWeb), url, new DrillInNavigationTransitionInfo());
             }
         }
+
+        private void list_pull_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Pulls).Aid);
+        }
+        bool isloadingpull = false;
+        private void list_pull_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            var scroll = Load.FindChildOfType<ScrollViewer>(list_pull);
+            scroll.ViewChanged += async (s, a) =>
+            {
+                if (scroll.VerticalOffset == scroll.ScrollableHeight && !isloadingpull && !isPullLoadingDone)  
+                {
+                    //滑动到底部了    
+                    int page = list_pull.Items.Count / 20 + 1;
+                    await loadpulls(page);
+                }
+            };
+        }
     }
 
-    public class WidthToHeight : IValueConverter
+    public sealed class PullTemplateSelector : DataTemplateSelector
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public DataTemplate Pull_up { get; set; }
+        public DataTemplate Pull_bangumi { get; set; }
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            return (double)value;
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
+            Pulls pulls = item as Pulls;
+            if (pulls != null)
+            {
+                switch(pulls.Type)
+                {
+                    case "1": return Pull_up;
+                    case "3": return Pull_bangumi;
+                }
+            }
             return null;
         }
     }

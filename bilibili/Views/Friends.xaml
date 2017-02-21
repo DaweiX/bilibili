@@ -13,20 +13,26 @@
                 <ScrollViewer>
                     <StackPanel>
                         <StackPanel x:Name="header">
-                            <StackPanel>
-                                <Image x:Name="toutu" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Top" SizeChanged="toutu_SizeChanged"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Height="80" Width="80" Stroke="Gray" StrokeThickness="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="12,-40,0,0">
-                                        <Ellipse.Fill>
-                                            <ImageBrush x:Name="Face"/>
-                                        </Ellipse.Fill>
-                                    </Ellipse>
-                                    <StackPanel Margin="8,0,0,0">
-                                        <TextBlock x:Name="userName" FontSize="26" FontWeight="Light"/>
-                                        <TextBlock x:Name="sign" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Image x:Name="toutu" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Top" SizeChanged="toutu_SizeChanged" Grid.ColumnSpan="3" Grid.RowSpan="2"/>
+                                <TextBlock x:Name="userName" FontSize="26" FontWeight="Light" Margin="8"/>
+                                <Ellipse Height="80" Width="80" Grid.Row="1" Grid.RowSpan="2" Stroke="Gray" StrokeThickness="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="12,-40,0,0">
+                                    <Ellipse.Fill>
+                                        <ImageBrush x:Name="Face"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock x:Name="sign" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource bili_Fontcolor_Second}" TextWrapping="WrapWholeWords"/>
+                            </Grid>
                             <StackPanel Margin="12" Grid.Column="1" VerticalAlignment="Bottom">
                                 <TextBlock x:Name="birth"/>
                                 <TextBlock x:Name="regdate"/>
@@ -92,7 +98,7 @@
                                                 <RowDefinition Height="*"/>
                                                 <RowDefinition Height="auto"/>
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="{Binding Title}" Foreground="{ThemeResource bili_Fontcolor_Main}" TextWrapping="WrapWholeWords" FontSize="14"/>
+                                            <TextBlock Text="{Binding Title}" TextWrapping="WrapWholeWords" FontSize="14"/>
                                             <Grid Grid.Row="1" VerticalAlignment="Bottom">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>

@@ -36,7 +36,7 @@ namespace bilibili.Http
         /// <returns></returns>
         public static async Task<JsonObject> GetJson(string url)
         {
-            string json = await BaseService.SentGetAsync(url);
+            string json = await SentGetAsync(url);
             if (json != null)
                 return JsonObject.Parse(json);
             else

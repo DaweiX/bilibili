@@ -244,3 +244,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /bilibili/UI
+/bilibili/Controls/FlipView

@@ -80,8 +80,7 @@ namespace bilibili.Views
                 txt_mydanmu.IsEnabled = false;
             }
             displayRq.RequestActive();      //保持屏幕常亮
-            type = SettingHelper.GetDeviceType();
-            if (type == DeviceType.PC)
+            if (SettingHelper.DeviceType == DeviceType.PC)
             {
                 menu_full.Visibility = Visibility.Visible;
                 MouseDevice.GetForCurrentView().MouseMoved += Video_MouseMoved;
@@ -142,7 +141,7 @@ namespace bilibili.Views
             cb_font.Items.Add("宋体");
             cb_font.Items.Add("等线");
             cb_font.Items.Add("楷体");
-            if (SettingHelper.GetDeviceType() == DeviceType.PC)
+            if (SettingHelper.DeviceType == DeviceType.PC)
             {
                 cb_font.Items.Add("幼圆");
             }

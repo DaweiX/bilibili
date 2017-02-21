@@ -13,8 +13,6 @@ using Windows.UI.Xaml.Media;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
-using bilibili.Animation.Effects;
-using bilibili.Animation.Root;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -35,7 +33,7 @@ namespace bilibili
             this.DataContext = this;
             //后退键
             SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
-            MainList.SelectedIndex = 0;
+            //MainList.SelectedIndex = 0;
             if (SettingHelper.ContainsKey("_topbar"))
             {
                 TopShoworHide();
@@ -46,22 +44,55 @@ namespace bilibili
                 {
                     RequestedTheme = ElementTheme.Dark;
                     currentTheme = false;
-                    txt.Text = "日间模式";
+                    //txt.Text = "日间模式";
                 }
                 else if (SettingHelper.GetValue("_nighttheme").ToString() == "light")
                 {
                     RequestedTheme = ElementTheme.Light;
                     currentTheme = true;
-                    txt.Text = "夜间模式";
+                    //txt.Text = "夜间模式";
                 }
             }
             else
             {
                 RequestedTheme = ElementTheme.Light;
                 currentTheme = true;
-                txt.Text = "夜间模式";
+                //txt.Text = "夜间模式";
             }
             ChangeTheme();
+        }
+
+        private async void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (FrameManager.FrameHelpers.action())
+            {
+                return;
+            }
+            if (mainframe == null)
+                return;
+            if (e.Handled == false)
+            {
+                if (mainframe.CanGoBack)
+                {
+                    e.Handled = true;
+                    mainframe.GoBack();
+                }
+                else
+                {
+                    if (isExit)
+                    {
+                        Application.Current.Exit();
+                    }
+                    else
+                    {
+                        e.Handled = true;
+                        isExit = true;
+                        await popup.Show("再次点击后退键退出");
+                        await Task.Delay(2000);
+                        isExit = false;
+                    }
+                }
+            }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -114,33 +145,37 @@ namespace bilibili
         private async Task ShowStatus()
         {
             await popup.Show("登录成功");
-            ApiHelper.accesskey = SettingHelper.GetValue("_accesskey").ToString();
-            string url = "http://api.bilibili.com/myinfo?appkey=422fd9d7289a1dd9&access_key=" + SettingHelper.GetValue("_accesskey").ToString();
-            url += ApiHelper.GetSign(url);
-            JsonObject json = await BaseService.GetJson(url);
-            if (json.ContainsKey("mid"))
-                UserHelper.mid = json["mid"].ToString();
-            if (json.ContainsKey("face"))
-                face.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(StringDeal.delQuotationmarks((json["face"].ToString())))) };
-            if (json.ContainsKey("uname"))
-                uname.Text = StringDeal.delQuotationmarks(json["uname"].ToString());
-            if (json.ContainsKey("level_info"))
+            try
             {
-                JsonObject json2 = JsonObject.Parse(json["level_info"].ToString());
-                if (json2.ContainsKey("current_level"))
+                ApiHelper.accesskey = SettingHelper.GetValue("_accesskey").ToString();
+                string url = "http://api.bilibili.com/myinfo?appkey=422fd9d7289a1dd9&access_key=" + SettingHelper.GetValue("_accesskey").ToString();
+                url += ApiHelper.GetSign(url);
+                JsonObject json = await BaseService.GetJson(url);
+                if (json.ContainsKey("mid"))
+                    UserHelper.mid = json["mid"].ToString();
+                if (json.ContainsKey("face"))
+                    face.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(StringDeal.delQuotationmarks((json["face"].ToString())))) };
+                if (json.ContainsKey("uname"))
+                    uname.Text = StringDeal.delQuotationmarks(json["uname"].ToString());
+                if (json.ContainsKey("level_info"))
                 {
-                    switch (json2["current_level"].ToString())
+                    JsonObject json2 = JsonObject.Parse(json["level_info"].ToString());
+                    if (json2.ContainsKey("current_level"))
                     {
-                        case "0": rank.Text = "普通用户"; break;
-                        case "1": rank.Text = "注册会员"; break;
-                        case "2": rank.Text = "正式会员"; break;
-                        case "3": rank.Text = "字幕君"; break;
-                        case "4": rank.Text = "VIP用户"; break;
-                        case "5": rank.Text = "职人"; break;
-                        case "6": rank.Text = "站长大人"; break;
+                        switch (json2["current_level"].ToString())
+                        {
+                            case "0": rank.Text = "普通用户"; break;
+                            case "1": rank.Text = "注册会员"; break;
+                            case "2": rank.Text = "正式会员"; break;
+                            case "3": rank.Text = "字幕君"; break;
+                            case "4": rank.Text = "VIP用户"; break;
+                            case "5": rank.Text = "职人"; break;
+                            case "6": rank.Text = "站长大人"; break;
+                        }
                     }
                 }
             }
+            catch { }
         }
 
         bool ChangeTheme(bool a = true)
@@ -202,43 +237,6 @@ namespace bilibili
         //    }
         //}
         //StatusBar sb = StatusBar.GetForCurrentView();
-        //后退键
-        private async void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            if (mainframe == null)
-                return;
-            if (e.Handled == false)
-            {
-                if (mainframe.CanGoBack)
-                {
-                    e.Handled = true;
-                    mainframe.GoBack();
-                }
-                else
-                {
-                    if (isExit)
-                    {
-                        Application.Current.Exit();
-                    }
-                    else
-                    {
-                        e.Handled = true;
-                        isExit = true;
-                        await popup.Show("再次点击后退键退出");
-                        await Task.Delay(2000);
-                        isExit = false;
-                    }
-                }
-            }
-        }
-
-        private void Sets_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ham.DisplayMode == SplitViewDisplayMode.Overlay)
-                ham.IsPaneOpen = false;
-            MainList.SelectedIndex = -1;
-            mainframe.Navigate(typeof(Views.Setting));
-        }
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
@@ -249,7 +247,7 @@ namespace bilibili
         private void mainframe_Navigated(object sender, NavigationEventArgs e)
         {
             //bilibili.Views.PartViews.Bangumi, bilibili, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-            Sets.SelectedIndex = -1;
+            //Sets.SelectedIndex = -1;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = mainframe.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
             if (mainframe.CurrentSourcePageType == typeof(Views.Video))
             {
@@ -349,78 +347,6 @@ namespace bilibili
             }
         }
 
-        private async void MainList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            if (ham.DisplayMode == SplitViewDisplayMode.Overlay)
-                ham.IsPaneOpen = false;          
-            var lbi = MainList.SelectedItem as ListBoxItem;
-            if (lbi != null)
-            {
-                switch (lbi.Tag.ToString())
-                {
-                    case "index":
-                        {
-                            mainframe.Navigate(typeof(Views.Partition));
-                        }
-                        break;              
-                    case "class":
-                        {
-                            mainframe.Navigate(typeof(Views.Bangumi));
-                        }
-                        break;
-                    case "message":
-                        {
-                            if (ApiHelper.IsLogin())
-                            {
-                                mainframe.Navigate(typeof(Views.Message));
-                            }
-                            else
-                            {
-                                await popup.Show("请先登录");
-                            }
-                        }
-                        break;
-                    case "history":
-                        {
-                            if (ApiHelper.IsLogin())
-                            {
-                                mainframe.Navigate(typeof(Views.History));
-                            }
-                            else
-                            {
-                                await popup.Show("请先登录");
-                            }
-                        }
-                        break;
-                    case "me":
-                        {
-                            if (ApiHelper.IsLogin())
-                            {
-                                mainframe.Navigate(typeof(Views.FavCollection));
-                            }
-                            else
-                            {
-                                await popup.Show("请先登录");
-                            }
-                        }
-                        break;
-                    case "download":
-                        {
-                            mainframe.Navigate(typeof(Views.Download));
-                        }
-                        break;
-                    case "night":
-                        {
-                            //fonticon.Glyph = "&#xE708/6;";
-                            bool isDark = ChangeDarkMode(currentTheme);
-                        }
-                        break;
-                }
-                Sets.SelectedIndex = -1;
-            }
-        }
-
-
         private bool ChangeDarkMode(bool value)
         {
             if (value)
@@ -428,7 +354,7 @@ namespace bilibili
                 RequestedTheme = ElementTheme.Dark;
                 currentTheme = false;
                 SettingHelper.SetValue("_nighttheme", "dark");
-                txt.Text = "日间模式";
+                //txt.Text = "日间模式";
                 return true;
             }
             else 
@@ -436,7 +362,7 @@ namespace bilibili
                 RequestedTheme = ElementTheme.Light;
                 currentTheme = true;
                 SettingHelper.SetValue("_nighttheme", "light");
-                txt.Text = "夜间模式";
+                //txt.Text = "夜间模式";
                 return false;
             }
         }
@@ -462,7 +388,7 @@ namespace bilibili
             //    back.Visibility = Visibility.Visible;
             //}
         }
-
+        
         private async void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (string.IsNullOrWhiteSpace(SearchBox.Text))
@@ -500,6 +426,73 @@ namespace bilibili
                 }
             }
             catch { }
+        }
+
+        public class PaneItem
+        {
+            public string Title { get; set; }
+            public string Glyph { get; set; }
+            public int Index { get; set; }
+            public bool isLoginNeeded { get; set; }
+        }
+
+        public List<PaneItem> PaneListItems => new List<PaneItem>
+        {
+            new PaneItem { Title = "精彩推荐", Glyph = "ms-appx:///Assets//Icons//tv.png" , Index = 0 },
+            new PaneItem { Title = "播放历史", Glyph = "ms-appx:///Assets//Icons//clock.png" , Index = 1, isLoginNeeded = true  },
+            new PaneItem { Title = "我的消息", Glyph = "ms-appx:///Assets//Icons//message.png" , Index = 2, isLoginNeeded = true  },
+            new PaneItem { Title = "我的收藏", Glyph = "ms-appx:///Assets//Icons//star.png" , Index = 3, isLoginNeeded = true },
+            new PaneItem { Title = "离线管理", Glyph = "ms-appx:///Assets//Icons//download.png" , Index = 4 }
+        };
+        //xE20a xE2ad xE119 xE208 xE118
+        private async void MainList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (ham.DisplayMode == SplitViewDisplayMode.Overlay) ham.IsPaneOpen = false;
+            var item = e.ClickedItem as PaneItem;
+            Type frame = null;
+            bool islog = false;
+            if (item != null)
+            {
+                islog = ApiHelper.IsLogin();
+                switch (item.Index)
+                {
+                    case 0: frame = typeof(Views.Partition); break;
+                    case 1: frame = typeof(Views.History); break;
+                    case 2: frame = typeof(Views.Message); break;
+                    case 3: frame = typeof(Views.FavCollection); break;
+                    case 4: frame = typeof(Views.Download); break;
+                    //case "night":
+                    //    {
+                    //        //fonticon.Glyph = "&#xE708/6;";
+                    //        bool isDark = ChangeDarkMode(currentTheme);
+                    //    }
+                    //    break;
+                }
+                //Sets.SelectedIndex = -1;
+            }
+            if (item.isLoginNeeded && islog == false)
+            {
+                await popup.Show("请先登录");
+                return;
+            }
+            if (frame != null)
+            {
+                mainframe.Navigate(frame);
+            }
+        }
+
+        private void set_Click(object sender, RoutedEventArgs e)
+        {
+            if (ham.DisplayMode == SplitViewDisplayMode.Overlay)
+            {
+                ham.IsPaneOpen = false;
+            }
+            mainframe.Navigate(typeof(Views.Setting));
+        }
+
+        private void night_Click(object sender, RoutedEventArgs e)
+        {
+            bool isDark = ChangeDarkMode(currentTheme);
         }
     }
 }

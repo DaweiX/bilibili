@@ -114,7 +114,7 @@
                                     <GridView.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel>
-                                                <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2" Foreground="{ThemeResource bili_Fontcolor_Main}"/>
+                                                <TextBlock x:Name="txt" Text="{Binding Tag}" Padding="2"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridView.ItemTemplate>
@@ -320,7 +320,7 @@
                                         <Image Source="{Binding Cover}"/>
                                         <TextBlock Text="{Binding Owner}" Foreground="{ThemeResource bili_Fontcolor_Second}" FontSize="12"/>
                                     </StackPanel>
-                                    <TextBlock Text="{Binding Title}" Grid.Column="1" Margin="4,0,0,0" Foreground="{ThemeResource bili_Fontcolor_Main}" FontSize="13" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding Title}" Grid.Column="1" Margin="4,0,0,0" FontSize="13" TextWrapping="Wrap"/>
                                     <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>

@@ -1,13 +1,10 @@
-﻿using bilibili.Helpers;
-using bilibili.Http;
+﻿using bilibili.Http;
 using bilibili.Methods;
-using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using bilibili.FrameManager;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -31,48 +28,34 @@ namespace bilibili.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            bool para = bool.Parse(e.Parameter.ToString());
-            if (para)
-            {
-                load(true);
-            }
-            else
-            {
-                load(false);
-            }
+            load();
         }
 
-        private async void load(bool isTopic)
+        private async void load()
         {
-            if (isTopic == true)
+            List<Models.Topic> topic = await ContentServ.GetTopicListAsync(1);
+            if (topic != null)
             {
-                list_topic.Visibility = Visibility.Visible;
-                List<Models.Topic> topic = await ContentServ.GetTopicListAsync(1);
-                if (topic != null)
+                foreach (var item in topic)
                 {
-                    foreach (var item in topic)
-                    {
-                        list_topic.Items.Add(item);
-                    }
+                    list_topic.Items.Add(item);
                 }
             }
-            if(isTopic == false)
+
+            list_event.Visibility = Visibility.Visible;
+            List<Models.Event> events = await ContentServ.GetEventListAsync(1);
+            if (events != null)
             {
-                list_event.Visibility = Visibility.Visible;
-                List<Models.Event> events = await ContentServ.GetEventListAsync(1);
-                if (events != null)
+                foreach (var item in events)
                 {
-                    foreach (var item in events)
-                    {
-                        list_event.Items.Add(item);
-                    }
+                    list_event.Items.Add(item);
                 }
             }
         }
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            width.Width = WidthFit.GetWidth(ActualWidth, 400, 280);
+            width.Width = WidthFit.GetWidth(ActualWidth);
         }
 
         bool isLoading = false;
@@ -119,26 +102,21 @@ namespace bilibili.Views
 
         private void list_topic_ItemClick(object sender, ItemClickEventArgs e)
         {
-            try
+            GridView list = sender as GridView;
+            if (list.Tag.ToString() == "0") 
             {
-                Frame.Navigate(typeof(MyWeb), (e.ClickedItem as Models.Topic).Url);
+                FrameHelpers.FrameManager.RightFrameNavi(frame => 
+                {
+                    frame.Navigate(typeof(MyWeb), (e.ClickedItem as Models.Topic).Url);
+                });
             }
-            catch
+            else if(list.Tag.ToString() == "1")
             {
-                Frame.Navigate(typeof(MyWeb), (e.ClickedItem as Models.Event).Link);
+                FrameHelpers.FrameManager.RightFrameNavi(frame =>
+                {
+                    frame.Navigate(typeof(MyWeb), (e.ClickedItem as Models.Event).Link);
+                });
             }
-        }
-    }
-    public class StatusToText : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value == null) return "{ThemeResource bili_Fontcolor_Main}";
-            return int.Parse(value.ToString()) == 0 ? "#e273a9" : "{ThemeResource bili_Fontcolor_Main}";
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return null;
         }
     }
 }

@@ -7,6 +7,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media.Animation;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -21,11 +22,11 @@ namespace bilibili.Views
         public InitPage()
         {
             this.InitializeComponent();
-            SettingHelper.Devicetype = SettingHelper.GetDeviceType();
-            if (SettingHelper.Devicetype == DeviceType.Mobile)
+            if (SettingHelper.DeviceType == DeviceType.Mobile)
             {
                 ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
             }
+            FrameManager.FrameHelpers.Init();
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -52,14 +53,14 @@ namespace bilibili.Views
                     task = await RegisterBackgroundTask(typeof(BackgroundTask.TileTask), "TileTask", new TimeTrigger(15, false), null);
                 }
             }
-            await Task.Delay(1000);
+            await Task.Delay(800);
             if (ApplicationView.GetForCurrentView().IsFullScreenMode)
             {
                 ApplicationView.GetForCurrentView().ExitFullScreenMode();
             }
             Frame rootFrame = new Frame();
             Window.Current.Content = rootFrame;
-            rootFrame.Navigate(typeof(MainPage), arg, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            rootFrame.Navigate(typeof(MainPage), arg, new DrillInNavigationTransitionInfo());
         }
 
         /// <summary>
@@ -115,7 +116,7 @@ namespace bilibili.Views
                     item.Value.Unregister(true);
                 }
             }
-            var builder = new BackgroundTaskBuilder { Name = name, TaskEntryPoint = EntryPoint.FullName, IsNetworkRequested = false };
+            var builder = new BackgroundTaskBuilder { Name = name, TaskEntryPoint = EntryPoint.FullName, IsNetworkRequested = true };
             builder.SetTrigger(trigger);
             if (condition != null)
             {

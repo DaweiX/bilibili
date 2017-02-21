@@ -13,7 +13,18 @@
         <Pivot>
             <PivotItem Header="本地视频" Margin="0">
                 <Grid>
-                    <ListView x:Name="donelist" SelectionMode="None" IsItemClickEnabled="True" ItemClick="donelist_ItemClick">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border x:Name="dragarea" Height="200" Margin="0 8" Background="{ThemeResource bili_ListBackground}" Visibility="Collapsed"
+                          AllowDrop="True" DragEnter="draggrid_DragEnter" DragLeave="draggrid_DragLeave" Drop="draggrid_Drop">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock FontSize="36" FontWeight="Light" Text="将本地视频拖动至此处播放"/>
+                            <TextBlock x:Name="txt_format" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ListView Grid.Row="1" x:Name="donelist" SelectionMode="None" IsItemClickEnabled="True" ItemClick="donelist_ItemClick">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Part}"/>
@@ -27,7 +38,7 @@
                             </ControlTemplate>
                         </ListView.Template>
                     </ListView>
-                    <CommandBar>
+                    <CommandBar Grid.Row="1">
                         <AppBarButton Icon="List" Label="选择" Click="Select_Click"/>
                         <AppBarButton x:Name="local" Icon="NewFolder" Label="本地视频" Click="local_Click"/>
                     </CommandBar>

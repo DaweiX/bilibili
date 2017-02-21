@@ -134,4 +134,91 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="c:FlipView">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="c:FlipView">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <c:FlipPanel x:Name="panel"
+                                     ItemSource="{TemplateBinding ItemsSource}"
+                                     ItemTemplate="{TemplateBinding ItemTemplate}"
+                                     Index="{TemplateBinding Index}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="c:ExpandPanel">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="c:ExpandPanel">
+                    <Grid x:Name="grid"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition From="Close" GeneratedDuration="0:0:0.5" To="Open"/>
+                                    <VisualTransition From="Open" GeneratedDuration="0:0:0.5" To="Close"/>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Close">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:0.5" Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" To="0">
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuadraticEase EasingMode="EaseOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Duration="0:0:0.5" Storyboard.TargetName="trans" Storyboard.TargetProperty="Y" By="{Binding ElementName=content,Path=ActualHeight}">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Open">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:0.5" Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" To="180">
+                                            <DoubleAnimation.EasingFunction>
+                                                <QuadraticEase EasingMode="EaseIn"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid.Resources>
+                            <c:BoolToVisibility x:Key="cvt"/>
+                        </Grid.Resources>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <ToggleButton x:Name="btn" Background="Transparent" Height="32" Width="48"
+                                      IsChecked="{Binding IsOpen,RelativeSource={RelativeSource Mode=TemplatedParent},Mode=TwoWay}">
+                            <ToggleButton.Content>
+                                <FontIcon x:Name="icon" FontFamily="Segoe MDL2 Assets" Width="20" Height="20" Glyph="&#xE099;">
+                                    <FontIcon.RenderTransform>
+                                        <RotateTransform x:Name="rotate" CenterX="10" CenterY="10"/>
+                                    </FontIcon.RenderTransform>
+                                </FontIcon>
+                            </ToggleButton.Content>
+                        </ToggleButton>
+                        <ContentPresenter x:Name="content" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                          Content="{TemplateBinding Content}" 
+                                          Visibility="{Binding IsOpen,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource cvt},Mode=TwoWay}">
+                            <ContentPresenter.RenderTransform>
+                                <TranslateTransform x:Name="trans"/>
+                            </ContentPresenter.RenderTransform>
+                        </ContentPresenter>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

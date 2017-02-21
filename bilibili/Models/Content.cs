@@ -17,10 +17,22 @@ namespace bilibili.Models
         public string Comment { get; set; }
     }
 
+    class Video
+    {
+        public string Aid { get; set; }
+        public string Title { get; set; }
+        public string Play { get; set; }
+        public string Danmaku { get; set; }
+        public string Author { get; set; }
+        public string Cover { get; set; }
+        public bool IsNew { get; set; }
+    }
+
     class Site_Concern
     {
         public string Code { get; set; }
         public bool Status { get; set; }
+        public string Count { get; set; }
         public List<ConcernItem> Result { get; set; }
     }
 

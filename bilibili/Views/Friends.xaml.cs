@@ -75,19 +75,23 @@ namespace bilibili.Views
             {
                 toutu.SizeChanged -= toutu_SizeChanged;
             }
-            List<ConcernItem> concerns = await UserRelated.GetConcernBangumiAsync(mid, 1, false);
-            if (concerns != null)
+            Site_Concern concern = await UserRelated.GetConcernBangumiAsync(mid, 1, false);
+            if (concern != null)
             {
-                if (concerns[0].Title == "PRIVATE")
+                var concerns = concern.Result;
+                if (concerns != null)
                 {
-                    txt_private.Visibility = Visibility.Visible;
-                    conlist.Visibility = Visibility.Collapsed;
+                    if (concerns[0].Title == "PRIVATE")
+                    {
+                        txt_private.Visibility = Visibility.Visible;
+                        conlist.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        conlist.ItemsSource = concerns;
+                    }
                 }
-                else
-                {
-                    conlist.ItemsSource = concerns;
-                }
-            }
+            }      
         }
 
         private void list_concern_ItemClick(object sender, ItemClickEventArgs e)

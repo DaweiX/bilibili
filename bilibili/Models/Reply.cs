@@ -47,6 +47,14 @@ namespace bilibili.Models
             set { baseon = value; }
         }
     }
+
+    public class Site_Friend
+    {
+        public int Result { get; set; }
+        public List<Friend> List { get; set; }
+        public bool isEmpty { get; set; }
+    }
+
     public class Friend
     {
         public string AddTime { get; set; }
