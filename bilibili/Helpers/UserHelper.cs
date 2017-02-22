@@ -1,11 +1,9 @@
-﻿using bilibili.Http;
-using bilibili.Models;
-using System.Collections.Generic;
-
-namespace bilibili.Helpers
+﻿namespace bilibili.Helpers
 {
-    class UserHelper
+    static class UserHelper
     {
-        public static string mid = string.Empty;
+        public static string Mid { get; set; }
+        public static string Uname { get; set; }
+        public static string Face { get; set; }
     }
 }

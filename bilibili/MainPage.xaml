@@ -49,8 +49,17 @@
                             x:Name="hambtn" Style="{StaticResource hamButtonStyle}" Foreground="White"/>
             <AppBarButton Icon="Back" Grid.Column="1" Foreground="White" Height="48" x:Name="back" Visibility="Collapsed" Click="back_Click"/>
             <TextBlock x:Name="txt_head" Grid.Column="2" Margin="4,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="White" FontWeight="Light"/>
-            <AutoSuggestBox x:Name="SearchBox" Grid.Column="3" HorizontalAlignment="Right" Width="220" VerticalAlignment="Center" Margin="0,0,8,0"                          
+            <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right">
+                <Button Width="48" Height="48" BorderThickness="0" Background="Transparent" Foreground="White">
+                    <SymbolIcon Symbol="Find"/>
+                    <Button.Flyout>
+                        <Flyout>
+                            <AutoSuggestBox x:Name="SearchBox" Grid.Column="3" HorizontalAlignment="Right" Width="220" VerticalAlignment="Center" Margin="0,0,8,0"                          
                                 QueryIcon="Find" PlaceholderText="请输入搜索内容" QuerySubmitted="SearchBox_QuerySubmitted" TextChanged="SearchBox_TextChanged"/>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
         </Grid>
         <Border x:Name="leftedge" Grid.RowSpan="2" Background="Pink" Canvas.ZIndex="100" HorizontalAlignment="Left" Width="20" Opacity="0" ManipulationMode="TranslateX" ManipulationCompleted="Border_ManipulationCompleted" Visibility="Collapsed"/>
         <SplitView x:Name="ham" DisplayMode="CompactInline" IsPaneOpen="{Binding ElementName=hambtn,Path=IsChecked,Mode=TwoWay}"

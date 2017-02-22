@@ -18,7 +18,7 @@ namespace bilibili.Helpers
 {
     class ApiHelper
     {
-        public static string appkey = "422fd9d7289a1dd9";
+        public const string appkey = "422fd9d7289a1dd9";
         public static string accesskey = string.Empty;
         public static int code = 233;
         public static string Password, Username, e_password = string.Empty;
@@ -49,7 +49,7 @@ namespace bilibili.Helpers
                 HttpBaseProtocolFilter httpBaseProtocolFilter = new HttpBaseProtocolFilter();
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
-                HttpClient httpClient = new Windows.Web.Http.HttpClient(httpBaseProtocolFilter);
+                HttpClient httpClient = new HttpClient(httpBaseProtocolFilter);
                 string result = await BaseService.SendPostAsync(url, "http://passport.bilibili.com");
                 JsonObject json = JsonObject.Parse(result);
                 json = json["data"].GetObject();

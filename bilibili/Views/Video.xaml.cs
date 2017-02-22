@@ -611,7 +611,7 @@ namespace bilibili.Views
                 url += ApiHelper.GetSign(url);
                 int a = (byte.Parse(sli_r.Value.ToString()) << 16) + (byte.Parse(sli_g.Value.ToString()) << 8) + (byte.Parse(sli_b.Value.ToString()) << 0);//位运算的优先级最低！
                 string color = a.ToString();
-                string Args = "mid=" + UserHelper.mid + "&type=json" + "&cid=" + cid + "&playTime=" + media.Position.TotalSeconds.ToString() +"&color=" + color+ "&msg=" + txt_mydanmu.Text + "&fontsize=25&mode=" + danmakuMode + "&pool=0&rnd=" + new Random().Next(1000, 2000).ToString();
+                string Args = "mid=" + UserHelper.Mid + "&type=json" + "&cid=" + cid + "&playTime=" + media.Position.TotalSeconds.ToString() +"&color=" + color+ "&msg=" + txt_mydanmu.Text + "&fontsize=25&mode=" + danmakuMode + "&pool=0&rnd=" + new Random().Next(1000, 2000).ToString();
                 string code = await BaseService.SendPostAsync(url, Args, "http://api.bilibili.com");
                 JsonObject json = JsonObject.Parse(code);
                 if (json.ContainsKey("code"))

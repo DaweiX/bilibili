@@ -826,7 +826,7 @@ namespace bilibili.Http
             #region XML
             VideoURL URL = new VideoURL { Acceptformat = new List<string>(), Acceptquality = new List<string>() };
             JsonObject json = new JsonObject();
-            string url = string.Format("http://interface.bilibili.com/playurl?_device=uwp&cid={0}&quality={1}&otype=xml&appkey={2}&_buvid=A7A15F70-8D92-4441-B941-0E4EF9F21B6319763infoc&_hwid=03008e90050092d8&platform=uwp_desktop&type={3}&access_key={4}&mid={5}&ts={6}", cid, quality, ApiHelper.appkey, format.ToString(), ApiHelper.accesskey, UserHelper.mid, ApiHelper.GetLinuxTS().ToString());
+            string url = string.Format("http://interface.bilibili.com/playurl?_device=uwp&cid={0}&quality={1}&otype=xml&appkey={2}&_buvid=A7A15F70-8D92-4441-B941-0E4EF9F21B6319763infoc&_hwid=03008e90050092d8&platform=uwp_desktop&type={3}&access_key={4}&mid={5}&ts={6}", cid, quality, ApiHelper.appkey, format.ToString(), ApiHelper.accesskey, UserHelper.Mid, ApiHelper.GetLinuxTS().ToString());
             url += ApiHelper.GetSign(url);
             XmlDocument doc = await XmlDocument.LoadFromUriAsync(new Uri(url));
             URL.Url = doc.GetElementsByTagName("url")[0].InnerText;
@@ -1727,7 +1727,7 @@ namespace bilibili.Http
                 return null;
             }
             List<Folder> myFolder = new List<Folder>();
-            string url_folder = "http://api.bilibili.com/x/app/favourite/folder?_device=android&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=427000&platform=android&vmid=" + UserHelper.mid + "&rnd=" + new Random().Next(1000, 2000).ToString();
+            string url_folder = "http://api.bilibili.com/x/app/favourite/folder?_device=android&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=427000&platform=android&vmid=" + UserHelper.Mid + "&rnd=" + new Random().Next(1000, 2000).ToString();
             url_folder += ApiHelper.GetSign(url_folder);
             JsonObject json_f = await BaseService.GetJson(url_folder);
             if (json_f.ContainsKey("data"))

@@ -72,7 +72,7 @@ namespace bilibili.Views
                             {
                                 level.Source = new BitmapImage { UriSource = new Uri("ms-appx:///Assets//Others//lv" + json2["current_level"].ToString() + ".png", UriKind.Absolute) };
                             }
-                            string url2 = "http://space.bilibili.com/ajax/settings/getSettings?mid=" + UserHelper.mid;
+                            string url2 = "http://space.bilibili.com/ajax/settings/getSettings?mid=" + UserHelper.Mid;
                             JsonObject json_toutu = await BaseService.GetJson(url2);
                             if (json_toutu.ContainsKey("data"))
                             {
@@ -134,7 +134,7 @@ namespace bilibili.Views
 
         private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(MyConcerns), UserHelper.mid, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+            Frame.Navigate(typeof(MyConcerns), UserHelper.Mid, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
         }
 
         private async void coin_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -223,7 +223,7 @@ namespace bilibili.Views
                     {
                         if (!isFriendLoaded)
                         {
-                            var list = await ContentServ.GetFriendsAsync(UserHelper.mid, page_friend);
+                            var list = await ContentServ.GetFriendsAsync(UserHelper.Mid, page_friend);
                             if (list.isEmpty)
                             {
                                 //提示：没有关注的人
@@ -249,7 +249,7 @@ namespace bilibili.Views
                 if (scroll.VerticalOffset == scroll.ScrollableHeight)
                 {
                     page_friend++;
-                    var result = await ContentServ.GetFriendsAsync(UserHelper.mid, page_friend);
+                    var result = await ContentServ.GetFriendsAsync(UserHelper.Mid, page_friend);
                     if (list_friends.Items.Count < result.Result)
                     {
                         for (int i = 0; i < result.List.Count; i++)
@@ -259,6 +259,11 @@ namespace bilibili.Views
                     }
                 }
             };
+        }
+
+        private void qr_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(QRcode));
         }
 
         private void fav_Click(object sender, RoutedEventArgs e)

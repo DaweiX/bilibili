@@ -78,10 +78,8 @@
                                 <SymbolIcon Symbol="Edit"/>
                             </Button.Content>
                         </Button>-->
-                                <Button Width="48" Height="48" Background="Transparent" BorderThickness="0">
-                                    <Button.Content>
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE136;"/>
-                                    </Button.Content>
+                                <Button Width="48" Height="48" Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="我的记录">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE136;"/>
                                     <Button.Flyout>
                                         <MenuFlyout Placement="Bottom">
                                             <MenuFlyoutItem Click="record_Click" Tag="0">登录记录</MenuFlyoutItem>
@@ -89,10 +87,11 @@
                                         </MenuFlyout>
                                     </Button.Flyout>
                                 </Button>
-                                <Button Width="48" Height="48" Background="Transparent" BorderThickness="0">
-                                    <Button.Content>
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE10A;"/>
-                                    </Button.Content>
+                                <Button Width="48" Height="48" Background="Transparent" Click="qr_Click" BorderThickness="0" ToolTipService.ToolTip="我的二维码">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE7EE;"/>
+                                </Button>
+                                <Button Width="48" Height="48" Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="退出登录">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE10A;"/>
                                     <Button.Flyout>
                                         <Flyout Placement="Bottom" x:Name="flyout_logout">
                                             <Grid Padding="8">
@@ -140,7 +139,7 @@
                             <controls:Header Content="追番"/>
                             <TextBlock x:Name="concern_count" Margin="8,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <GridView x:Name="conlist" Style="{StaticResource GridViewStyle1}" IsItemClickEnabled="True" ItemClick="conlist_ItemClick" SelectionMode="None">
+                        <GridView x:Name="conlist" IsItemClickEnabled="True" Style="{StaticResource GridViewStyle1}" ItemClick="conlist_ItemClick" SelectionMode="None">
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="m:ConcernItem">
                                     <StackPanel>

@@ -49,71 +49,78 @@ namespace bilibili.Views
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
-            SwitchCommandBar(false);
-            desc.Visibility = Visibility.Visible;
-            aid = e.Parameter.ToString();
-            string url = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=" + aid + "&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey;
-            url += ApiHelper.GetSign(url);
-            details = await ContentServ.GetDetailsAsync(url);
-            if (details != null)
+            try
             {
-                pageNavi("AV" + details.Aid);
-                BitmapImage bmp = new BitmapImage();
-                bmp.UriSource = new Uri(details.Pic);
-                pic.Source = bmp;
-                pic_blur.Source = bmp;
-                if (AnimationExtensions.IsBlurSupported)
+                base.OnNavigatedTo(e);
+                SwitchCommandBar(false);
+                desc.Visibility = Visibility.Visible;
+                aid = e.Parameter.ToString();
+                string url = "http://app.bilibili.com/x/view?_device=android&_ulv=10000&plat=0&build=424000&aid=" + aid + "&appkey=" + ApiHelper.appkey + "&access_key=" + ApiHelper.accesskey;
+                url += ApiHelper.GetSign(url);
+                details = await ContentServ.GetDetailsAsync(url);
+                if (details != null)
                 {
-                    pic_blur.Blur(duration: 3000, value: 20).Start();
+                    pageNavi("AV" + details.Aid);
+                    BitmapImage bmp = new BitmapImage();
+                    bmp.UriSource = new Uri(details.Pic);
+                    pic.Source = bmp;
+                    pic_blur.Source = bmp;
+                    if (AnimationExtensions.IsBlurSupported)
+                    {
+                        pic_blur.Blur(duration: 3000, value: 20).Start();
+                    }
+                    title.Text = details.Title;
+                    up.Content = details.Upzhu;
+                    desc.Text = details.Desc;
+                    c_play.Text = "播放：" + details.View + '\t';
+                    c_fav.Text = "收藏：" + details.Fav + '\t';
+                    c_danmaku.Text = "弹幕：" + details.Danmu + '\t';
+                    c_coin.Text = "硬币：" + details.Coins + '\t';
+                    c_comment.Text = "评论：" + details.Reply + '\t';
+                    time.Text = details.Time;
+                    if (details.IsFav == "1")
+                    {
+                        btn_addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
+                        btn_addfav.Label = "取消收藏";
+                    }
+                    foreach (var item in details.Tags)
+                    {
+                        if (item.Length > 0)
+                            list_tags.Items.Add(new Tags { Tag = item });
+                    }
+                    foreach (var item in details.Ps)
+                    {
+                        ReadyList.Items.Add(item);
+                    }
+                    if (!string.IsNullOrEmpty(details.Sid))
+                    {
+                        bangumi.Content = details.BangumiTitle;
+                        bangumi.Click += Bangumi_Click;
+                        stk_bangumi.Visibility = Visibility.Visible;
+                    }
+                    //if (UserHelper.concernList.FindIndex(o => o.ID == cid) != -1)
+                    //{
+                    //    btn_addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
+                    //    btn_addfav.Label = "取消收藏";
+                    //}
+                    if (SettingHelper.ContainsKey("_quality"))
+                    {
+                        (FindName("q" + SettingHelper.GetValue("_quality").ToString()) as RadioButton).IsChecked = true;
+                    }
+                    if (SettingHelper.ContainsKey("_videoformat"))
+                    {
+                        (FindName("f" + SettingHelper.GetValue("_videoformat").ToString()) as RadioButton).IsChecked = true;
+                    }
                 }
-                title.Text = details.Title;
-                up.Content = details.Upzhu;
-                desc.Text = details.Desc;
-                c_play.Text = "播放：" + details.View + '\t';
-                c_fav.Text = "收藏：" + details.Fav + '\t';
-                c_danmaku.Text = "弹幕：" + details.Danmu + '\t';
-                c_coin.Text = "硬币：" + details.Coins + '\t';
-                c_comment.Text = "评论：" + details.Reply + '\t';
-                time.Text = details.Time;
-                if (details.IsFav == "1")
+                else
                 {
-                    btn_addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
-                    btn_addfav.Label = "取消收藏";
-                }
-                foreach (var item in details.Tags)
-                {
-                    if (item.Length > 0)
-                        list_tags.Items.Add(new Tags { Tag = item });
-                }
-                foreach (var item in details.Ps)
-                {
-                    ReadyList.Items.Add(item);
-                }
-                if (!string.IsNullOrEmpty(details.Sid))
-                {
-                    bangumi.Content = details.BangumiTitle;
-                    bangumi.Click += Bangumi_Click;
-                    stk_bangumi.Visibility = Visibility.Visible;
-                }
-                //if (UserHelper.concernList.FindIndex(o => o.ID == cid) != -1)
-                //{
-                //    btn_addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
-                //    btn_addfav.Label = "取消收藏";
-                //}
-                if (SettingHelper.ContainsKey("_quality"))
-                {
-                    (FindName("q" + SettingHelper.GetValue("_quality").ToString()) as RadioButton).IsChecked = true;
-                }
-                if (SettingHelper.ContainsKey("_videoformat"))
-                {
-                    (FindName("f" + SettingHelper.GetValue("_videoformat").ToString()) as RadioButton).IsChecked = true;
+                    await popup.Show("视频不存在或已被删除");
                 }
             }
-           else
+            catch 
             {
-                await popup.Show("视频不存在或已被删除");
-            }
+                await popup.Show("加载失败啦~");
+            }           
         }
 
         private void Bangumi_Click(object sender, RoutedEventArgs e)

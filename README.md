@@ -3,6 +3,7 @@
 ###摘要：  
 哔哩哔哩动画的第三方客户端，同时兼容`Windows™ 10桌面版`、`Windows™ 10 Mobile`、`XBOX`、`Surface Hub`与`Hololens`.本应用
 主要出于学习、交流目的而开发，没有应用商店发行版.  
+详细的更新记录请查阅Notes/Version.txt 文档  
 
 ###主要功能：  
 * 视频分类查询、播放  

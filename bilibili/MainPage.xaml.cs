@@ -148,15 +148,21 @@ namespace bilibili
             try
             {
                 ApiHelper.accesskey = SettingHelper.GetValue("_accesskey").ToString();
-                string url = "http://api.bilibili.com/myinfo?appkey=422fd9d7289a1dd9&access_key=" + SettingHelper.GetValue("_accesskey").ToString();
+                string url = "http://api.bilibili.com/myinfo?appkey=" + ApiHelper.appkey + "&access_key=" + SettingHelper.GetValue("_accesskey").ToString();
                 url += ApiHelper.GetSign(url);
                 JsonObject json = await BaseService.GetJson(url);
                 if (json.ContainsKey("mid"))
-                    UserHelper.mid = json["mid"].ToString();
+                    UserHelper.Mid = json["mid"].ToString();
                 if (json.ContainsKey("face"))
-                    face.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(StringDeal.delQuotationmarks((json["face"].ToString())))) };
+                {
+                    string f = json["face"].GetString();
+                    UserHelper.Face = f;
+                    face.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(f)) };
+                }
                 if (json.ContainsKey("uname"))
-                    uname.Text = StringDeal.delQuotationmarks(json["uname"].ToString());
+                {
+                    UserHelper.Uname = uname.Text = json["uname"].GetString();
+                }
                 if (json.ContainsKey("level_info"))
                 {
                     JsonObject json2 = JsonObject.Parse(json["level_info"].ToString());

@@ -48,7 +48,7 @@ namespace bilibili.Views
                 isGrid = false;
                 conlist.ItemTemplate = this.Resources["TemplateList"] as DataTemplate;
             }
-            isMySelf = mid == UserHelper.mid ? true : false;
+            isMySelf = mid == UserHelper.Mid ? true : false;
             var concern = await UserRelated.GetConcernBangumiAsync(mid, 1, (bool)isMySelf);
             if (concern != null)
             {

@@ -52,7 +52,7 @@ namespace bilibili.Views.PartViews
                     break;
                 case 2:
                     {
-                        KeyStringList.Add(new KeyValuePair<string, string>("精彩推荐", "1"));
+                        KeyStringList.Add(new KeyValuePair<string, string>("精彩推荐", "27"));
                         KeyStringList.Add(new KeyValuePair<string, string>("MAD·AMV", "24"));
                         KeyStringList.Add(new KeyValuePair<string, string>("MMD·3D", "25"));
                         KeyStringList.Add(new KeyValuePair<string, string>("短片·手书·配音", "47"));
@@ -74,6 +74,7 @@ namespace bilibili.Views.PartViews
                     break;
                 case 5:
                     {
+                        //http://www.bilibili.com/index/ding/155.json?rnd=8008
                         KeyStringList.Add(new KeyValuePair<string, string>("精彩推荐", "155"));
                         KeyStringList.Add(new KeyValuePair<string, string>("美妆", "157"));
                         KeyStringList.Add(new KeyValuePair<string, string>("服饰", "158"));

@@ -53,122 +53,129 @@ namespace bilibili.Views
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
-            sid = e.Parameter.ToString();
-            aa = await ContentServ.GetSeasonResultAsync(sid);
-            BitmapImage bmp = new BitmapImage();
-            Uri url = new Uri(aa.Cover);
-            //var streamReference = RandomAccessStreamReference.CreateFromUri(url);
-            //IRandomAccessStream stream = await streamReference.OpenReadAsync();
-            //MyImage myimage;
-            //if (stream != null)
-            //{
-            //    BitmapImage img = new BitmapImage(url);
-            //    WriteableBitmap bmp = new WriteableBitmap(480, 640);
-            //    await bmp.SetSourceAsync(stream);
-            //    myimage = new MyImage(bmp);
-            //    GaussianBlurFilter filter = new GaussianBlurFilter();
-            //    myimage = filter.process(myimage);
-            //    pic.Source = myimage.image;
-            //}
-            bmp.UriSource = url;
-            pic.Source = bmp;
-            pic_blur.Source = bmp;
-            if (AnimationExtensions.IsBlurSupported)
+            try
             {
-                pic_blur.Blur(duration: 3000, value: 20).Start();
-            }
-            mainitem.Header = aa.Title;
-            up.Text = aa.Copyright;
-            desc.Text = aa.Brief;
-            count.Text = "播放：" + aa.View + "\n" + "收藏：" + aa.Fav + "\n" + "弹幕：" + aa.Danmaku + "\n" + "硬币：" + aa.Coins;
-            time.Text = aa.Time;
-            staff.Text = aa.Staff ?? string.Empty;
-            if (aa.CVlist.Count == 0) 
-            {
-                stk_staff_1.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                foreach (Cast item in aa.CVlist)
+                base.OnNavigatedTo(e);
+                sid = e.Parameter.ToString();
+                aa = await ContentServ.GetSeasonResultAsync(sid);
+                BitmapImage bmp = new BitmapImage();
+                Uri url = new Uri(aa.Cover);
+                //var streamReference = RandomAccessStreamReference.CreateFromUri(url);
+                //IRandomAccessStream stream = await streamReference.OpenReadAsync();
+                //MyImage myimage;
+                //if (stream != null)
+                //{
+                //    BitmapImage img = new BitmapImage(url);
+                //    WriteableBitmap bmp = new WriteableBitmap(480, 640);
+                //    await bmp.SetSourceAsync(stream);
+                //    myimage = new MyImage(bmp);
+                //    GaussianBlurFilter filter = new GaussianBlurFilter();
+                //    myimage = filter.process(myimage);
+                //    pic.Source = myimage.image;
+                //}
+                bmp.UriSource = url;
+                pic.Source = bmp;
+                pic_blur.Source = bmp;
+                if (AnimationExtensions.IsBlurSupported)
                 {
-                    cvlist.Items.Add(item);
+                    pic_blur.Blur(duration: 3000, value: 20).Start();
                 }
-            }
-            if (aa.IsConcerned == "1")
-            {
-                addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
-                addfav.Label = "取消订阅";
-            }
-            foreach (var item in aa.Tags)
-            {
-                if (item.Length > 0)
+                mainitem.Header = aa.Title;
+                up.Text = aa.Copyright;
+                desc.Text = aa.Brief;
+                count.Text = "播放：" + aa.View + "\n" + "收藏：" + aa.Fav + "\n" + "弹幕：" + aa.Danmaku + "\n" + "硬币：" + aa.Coins;
+                time.Text = aa.Time;
+                staff.Text = aa.Staff ?? string.Empty;
+                if (aa.CVlist.Count == 0)
                 {
-                    list_tags.Items.Add(new Tags { Tag = item });
+                    stk_staff_1.Visibility = Visibility.Collapsed;
                 }
-            }
-            List<Episodes> ep = aa.EPS;
-            if (ep.Count > 0)
-            {
-                string id_0 = ep[0].ID;
-                foreach (var item in ep)
+                else
                 {
-                    if (item.ID == id_0)
+                    foreach (Cast item in aa.CVlist)
                     {
-                        continue;
+                        cvlist.Items.Add(item);
                     }
-                    else
+                }
+                if (aa.IsConcerned == "1")
+                {
+                    addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
+                    addfav.Label = "取消订阅";
+                }
+                foreach (var item in aa.Tags)
+                {
+                    if (item.Length > 0)
                     {
-                        foreach (var item1 in ep)
+                        list_tags.Items.Add(new Tags { Tag = item });
+                    }
+                }
+                List<Episodes> ep = aa.EPS;
+                if (ep.Count > 0)
+                {
+                    string id_0 = ep[0].ID;
+                    foreach (var item in ep)
+                    {
+                        if (item.ID == id_0)
                         {
-                            mylist.Items.Add(item1);
+                            continue;
                         }
-                        break;
+                        else
+                        {
+                            foreach (var item1 in ep)
+                            {
+                                mylist.Items.Add(item1);
+                            }
+                            break;
+                        }
+                    }
+                    if (mylist.Items.Count == 0)    //合集
+                    {
+                        isCollection = true;
+                        mylist.Items.Add(new Episodes { Title = aa.Title + "(合集)", ID = ep[0].ID, Cover = ep[0].Cover });
                     }
                 }
-                if (mylist.Items.Count == 0)    //合集
+                if (SecondaryTile.Exists("tile" + sid))
                 {
-                    isCollection = true;
-                    mylist.Items.Add(new Episodes { Title = aa.Title + "(合集)", ID = ep[0].ID, Cover = ep[0].Cover });
+                    pin.Icon = new SymbolIcon(Symbol.UnPin);
+                    pin.Label = "取消固定";
+                    isPinned = true;
                 }
-            }
-            if (SecondaryTile.Exists("tile" + sid)) 
-            {
-                pin.Icon = new SymbolIcon(Symbol.UnPin);
-                pin.Label = "取消固定";
-                isPinned = true;
-            }
-            if (aa.Related != null)
-            {
-                if (aa.Related.Count > 1)
+                if (aa.Related != null)
                 {
-                    list_season.ItemsSource = aa.Related;
+                    if (aa.Related.Count > 1)
+                    {
+                        list_season.ItemsSource = aa.Related;
+                    }
                 }
-            }
-            if (aa.isFinish == false)
-            {
-                string day = string.Empty;
-                switch(aa.WeekDay)
+                if (aa.isFinish == false)
                 {
-                    case "1": day = "一"; break;
-                    case "2": day = "二"; break;
-                    case "3": day = "三"; break;
-                    case "4": day = "四"; break;
-                    case "5": day = "五"; break;
-                    case "6": day = "六"; break;
-                    case "0": day = "日"; break;
+                    string day = string.Empty;
+                    switch (aa.WeekDay)
+                    {
+                        case "1": day = "一"; break;
+                        case "2": day = "二"; break;
+                        case "3": day = "三"; break;
+                        case "4": day = "四"; break;
+                        case "5": day = "五"; break;
+                        case "6": day = "六"; break;
+                        case "0": day = "日"; break;
+                    }
+                    txt_update.Text = day == string.Empty ? string.Empty : "每周" + day + "更新";
                 }
-                txt_update.Text = day == string.Empty ? string.Empty : "每周" + day + "更新";
+                //HyperlinkButton btn = new HyperlinkButton();
+                //btn.Command=ne
+                //if (UserHelper.concernList.FindIndex(o => o.ID == sid) != -1)
+                //{
+                //    addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
+                //    addfav.Label = "取消订阅";
+                //}
             }
-            //HyperlinkButton btn = new HyperlinkButton();
-            //btn.Command=ne
-            //if (UserHelper.concernList.FindIndex(o => o.ID == sid) != -1)
-            //{
-            //    addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
-            //    addfav.Label = "取消订阅";
-            //}
+            catch
+            {
+                //通常的原因：网络连接超时
+                await popup.Show("加载失败啦~");
+            }
         }
-
         class Tags
         {
             public string Tag { get; set; }

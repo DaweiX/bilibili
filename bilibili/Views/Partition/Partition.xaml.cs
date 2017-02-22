@@ -30,7 +30,7 @@ namespace bilibili.Views
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Required;
             comment.Navi += Comment_Navi;
             comment.Info += Comment_Info;
-            comment.live += Comment_live;
+            //comment.live += Comment_live;
             ContentServ.report += Report;
         }
 
@@ -137,9 +137,9 @@ namespace bilibili.Views
                             break;
                     }
                 }
-                catch(Exception)
+                catch(Exception err)
                 {
-                    
+                    string a = err.Message;
                 }
             }        
         }
@@ -207,7 +207,7 @@ namespace bilibili.Views
                             Report("请先登录");
                             return;
                         }
-                        Frame.Navigate(typeof(MyConcerns), UserHelper.mid, new SlideNavigationTransitionInfo());
+                        Frame.Navigate(typeof(MyConcerns), UserHelper.Mid, new SlideNavigationTransitionInfo());
                     }
                     break;
                 case "2": Frame.Navigate(typeof(Timeline), null, new SlideNavigationTransitionInfo()); break;
