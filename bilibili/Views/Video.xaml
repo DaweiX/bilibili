@@ -52,11 +52,11 @@
                             <ComboBox x:Name="cb_quality" Header="清晰度更改" Foreground="White">
                                 <ComboBoxItem x:Name="q1" Tapped="ComboBoxItem_Tapped" Tag="1" Visibility="Collapsed">低清</ComboBoxItem>
                                 <ComboBoxItem x:Name="q2" Tapped="ComboBoxItem_Tapped" Tag="2" Visibility="Collapsed">高清</ComboBoxItem>
-                                <ComboBoxItem x:Name="q3" Tapped="ComboBoxItem_Tapped" Tag="3" Visibility="Collapsed" IsEnabled="False">原画(flv,暂不可用)</ComboBoxItem>
+                                <ComboBoxItem x:Name="q3" Tapped="ComboBoxItem_Tapped" Tag="3" Visibility="Collapsed">原画</ComboBoxItem>
                             </ComboBox>
                             <ComboBox x:Name="cb_format" Margin="0,8,0,0" Header="视频格式更改" Foreground="White">
                                 <ComboBoxItem Tapped="ComboBoxItem_Tapped_1" Tag="mp4">mp4</ComboBoxItem>
-                                <ComboBoxItem Tapped="ComboBoxItem_Tapped_1" Tag="flv" Visibility="Collapsed" IsEnabled="False">flv</ComboBoxItem>
+                                <ComboBoxItem Tapped="ComboBoxItem_Tapped_1" Tag="flv">flv</ComboBoxItem>
                             </ComboBox>
                             <TextBlock x:Name="info" TextWrapping="Wrap" Foreground="White" Margin="0,8,0,0"/>
                         </StackPanel>
@@ -234,13 +234,23 @@
                         <TextBlock x:Name="txt_total" Foreground="White"/>
                     </StackPanel>
                     <Grid Grid.Column="1">
-                        <Slider Margin="0,8,0,0" x:Name="sli_main" Value="{Binding ElementName=media,Path=Position,Mode=TwoWay,Converter={StaticResource cvt2}}" Style="{StaticResource SliderStyle1}" Canvas.ZIndex="62" ThumbToolTipValueConverter="{StaticResource cvt}"/>
+                        <!--视频主进度条-->
+                        <Slider Margin="0,8,0,0" 
+                                x:Name="sli_main" 
+                                Value="{Binding ElementName=media,Path=Position,Mode=TwoWay,Converter={StaticResource cvt2}}" 
+                                Style="{StaticResource SliderStyle1}" 
+                                ValueChanged="sli_main_ValueChanged"
+                                Canvas.ZIndex="62" 
+                                ThumbToolTipValueConverter="{StaticResource cvt}"/>
                         <ProgressBar x:Name="pro_down" Foreground="{ThemeResource bili_Theme}" Opacity="0.8" Canvas.ZIndex="61"/>
                     </Grid>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <AppBarButton x:Name="pause" Click="AppBarButton_Click" Width="48" Background="{x:Null}" Foreground="White" Icon="Pause" ToolTipService.ToolTip="播放/暂停"/>
-                        <AppBarButton Background="{x:Null}" Foreground="White" Width="48" ToolTipService.ToolTip="弹幕开关" Margin="4,0,4,0" Icon="Comment">
-                            <AppBarButton.Flyout>
+                        <Button x:Name="pause" Style="{StaticResource BtnStyle2}" Click="AppBarButton_Click" ToolTipService.ToolTip="播放/暂停">
+                            <SymbolIcon x:Name="icon_play" Symbol="Pause"/>
+                        </Button>
+                        <Button ToolTipService.ToolTip="弹幕开关" Style="{StaticResource BtnStyle2}" Margin="4,0,4,0">
+                            <SymbolIcon Symbol="Comment"/>
+                            <Button.Flyout>
                                 <Flyout>
                                     <Flyout.FlyoutPresenterStyle>
                                         <Style TargetType="FlyoutPresenter">
@@ -276,11 +286,14 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </Flyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
-                        <AppBarButton x:Name="repeat" Foreground="White" Width="48" Background="{x:Null}" ToolTipService.ToolTip="锚点循环" Click="Repeat_Click" Icon="RepeatAll"/>
-                        <AppBarButton Background="{x:Null}" VerticalAlignment="Stretch" Foreground="White" Width="48" ToolTipService.ToolTip="播放设定" Icon="Setting">
-                            <AppBarButton.Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <Button x:Name="repeat" Style="{StaticResource BtnStyle2}" ToolTipService.ToolTip="锚点循环" Click="Repeat_Click">
+                            <SymbolIcon x:Name="icon_repeat" Symbol="RepeatAll"/>
+                        </Button>
+                        <Button Style="{StaticResource BtnStyle2}" ToolTipService.ToolTip="播放设定">
+                            <SymbolIcon Symbol="Setting"/>
+                            <Button.Flyout>
                                 <Flyout>
                                     <Flyout.FlyoutPresenterStyle>
                                         <Style TargetType="FlyoutPresenter">
@@ -363,9 +376,11 @@
                                         </AppBarButton>
                                     </StackPanel>
                                 </Flyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
-                        <AppBarButton Foreground="White" Width="48" Background="{x:Null}" Click="Button_Click" ToolTipService.ToolTip="更多选项" Icon="More"/>
+                            </Button.Flyout>
+                        </Button>
+                        <Button Style="{StaticResource BtnStyle2}" Click="Button_Click" ToolTipService.ToolTip="更多选项">
+                            <SymbolIcon Symbol="More"/>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </Grid>

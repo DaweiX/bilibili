@@ -241,6 +241,22 @@ namespace bilibili.Views
                 {
                     pc_fullscreen.IsOn = true;
                 }
+                if (SettingHelper.ContainsKey("_fvideo"))
+                {
+                    f_v.IsOn = (bool)SettingHelper.GetValue("_fvideo");
+                }
+                else
+                {
+                    f_v.IsOn = true;
+                }
+                if (SettingHelper.ContainsKey("_faudio"))
+                {
+                    f_a.IsOn = (bool)SettingHelper.GetValue("_faudio");
+                }
+                else
+                {
+                    f_a.IsOn = true;
+                }
             }
             else if (type == DeviceType.Mobile)
             {
@@ -251,6 +267,22 @@ namespace bilibili.Views
                 else
                 {
                     m_top.IsOn = true;
+                }
+                if (SettingHelper.ContainsKey("_fvideo"))
+                {
+                    f_v.IsOn = (bool)SettingHelper.GetValue("_fvideo");
+                }
+                else
+                {
+                    f_v.IsOn = false;
+                }
+                if (SettingHelper.ContainsKey("_faudio"))
+                {
+                    f_a.IsOn = (bool)SettingHelper.GetValue("_faudio");
+                }
+                else
+                {
+                    f_a.IsOn = true;
                 }
             }
         }
@@ -539,6 +571,16 @@ namespace bilibili.Views
         private void backtaskcost_Toggled(object sender, RoutedEventArgs e)
         {
             SettingHelper.SetValue("_backtaskcost", backtaskcost.IsOn);
+        }
+
+        private void f_a_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_faudio", f_a.IsOn);
+        }
+
+        private void f_v_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_fvideo", f_v.IsOn);
         }
     }
 }

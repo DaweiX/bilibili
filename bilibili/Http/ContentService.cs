@@ -824,16 +824,61 @@ namespace bilibili.Http
                 return null;
             }
             #region XML
-            VideoURL URL = new VideoURL { Acceptformat = new List<string>(), Acceptquality = new List<string>() };
-            JsonObject json = new JsonObject();
             string url = string.Format("http://interface.bilibili.com/playurl?_device=uwp&cid={0}&quality={1}&otype=xml&appkey={2}&_buvid=A7A15F70-8D92-4441-B941-0E4EF9F21B6319763infoc&_hwid=03008e90050092d8&platform=uwp_desktop&type={3}&access_key={4}&mid={5}&ts={6}", cid, quality, ApiHelper.appkey, format.ToString(), ApiHelper.accesskey, UserHelper.Mid, ApiHelper.GetLinuxTS().ToString());
             url += ApiHelper.GetSign(url);
-            XmlDocument doc = await XmlDocument.LoadFromUriAsync(new Uri(url));
-            URL.Url = doc.GetElementsByTagName("url")[0].InnerText;
-            URL.Size = doc.GetElementsByTagName("size")[0].InnerText;
-            URL.Length = doc.GetElementsByTagName("length")[0].InnerText;
-            URL.Acceptquality = doc.GetElementsByTagName("accept_quality")[0].InnerText.Split(',').ToList();
-            URL.Acceptformat = doc.GetElementsByTagName("accept_format")[0].InnerText.Split(',').ToList();
+            XmlDocument xmldoc = new XmlDocument();
+            xmldoc = await XmlDocument.LoadFromUriAsync(new Uri(url));
+            VideoURL URL = new VideoURL
+            {
+                Acceptformat = new List<string>(),
+                Acceptquality = new List<string>(),
+                Ps = new List<Purl>()
+            };
+            var Durls = xmldoc.GetElementsByTagName("durl");
+            int Pcount = Durls.Count;
+            for (int i = 0; i < Pcount; i++)
+            {
+                Purl purl = new Purl
+                {
+                    Backup_URL = new List<string>()
+                };
+                var list = Durls[i].ChildNodes;
+                for (int j = 0; j < list.Length; j++)
+                {
+                    var kid = list[j];
+                    if (kid.NodeName == "#text")
+                    {
+                        continue;
+                    }
+                    if (kid.NodeName == "size")
+                    {
+                        purl.Size = double.Parse(kid.InnerText);
+                    }
+                    else if (kid.NodeName == "length")
+                    {
+                        purl.Length = double.Parse(kid.InnerText);
+                    }
+                    else if (kid.NodeName == "url")
+                    {
+                        purl.Url = kid.InnerText.Trim();
+                    }
+                    else if (kid.NodeName == "backup_url")
+                    {
+                        for (int k = 0; k < kid.ChildNodes.Length; k++)
+                        {
+                            var kid2 = kid.ChildNodes[k];
+                            if (kid2.NodeName == "url")
+                            {
+                                purl.Backup_URL.Add(kid2.InnerText.Trim());
+                            }
+                        }
+                    }
+                }
+                URL.Ps.Add(purl);
+            }
+            URL.TotalLength = double.Parse(xmldoc.GetElementsByTagName("timelength")[0].InnerText);
+            URL.Acceptquality = xmldoc.GetElementsByTagName("accept_quality")[0].InnerText.Split(',').ToList();
+            URL.Acceptformat = xmldoc.GetElementsByTagName("accept_format")[0].InnerText.Split(',').ToList();        
             #endregion
             #region JSON
             //XmlElement ele = durl as XmlElement;
@@ -876,14 +921,7 @@ namespace bilibili.Http
             //        }
             //    }
             #endregion
-            //http://interface.bilibili.com/playurl?_device=uwp&cid=4651392&quality=2&otype=xml&appkey=422fd9d7289a1dd9&_buvid=A7A15F70-8D92-4441-B941-0E4EF9F21B6319763infoc&_hwid=03008e90050092d8&platform=uwp_desktop&type=mp4&access_key=d0c76c033585f2b1332845538fb20712&mid=33034956&ts=1484143990&sign=3d2b7a1d6d03cb3642338639d6956544
-            //http://interface.bilibili.com/playurl?_device=uwp&cid={0}&quality={1}&otype=xml&appkey={2}&_buvid=D57C3D63-7920-41FA-910D-AB6CBD5365F830799infoc&_hwid=0100d4c50200c2a6&platform=uwp_mobile&type=mp4&access_key={3}&mid={4}&ts={5}", cid, quality.ToString(), ApiHelper.appkey, ApiHelper.accesskey, UserHelper.mid, ApiHelper.GetLinuxTS().ToString());
             return URL;
-            //}
-            //catch
-            //{
-            //    return null;
-            //}
         }
         public static async Task<string> GetHashAsync(string url)
         {

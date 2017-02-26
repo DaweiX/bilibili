@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="502c014c-c943-4a3b-a2ad-114c5c7288f9" Publisher="CN=Dawei" Version="1.0.0.0" />
+  <Identity Name="502c014c-c943-4a3b-a2ad-114c5c7288f9" Publisher="CN=Dawei" Version="1.7.5.0" />
   <mp:PhoneIdentity PhoneProductId="502c014c-c943-4a3b-a2ad-114c5c7288f9" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>bilibili</DisplayName>
@@ -27,11 +27,11 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="transparent" />
       </uap:VisualElements>
       <Extensions>
-        <uap:Extension Category="windows.protocol" EntryPoint="bilibili.App">
-          <uap:Protocol Name="web">
-            <uap:DisplayName>哔哩哔哩</uap:DisplayName>
-          </uap:Protocol>
-        </uap:Extension>
+        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTask.TileTask">
+          <BackgroundTasks>
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
         <uap:Extension Category="windows.fileTypeAssociation" EntryPoint="bilibili.App">
           <uap:FileTypeAssociation Name="format_mp4">
             <uap:DisplayName>哔哩哔哩</uap:DisplayName>
@@ -41,11 +41,11 @@
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
-        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTask.TileTask">
-          <BackgroundTasks>
-            <Task Type="timer" />
-          </BackgroundTasks>
-        </Extension>
+        <uap:Extension Category="windows.protocol" EntryPoint="bilibili.App">
+          <uap:Protocol Name="web">
+            <uap:DisplayName>哔哩哔哩</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
       </Extensions>
     </Application>
   </Applications>

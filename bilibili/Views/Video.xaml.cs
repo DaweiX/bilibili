@@ -24,6 +24,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using static bilibili.Controls.Danmaku;
+using FFmpegInterop;
+using Windows.Media.Core;
+using Windows.UI.Xaml.Controls.Primitives;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -34,16 +37,19 @@ namespace bilibili.Views
     /// </summary>
     public sealed partial class Video : Page
     {
-        VideoURL URL = null;
+        FFmpegInteropMSS FFmpegMSS;
+        VideoURL URL;
+        Purl _currentP;
         bool isX = false;
         DispatcherTimer timer_danmaku = new DispatcherTimer();
         DispatcherTimer timer_repeat = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
         DispatcherTimer timer = new DispatcherTimer();
         DisplayRequest displayRq = new DisplayRequest();
+        List<int> Flags = new List<int>();
         string part = string.Empty;
         string folder = string.Empty;
         string quality = "2";
-        VideoFormat format = VideoFormat.mp4;
+        VideoFormat format;
         string cid = string.Empty;
         string aid = string.Empty;
         int R_1, R_2;
@@ -57,10 +63,10 @@ namespace bilibili.Views
         bool isInited = false;
         bool? isLocal = null;
         bool isMouseMoving = false;
-        DeviceType type;
         int Index = 0;
         bool isPropInit = false;
         bool lightinit = false;
+        int _offsettime;
         public Video()
         {
             this.InitializeComponent();
@@ -203,14 +209,14 @@ namespace bilibili.Views
                         {
                             media.Pause();
                             danmaku.IsPauseDanmaku(true);
-                            pause.Icon = new SymbolIcon(Symbol.Play);
+                            icon_play = new SymbolIcon(Symbol.Play);
                         }
                         else if (media.CurrentState == MediaElementState.Paused)
                         {
                             media.Play();
                             danmaku.ClearStaticDanmu();
                             danmaku.IsPauseDanmaku(false);
-                            pause.Icon = new SymbolIcon(Symbol.Pause);
+                            icon_play = new SymbolIcon(Symbol.Pause);
                         }
                     }
                     break;
@@ -257,7 +263,7 @@ namespace bilibili.Views
         }
 
         /// <summary>
-        /// 显示弹幕
+        /// 发送弹幕（自动）
         /// </summary>
         private void Timer_danmaku_Tick(object sender, object e)
         {
@@ -267,7 +273,7 @@ namespace bilibili.Views
                 {
                     foreach (var item in DanmuPool)
                     {
-                        if(Convert.ToInt32(item.Time) == Convert.ToInt32(media.Position.TotalSeconds))
+                        if(Convert.ToInt32(item.Time) == Convert.ToInt32(media.Position.TotalSeconds + _offsettime))
                         {
                             foreach (string word in strs)
                             {
@@ -302,6 +308,10 @@ namespace bilibili.Views
             }
             media.Stop();
             media.Source = null;
+            if (FFmpegMSS != null)
+            {
+                FFmpegMSS.Dispose();
+            }
             GC.Collect();
             timer.Stop();
             displayRq.RequestRelease();     //撤销常亮请求  
@@ -331,7 +341,7 @@ namespace bilibili.Views
 
         async Task HideCursor()
         {
-            if (type == DeviceType.PC && isMouseMoving == false && grid_top.Visibility == Visibility.Collapsed) 
+            if (SettingHelper.DeviceType == DeviceType.PC && isMouseMoving == false && grid_top.Visibility == Visibility.Collapsed) 
             {
                 await Task.Delay(3000);
                 //隐藏光标
@@ -441,6 +451,14 @@ namespace bilibili.Views
             {
                 right.Visibility = Visibility.Collapsed;
             }
+            if (SettingHelper.ContainsKey("_videoformat"))
+            {
+                format = SettingHelper.GetValue("_videoformat").ToString() == "0"
+                ? VideoFormat.mp4
+                : VideoFormat.flv;
+            }
+            //默认的格式：MP4
+            else format = VideoFormat.mp4;
             await read(Index);
         }
 
@@ -453,8 +471,9 @@ namespace bilibili.Views
             aid = infos[0].Title;
             status.Text = "获取视频地址...";
             URL = await ContentServ.GetVedioURL(cid, quality, format);
-            string url = URL.Url;
-            status.Text += (URL == null) ? "失败" : "完毕";
+            status.Text += (URL == null) 
+                ? "失败" 
+                : $"{URL.Ps.Count}个{format}分段";
             if (URL == null) return;
             status.Text += Environment.NewLine + "加载弹幕数据...";
             try
@@ -466,7 +485,22 @@ namespace bilibili.Views
             {
                 status.Text += "失败";
             }
-            media.Source = new Uri(url);
+            if (format == VideoFormat.mp4)
+            {
+                //MP4只有一个分段（根据经验(￣▽￣)"）
+                media.Source = new Uri(URL.Ps[0].Url);
+            }
+            else if (format == VideoFormat.flv) 
+            {
+                //先读第一个分段
+                SetFFmpegSource(URL.Ps[0].Url);
+            }
+            if (URL.Ps.Count > 1)
+            {
+                //Flag该立的时候也得立啊
+                //GetFlags();
+            }
+            _currentP = URL.Ps[0];
             txt_title.Text = infos[index].Title;
             if (URL.Acceptquality.Contains("1")) q1.Visibility = Visibility.Visible;
             if (URL.Acceptquality.Contains("2")) q2.Visibility = Visibility.Visible;
@@ -475,9 +509,48 @@ namespace bilibili.Views
             loading.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// 设置FFmpeg媒体源
+        /// </summary>
+        private void SetFFmpegSource(string url)
+        {
+            bool force_a = false;
+            bool force_v = false;
+            if (SettingHelper.DeviceType == DeviceType.PC)
+            {
+                force_a = force_v = true;
+            }
+            if (SettingHelper.ContainsKey("_faudio"))
+            {
+                force_a = (bool)SettingHelper.GetValue("_faudio");
+            }
+            if (SettingHelper.ContainsKey("_fvideo"))
+            {
+                force_v = (bool)SettingHelper.GetValue("_fvideo");
+            }
+            FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromUri(url, force_a, force_v);
+            MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
+            if (mss != null)
+            {
+                media.SetMediaStreamSource(mss);
+            }
+            //更新当前分段
+            int index = URL.Ps.FindIndex(p => p.Url == url);
+            _currentP = URL.Ps[index];
+            ///更新时间偏移量，用于<see cref="Timer_danmaku_Tick(object, object)"/>
+            _offsettime = 0;
+            for (int i = index; i > 0; i--) 
+            {
+                _offsettime += (int)(URL.Ps[i - 1].Length / 1000);
+            }
+        }
+
         void ReverseVisibility()
         {
-            grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = grid_bottom.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = 
+                grid_bottom.Visibility == Visibility.Visible 
+                ? Visibility.Collapsed 
+                : Visibility.Visible;
         }
 
         private async void media_MediaOpened(object sender, RoutedEventArgs e)
@@ -492,12 +565,14 @@ namespace bilibili.Views
             {
                 timer_danmaku.Start();
             }
-            TimeSpan ts = new TimeSpan(0, 0, (int)media.NaturalDuration.TimeSpan.TotalSeconds);
+            TimeSpan ts = new TimeSpan(0, 0, (int)URL.TotalLength / 1000);
             if (ts.Hours == 0)
                 txt_total.Text = ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
             else
                 txt_total.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
-            sli_main.Maximum = ts.TotalSeconds;
+            //分段长度之和
+            sli_main.Maximum = URL.TotalLength / 1000;
+            await RefreshInfo();
             await Task.Delay(500);
             grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = Visibility.Collapsed;
         }
@@ -508,14 +583,14 @@ namespace bilibili.Views
             {
                 media.Pause();
                 danmaku.IsPauseDanmaku(true);
-                pause.Icon = new SymbolIcon(Symbol.Play);
+                icon_play = new SymbolIcon(Symbol.Play);
             }
             else if (media.CurrentState == MediaElementState.Paused)
             {
                 media.Play();
                 danmaku.ClearStaticDanmu();
                 danmaku.IsPauseDanmaku(false);
-                pause.Icon = new SymbolIcon(Symbol.Pause);
+                icon_play = new SymbolIcon(Symbol.Pause);
             }
         }
 
@@ -584,6 +659,9 @@ namespace bilibili.Views
             pro_down.Value = media.DownloadProgress * 100;
         }
 
+        /// <summary>
+        /// 发送弹幕（手动）
+        /// </summary>
         async void SendDanmu()
         {
             if (!ApiHelper.IsLogin() || !WebStatusHelper.IsOnline()) 
@@ -673,6 +751,15 @@ namespace bilibili.Views
             }
             else
             {
+                /*------------单段播放完的操作------------*/
+                //如果不是最后一个分段
+                if (URL.Ps.Last() != _currentP)
+                {
+                    SetFFmpegSource(URL.Ps[URL.Ps.IndexOf(_currentP) + 1].Url);
+                    return;
+                }
+                //否则
+                /*------------整集播放完的操作------------*/
                 if (Index < infos.Count - 1)
                 {
                     status.Text = "本选集已播放完毕，即将进入下一选集…";
@@ -683,7 +770,9 @@ namespace bilibili.Views
                     await read(Index);
                 }
                 else
+                {
                     Frame.GoBack();
+                }
             }             
         }
 
@@ -816,7 +905,7 @@ namespace bilibili.Views
             {
                 isX = true;
                 media.Pause();
-                pause.Icon = new SymbolIcon(Symbol.Play);
+                icon_play = new SymbolIcon(Symbol.Play);
                 double actual = X / this.ActualWidth;
                 //横跨屏幕的TimeSpan:90s（一分半）
                 sli_main.Value += actual * 90;
@@ -847,7 +936,7 @@ namespace bilibili.Views
             if (isX)
             {
                 media.Play();
-                pause.Icon = new SymbolIcon(Symbol.Pause);
+                icon_play = new SymbolIcon(Symbol.Pause);
             }
         }
 
@@ -857,28 +946,33 @@ namespace bilibili.Views
             ReverseVisibility();
         }
 
+        async Task RefreshInfo()
+        {
+            if (isLocal == false)
+            {
+                info.Text = "视频大小:" + (_currentP.Size / Math.Pow(1024, 2)).ToString("0.0") + "M" + Environment.NewLine +
+                     "视频尺寸:" + media.NaturalVideoWidth.ToString() + "×" + media.NaturalVideoHeight.ToString() + Environment.NewLine +
+                     "分段数:" + URL.Ps.Count.ToString();
+            }
+            else if (isLocal == true)
+            {
+                var property = await file.GetBasicPropertiesAsync();
+                var property2 = await file.Properties.GetVideoPropertiesAsync();
+                var property3 = await file.Properties.GetMusicPropertiesAsync();
+                info.Text = "视频大小:" + (property.Size / Math.Pow(1024, 2)).ToString("0.0") + "M" + Environment.NewLine +
+                    "修改时间:" + property.DateModified.ToLocalTime().ToString() + Environment.NewLine +
+                    "视频尺寸:" + property2.Width.ToString() + "×" + property2.Height.ToString() + Environment.NewLine +
+                    "总比特率:" + (property2.Bitrate / 1000).ToString() + "kbps";
+            }
+            isPropInit = true;
+        }
+
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             ham.IsPaneOpen = !ham.IsPaneOpen;
             if (isPropInit == false)
             {
-                if (isLocal == false)
-                {
-                    info.Text = "视频大小:" + (int.Parse(URL.Size) / 1024 / 1024).ToString() + "MB" + Environment.NewLine +
-                         "视频尺寸:" + media.NaturalVideoWidth.ToString() + "×" + media.NaturalVideoHeight.ToString() + Environment.NewLine +
-                         "最高清晰度:" + URL.Acceptquality.Count.ToString();
-                }
-                else if (isLocal == true)
-                {
-                    var property = await file.GetBasicPropertiesAsync();
-                    var property2 = await file.Properties.GetVideoPropertiesAsync();
-                    var property3 = await file.Properties.GetMusicPropertiesAsync();
-                    info.Text = "视频大小:" + (property.Size / Math.Pow(1024, 2)).ToString("0.0") + "M" + Environment.NewLine +
-                        "修改时间:" + property.DateModified.ToLocalTime().ToString() + Environment.NewLine +
-                        "视频尺寸:" + property2.Width.ToString() + "×" + property2.Height.ToString() + Environment.NewLine +
-                        "总比特率:" + (property2.Bitrate / 1000).ToString() + "kbps";
-                }
-                isPropInit = true;
+                await RefreshInfo();
             }         
         }
 
@@ -897,14 +991,14 @@ namespace bilibili.Views
             {
                 media.Pause();
                 danmaku.IsPauseDanmaku(true);
-                pause.Icon = new SymbolIcon(Symbol.Play);
+                icon_play = new SymbolIcon(Symbol.Play);
             }
             else if (media.CurrentState == MediaElementState.Paused)
             {
                 media.Play();
                 danmaku.IsPauseDanmaku(false);
                 danmaku.ClearStaticDanmu();
-                pause.Icon = new SymbolIcon(Symbol.Pause);
+                icon_play = new SymbolIcon(Symbol.Pause);
             }
         }
 
@@ -1027,9 +1121,41 @@ namespace bilibili.Views
             ham.IsPaneOpen = false;
         }
 
-        private void rating_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        private void rating_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             media.PlaybackRate = rating.Value;
+        }
+
+        /// <summary>
+        /// 这个事件仅用于提供多分段下调戏进度条的功能！(DRAG)
+        /// </summary>
+        private void sli_main_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {          
+            //double currentPos = sli_main.Value * 1000;
+            ////注意：从零开始的index
+            //int currentindex = URL.Ps.IndexOf(_currentP);
+            //int goalindex = 0;
+            //for (int i = Flags.Count; i > 0; i--)
+            //{
+            //    if (currentPos > Flags[i - 1])
+            //    {
+            //        goalindex = i - 1;
+            //    }
+            //}
+        }
+
+        void GetFlags()
+        {
+            //间断点数量 = 分段数 - 1
+            for (int i = 0; i < URL.Ps.Count - 1; i++)
+            {
+                int f = 0;
+                for (int j = i; i >= 0; j--)
+                {
+                    f += (int)(URL.Ps[j].Length / 1000);
+                }
+                Flags.Add(f);
+            }
         }
 
         private void Repeat_Click(object sender, RoutedEventArgs e)
@@ -1039,19 +1165,19 @@ namespace bilibili.Views
                 case null:
                     R_1 = (int)media.Position.TotalMilliseconds;
                     isRepeat = true;
-                    repeat.Icon = new SymbolIcon(Symbol.ZoomIn);
+                    icon_repeat = new SymbolIcon(Symbol.ZoomIn);
                     break;
                 case true:
                     R_2 = (int)media.Position.TotalMilliseconds;
                     media.Position = TimeSpan.FromMilliseconds(R_1);
                     isRepeat = false;
                     timer_repeat.Start();
-                    repeat.Icon = new SymbolIcon(Symbol.ZoomOut);
+                    icon_repeat = new SymbolIcon(Symbol.ZoomOut);
                     break;
                 case false:
                     isRepeat = null;
                     timer_repeat.Stop();
-                    repeat.Icon = new SymbolIcon(Symbol.RepeatAll);
+                    icon_repeat = new SymbolIcon(Symbol.RepeatAll);
                     break;
             }
         }

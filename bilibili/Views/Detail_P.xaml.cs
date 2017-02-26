@@ -476,8 +476,8 @@ namespace bilibili.Views
                     string name = StringDeal.RemoveSpecial(title.Text);
                     string part = StringDeal.RemoveSpecial(item.Part);
                     StorageFolder folder = await DownloadHelper.GetMyFolderAsync();
-                    StorageFolder f1 = await folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists);                   
-                    var download = await DownloadHelper.Download(url.Url, part + ".mp4", f1);
+                    StorageFolder f1 = await folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists);
+                    var download = await DownloadHelper.Download(url.Ps[0].Url, part + ".mp4", f1);
                     //如果await，那么执行完第一个StartAsync()后即退出循环.GetCurrentDownloadsAsync()方法同样会遇到此问题.(Download页)
                     IAsyncOperationWithProgress<DownloadOperation, DownloadOperation> start = download.StartAsync();
                     i++;

@@ -41,6 +41,8 @@
 隐藏指针		_cursor					bool
 视频清晰度		_quality				1，2，3
 视频格式		_videoformat			0，1
+强制软解音频	_faudio					bool
+强制软解视频	_fvideo					bool
 
 播放//////////////////////
 

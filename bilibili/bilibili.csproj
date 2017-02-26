@@ -20,7 +20,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>arm</AppxBundlePlatforms>
     <AppxBundle>Never</AppxBundle>
-    <AppxPackageDir>C:\Users\Dawei\Desktop\bin</AppxPackageDir>
+    <AppxPackageDir>F:\Documents\Visual Studio 2015\Projects\bilibili\bilibili\Appx\</AppxPackageDir>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -359,6 +359,13 @@
     <Content Include="Notes\Version.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <None Include="Notes\备忘.json" />
+    <Content Include="F:\FFmpegInterop\ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avcodec-57.dll" />
+    <Content Include="F:\FFmpegInterop\ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avdevice-57.dll" />
+    <Content Include="F:\FFmpegInterop\ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avfilter-6.dll" />
+    <Content Include="F:\FFmpegInterop\ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avformat-57.dll" />
+    <Content Include="F:\FFmpegInterop\ffmpeg\Build\Windows10\$(PlatformTarget)\bin\avutil-55.dll" />
+    <Content Include="F:\FFmpegInterop\ffmpeg\Build\Windows10\$(PlatformTarget)\bin\swresample-2.dll" />
+    <Content Include="F:\FFmpegInterop\ffmpeg\Build\Windows10\$(PlatformTarget)\bin\swscale-4.dll" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -563,10 +570,17 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\FFmpegInterop\FFmpegInterop\Win10\FFmpegInterop\FFmpegInterop.vcxproj">
+      <Project>{9cfa3b3e-b7af-4629-84e2-c962c5b046b1}</Project>
+      <Name>FFmpegInterop</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BackgroundTask\BackgroundTask.csproj">
       <Project>{c67dcf48-f5fc-4655-b12e-cca7e9159d35}</Project>
       <Name>BackgroundTask</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

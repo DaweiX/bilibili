@@ -85,19 +85,30 @@ namespace bilibili.Models
     }
     class VideoURL
     {
+        public double TotalLength { get; set; }
         public List<string> Acceptformat { get; set; }
         public List<string> Acceptquality { get; set; }
-        public string Url { get; set; }
-        public string BackupUrl { get; set; }
-        public string Length { get; set; }
-        public string Size { get; set; }
+        public List<Purl> Ps { get; set; }
+        public double Size { get; set; }
     }
+
+    public class Purl
+    {
+        public double Length { get; set; }
+        public double Size { get; set; }
+        public string Url { get; set; }
+        public List<string> Backup_URL { get; set; }
+    }
+
     public class FlipItem
     {
         public string Img { get; set; }
         public string Link { get; set; }
         public string Title { get; set; }
     }
+    /// <summary>
+    /// 视频格式(其中,hdmp4的最高清晰度与mp4相同，弃用)
+    /// </summary>
     public enum VideoFormat
     {
         flv,
