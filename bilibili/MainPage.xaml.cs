@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Media;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using Windows.Storage;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -98,43 +99,39 @@ namespace bilibili
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             mainframe.Navigate(typeof(Views.Partition));
-            string arg = e.Parameter.ToString();
             //处理跳转参数
-            if (!string.IsNullOrEmpty(arg))
+            if (e.Parameter is StorageFile)
             {
-                if (arg[0] == '@' || arg[0] == '#')
+                mainframe.Navigate(typeof(Views.Video), e.Parameter);
+            }
+            else
+            {
+                if (e.Parameter != null)
                 {
-                    mainframe.Navigate(typeof(Views.Video), arg);
-                }
-                else
-                {
+                    string arg = e.Parameter.ToString();
                     if (WebStatusHelper.IsOnline())
                     {
-                        if (arg[0] == 't')
+                        if (!string.IsNullOrEmpty(arg))
                         {
-                            mainframe.Navigate(typeof(Views.Detail_P), arg.Substring(1));
-                        }
-                        else if (arg[0] == 's')
-                        {
-                            mainframe.Navigate(typeof(Views.Detail), arg.Substring(1));
-                        }
-                        else if (arg[0] == 'm')
-                        {
-                            mainframe.Navigate(typeof(Views.Message), arg.Substring(2));
-                        }
+                            if (arg[0] == 't')
+                            {
+                                mainframe.Navigate(typeof(Views.Detail_P), arg.Substring(1));
+                            }
+                            else if (arg[0] == 's')
+                            {
+                                mainframe.Navigate(typeof(Views.Detail), arg.Substring(1));
+                            }
+                            else if (arg[0] == 'm')
+                            {
+                                mainframe.Navigate(typeof(Views.Message), arg.Substring(2));
+                            }
+                        }                      
                     }
                     else
                     {
                         await popup.Show("没有网络连接");
                     }
                 }               
-            }
-            else
-            {
-                if (!WebStatusHelper.IsOnline())
-                {
-                    await popup.Show("没有网络连接");
-                }
             }
             if (ApiHelper.IsLogin())
             {
@@ -247,7 +244,7 @@ namespace bilibili
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (WebStatusHelper.IsOnline())
-                mainframe.Navigate(typeof(Views.Search), SearchBox.Text, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                mainframe.Navigate(typeof(Views.Search), SearchBox.Text);
         }
 
         private void mainframe_Navigated(object sender, NavigationEventArgs e)

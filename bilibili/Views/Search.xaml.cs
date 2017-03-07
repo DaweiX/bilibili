@@ -1,22 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using bilibili.Http;
 using bilibili.Methods;
 using bilibili.Models;
-using bilibili.Helpers;
 using System.Threading.Tasks;
 using System.Collections;
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
@@ -38,39 +28,6 @@ namespace bilibili.Views
             base.OnNavigatedTo(e);
             keyword = e.Parameter.ToString();
             keyword = Uri.EscapeUriString(keyword);
-        }
-
-        private void listTapped(object sender, TappedRoutedEventArgs e)
-        {
-            GridView listview = sender as GridView;
-            try
-            {
-                switch (pivot.SelectedIndex)
-                {
-                    case 0:
-                        {
-                            var item = listview.SelectedItem as SearchResult;
-                            string aid = item.Aid;
-                            Frame.Navigate(typeof(Detail_P), aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-                        }
-                        break;
-                    case 1:
-                        {
-                            var item = listview.SelectedItem as SearchResult_Bangumi;
-                            string sid = item.ID;
-                            Frame.Navigate(typeof(Detail), sid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-                        }
-                        break;
-                    case 2:
-                        {
-                            var item = listview.SelectedItem as UpForSearch;
-                            string mid = item.Param;
-                            Frame.Navigate(typeof(Friends), mid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-                        }
-                        break;
-                }
-            }
-            catch { }
         }
 
         private async void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -247,7 +204,36 @@ namespace bilibili.Views
             //i /= 300;
             //i = i == 0 ? 1 : i;
             //width.Width = ActualWidth / (int)i - 20;
-            width.Width = WidthFit.GetWidth(i, 400, 280, 24);
+            width.Width = WidthFit.GetWidth(i);
+        }
+
+        private void list_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //当然，不一定非要用pivot判定，也可以使用is进行类型的判定
+            switch (pivot.SelectedIndex)
+            {
+                case 0:
+                    {
+                        var item = e.ClickedItem as SearchResult;
+                        string aid = item.Aid;
+                        Frame.Navigate(typeof(Detail_P), aid);
+                    }
+                    break;
+                case 1:
+                    {
+                        var item = e.ClickedItem as SearchResult_Bangumi;
+                        string sid = item.ID;
+                        Frame.Navigate(typeof(Detail), sid);
+                    }
+                    break;
+                case 2:
+                    {
+                        var item = e.ClickedItem as UpForSearch;
+                        string mid = item.Param;
+                        Frame.Navigate(typeof(Friends), mid);
+                    }
+                    break;
+            }
         }
     }
 }

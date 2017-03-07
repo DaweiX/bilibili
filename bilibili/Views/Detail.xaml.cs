@@ -58,6 +58,7 @@ namespace bilibili.Views
                 base.OnNavigatedTo(e);
                 sid = e.Parameter.ToString();
                 aa = await ContentServ.GetSeasonResultAsync(sid);
+                if (aa == null) return;
                 BitmapImage bmp = new BitmapImage();
                 Uri url = new Uri(aa.Cover);
                 //var streamReference = RandomAccessStreamReference.CreateFromUri(url);
@@ -299,7 +300,7 @@ namespace bilibili.Views
 
         private void list_tags_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Search), (e.ClickedItem as Tags).Tag, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Search), (e.ClickedItem as Tags).Tag);
         }
 
         private async void mylist_ItemClick(object sender, ItemClickEventArgs e)
@@ -317,7 +318,7 @@ namespace bilibili.Views
             }
             else
             {
-                Frame.Navigate(typeof(Detail_P), ep.ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Detail_P), ep.ID);
             }
         }
 

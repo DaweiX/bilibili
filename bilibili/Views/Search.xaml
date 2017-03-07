@@ -13,19 +13,19 @@
         <Border x:Name="width"/>
         <Pivot x:Name="pivot" SelectionChanged="pivot_SelectionChanged">
             <PivotItem Header="视频" Tag="video">
-                <GridView x:Name="list_videos" Tag="videos" Tapped="listTapped" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
+                <GridView x:Name="list_videos" Tag="videos" IsItemClickEnabled="True" ItemClick="list_ItemClick" SelectionMode="None" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="{Binding Width,ElementName=width}">
+                            <Grid Width="{Binding Width,ElementName=width}" Height="90">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Source="{Binding Pic}" Width="100"/>
+                                <Image Source="{Binding Pic}" Width="120"/>
                                 <StackPanel Margin="4,0,0,0" Grid.Column="1">
-                                    <TextBlock Text="{Binding Title}" FontWeight="Light"/>
-                                    <TextBlock Text="{Binding Author}" FontSize="10"/>
-                                    <TextBlock Text="{Binding TypeName}" Foreground="Gray"/>
+                                    <TextBlock Text="{Binding Title}"/>
+                                    <TextBlock Text="{Binding Author}" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                    <TextBlock Text="{Binding TypeName}" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
@@ -33,7 +33,7 @@
                 </GridView>
             </PivotItem>
             <PivotItem Header="番剧" Tag="fanju">
-                <GridView x:Name="list_fanju" Tag="bangumi" Tapped="listTapped" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
+                <GridView x:Name="list_fanju" Tag="bangumi" IsItemClickEnabled="True" ItemClick="list_ItemClick" SelectionMode="None" Template="{StaticResource myControlTemplete}" ContainerContentChanging="list_ContainerContentChanging">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid Width="{Binding Width,ElementName=width}" Height="120">
@@ -48,7 +48,7 @@
                                 <Image Grid.RowSpan="2" Source="{Binding Cover}" Width="90"/>
                                 <StackPanel Grid.Column="1" Margin="4,0,0,0">
                                     <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
-                                    <TextBlock Text="{Binding Evaluate}" TextWrapping="Wrap" MaxLines="3" FontSize="14" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
+                                    <TextBlock Text="{Binding Evaluate}" TextWrapping="Wrap" MaxLines="3" FontSize="13" Foreground="{ThemeResource bili_Fontcolor_Second}"/>
                                 </StackPanel>
                                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Count}" Foreground="Gray" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4"/>
                             </Grid>
@@ -57,7 +57,7 @@
                 </GridView>
             </PivotItem>
             <PivotItem Header="up主" Tag="up">
-                <GridView x:Name="list_up" Tag="up" Tapped="listTapped">
+                <GridView x:Name="list_up" Tag="up" IsItemClickEnabled="True" ItemClick="list_ItemClick" SelectionMode="None">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid Width="{Binding Width,ElementName=width}">

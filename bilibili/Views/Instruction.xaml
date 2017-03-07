@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="bilibili.Views.Instruction"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:bilibili.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="using:bilibili.Controls"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel Background="{ThemeResource bili_PageBackground}" Margin="8 0">
+            <c:ExpandPanel Header="视频播放">
+                <RichTextBlock>
+                    <Paragraph>
+                        <Bold>视频格式</Bold>
+                        <Run>在线播放共支持两种视频格式: mp4和flv. 其中,前者具有下载、播放方便的特点，可被系统自带视频播放器识别，而后者则通常会提供更高的清晰度（超清画质仅为flv支持），但较长的视频会分段播放、下载，二者各有所长，请视情况使用. 默认的格式为mp4</Run>
+                    </Paragraph>
+                </RichTextBlock>
+            </c:ExpandPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

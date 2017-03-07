@@ -160,7 +160,7 @@ namespace bilibili.Views.PartViews
 
         private void gridview_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Models.Video).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Models.Video).Aid);
         }
 
         private void gridview_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

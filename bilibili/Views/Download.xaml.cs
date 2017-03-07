@@ -12,11 +12,9 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.System.Display;
-using Windows.UI;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -43,13 +41,6 @@ namespace bilibili.Views
             {
                 dragarea.Visibility = Visibility.Visible;
             }
-            StringBuilder builder = new StringBuilder();
-            builder.Append("支持的格式：");
-            for (int i = 0; i < videoExtensions.Count; i++)
-            {
-                builder.Append(videoExtensions[i].Substring(1) + ",");
-            }
-            txt_format.Text = builder.Remove(builder.Length - 1, 1).ToString();
         }     
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -66,7 +57,7 @@ namespace bilibili.Views
                             foreach (StorageFile file in await folder1.GetFilesAsync())
                             {
                                 var pro = await file.GetBasicPropertiesAsync();
-                                if (file != null && file.FileType == ".mp4" && pro.Size != 0) 
+                                if (file != null && file.ContentType.Split('/')[0]=="video" && pro.Size != 0) 
                                     donelist.Items.Add(new LocalVideo { Part = file.DisplayName, Folder = folder1.DisplayName });
                             }
                         }
@@ -368,13 +359,16 @@ namespace bilibili.Views
                         e.AcceptedOperation = DataPackageOperation.Link;
                         StorageFile file = (StorageFile)item;
                         StorageItemThumbnail img = await file.GetScaledImageAsThumbnailAsync(ThumbnailMode.VideosView);
-                        BitmapImage bmp = new BitmapImage();
-                        bmp.DecodePixelWidth = 150;
-                        bmp.SetSource(img);
-                        e.DragUIOverride.SetContentFromBitmapImage(bmp);
+                        if (img != null)
+                        {
+                            BitmapImage bmp = new BitmapImage();
+                            bmp.DecodePixelWidth = 150;
+                            bmp.SetSource(img);
+                            e.DragUIOverride.SetContentFromBitmapImage(bmp);
+                        }
                         //e.DragUIOverride.Caption = file.DisplayName;
                         //e.DragUIOverride.IsCaptionVisible = false;    
-                        if (videoExtensions.Contains(file.FileType))
+                        if (file.ContentType.Split('/')[0] == "video")
                         {
                             dragfile = file;
                         }
@@ -405,8 +399,6 @@ namespace bilibili.Views
             deferral.Complete();
         }
 
-        //目前仅资磁 mp4
-        List<string> videoExtensions => new List<string> { ".mp4" };
         StorageFile dragfile;
 
         //拖动操作降落时发生

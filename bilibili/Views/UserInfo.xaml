@@ -51,7 +51,7 @@
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Pivot SelectionChanged="Pivot_SelectionChanged">
-            <PivotItem Header="主页">
+            <PivotItem Header="主页" Margin="0">
                 <ScrollViewer x:Name="scrollviewer" ViewChanged="ScrollViewer_ViewChanged">
                     <StackPanel>
                         <Border x:Name="width" Width="128"/>

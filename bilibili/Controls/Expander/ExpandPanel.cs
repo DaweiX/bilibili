@@ -34,11 +34,17 @@ namespace bilibili.Controls
         }
 
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register("Content", typeof(object), typeof(ExpandPanel), new PropertyMetadata(null));
+        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register("Header", typeof(string), typeof(ExpandPanel), new PropertyMetadata(string.Empty));
         public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register("IsOpen", typeof(bool), typeof(ExpandPanel), new PropertyMetadata(false));
         public object Content
         {
             get { return GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
+        }
+        public string Header
+        {
+            get { return GetValue(HeaderProperty).ToString(); }
+            set { SetValue(HeaderProperty, value); }
         }
         public bool IsOpen
         {
@@ -62,6 +68,30 @@ namespace bilibili.Controls
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             return (bool)value ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
+    }
+    public class Half : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return (double)value / 4;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
+    }
+    public class NegativeHalf : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return -(double)value / 4;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

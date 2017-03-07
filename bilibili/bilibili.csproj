@@ -20,7 +20,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>arm</AppxBundlePlatforms>
     <AppxBundle>Never</AppxBundle>
-    <AppxPackageDir>F:\Documents\Visual Studio 2015\Projects\bilibili\bilibili\Appx\</AppxPackageDir>
+    <AppxPackageDir>C:\Users\Dawei\Desktop\</AppxPackageDir>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -160,6 +160,7 @@
     <Compile Include="FrameManager\FrameHelpers.cs" />
     <Compile Include="FrameManager\FrameManagerBase.cs" />
     <Compile Include="FrameManager\IframeManager.cs" />
+    <Compile Include="Helpers\VideoHelper.cs" />
     <Compile Include="Http\BaseService.cs" />
     <Compile Include="Http\ContentService.cs" />
     <Compile Include="Http\ContentService\UserRelated.cs" />
@@ -227,6 +228,9 @@
     </Compile>
     <Compile Include="Views\InitPage.xaml.cs">
       <DependentUpon>InitPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Instruction.xaml.cs">
+      <DependentUpon>Instruction.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Live.xaml.cs">
       <DependentUpon>Live.xaml</DependentUpon>
@@ -488,6 +492,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Instruction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Live.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -578,9 +586,6 @@
       <Project>{c67dcf48-f5fc-4655-b12e-cca7e9159d35}</Project>
       <Name>BackgroundTask</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

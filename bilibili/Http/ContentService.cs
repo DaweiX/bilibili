@@ -15,6 +15,8 @@ namespace bilibili.Http
     {
         public delegate void ReportStatus(string status);
         public static event ReportStatus report;
+        //const string _buvid = "7826B363-D8C5-4410-BC5B-045BD6A7EBB818582infoc";
+        //const string _hwid = "03008e90050092d8";
         /// <summary>
         /// 
         /// </summary>
@@ -824,7 +826,7 @@ namespace bilibili.Http
                 return null;
             }
             #region XML
-            string url = string.Format("http://interface.bilibili.com/playurl?_device=uwp&cid={0}&quality={1}&otype=xml&appkey={2}&_buvid=A7A15F70-8D92-4441-B941-0E4EF9F21B6319763infoc&_hwid=03008e90050092d8&platform=uwp_desktop&type={3}&access_key={4}&mid={5}&ts={6}", cid, quality, ApiHelper.appkey, format.ToString(), ApiHelper.accesskey, UserHelper.Mid, ApiHelper.GetLinuxTS().ToString());
+            string url = "http://" + $"interface.bilibili.com/playurl?_device=uwp&cid={cid}&quality={quality}&otype=xml&appkey={ApiHelper.appkey}&_buvid=A7A15F70-8D92-4441-B941-0E4EF9F21B6319763infoc&_hwid=03008e90050092d8&platform=uwp_desktop&type={format.ToString()}&access_key={ApiHelper.accesskey}&mid={UserHelper.Mid}&ts={ApiHelper.GetLinuxTS().ToString()}";
             url += ApiHelper.GetSign(url);
             XmlDocument xmldoc = new XmlDocument();
             xmldoc = await XmlDocument.LoadFromUriAsync(new Uri(url));
@@ -968,8 +970,9 @@ namespace bilibili.Http
                         tag.TagName = StringDeal.delQuotationmarks(temp["tag_name"].ToString());
                     tagList.Add(tag);
                 }
+                return tagList;
             }
-            return tagList;
+            return null;
         }
         /// <summary>
         /// 根据标签获取番剧
@@ -1013,9 +1016,10 @@ namespace bilibili.Http
                         var ads = temp["is_finish"].ToString();
                         banList.Add(ban);
                     }
+                    return banList;
                 }
             }
-            return banList;
+            return null;
         }
 
         /// <summary>

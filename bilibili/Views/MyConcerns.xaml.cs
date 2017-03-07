@@ -127,7 +127,7 @@ namespace bilibili.Views
 
         private void conlist_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail), (e.ClickedItem as ConcernItem).Season_id, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail), (e.ClickedItem as ConcernItem).Season_id);
         }
 
         private void conlist_SizeChanged(object sender, SizeChangedEventArgs e)

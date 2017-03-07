@@ -48,17 +48,17 @@ namespace bilibili.Controls
                 isListLoaded = true;
                 center.SelectedIndex = 1;
             }
-            for (int i = 0; i < count; i++)
-            {
-                round.Children.Add(new Ellipse
-                {
-                    Name = "r" + i.ToString(),
-                    Width = 10,
-                    Height = 10,
-                    Fill = new SolidColorBrush(Colors.Gray),
-                    Margin = new Thickness(4, 0, 4, 0)
-                });
-            }
+            //for (int i = 0; i < count; i++)
+            //{
+            //    round.Children.Add(new Ellipse
+            //    {
+            //        Name = "r" + i.ToString(),
+            //        Width = 10,
+            //        Height = 10,
+            //        Fill = new SolidColorBrush(Colors.Gray),
+            //        Margin = new Thickness(4, 0, 4, 0)
+            //    });
+            //}
         }
         bool isArrange;
 

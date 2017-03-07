@@ -34,13 +34,11 @@ namespace bilibili.Views
                     TagID = "109",
                     TagName = "新番推荐"
                 });
-            } 
-            if (tags != null && tags.Count > 0)
+            }
+            if (tags == null) return;
+            foreach (var item in tags)
             {
-                foreach (var item in tags)
-                {
-                    gridview.Items.Add(new Tags { Cover = item.Cover, TagID = item.TagID, TagName = item.TagName });
-                }
+                gridview.Items.Add(new Tags { Cover = item.Cover, TagID = item.TagID, TagName = item.TagName });
             }
         }
 
@@ -59,7 +57,7 @@ namespace bilibili.Views
 
         private void gridview_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(BangList), (e.ClickedItem as Tags).TagID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(BangList), (e.ClickedItem as Tags).TagID);
         }
     }
 }

@@ -13,7 +13,7 @@
     </Page.Resources>
     <Grid Background="{ThemeResource bili_PageBackground}">
         <Pivot>
-            <PivotItem Header="外观">
+            <PivotItem Header="通用">
                 <ScrollViewer>
                     <StackPanel Margin="0 8">
                         <ToggleSwitch x:Name="night" Toggled="night_Toggled" Header="夜间模式"/>
@@ -62,6 +62,7 @@
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
+                        <HyperlinkButton Click="help_Click">应用帮助</HyperlinkButton>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>

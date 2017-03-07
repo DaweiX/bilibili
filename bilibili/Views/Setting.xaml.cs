@@ -32,6 +32,11 @@ namespace bilibili.Views
             init();
         }
 
+        //void InitValue(string key, bool defaultvalue)
+        //{
+
+        //}
+
         void init()
         {
             var type = SettingHelper.DeviceType;
@@ -282,7 +287,7 @@ namespace bilibili.Views
                 }
                 else
                 {
-                    f_a.IsOn = true;
+                    f_a.IsOn = false;
                 }
             }
         }
@@ -581,6 +586,11 @@ namespace bilibili.Views
         private void f_v_Toggled(object sender, RoutedEventArgs e)
         {
             SettingHelper.SetValue("_fvideo", f_v.IsOn);
+        }
+
+        private void help_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Instruction));
         }
     }
 }

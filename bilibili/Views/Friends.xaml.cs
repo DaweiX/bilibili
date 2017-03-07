@@ -98,20 +98,20 @@ namespace bilibili.Views
         {
             if (e.ClickedItem as Friend != null)
             {
-                Frame.Navigate(typeof(Friends), (e.ClickedItem as Friend).Fid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Friends), (e.ClickedItem as Friend).Fid);
             }
         }
 
         private void list_videos_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as MyVideo).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as MyVideo).Aid);
         }
 
         private void conlist_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (conlist.SelectedItem != null)
             {
-                Frame.Navigate(typeof(Detail), (conlist.SelectedItem as ConcernItem).Season_id, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Detail), (conlist.SelectedItem as ConcernItem).Season_id);
             }
         }
 

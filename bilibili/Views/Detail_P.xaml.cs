@@ -125,7 +125,7 @@ namespace bilibili.Views
 
         private void Bangumi_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(Detail), details.Sid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail), details.Sid);
         }
 
         async Task<bool> load(int page, string aid)
@@ -511,19 +511,19 @@ namespace bilibili.Views
 
         private void list_tags_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Search), (e.ClickedItem as Tags).Tag, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Search), (e.ClickedItem as Tags).Tag);
         }
 
         private void list_relates_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as RelateVideo).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as RelateVideo).ID);
         }
 
         private void up_Click(object sender, RoutedEventArgs e)
         {
             if (details.Mid.Length > 0)
             {
-                Frame.Navigate(typeof(Friends), details.Mid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Friends), details.Mid);
             }
         }
 
@@ -615,7 +615,7 @@ namespace bilibili.Views
                 string url_report = "http://api.bilibili.com/x/history/add?_device=wp&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=411005&platform=android";
                 url_report += ApiHelper.GetSign(url_report);
                 await BaseService.SendPostAsync(url_report, "aid=" + aid);
-                Frame.Navigate(typeof(Video), list, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Video), list);
             }
         }
     }

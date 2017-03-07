@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using bilibili.Helpers;
 using bilibili.FrameManager;
+using System.Collections.Generic;
 
 namespace bilibili
 {
@@ -138,34 +139,16 @@ namespace bilibili
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
-            //mp4:@     flv:#
             StorageFile file = args.Files[0] as StorageFile;
-            string path = file.Path;
-            string type = file.FileType;
-            if (type == ".mp4")
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame == null)
             {
-                type = "@";
+                rootFrame = new Frame();
+                Window.Current.Content = rootFrame;
             }
-            else if (type == ".flv")
-            {
-                type = "#";
-            }
-            else
-            {
-                type = string.Empty;
-            }
-            if (!string.IsNullOrEmpty(type))
-            {
-                Frame rootFrame = Window.Current.Content as Frame;
-                if (rootFrame == null)
-                {
-                    rootFrame = new Frame();
-                    Window.Current.Content = rootFrame;
-                }
-                rootFrame.Navigate(typeof(Views.InitPage), type + path);
-                Window.Current.Activate();
-                return;
-            }
+            rootFrame.Navigate(typeof(Views.InitPage), file);
+            Window.Current.Activate();
+            return;
         }
 
         /// <summary>

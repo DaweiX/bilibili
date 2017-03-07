@@ -55,7 +55,7 @@ namespace bilibili.Views
         int R_1, R_2;
         string danmakuMode = "1";
         bool? isRepeat = null;
-        List<VideoInfo> infos = new List<VideoInfo>();
+        List<VideoInfo> infos;
         StorageFile file = null;
         List<string> strs = new List<string>();
         bool isHideDanmu = false;
@@ -63,6 +63,8 @@ namespace bilibili.Views
         bool isInited = false;
         bool? isLocal = null;
         bool isMouseMoving = false;
+        bool force_a = false;
+        bool force_v = false;
         int Index = 0;
         bool isPropInit = false;
         bool lightinit = false;
@@ -177,6 +179,18 @@ namespace bilibili.Views
             if (SettingHelper.ContainsKey("_videoformat"))
             {
                 cb_format.SelectedIndex = int.Parse(SettingHelper.GetValue("_videoformat").ToString());
+            }
+            if (SettingHelper.DeviceType == DeviceType.PC)
+            {
+                force_a = force_v = true;
+            }
+            if (SettingHelper.ContainsKey("_faudio"))
+            {
+                force_a = (bool)SettingHelper.GetValue("_faudio");
+            }
+            if (SettingHelper.ContainsKey("_fvideo"))
+            {
+                force_v = (bool)SettingHelper.GetValue("_fvideo");
             }
         }
 
@@ -341,10 +355,12 @@ namespace bilibili.Views
 
         async Task HideCursor()
         {
+            //窗口模式就不隐藏了，不然很不方便
+            if (!ApplicationView.GetForCurrentView().IsFullScreenMode) return;
             if (SettingHelper.DeviceType == DeviceType.PC && isMouseMoving == false && grid_top.Visibility == Visibility.Collapsed) 
             {
                 await Task.Delay(3000);
-                //隐藏光标
+                //隐藏光标（将指针设为空即可）
                 Window.Current.CoreWindow.PointerCursor = null;
             }
         }
@@ -352,121 +368,146 @@ namespace bilibili.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter.GetType() == typeof(string))
+            if(e.Parameter.GetType() == typeof(List<VideoInfo>))
             {
-                //文件关联
-                string a = e.Parameter.ToString();
-                if (a[0] == '@')
+                //读取在线视频信息
+                isLocal = false;
+                infos = e.Parameter as List<VideoInfo>;
+                Index = Convert.ToInt32(infos[0].Cid) + 1;
+                if (Index == 1)
+                    left.Visibility = Visibility.Collapsed;
+                if (infos.Count <= 2 || Index == infos.Count - 1)
                 {
-                    isLocal = true;
-                    left.Visibility = right.Visibility = Visibility.Collapsed;
-                    string path = e.Parameter.ToString().Substring(1);
-                    file = await StorageFile.GetFileFromPathAsync(path);
-                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
-                    status.Text += "正在读取弹幕...";
-                    var danmupool = await GetDanmu(file);
-                    if (danmupool != null)
-                    {
-                        DanmuPool = danmupool;
-                        status.Text += "完毕";
-                    }
-                    status.Text += Environment.NewLine + "正在读取视频...";
-                    txt_title.Text = file.DisplayName;
-                    var stream = await file.OpenAsync(FileAccessMode.Read);
-                    media.SetSource(stream, file.ContentType);
-                    status.Text += "完毕";
-                    await Task.Delay(500);
-                    return;
+                    right.Visibility = Visibility.Collapsed;
                 }
+                if (SettingHelper.ContainsKey("_videoformat"))
+                {
+                    format = SettingHelper.GetValue("_videoformat").ToString() == "0"
+                    ? VideoFormat.mp4
+                    : VideoFormat.flv;
+                }
+                //默认的格式：mp4
+                else format = VideoFormat.mp4;
+                await read(Index);
             }
-            //读取本地视频
-            if (e.Parameter.GetType() == typeof(StorageFile))                 
+            else
             {
                 isLocal = true;
-                left.Visibility = right.Visibility = Visibility.Collapsed;
-                file = e.Parameter as StorageFile;
-                if (file != null)
+                btn_Switchffmpeg.Visibility = Visibility.Visible;
+                if (e.Parameter.GetType() == typeof(string))
                 {
-                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
-                    status.Text += "正在读取弹幕...";
-                    var danmupool = await GetDanmu(file);
-                    if (danmupool != null)
+                    //文件关联
+                    string a = e.Parameter.ToString();
+                    if (a[0] == '@')
                     {
-                        DanmuPool = danmupool;
-                        if (DanmuPool.Count > 0)
+                        left.Visibility = right.Visibility = Visibility.Collapsed;
+                        string path = e.Parameter.ToString().Substring(1);
+                        file = await StorageFile.GetFileFromPathAsync(path);
+                        Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                        status.Text += "正在读取弹幕...";
+                        var danmupool = await GetDanmu(file);
+                        if (danmupool != null)
                         {
-                            status.Text += DanmuPool.Count.ToString() + "条";
+                            DanmuPool = danmupool;
+                            status.Text += "完毕";
+                        }
+                        status.Text += Environment.NewLine + "正在读取视频...";
+                        txt_title.Text = file.DisplayName;
+                        var stream = await file.OpenAsync(FileAccessMode.Read);
+                        media.SetSource(stream, file.ContentType);
+                        status.Text += "完毕";
+                        await Task.Delay(500);
+                        return;
+                    }
+                }
+                //读取本地视频
+                if (e.Parameter.GetType() == typeof(StorageFile))
+                {
+                    left.Visibility = right.Visibility = Visibility.Collapsed;
+                    file = e.Parameter as StorageFile;
+                    if (file != null)
+                    {
+                        Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                        status.Text += "正在读取弹幕...";
+                        var danmupool = await GetDanmu(file);
+                        if (danmupool != null)
+                        {
+                            DanmuPool = danmupool;
+                            if (DanmuPool.Count > 0)
+                            {
+                                status.Text += DanmuPool.Count.ToString() + "条";
+                            }
+                            else
+                            {
+                                status.Text += "完毕";
+                            }
+                        }
+                        status.Text += Environment.NewLine + "正在读取视频...";
+                        txt_title.Text = file.DisplayName;
+                        //系统原生支持的类型
+                        if (VideoHelper.videoExtensions_sys.Contains(file.FileType))
+                        {
+                            var stream = await file.OpenAsync(FileAccessMode.Read);
+                            media.SetSource(stream, file.ContentType);
+                            status.Text += "完毕";
+                            await Task.Delay(500);
+                            return;
                         }
                         else
                         {
+                            await SetFFmpegSource(file);
                             status.Text += "完毕";
+                            await Task.Delay(500);
+                            return;
                         }
                     }
-                    status.Text += Environment.NewLine + "正在读取视频...";
-                    txt_title.Text = file.DisplayName;
-                    var stream = await file.OpenAsync(FileAccessMode.Read);
-                    media.SetSource(stream, file.ContentType);
-                    status.Text += "完毕";
-                    await Task.Delay(500);
-                    return;
-                }             
-            }
-            //下载列表
-            if (e.Parameter.GetType() == typeof(LocalVideo))
-            {
-                LocalVideo myVideo = e.Parameter as LocalVideo;
-                if (myVideo != null)
-                {
-                    isLocal = true;
-                    left.Visibility = right.Visibility = Visibility.Collapsed;
-                    part = myVideo.Part;
-                    folder = myVideo.Folder;
-                    StorageFolder myfolder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");
-                    myfolder = await myfolder.GetFolderAsync(folder);
-                    file = await myfolder.GetFileAsync(part + ".mp4");
-                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
-                    status.Text += "正在读取弹幕...";
-                    var danmupool = await GetDanmu(file);
-                    if (danmupool != null)
-                    {
-                        DanmuPool = danmupool;
-                        status.Text += DanmuPool.Count.ToString() + "完毕";
-                    }
-                    status.Text += Environment.NewLine + "正在读取视频...";
-                    txt_title.Text = part;
-                    var stream = await file.OpenAsync(FileAccessMode.Read);
-                    media.SetSource(stream, file.ContentType);
-                    status.Text += "完毕";
-                    await Task.Delay(500);
-                    return;
                 }
-            }
-            //读取在线视频信息
-            isLocal = false;
-            infos = e.Parameter as List<VideoInfo>;
-            Index = Convert.ToInt32(infos[0].Cid) + 1;
-            if (Index == 1) 
-                left.Visibility = Visibility.Collapsed;
-            if (infos.Count <= 2 || Index == infos.Count - 1) 
-            {
-                right.Visibility = Visibility.Collapsed;
-            }
-            if (SettingHelper.ContainsKey("_videoformat"))
-            {
-                format = SettingHelper.GetValue("_videoformat").ToString() == "0"
-                ? VideoFormat.mp4
-                : VideoFormat.flv;
-            }
-            //默认的格式：MP4
-            else format = VideoFormat.mp4;
-            await read(Index);
+                //下载列表(gaigaigai)
+                if (e.Parameter.GetType() == typeof(LocalVideo))
+                {
+                    LocalVideo myVideo = e.Parameter as LocalVideo;
+                    if (myVideo != null)
+                    {
+                        left.Visibility = right.Visibility = Visibility.Collapsed;
+                        part = myVideo.Part;
+                        folder = myVideo.Folder;
+                        StorageFolder myfolder = await KnownFolders.VideosLibrary.GetFolderAsync("哔哩哔哩");
+                        myfolder = await myfolder.GetFolderAsync(folder);
+                        file = await myfolder.GetFileAsync(part + ".mp4");
+                        Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                        status.Text += "正在读取弹幕...";
+                        var danmupool = await GetDanmu(file);
+                        if (danmupool != null)
+                        {
+                            DanmuPool = danmupool;
+                            status.Text += DanmuPool.Count.ToString() + "完毕";
+                        }
+                        status.Text += Environment.NewLine + "正在读取视频...";
+                        txt_title.Text = part;
+                        //如果是系统原生支持的格式，直接设置媒体源
+                        if (VideoHelper.videoExtensions_sys.Contains(file.FileType))
+                        {
+                            var stream = await file.OpenAsync(FileAccessMode.Read);
+                            media.SetSource(stream, file.ContentType);
+                            status.Text += "完毕";
+                            await Task.Delay(500);
+                            return;
+                        }
+                        //否则，使用ffmpeg
+                        else
+                        {
+                            await SetFFmpegSource(file);
+                        }
+                    }
+                }
+            }            
         }
 
         async Task read(int index)
         {
             danmaku.ClearDanmu();
             media.Visibility = Visibility.Collapsed;
-            status.Visibility = Visibility.Visible;
+            grid_status.Visibility = Visibility.Visible;
             cid = infos[index].Cid;
             aid = infos[0].Title;
             status.Text = "获取视频地址...";
@@ -514,20 +555,6 @@ namespace bilibili.Views
         /// </summary>
         private void SetFFmpegSource(string url)
         {
-            bool force_a = false;
-            bool force_v = false;
-            if (SettingHelper.DeviceType == DeviceType.PC)
-            {
-                force_a = force_v = true;
-            }
-            if (SettingHelper.ContainsKey("_faudio"))
-            {
-                force_a = (bool)SettingHelper.GetValue("_faudio");
-            }
-            if (SettingHelper.ContainsKey("_fvideo"))
-            {
-                force_v = (bool)SettingHelper.GetValue("_fvideo");
-            }
             FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromUri(url, force_a, force_v);
             MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
             if (mss != null)
@@ -545,6 +572,21 @@ namespace bilibili.Views
             }
         }
 
+        /// <summary>
+        /// 设置FFmpeg媒体源
+        /// </summary>
+        private async Task SetFFmpegSource(StorageFile file)
+        {
+            var stream = await file.OpenAsync(FileAccessMode.Read);
+            media.SetSource(stream, file.ContentType);
+            FFmpegMSS = FFmpegInteropMSS.CreateFFmpegInteropMSSFromStream(stream, force_a, force_v);
+            MediaStreamSource mss = FFmpegMSS.GetMediaStreamSource();
+            if (mss != null)
+            {
+                media.SetMediaStreamSource(mss);
+            }
+        }
+
         void ReverseVisibility()
         {
             grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = 
@@ -555,7 +597,7 @@ namespace bilibili.Views
 
         private async void media_MediaOpened(object sender, RoutedEventArgs e)
         {
-            status.Visibility = Visibility.Collapsed;
+            grid_status.Visibility = Visibility.Collapsed;
             media.Visibility = Visibility.Visible;
             if (isLocal == true)
             {
@@ -565,13 +607,31 @@ namespace bilibili.Views
             {
                 timer_danmaku.Start();
             }
-            TimeSpan ts = new TimeSpan(0, 0, (int)URL.TotalLength / 1000);
+            if (isLocal == null) return;
+            TimeSpan ts;
+            if (isLocal != true)
+            {
+                ts = new TimeSpan(0, 0, (int)URL.TotalLength / 1000);
+                sli_main.Maximum = URL.TotalLength / 1000;
+            }
+            else
+            {
+                if (FFmpegMSS != null)
+                {
+                    ts = FFmpegMSS.GetMediaStreamSource().Duration;
+                }
+                else
+                {
+                    var pro = await file.Properties.GetVideoPropertiesAsync();
+                    ts = pro.Duration;
+                }
+                sli_main.Maximum = ts.TotalSeconds;
+            }
             if (ts.Hours == 0)
                 txt_total.Text = ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
             else
                 txt_total.Text = ts.Hours.ToString("00") + ":" + ts.Minutes.ToString("00") + ":" + ts.Seconds.ToString("00");
             //分段长度之和
-            sli_main.Maximum = URL.TotalLength / 1000;
             await RefreshInfo();
             await Task.Delay(500);
             grid_top.Visibility = grid_bottom.Visibility = grid_center.Visibility = Visibility.Collapsed;
@@ -1155,6 +1215,14 @@ namespace bilibili.Views
                     f += (int)(URL.Ps[j].Length / 1000);
                 }
                 Flags.Add(f);
+            }
+        }
+
+        private async void Switchffmpeg_Click(object sender, RoutedEventArgs e)
+        {
+            if (isLocal == true) 
+            {
+                await SetFFmpegSource(file);
             }
         }
 

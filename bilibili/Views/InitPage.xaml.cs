@@ -18,7 +18,6 @@ namespace bilibili.Views
     /// </summary>
     public sealed partial class InitPage : Page
     {
-        string arg = string.Empty;
         public InitPage()
         {
             this.InitializeComponent();
@@ -33,10 +32,6 @@ namespace bilibili.Views
         {
             await this.Scale(0.5f, 0.5f, (float)ActualWidth / 2, (float)ActualHeight / 2, 1).StartAsync();
             await this.Scale(1f, 1f, (float)ActualWidth / 2, (float)ActualHeight / 2, 300).StartAsync();
-            if (e.Parameter.ToString().Length > 0) 
-            {
-                arg = e.Parameter.ToString();
-            }
             BackgroundTaskRegistration task;
             bool isLogin = await autologin();
             if (isLogin)
@@ -60,7 +55,7 @@ namespace bilibili.Views
             }
             Frame rootFrame = new Frame();
             Window.Current.Content = rootFrame;
-            rootFrame.Navigate(typeof(MainPage), arg, new DrillInNavigationTransitionInfo());
+            rootFrame.Navigate(typeof(MainPage), e.Parameter, new DrillInNavigationTransitionInfo());
         }
 
         /// <summary>

@@ -30,12 +30,10 @@ namespace bilibili.Views
             url += ApiHelper.GetSign(url);
             List<Models.Bangumi> list_rs = new List<Models.Bangumi>();
             list_rs = await ContentServ.GetBansByTagAsync(url);
-            if (list_rs != null && list_rs.Count > 0)
+            if (list_rs == null) return;
+            foreach (var item in list_rs)
             {
-                foreach (var item in list_rs)
-                {
-                    listview.Items.Add(item);
-                }
+                listview.Items.Add(item);
             }
         }
 
@@ -50,7 +48,7 @@ namespace bilibili.Views
         {
             var item = listview.SelectedItem as Models.Bangumi;
             if (item != null)
-                Frame.Navigate(typeof(Detail),item.ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                Frame.Navigate(typeof(Detail),item.ID);
         }
 
         private void listview_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

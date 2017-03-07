@@ -27,7 +27,7 @@ namespace bilibili.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await load(1);
+            await load(page);
         }
         //http://api.bilibili.com/x/v2/history?_device=android&_hwid=ccbb856c97ccb8d2&_ulv=10000&access_key=a48208a7c5b67a4a369124cf5c1b515c&appkey=1d8b6e7d45233436&build=427000&mobi_app=android&platform=android&pn=1&ps=200
 
@@ -87,7 +87,7 @@ namespace bilibili.Views
 
         private void hslist_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Models.History).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Models.History).Aid);
         }
 
         private async void hslist_RefreshRequested(object sender, System.EventArgs e)

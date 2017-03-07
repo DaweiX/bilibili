@@ -27,25 +27,29 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="transparent" />
       </uap:VisualElements>
       <Extensions>
-        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTask.TileTask">
-          <BackgroundTasks>
-            <Task Type="timer" />
-          </BackgroundTasks>
-        </Extension>
-        <uap:Extension Category="windows.fileTypeAssociation" EntryPoint="bilibili.App">
-          <uap:FileTypeAssociation Name="format_mp4">
-            <uap:DisplayName>哔哩哔哩</uap:DisplayName>
-            <uap:InfoTip>播放MP4视频</uap:InfoTip>
-            <uap:SupportedFileTypes>
-              <uap:FileType ContentType="video/mp4">.mp4</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileTypeAssociation>
-        </uap:Extension>
         <uap:Extension Category="windows.protocol" EntryPoint="bilibili.App">
           <uap:Protocol Name="web">
             <uap:DisplayName>哔哩哔哩</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation" EntryPoint="bilibili.App">
+          <uap:FileTypeAssociation Name="format">
+            <uap:DisplayName>哔哩哔哩</uap:DisplayName>
+            <uap:InfoTip>播放MP4视频</uap:InfoTip>
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="video/mp4">.mp4</uap:FileType>
+              <uap:FileType ContentType="video/flv">.flv</uap:FileType>
+              <uap:FileType ContentType="video/mkv">.mkv</uap:FileType>
+              <uap:FileType ContentType="video/avi">.avi</uap:FileType>
+              <uap:FileType ContentType="video/rmvb">.rmvb</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <Extension Category="windows.backgroundTasks" EntryPoint="BackgroundTask.TileTask">
+          <BackgroundTasks>
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
       </Extensions>
     </Application>
   </Applications>

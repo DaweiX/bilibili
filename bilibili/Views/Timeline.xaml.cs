@@ -79,7 +79,7 @@ namespace bilibili.Views
 
         private void listview_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail), (e.ClickedItem as Times).ID, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail), (e.ClickedItem as Times).ID);
         }
     }
 }

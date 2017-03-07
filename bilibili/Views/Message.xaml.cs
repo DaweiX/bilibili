@@ -101,12 +101,12 @@ namespace bilibili.Views
 
         private void ls_chat_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Chat).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Chat).Aid);
         }
 
         private void ls_prme_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as PraiseMe).Aid, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as PraiseMe).Aid);
         }
     }
 }

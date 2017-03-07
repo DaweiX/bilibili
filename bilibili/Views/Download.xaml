@@ -21,7 +21,7 @@
                           AllowDrop="True" DragEnter="draggrid_DragEnter" DragLeave="draggrid_DragLeave" Drop="draggrid_Drop">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock FontSize="36" FontWeight="Light" Text="将本地视频拖动至此处播放"/>
-                            <TextBlock x:Name="txt_format" HorizontalAlignment="Center"/>
+                            <TextBlock HorizontalAlignment="Center" Text="支持所有常见视频格式"/>
                         </StackPanel>
                     </Border>
                     <ListView Grid.Row="1" x:Name="donelist" SelectionMode="None" IsItemClickEnabled="True" ItemClick="donelist_ItemClick">

@@ -73,7 +73,7 @@ namespace bilibili.Views
 
         private void favlist_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Content).Num, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(Detail_P), (e.ClickedItem as Content).Num);
         }
 
         private void favlist_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)

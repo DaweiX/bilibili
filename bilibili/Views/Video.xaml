@@ -210,7 +210,10 @@
                         </Button.Content>
                     </Button>
                 </Grid>
-                <TextBlock Foreground="White" x:Name="status" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8" Canvas.ZIndex="100"/>
+                <StackPanel x:Name="grid_status" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8" Canvas.ZIndex="100">
+                    <TextBlock Foreground="White" x:Name="status"/>
+                    <HyperlinkButton x:Name="btn_Switchffmpeg" Click="Switchffmpeg_Click" Visibility="Collapsed">如果没有开始播放，点这里</HyperlinkButton>
+                </StackPanel>
                 <MediaElement AudioCategory="BackgroundCapableMedia"
                               Visibility="Collapsed" 
                               Grid.RowSpan="3" 
