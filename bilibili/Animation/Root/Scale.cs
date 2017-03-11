@@ -6,14 +6,14 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace bilibili.Animation.Root
 {
-    /// <summary>
-    /// 实现缩放动画的核心算法
-    /// </summary>
+   /// <summary>
+   /// 实现缩放动画的核心算法
+   /// </summary>
     public static partial class AnimationExtensions
     {
-        /// <summary>
-        /// 指示是否支持模糊效果（SDK >= 14393）
-        /// </summary>
+       /// <summary>
+       /// 指示是否支持模糊效果（SDK >= 14393）
+       /// </summary>
         internal static bool IsBlurSupported => ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 3);
 
         public static AnimationSet Scale(

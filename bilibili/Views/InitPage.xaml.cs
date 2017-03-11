@@ -9,13 +9,13 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media.Animation;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class InitPage : Page
     {
         public InitPage()
@@ -58,9 +58,9 @@ namespace bilibili.Views
             rootFrame.Navigate(typeof(MainPage), e.Parameter, new DrillInNavigationTransitionInfo());
         }
 
-        /// <summary>
-        /// 自动登录
-        /// </summary>
+       /// <summary>
+       /// 自动登录
+       /// </summary>
         async Task<bool> autologin()
         {
             try
@@ -118,7 +118,7 @@ namespace bilibili.Views
                 builder.AddCondition(condition);
             }
             BackgroundTaskRegistration task = builder.Register();
-            //await popup.Show(string.Format("----Register{0}-----", task.Name));
+            // await popup.Show(string.Format("----Register{0}-----", task.Name));
             return task;
         }
     }

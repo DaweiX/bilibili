@@ -8,33 +8,33 @@ namespace bilibili.Models
 {
     class Episodes
     {
-        /// <summary>
-        /// 视频ID（av_id）
-        /// </summary>
+       /// <summary>
+       /// 视频ID（av_id）
+       /// </summary>
         public string ID { get; set; }
-        /// <summary>
-        /// 硬币
-        /// </summary>
+       /// <summary>
+       /// 硬币
+       /// </summary>
         public string Coins { get; set; }
-        /// <summary>
-        /// 弹幕
-        /// </summary>
+       /// <summary>
+       /// 弹幕
+       /// </summary>
         public string Danmaku { get; set; }
-        /// <summary>
-        /// 封面
-        /// </summary>
+       /// <summary>
+       /// 封面
+       /// </summary>
         public string Cover { get; set; }
-        /// <summary>
-        /// 索引
-        /// </summary>
+       /// <summary>
+       /// 索引
+       /// </summary>
         public string Index { get; set; }
-        /// <summary>
-        /// 标题
-        /// </summary>
+       /// <summary>
+       /// 标题
+       /// </summary>
         public string Title { get; set; }
-        /// <summary>
-        /// 时间
-        /// </summary>
+       /// <summary>
+       /// 时间
+       /// </summary>
         public string Time { get; set; }
     }
     class Season

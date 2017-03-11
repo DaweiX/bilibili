@@ -7,13 +7,13 @@ using Windows.UI.Xaml.Navigation;
 using bilibili.Http;
 using bilibili.Helpers;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class BangList : Page
     {
         public BangList()
@@ -57,11 +57,11 @@ namespace bilibili.Views
             var scroll = Methods.Load.FindChildOfType<ScrollViewer>(listview);
             scroll.ViewChanged += async (s, a) =>
             {
-                if (scroll.VerticalOffset == scroll.ScrollableHeight)// && NextLoading)
+                if (scroll.VerticalOffset == scroll.ScrollableHeight)//  && NextLoading)
                 {
                     var text = Methods.Load.FindChildOfType<TextBlock>(listview);
                     int count0 = listview.Items.Count;
-                    //滑动到底部了    
+                    // 滑动到底部了    
                     text.Visibility = Visibility.Visible;
                     page++;
                     await Load(page);

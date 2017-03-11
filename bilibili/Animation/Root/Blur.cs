@@ -37,9 +37,9 @@ namespace bilibili.Animation.Root
 
             if (!IsBlurSupported)
             {
-                // The operating system doesn't support blur.
-                // Fail gracefully by not applying blur.
-                // See 'IsBlurSupported' property
+                //  The operating system doesn't support blur.
+                //  Fail gracefully by not applying blur.
+                //  See 'IsBlurSupported' property
                 return null;
             }
 
@@ -59,7 +59,7 @@ namespace bilibili.Animation.Root
                 return null;
             }
 
-            // check to see if the visual already has a blur applied.
+            //  check to see if the visual already has a blur applied.
             var spriteVisual = ElementCompositionPreview.GetElementChildVisual(associatedObject) as SpriteVisual;
             var blurBrush = spriteVisual?.Brush as CompositionEffectBrush;
 
@@ -74,11 +74,11 @@ namespace bilibili.Animation.Root
                     Source = new CompositionEffectSourceParameter("source")
                 };
 
-                // Create a brush to which I want to apply. I also have noted that BlurAmount should be left out of the compiled shader.
+                //  Create a brush to which I want to apply. I also have noted that BlurAmount should be left out of the compiled shader.
                 blurBrush = compositor.CreateEffectFactory(blurEffect, new[] { $"{blurName}.BlurAmount" }).CreateBrush();
                 blurBrush.Comment = blurName;
 
-                // Set the source of the blur as a backdrop brush
+                //  Set the source of the blur as a backdrop brush
                 blurBrush.SetSourceParameter("source", compositor.CreateBackdropBrush());
 
                 var blurSprite = compositor.CreateSpriteVisual();
@@ -99,7 +99,7 @@ namespace bilibili.Animation.Root
             }
             else
             {
-                // Create an animation to change the blur amount over time
+                //  Create an animation to change the blur amount over time
                 var blurAnimation = compositor.CreateScalarKeyFrameAnimation();
                 blurAnimation.InsertKeyFrame(1f, (float)value);
                 blurAnimation.Duration = TimeSpan.FromMilliseconds(duration);

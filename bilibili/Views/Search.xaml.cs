@@ -9,13 +9,13 @@ using bilibili.Methods;
 using bilibili.Models;
 using System.Threading.Tasks;
 using System.Collections;
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class Search : Page
     {
         string keyword = string.Empty;
@@ -185,31 +185,31 @@ namespace bilibili.Views
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double i = ActualWidth;
-            //if (i > 1200)
-            //{
-            //    i /= 2;
-            //}
-            //else if (i > 750)
-            //{
-            //    i = 3;
-            //}
-            //else if (i > 500)
-            //{
-            //    i = 2;
-            //}
-            //else
-            //{
-            //    i = 1;
-            //}
-            //i /= 300;
-            //i = i == 0 ? 1 : i;
-            //width.Width = ActualWidth / (int)i - 20;
+            // if (i > 1200)
+            // {
+            //     i /= 2;
+            // }
+            // else if (i > 750)
+            // {
+            //     i = 3;
+            // }
+            // else if (i > 500)
+            // {
+            //     i = 2;
+            // }
+            // else
+            // {
+            //     i = 1;
+            // }
+            // i /= 300;
+            // i = i == 0 ? 1 : i;
+            // width.Width = ActualWidth / (int)i - 20;
             width.Width = WidthFit.GetWidth(i);
         }
 
         private void list_ItemClick(object sender, ItemClickEventArgs e)
         {
-            //当然，不一定非要用pivot判定，也可以使用is进行类型的判定
+            // 当然，不一定非要用pivot判定，也可以使用is进行类型的判定
             switch (pivot.SelectedIndex)
             {
                 case 0:

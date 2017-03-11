@@ -12,13 +12,13 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.Data.Json;
 using bilibili.Methods;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class Partition : Page
     {
         static bool isTopicLoaded = false;
@@ -30,7 +30,7 @@ namespace bilibili.Views
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Required;
             comment.Navi += Comment_Navi;
             comment.Info += Comment_Info;
-            //comment.live += Comment_live;
+            // comment.live += Comment_live;
             ContentServ.report += Report;
         }
 
@@ -71,10 +71,10 @@ namespace bilibili.Views
             Frame.Navigate(typeof(PartViews.Part), num, new DrillInNavigationTransitionInfo());
         }
 
-        //private void Refesh_Click(object sender, RoutedEventArgs e)
-        //{
-        //    loadItems();
-        //}
+        // private void Refesh_Click(object sender, RoutedEventArgs e)
+        // {
+        //     loadItems();
+        // }
 
         private async void mainpivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -88,13 +88,13 @@ namespace bilibili.Views
                             {
                                 if (!isTopicLoaded)
                                 {
-                                    //string url = "http://api.bilibili.com/x/web-show/res/loc?jsonp=jsonp&pf=0&id=23";
-                                    //List<Models.Topic> MyList = await ContentServ.GetTopicListAsync(url);
-                                    //foreach (var item in MyList)
-                                    //{
-                                    //    show_1.Source.Add(new Controls.RecommandShow.MySource { bmp = new BitmapImage { UriSource = new Uri(item.Pic) }, url = item.Url });
-                                    //}
-                                    //show_1.show();
+                                    // string url = "http://api.bilibili.com/x/web-show/res/loc?jsonp=jsonp&pf=0&id=23";
+                                    // List<Models.Topic> MyList = await ContentServ.GetTopicListAsync(url);
+                                    // foreach (var item in MyList)
+                                    // {
+                                    //     show_1.Source.Add(new Controls.RecommandShow.MySource { bmp = new BitmapImage { UriSource = new Uri(item.Pic) }, url = item.Url });
+                                    // }
+                                    // show_1.show();
                                     await comment.init();
                                     header_Home.init(await ContentServ.GetHomeBanners());
                                     header_Home.navi += Header_navi;
@@ -128,7 +128,7 @@ namespace bilibili.Views
                             break;
                         case 3:
                             {
-                                //发现
+                                // 发现
                                 if (list_hottags.Items.Count == 0)
                                 {
                                     list_hottags.ItemsSource = await ContentServ.GetHotSearchAsync();
@@ -146,8 +146,8 @@ namespace bilibili.Views
 
         private void Header_navi(string arg)
         {
-            //link=http://bangumi.bilibili.com/anime/5516
-            //@"(?<=av)\d+
+            // link=http://bangumi.bilibili.com/anime/5516
+            // @"(?<=av)\d+
             if (Regex.IsMatch(arg, @"(?<=anime/)\d*"))
             {
                 Frame.Navigate(typeof(Detail), Regex.Match(arg, @"(?<=anime/)\d*").Value, new DrillInNavigationTransitionInfo());
@@ -174,7 +174,7 @@ namespace bilibili.Views
             isloadingpull = false;
         }
 
-        //番剧推荐
+        // 番剧推荐
         async Task<bool> addcomment(string p)
         {
             isLoading = true;
@@ -222,7 +222,7 @@ namespace bilibili.Views
                 if (scollviewer.VerticalOffset == scollviewer.ScrollableHeight && !isLoading)
                 {
                     int count0 = list_commandbangumi.Items.Count;
-                    //滑动到底部了    
+                    // 滑动到底部了    
                     cursor = (list_commandbangumi.Items[list_commandbangumi.Items.Count - 1] as HotBangumi).Cursor;
                     await addcomment(cursor);
                     if (list_commandbangumi.Items.Count == count0)
@@ -363,7 +363,7 @@ namespace bilibili.Views
             {
                 if (scroll.VerticalOffset == scroll.ScrollableHeight && !isloadingpull && !isPullLoadingDone)  
                 {
-                    //滑动到底部了    
+                    // 滑动到底部了    
                     int page = list_pull.Items.Count / 20 + 1;
                     await loadpulls(page);
                 }

@@ -6,22 +6,22 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace bilibili.Animation.Root
 {
-    /// <summary>
-    /// 这些拓展方法将动画展现于可视元素上
-    /// </summary>
+   /// <summary>
+   /// 这些拓展方法将动画展现于可视元素上
+   /// </summary>
     public static partial class AnimationExtensions
     {
-        /// <summary>
-        /// 默认缓动函数：三次函数
-        /// </summary>
+       /// <summary>
+       /// 默认缓动函数：三次函数
+       /// </summary>
         private static readonly EasingFunctionBase _defaultStoryboardEasingFunction = new CubicEase();
 
-        /// <summary>
-        /// 开始一个时间线
-        /// </summary>
+       /// <summary>
+       /// 开始一个时间线
+       /// </summary>
         public static Task BeginAsync(this Storyboard storyboard)
         {
-            //this:此方法为拓展方法
+            // this:此方法为拓展方法
             var taskSource = new TaskCompletionSource<object>();
             EventHandler<object> completed = null;
             completed += (s, e) =>
@@ -59,10 +59,10 @@ namespace bilibili.Animation.Root
         }
         private static CompositeTransform GetAttachedCompositeTransform(UIElement element)
         {
-            // We need to use an index to keep track of our CompositeTransform as animation engine
-            // recreates new transform objects when animating properties
+            //  We need to use an index to keep track of our CompositeTransform as animation engine
+            //  recreates new transform objects when animating properties
 
-            // Already attached?
+            //  Already attached?
             var compositeTransformIndex = AnimationTools.GetAnimationCompositeTransformIndex(element);
 
             if (compositeTransformIndex > -2)
@@ -80,16 +80,16 @@ namespace bilibili.Animation.Root
                 }
             }
 
-            // Let's create a new CompositeTransform
+            //  Let's create a new CompositeTransform
             var result = new CompositeTransform();
 
             var currentTransform = element.RenderTransform;
 
             if (currentTransform != null)
             {
-                // We found a RenderTransform
+                //  We found a RenderTransform
 
-                // Is it a TransformGroup?
+                //  Is it a TransformGroup?
                 var currentTransformGroup = currentTransform as TransformGroup;
 
                 if (currentTransformGroup != null)
@@ -100,7 +100,7 @@ namespace bilibili.Animation.Root
                 }
                 else
                 {
-                    // Let's create our own TransformGroup
+                    //  Let's create our own TransformGroup
                     var group = new TransformGroup();
                     group.Children.Add(currentTransform);
                     group.Children.Add(result);

@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-// The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
+//  The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
 namespace bilibili.Controls
 {
@@ -16,33 +16,33 @@ namespace bilibili.Controls
         public static readonly DependencyProperty BorderHeightProperty = DependencyProperty.Register("BorderHeight", typeof(double), typeof(Header), new PropertyMetadata(28));
         public static readonly DependencyProperty IsClickEnabledProperty = DependencyProperty.Register("IsClickEnabled", typeof(bool), typeof(Header), new PropertyMetadata(false));
         public static readonly DependencyProperty PlacementProperty = DependencyProperty.Register("Placement", typeof(placement), typeof(Header), new PropertyMetadata(placement.Left));
-        /// <summary>
-        /// 题头文字
-        /// </summary>
+       /// <summary>
+       /// 题头文字
+       /// </summary>
         public string Content
         {
             get { return (string)GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
         }
-        /// <summary>
-        /// 侧边宽度
-        /// </summary>
+       /// <summary>
+       /// 侧边宽度
+       /// </summary>
         public double BorderWidth
         {
             get { return (double)GetValue(BorderWidthProperty); }
             set { SetValue(BorderWidthProperty, value); }
         }
-        /// <summary>
-        /// 侧边高度
-        /// </summary>
+       /// <summary>
+       /// 侧边高度
+       /// </summary>
         public double BorderHeight
         {
             get { return (double)GetValue(BorderHeightProperty); }
             set { SetValue(BorderHeightProperty, value); }
         }
-        /// <summary>
-        /// 是否具有点击逻辑
-        /// </summary>
+       /// <summary>
+       /// 是否具有点击逻辑
+       /// </summary>
         public bool IsClickEnabled
         {
             get { return (bool)GetValue(IsClickEnabledProperty); }
@@ -55,9 +55,9 @@ namespace bilibili.Controls
             Below
         }
 
-        /// <summary>
-        /// 侧边栏显示位置
-        /// </summary>
+       /// <summary>
+       /// 侧边栏显示位置
+       /// </summary>
         public placement Placement
         {
             get { return (placement)GetValue(PlacementProperty); }

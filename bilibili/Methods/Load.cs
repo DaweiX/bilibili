@@ -33,14 +33,14 @@ namespace bilibili.Methods
     }
     class WidthFit
     {
-        /// <summary>
-        /// 获取自适应列表项宽度
-        /// </summary>
-        /// <param name="width">当前窗口宽度</param>
-        /// <param name="max">列表项最大宽度</param>
-        /// <param name="min">列表项最小宽度</param>
-        /// <param name="offset">偏移量</param>
-        /// <returns></returns>
+       /// <summary>
+       /// 获取自适应列表项宽度
+       /// </summary>
+       /// <param name="width">当前窗口宽度</param>
+       /// <param name="max">列表项最大宽度</param>
+       /// <param name="min">列表项最小宽度</param>
+       /// <param name="offset">偏移量</param>
+       /// <returns></returns>
         public static double GetWidth(double width, int max = 600, int min = 360, int offset = 12)
         {
             if (offset < 0 || offset > 20)

@@ -16,13 +16,13 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class ChatPage : Page
     {
         string rid = string.Empty;
@@ -45,12 +45,12 @@ namespace bilibili.Views
                 JsonObject json = JsonObject.Parse(result);
                 if (json["code"].ToString() != "0")
                 {
-                    //发送失败
+                    // 发送失败
                 }
             }
             catch  
             {
-                //发送失败
+                // 发送失败
             }
         }
     }

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Data.Json;
 using Windows.Networking.BackgroundTransfer;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -13,11 +14,11 @@ namespace bilibili.Helpers
 {
     class DownloadHelper
     {
-        /// <summary>
-        /// 将网址result转换为字节流
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 将网址result转换为字节流
+       /// </summary>
+       /// <param name="url"></param>
+       /// <returns></returns>
         static public async Task<IBuffer> GetBuffer(string url)
         {
             using (HttpClient client = new HttpClient())
@@ -28,18 +29,18 @@ namespace bilibili.Helpers
                 return buff;
             }
         }
-        /// <summary>
-        /// 返回指定参数的下载操作
-        /// </summary>
-        /// <param name="url">请求到的下载地址</param>
-        /// <param name="name">要下载的文件名</param>
-        /// <returns></returns>
+       /// <summary>
+       /// 返回指定参数的下载操作
+       /// </summary>
+       /// <param name="url">请求到的下载地址</param>
+       /// <param name="name">要下载的文件名</param>
+       /// <returns></returns>
         static public async Task<DownloadOperation> Download(string url, string name, StorageFolder folder)
         {
             try
             {
                 BackgroundDownloader downloader = new BackgroundDownloader();
-                //获取文件夹权限（可选）
+                // 获取文件夹权限（可选）
                 Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(folder);
                 StorageFile file = await folder.CreateFileAsync(name, CreationCollisionOption.OpenIfExists);
                 DownloadOperation download = downloader.CreateDownload(new Uri(url), file);
@@ -56,14 +57,14 @@ namespace bilibili.Helpers
             {
                 var a = ex.Message;
                 return null;
-                //WebErrorStatus error = BackgroundTransferError.GetStatus(ex.HResult);
-                //MessageDialog md = new MessageDialog(ex.Message);
-                //await md.ShowAsync();
+                // WebErrorStatus error = BackgroundTransferError.GetStatus(ex.HResult);
+                // MessageDialog md = new MessageDialog(ex.Message);
+                // await md.ShowAsync();
             }
         }
-        /// <summary>
-        /// Handler
-        /// </summary>
+       /// <summary>
+       /// Handler
+       /// </summary>
         public class DownloadHandler:INotifyPropertyChanged
         {
             public CancellationTokenSource cts = new CancellationTokenSource();
@@ -138,9 +139,9 @@ namespace bilibili.Helpers
                 }
             }
         }
-        /// <summary>
-        /// 获取存储文件夹
-        /// </summary>
+       /// <summary>
+       /// 获取存储文件夹
+       /// </summary>
         public async static Task<StorageFolder> GetMyFolderAsync()
         {
             StorageFolder folder = null;
@@ -168,18 +169,62 @@ namespace bilibili.Helpers
             return folder;
         }
 
-        /// <summary>
-        /// 下载弹幕文档
-        /// </summary>
+       /// <summary>
+       /// 下载弹幕文档
+       /// </summary>
         public async static Task DownloadDanmakuAsync(string cid, string name, StorageFolder folder)
         {
-            string xml = await BaseService.SentGetAsync("http://comment.bilibili.com/" + cid + ".xml");
+            string xml = await BaseService.SentGetAsync("http://comment.bilibili.com/" + cid + ".xml?rnd=" + new Random().Next(500, 1000));
             StorageFile file = await folder.CreateFileAsync(name + ".xml");
             using (Stream file0 = await file.OpenStreamForWriteAsync())
             {
                 using (StreamWriter writer = new StreamWriter(file0))
                 {
                     await writer.WriteAsync(xml);
+                }
+            }
+        }
+
+        public async static Task AddVideoInfo(string title, string cid, string sid = null)
+        {
+            JsonObject json = new JsonObject();
+            JsonObject jsonAppend = new JsonObject
+            {
+                { title, new JsonObject
+                    {
+                        { "cid", JsonValue.CreateStringValue(cid) },
+                        { "sid", sid == null 
+                                      ? JsonValue.CreateNullValue()
+                                      : JsonValue.CreateStringValue(sid) },
+                    }
+                }
+            };
+            StorageFile file = await KnownFolders.VideosLibrary.CreateFileAsync("list.json", CreationCollisionOption.OpenIfExists);
+            using (Stream file0 = await file.OpenStreamForReadAsync())
+            {
+                StreamReader reader = new StreamReader(file0);
+                string txt = await reader.ReadToEndAsync();
+                if (string.IsNullOrEmpty(txt))
+                {
+                    json.Add("data", new JsonArray());
+                    json.Add("mid", UserHelper.Mid == null 
+                                                    ? JsonValue.CreateNullValue()
+                                                    : JsonValue.CreateStringValue(UserHelper.Mid));
+                    json.Add("count", JsonValue.CreateNumberValue(0));
+                }
+                else
+                {
+                    json = JsonObject.Parse(txt);
+                }
+                JsonArray array = json["data"].GetArray();
+                array.Add(jsonAppend);
+                json["count"] = JsonValue.CreateNumberValue(json["count"].GetNumber() + 1);
+            }
+            using (Stream file1 = await file.OpenStreamForWriteAsync())
+            {
+                using (StreamWriter writer = new StreamWriter(file1))
+                {
+                    await writer.WriteAsync(json.ToString());
                 }
             }
         }

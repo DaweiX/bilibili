@@ -10,16 +10,16 @@ using Windows.System;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Data;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 /*-----------------------------------
      键值说明：Notes/SettingKeys
 ------------------------------------*/
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class Setting : Page
     {
         public delegate bool SettingHandler(bool value);
@@ -32,10 +32,10 @@ namespace bilibili.Views
             init();
         }
 
-        //void InitValue(string key, bool defaultvalue)
-        //{
+        // void InitValue(string key, bool defaultvalue)
+        // {
 
-        //}
+        // }
 
         void init()
         {
@@ -227,7 +227,7 @@ namespace bilibili.Views
             {
                 backtaskcost.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_backtaskcost"));
             }
-            //根据平台分化的设置项
+            // 根据平台分化的设置项
             if (type == DeviceType.PC)
             {
                 if (SettingHelper.ContainsKey("_cursor"))

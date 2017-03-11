@@ -17,14 +17,16 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using System.IO;
+using Windows.Data.Json;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class Download : Page, IDisposable
     {
         static bool Isdonelistloaded = false;
@@ -57,8 +59,8 @@ namespace bilibili.Views
                             foreach (StorageFile file in await folder1.GetFilesAsync())
                             {
                                 var pro = await file.GetBasicPropertiesAsync();
-                                if (file != null && file.ContentType.Split('/')[0]=="video" && pro.Size != 0) 
-                                    donelist.Items.Add(new LocalVideo { Part = file.DisplayName, Folder = folder1.DisplayName });
+                                if (file != null && file.ContentType.Split('/')[0] == "video" && pro.Size != 0)
+                                    donelist.Items.Add(new LocalVideo { Part = file.DisplayName, Folder = folder1.DisplayName, Format = file.FileType });
                             }
                         }
                         catch { }
@@ -97,7 +99,7 @@ namespace bilibili.Views
                         {
                             Name = download.ResultFile.Name,
                             DownOpration = download,
-                            Process = (float)((download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100),
+                            Process = (double)((download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100),
                             Size = download.Progress.BytesReceived.ToString(),
                         });
                     }
@@ -162,7 +164,7 @@ namespace bilibili.Views
                 {
                     ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Size = download.Progress.BytesReceived.ToString();
                     ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Status = download.Progress.Status.ToString();
-                    ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Process = (float)(download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100;
+                    ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Process = (double)(download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100;
                     if (download.Progress.BytesReceived == download.Progress.TotalBytesToReceive && download.Progress.BytesReceived > 0) 
                     {
                         Sendtoast("下载完成", ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Name);
@@ -293,9 +295,9 @@ namespace bilibili.Views
                     foreach (DownloadHelper.DownloadHandler item in list_now.SelectedItems)
                     {
                         item.DownOpration.Priority = BackgroundTransferPriority.High;
-                        //ListViewItem list = list_now.Items[list_now.Items.IndexOf(item)] as ListViewItem;
-                        //list.BorderBrush = new SolidColorBrush(Colors.Pink);
-                        //list.BorderThickness = new Windows.UI.Xaml.Thickness(4);
+                        // ListViewItem list = list_now.Items[list_now.Items.IndexOf(item)] as ListViewItem;
+                        // list.BorderBrush = new SolidColorBrush(Colors.Pink);
+                        // list.BorderThickness = new Windows.UI.Xaml.Thickness(4);
                     }
                 }
             }
@@ -343,7 +345,7 @@ namespace bilibili.Views
             donelist.SelectionMode = donelist.SelectionMode == ListViewSelectionMode.None ? ListViewSelectionMode.Multiple : ListViewSelectionMode.None;
         }
 
-        //拖动进入目标区域时发生
+        // 拖动进入目标区域时发生
         private async void draggrid_DragEnter(object sender, DragEventArgs e)
         {
             var deferral = e.GetDeferral();
@@ -358,16 +360,19 @@ namespace bilibili.Views
                     {
                         e.AcceptedOperation = DataPackageOperation.Link;
                         StorageFile file = (StorageFile)item;
-                        StorageItemThumbnail img = await file.GetScaledImageAsThumbnailAsync(ThumbnailMode.VideosView);
-                        if (img != null)
+                        // 使用using块避免出现Thumbnail不可用的异常
+                        using (StorageItemThumbnail img = await file.GetScaledImageAsThumbnailAsync(ThumbnailMode.VideosView))
                         {
-                            BitmapImage bmp = new BitmapImage();
-                            bmp.DecodePixelWidth = 150;
-                            bmp.SetSource(img);
-                            e.DragUIOverride.SetContentFromBitmapImage(bmp);
+                            if (img != null)
+                            {
+                                BitmapImage bmp = new BitmapImage();
+                                bmp.DecodePixelWidth = 150;
+                                bmp.SetSource(img);
+                                e.DragUIOverride.SetContentFromBitmapImage(bmp);
+                            }
                         }
-                        //e.DragUIOverride.Caption = file.DisplayName;
-                        //e.DragUIOverride.IsCaptionVisible = false;    
+                        // e.DragUIOverride.Caption = file.DisplayName;
+                        // e.DragUIOverride.IsCaptionVisible = false;    
                         if (file.ContentType.Split('/')[0] == "video")
                         {
                             dragfile = file;
@@ -375,7 +380,7 @@ namespace bilibili.Views
                     }
                     else
                     {
-                        //不用 DataPackageOperation.None 原因：不是约定的用法
+                        // 不用 DataPackageOperation.None 原因：不是约定的用法
                         deferral.Complete();
                         return;
                     }
@@ -386,22 +391,22 @@ namespace bilibili.Views
                 deferral.Complete();
                 return;
             }
-            //dragarea.Background.Opacity = 0;
+            // dragarea.Background.Opacity = 0;
             deferral.Complete();
         }
 
-        //拖动离开目标区域时发生
+        // 拖动离开目标区域时发生
         private void draggrid_DragLeave(object sender, DragEventArgs e)
         {
-            //AccessViolationException
+            // AccessViolationException
             var deferral = e.GetDeferral();
-            //dragarea.Background.Opacity = 1;
+            // dragarea.Background.Opacity = 1;
             deferral.Complete();
         }
 
         StorageFile dragfile;
 
-        //拖动操作降落时发生
+        // 拖动操作降落时发生
         private void draggrid_Drop(object sender, DragEventArgs e)
         {
             var deferral = e.GetDeferral();
@@ -409,7 +414,7 @@ namespace bilibili.Views
             {
                 Frame.Navigate(typeof(Video), dragfile);
             }
-            //不报告完成的话如何？试一试就知道了，233
+            // 不报告完成：电脑假死
             deferral.Complete();
         }
     }

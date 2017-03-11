@@ -12,9 +12,9 @@ namespace bilibili.Helpers
     {
         static ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
 
-        /// <summary>
-        /// 获取指定键的值
-        /// </summary>
+       /// <summary>
+       /// 获取指定键的值
+       /// </summary>
         public static object GetValue(string key)
         {
             if (container.Values[key] != null)
@@ -27,17 +27,17 @@ namespace bilibili.Helpers
             }
         }
 
-        /// <summary>
-        /// 设置指定键的值
-        /// </summary>
+       /// <summary>
+       /// 设置指定键的值
+       /// </summary>
         public static void SetValue(string key,object value)
         {
             container.Values[key] = value;     
         }
 
-        /// <summary>
-        /// 指示应用容器内是否存在某键
-        /// </summary>
+       /// <summary>
+       /// 指示应用容器内是否存在某键
+       /// </summary>
         public static bool ContainsKey(string key)
         {
             if (container.Values[key] != null)
@@ -50,10 +50,10 @@ namespace bilibili.Helpers
             }
         }
      
-        /// <summary>
-        /// 设备类型
-        /// </summary>
-        /// <returns></returns>
+       /// <summary>
+       /// 设备类型
+       /// </summary>
+       /// <returns></returns>
         public static DeviceType DeviceType
         {
             get

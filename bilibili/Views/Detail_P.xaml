@@ -166,7 +166,7 @@
                                         <StackPanel Orientation="Horizontal">
                                             <RadioButton x:Name="q1" GroupName="quality" Tag="1" Click="quality_Checked">低清</RadioButton>
                                             <RadioButton x:Name="q2" GroupName="quality" Tag="2" Click="quality_Checked">高清</RadioButton>
-                                            <RadioButton x:Name="q3" GroupName="quality" IsEnabled="False" Tag="3" Click="quality_Checked">原画</RadioButton>
+                                            <RadioButton x:Name="q3" GroupName="quality" Tag="3" Click="quality_Checked">原画</RadioButton>
                                         </StackPanel>
                                         <Button Content="确定" Click="btn_ok_Click"/>
                                     </StackPanel>

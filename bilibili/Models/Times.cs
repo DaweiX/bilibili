@@ -10,25 +10,25 @@ namespace bilibili.Models
     {
         private int _weekday;
         private int _isFinish;
-        /// <summary>
-        /// 封面
-        /// </summary>
+       /// <summary>
+       /// 封面
+       /// </summary>
         public string Cover { get; set; }
-        /// <summary>
-        /// 标题
-        /// </summary>
+       /// <summary>
+       /// 标题
+       /// </summary>
         public string Title { get; set; }
-        /// <summary>
-        /// 是否更新
-        /// </summary>
+       /// <summary>
+       /// 是否更新
+       /// </summary>
         public bool IsNew { get; set; }
-        /// <summary>
-        /// 更新时间
-        /// </summary>
+       /// <summary>
+       /// 更新时间
+       /// </summary>
         public string LastUpdate { get; set; }
-        /// <summary>
-        /// 是否完结
-        /// </summary>
+       /// <summary>
+       /// 是否完结
+       /// </summary>
         public string IsFinish
         {
             get
@@ -37,9 +37,9 @@ namespace bilibili.Models
             }
             set { _isFinish = int.Parse(value); }
         }
-        /// <summary>
-        /// 星期X
-        /// </summary>
+       /// <summary>
+       /// 星期X
+       /// </summary>
         public string Weekday
         {
             get
@@ -62,13 +62,13 @@ namespace bilibili.Models
                 _weekday = int.Parse(value);
             }
         }
-        /// <summary>
-        /// ID
-        /// </summary>
+       /// <summary>
+       /// ID
+       /// </summary>
         public string ID { get; set; }
-        /// <summary>
-        /// 总集数
-        /// </summary>
+       /// <summary>
+       /// 总集数
+       /// </summary>
         public string Count { get; set; }
     }
 }

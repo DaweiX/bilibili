@@ -9,13 +9,13 @@ using Windows.UI.Xaml.Navigation;
 using Windows.Data.Json;
 using System;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class History : Page
     {
         int page = 1;
@@ -29,7 +29,7 @@ namespace bilibili.Views
             base.OnNavigatedTo(e);
             await load(page);
         }
-        //http://api.bilibili.com/x/v2/history?_device=android&_hwid=ccbb856c97ccb8d2&_ulv=10000&access_key=a48208a7c5b67a4a369124cf5c1b515c&appkey=1d8b6e7d45233436&build=427000&mobi_app=android&platform=android&pn=1&ps=200
+        // http://api.bilibili.com/x/v2/history?_device=android&_hwid=ccbb856c97ccb8d2&_ulv=10000&access_key=a48208a7c5b67a4a369124cf5c1b515c&appkey=1d8b6e7d45233436&build=427000&mobi_app=android&platform=android&pn=1&ps=200
 
         async Task load(int p)
         {
@@ -60,7 +60,7 @@ namespace bilibili.Views
             {
                 if (scroll.VerticalOffset == scroll.ScrollableHeight) 
                 {
-                    //滑动到底部了    
+                    // 滑动到底部了    
                     text.Visibility = Visibility.Visible;
                     page++;
                     await load(page);
@@ -71,10 +71,10 @@ namespace bilibili.Views
 
         private async void clear_Click(object sender, RoutedEventArgs e)
         {
-            //http://api.bilibili.com/x/v2/history/clear?_device=android&access_key=c0ca6415ce6d8bcb7bda0ea9bc9a2419&appkey=c1b107428d337928&build=421000&mobi_app=android&platform=android&sign=fe59b1a3abe6d935094e757a8a718424
+            // http://api.bilibili.com/x/v2/history/clear?_device=android&access_key=c0ca6415ce6d8bcb7bda0ea9bc9a2419&appkey=c1b107428d337928&build=421000&mobi_app=android&platform=android&sign=fe59b1a3abe6d935094e757a8a718424
             string url = "http://api.bilibili.com/x/v2/history/clear?_device=android&access_key=" + ApiHelper.accesskey + "&appkey=c1b107428d337928&build=421000&mobi_app=android&platform=android";
             url += ApiHelper.GetSign(url);
-            //B站真有趣，清除历史记录好好的GET不用非用POST……
+            // B站真有趣，清除历史记录好好的GET不用非用POST……
             JsonObject json = JsonObject.Parse(await BaseService.SendPostAsync(url, ""));
             if (json.ContainsKey("code"))
             {

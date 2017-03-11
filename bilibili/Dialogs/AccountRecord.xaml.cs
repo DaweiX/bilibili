@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// “内容对话框”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上进行了说明
+//  “内容对话框”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上进行了说明
 
 namespace bilibili.Dialogs
 {
@@ -32,7 +32,7 @@ namespace bilibili.Dialogs
         {
             try
             {
-                string url = "https://account.bilibili.com/site/GetLoginLog";
+                string url = "https:// account.bilibili.com/site/GetLoginLog";
                 JsonObject json = await BaseService.GetJson(url);
                 if (json.ContainsKey("data"))
                 {

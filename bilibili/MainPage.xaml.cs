@@ -15,26 +15,26 @@ using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using Windows.Storage;
 
-//“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
+// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
 namespace bilibili
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class MainPage : Page
     {
-        //public delegate void ShowStatus(string message);
-        //public event ShowStatus Showstatus;
+        // public delegate void ShowStatus(string message);
+        // public event ShowStatus Showstatus;
         bool currentTheme;
         bool isExit = false;
         public MainPage()
         {
             this.InitializeComponent();
             this.DataContext = this;
-            //后退键
+            // 后退键
             SystemNavigationManager.GetForCurrentView().BackRequested += MainPage_BackRequested;
-            //MainList.SelectedIndex = 0;
+            // MainList.SelectedIndex = 0;
             if (SettingHelper.ContainsKey("_topbar"))
             {
                 TopShoworHide();
@@ -45,20 +45,20 @@ namespace bilibili
                 {
                     RequestedTheme = ElementTheme.Dark;
                     currentTheme = false;
-                    //txt.Text = "日间模式";
+                    // txt.Text = "日间模式";
                 }
                 else if (SettingHelper.GetValue("_nighttheme").ToString() == "light")
                 {
                     RequestedTheme = ElementTheme.Light;
                     currentTheme = true;
-                    //txt.Text = "夜间模式";
+                    // txt.Text = "夜间模式";
                 }
             }
             else
             {
                 RequestedTheme = ElementTheme.Light;
                 currentTheme = true;
-                //txt.Text = "夜间模式";
+                // txt.Text = "夜间模式";
             }
             ChangeTheme();
         }
@@ -99,7 +99,7 @@ namespace bilibili
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             mainframe.Navigate(typeof(Views.Partition));
-            //处理跳转参数
+            // 处理跳转参数
             if (e.Parameter is StorageFile)
             {
                 mainframe.Navigate(typeof(Views.Video), e.Parameter);
@@ -227,19 +227,19 @@ namespace bilibili
                 }
             }
         }
-        //async void topShowOrHide()
-        //{
-        //    if (_appSettings.Values["_topbar"].ToString() == "False")
-        //    {
-        //        await sb.ShowAsync();
-        //        sb.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
-        //    }
-        //    else if (_appSettings.Values["_topbar"].ToString() == "True")
-        //    {
-        //        await sb.HideAsync();
-        //    }
-        //}
-        //StatusBar sb = StatusBar.GetForCurrentView();
+        // async void topShowOrHide()
+        // {
+        //     if (_appSettings.Values["_topbar"].ToString() == "False")
+        //     {
+        //         await sb.ShowAsync();
+        //         sb.BackgroundColor = Color.FromArgb(1, 226, 115, 170);
+        //     }
+        //     else if (_appSettings.Values["_topbar"].ToString() == "True")
+        //     {
+        //         await sb.HideAsync();
+        //     }
+        // }
+        // StatusBar sb = StatusBar.GetForCurrentView();
 
         private void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
@@ -249,8 +249,8 @@ namespace bilibili
 
         private void mainframe_Navigated(object sender, NavigationEventArgs e)
         {
-            //bilibili.Views.PartViews.Bangumi, bilibili, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-            //Sets.SelectedIndex = -1;
+            // bilibili.Views.PartViews.Bangumi, bilibili, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+            // Sets.SelectedIndex = -1;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = mainframe.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
             if (mainframe.CurrentSourcePageType == typeof(Views.Video))
             {
@@ -272,10 +272,10 @@ namespace bilibili
                     break;
                 case "Detail":
                     txt_head.Text = "番剧详情";
-                    //if (!ApiHelper.IsLogin())
-                    //{
-                    //    (mainframe.Content as Views.Detail).trylogin += Detail_trylogin;
-                    //}
+                    // if (!ApiHelper.IsLogin())
+                    // {
+                    //     (mainframe.Content as Views.Detail).trylogin += Detail_trylogin;
+                    // }
                     break;
                 case "Detail_P":
                     (mainframe.Content as Views.Detail_P).pageNavi += DetailPNavi;
@@ -357,7 +357,7 @@ namespace bilibili
                 RequestedTheme = ElementTheme.Dark;
                 currentTheme = false;
                 SettingHelper.SetValue("_nighttheme", "dark");
-                //txt.Text = "日间模式";
+                // txt.Text = "日间模式";
                 return true;
             }
             else 
@@ -365,7 +365,7 @@ namespace bilibili
                 RequestedTheme = ElementTheme.Light;
                 currentTheme = true;
                 SettingHelper.SetValue("_nighttheme", "light");
-                //txt.Text = "夜间模式";
+                // txt.Text = "夜间模式";
                 return false;
             }
         }
@@ -386,10 +386,10 @@ namespace bilibili
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //if (DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape || DisplayInformation.AutoRotationPreferences == DisplayOrientations.LandscapeFlipped) 
-            //{
-            //    back.Visibility = Visibility.Visible;
-            //}
+            // if (DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape || DisplayInformation.AutoRotationPreferences == DisplayOrientations.LandscapeFlipped) 
+            // {
+            //     back.Visibility = Visibility.Visible;
+            // }
         }
         
         private async void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -431,23 +431,15 @@ namespace bilibili
             catch { }
         }
 
-        public class PaneItem
-        {
-            public string Title { get; set; }
-            public string Glyph { get; set; }
-            public int Index { get; set; }
-            public bool isLoginNeeded { get; set; }
-        }
-
         public List<PaneItem> PaneListItems => new List<PaneItem>
         {
             new PaneItem { Title = "精彩推荐", Glyph = "ms-appx:///Assets//Icons//tv.png" , Index = 0 },
-            new PaneItem { Title = "播放历史", Glyph = "ms-appx:///Assets//Icons//clock.png" , Index = 1, isLoginNeeded = true  },
-            new PaneItem { Title = "我的消息", Glyph = "ms-appx:///Assets//Icons//message.png" , Index = 2, isLoginNeeded = true  },
-            new PaneItem { Title = "我的收藏", Glyph = "ms-appx:///Assets//Icons//star.png" , Index = 3, isLoginNeeded = true },
+            new PaneItem { Title = "播放历史", Glyph = "ms-appx:///Assets//Icons//clock.png" , Index = 1, IsLoginNeeded = true  },
+            new PaneItem { Title = "我的消息", Glyph = "ms-appx:///Assets//Icons//message.png" , Index = 2, IsLoginNeeded = true  },
+            new PaneItem { Title = "我的收藏", Glyph = "ms-appx:///Assets//Icons//star.png" , Index = 3, IsLoginNeeded = true },
             new PaneItem { Title = "离线管理", Glyph = "ms-appx:///Assets//Icons//download.png" , Index = 4 }
         };
-        //xE20a xE2ad xE119 xE208 xE118
+        // xE20a xE2ad xE119 xE208 xE118
         private async void MainList_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (ham.DisplayMode == SplitViewDisplayMode.Overlay) ham.IsPaneOpen = false;
@@ -464,16 +456,16 @@ namespace bilibili
                     case 2: frame = typeof(Views.Message); break;
                     case 3: frame = typeof(Views.FavCollection); break;
                     case 4: frame = typeof(Views.Download); break;
-                    //case "night":
-                    //    {
-                    //        //fonticon.Glyph = "&#xE708/6;";
-                    //        bool isDark = ChangeDarkMode(currentTheme);
-                    //    }
-                    //    break;
+                    // case "night":
+                    //     {
+                    //         // fonticon.Glyph = "&#xE708/6;";
+                    //         bool isDark = ChangeDarkMode(currentTheme);
+                    //     }
+                    //     break;
                 }
-                //Sets.SelectedIndex = -1;
+                // Sets.SelectedIndex = -1;
             }
-            if (item.isLoginNeeded && islog == false)
+            if (item.IsLoginNeeded && islog == false)
             {
                 await popup.Show("请先登录");
                 return;

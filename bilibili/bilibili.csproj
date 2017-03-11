@@ -189,6 +189,7 @@
     <Compile Include="Helpers\SettingHelper.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\WebStatusHelper.cs" />
+    <Compile Include="Models\PaneItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\ExpandPanel.xaml.cs">
       <DependentUpon>ExpandPanel.xaml</DependentUpon>

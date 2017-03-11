@@ -16,23 +16,23 @@ namespace bilibili.Methods
 {
     class RSA
     {
-        /// <summary>
-        /// 获取RSA加密密文
-        /// </summary>
-        /// <param name="passWord">明文</param>
-        /// <returns></returns>
+       /// <summary>
+       /// 获取RSA加密密文
+       /// </summary>
+       /// <param name="passWord">明文</param>
+       /// <returns></returns>
         public static async Task<string> GetRSA(string passWord)
         {
             string base64String;
             try
             {
-                //https://secure.bilibili.com/login?act=getkey&rnd=4928
-                //https://passport.bilibili.com/login?act=getkey&rnd=4928
+                // https:// secure.bilibili.com/login?act=getkey&rnd=4928
+                // https:// passport.bilibili.com/login?act=getkey&rnd=4928
                 HttpBaseProtocolFilter httpBaseProtocolFilter = new HttpBaseProtocolFilter();
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
                 HttpClient httpClient = new HttpClient(httpBaseProtocolFilter);
-                string stringAsync = await httpClient.GetStringAsync((new Uri("https://secure.bilibili.com/login?act=getkey&rnd=" + new Random().Next(1000, 9999), UriKind.Absolute)));
+                string stringAsync = await httpClient.GetStringAsync((new Uri("https:// secure.bilibili.com/login?act=getkey&rnd=" + new Random().Next(1000, 9999), UriKind.Absolute)));
                 JsonObject jObjects = JsonObject.Parse(stringAsync);
                 string str = jObjects["hash"].ToString();
                 string str1 = jObjects["key"].ToString();

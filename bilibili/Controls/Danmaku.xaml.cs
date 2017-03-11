@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
-// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+//  The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace bilibili.Controls
 {
@@ -33,10 +33,10 @@ namespace bilibili.Controls
                 ChangeSpace(0);
             }
         }
-        /// <summary>
-        /// 添加滚动弹幕
-        /// </summary>
-        /// <param name="model"></param>
+       /// <summary>
+       /// 添加滚动弹幕
+       /// </summary>
+       /// <param name="model"></param>
         public async void AddBasic(DanmuModel model ,bool isMyDanmu)
         {
             TextBlock txt1 = new TextBlock
@@ -133,10 +133,10 @@ namespace bilibili.Controls
         {
             font = fontname;
         }
-        /// <summary>
-        /// 弹幕间距
-        /// </summary>
-        /// <param name="value">0:单倍行距；1:1.2倍行距;2:1.5倍行距(好像并不是这样)</param>
+       /// <summary>
+       /// 弹幕间距
+       /// </summary>
+       /// <param name="value">0:单倍行距；1:1.2倍行距;2:1.5倍行距(好像并不是这样)</param>
         public void ChangeSpace(int value)
         {
             double h = 0;
@@ -153,19 +153,19 @@ namespace bilibili.Controls
             space.Height = new GridLength(h, GridUnitType.Pixel);
         }
 
-        /// <summary>
-        /// 弹幕速度
-        /// </summary>
-        /// <param name="value"></param>
+       /// <summary>
+       /// 弹幕速度
+       /// </summary>
+       /// <param name="value"></param>
         public void ChangeSpeed(int value)
         {
             speed = value;
         }
 
-        /// <summary>
-        /// 弹幕字号
-        /// </summary>
-        /// <param name="value"></param>
+       /// <summary>
+       /// 弹幕字号
+       /// </summary>
+       /// <param name="value"></param>
         public void ChangeSize(int value)
         {
             switch(value)
@@ -177,10 +177,10 @@ namespace bilibili.Controls
             }
         }
 
-        /// <summary>
-        /// 添加顶部和底部弹幕
-        /// </summary>
-        /// <param name="model"></param>
+       /// <summary>
+       /// 添加顶部和底部弹幕
+       /// </summary>
+       /// <param name="model"></param>
         public async void AddTop(DanmuModel model, bool isMyDanmu)
         {
             TextBlock txt1 = new TextBlock
@@ -240,18 +240,18 @@ namespace bilibili.Controls
             }
         }
 
-        /// <summary>
-        /// 清除弹幕
-        /// </summary>
+       /// <summary>
+       /// 清除弹幕
+       /// </summary>
         public void ClearDanmu()
         {
             grid_0.Children.Clear();
             top.Children.Clear();
             bottom.Children.Clear();
         }
-        /// <summary>
-        /// 清除顶部和底部
-        /// </summary>
+       /// <summary>
+       /// 清除顶部和底部
+       /// </summary>
         public void ClearStaticDanmu()
         {
             top.Children.Clear();
@@ -282,9 +282,9 @@ namespace bilibili.Controls
                 get { return time; }
                 set { time = value; }
             }
-            /// <summary>
-            /// 3 滚动弹幕 4底端弹幕 5顶端弹幕 6.逆向弹幕 7精准定位 8高级弹幕
-            /// </summary>
+           /// <summary>
+           /// 3 滚动弹幕 4底端弹幕 5顶端弹幕 6.逆向弹幕 7精准定位 8高级弹幕
+           /// </summary>
             public string Mode { get; set; }
             public string Size { get; set;}
             public string Color { get; set; }

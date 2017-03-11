@@ -122,26 +122,26 @@ namespace bilibili.Models
         public string Current_min { get; set; }
         public string Next_exp { get; set; }
     }
-    /// <summary>
-    /// 用户基本信息
-    /// </summary>
+   /// <summary>
+   /// 用户基本信息
+   /// </summary>
     class Site_UserInfo
     {
         public bool Status { get; set; }
         public UserInfo Data { get; set; }
     }
-    /// <summary>
-    /// 用户设置（头图等）
-    /// </summary>
+   /// <summary>
+   /// 用户设置（头图等）
+   /// </summary>
     class Site_UserSettings
     {
         public bool Status { get; set; }
         public UserSettings Data { get; set; }
     }
 
-    /// <summary>
-    /// 投稿视频
-    /// </summary>
+   /// <summary>
+   /// 投稿视频
+   /// </summary>
     class Site_MyVideo
     {
         public bool Status { get; set; }

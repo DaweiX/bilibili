@@ -10,9 +10,9 @@ namespace bilibili.Methods
 {
     static class MathExtension
     {
-        /// <summary>
-        /// 确保余数为正的求余拓展方法
-        /// </summary>
+       /// <summary>
+       /// 确保余数为正的求余拓展方法
+       /// </summary>
         public static int Mod(this int value, int module)
         {
             int result = value % module;

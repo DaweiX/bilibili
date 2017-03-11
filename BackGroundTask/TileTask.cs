@@ -12,12 +12,12 @@ using Windows.UI.Notifications;
 
 namespace BackgroundTask
 {
-    //windows运行时组件中，public方法一定要声明为密封类
+    // windows运行时组件中，public方法一定要声明为密封类
     public sealed class TileTask : IBackgroundTask
     {
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
-            //Helper.SetValue("_toastquene", "");
+            // Helper.SetValue("_toastquene", "");
             var deferral = taskInstance.GetDeferral();
             await MyTask();
             deferral.Complete();
@@ -27,7 +27,7 @@ namespace BackgroundTask
         {
             List<Feed_Bangumi> list0 = await GetPulls();
             UpdateTile(list0);
-            //这块写得有点难看
+            // 这块写得有点难看
             if (Helper.ContainsKey("_toast_m"))
             {
                 if ((bool)Helper.GetValue("_toast_m"))
@@ -147,7 +147,7 @@ namespace BackgroundTask
                             list.Add(feed);
                         }
                     }
-                    //string temp = string.Empty;
+                    // string temp = string.Empty;
                     string OldQuene = string.Empty;
                     if (Helper.ContainsKey("_toastquene"))
                     {
@@ -155,17 +155,17 @@ namespace BackgroundTask
                     }
                     foreach (var item in list)
                     {
-                        //temp += item.Sid + " ";
+                        // temp += item.Sid + " ";
                         if (OldQuene.Contains(item.Sid))
                             continue;
                         OldQuene += item.Sid + ",";
                     }
-                    //foreach (var str in Regex.Match(OldQuene, @"\d*(?=@)").Groups) 
-                    //{
-                    //    string value = str.ToString();
-                    //    if (!temp.Contains(value))//最新的推送列表里没有该番剧的信息，它将被删除
-                    //        OldQuene = OldQuene.Replace(value + "@,", "");
-                    //}
+                    // foreach (var str in Regex.Match(OldQuene, @"\d*(?=@)").Groups) 
+                    // {
+                    //     string value = str.ToString();
+                    //     if (!temp.Contains(value))// 最新的推送列表里没有该番剧的信息，它将被删除
+                    //         OldQuene = OldQuene.Replace(value + "@,", "");
+                    // }
                     Helper.SetValue("_toastquene", OldQuene);
                     return list;
                 }
@@ -244,17 +244,17 @@ namespace BackgroundTask
                     string a = Regex.Match(UnpulledQuene,feed.Sid + @":\d+").Value;
                     if (string.IsNullOrEmpty(a))
                     {
-                        //之前没有推送过该番剧
+                        // 之前没有推送过该番剧
                         PullToast(feed.Aid, feed.Title, feed.New_ep, feed.Pic);
                         UnpulledQuene = UnpulledQuene.Replace(feed.Sid, feed.Sid + ":" + feed.Aid);
                     }
                     else
                     {
-                        //之前已经推送过
+                        // 之前已经推送过
                         string aid = a.Split(':')[1];
                         if (feed.Aid == aid)
                         {
-                            //还是之前的选集
+                            // 还是之前的选集
                             continue;
                         }
                         else
@@ -268,13 +268,13 @@ namespace BackgroundTask
             Helper.SetValue("_toastquene", UnpulledQuene);
         }
 
-        /// <summary>
-        /// 推送Toast通知
-        /// </summary>
-        /// <param name="Args">启动参数</param>
-        /// <param name="Title">标题</param>
-        /// <param name="SubTitle">副标题</param>
-        /// <param name="Pic">图片（可选）</param>
+       /// <summary>
+       /// 推送Toast通知
+       /// </summary>
+       /// <param name="Args">启动参数</param>
+       /// <param name="Title">标题</param>
+       /// <param name="SubTitle">副标题</param>
+       /// <param name="Pic">图片（可选）</param>
         private void PullToast(string Args, string Title, string SubTitle, string Pic = "")
         {
             XmlDocument xml = new XmlDocument();

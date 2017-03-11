@@ -96,12 +96,6 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-                            <ListBoxItem Tag="night">
-                                <StackPanel Orientation="Horizontal">
-                                    <FontIcon x:Name="fonticon" FontFamily="Segoe MDL2 Assets" Glyph="&#xE708;" FontSize="16"/>
-                                    <TextBlock x:Name="txt" Margin="24,0,0,0" Text="夜间模式" FontSize="16" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </ListBoxItem>
                         </ListView>
                         <StackPanel x:Name="stk_bottom" Grid.Row="2" Padding="0,0,0,8" Orientation="{Binding ElementName=hambtn,Path=IsChecked,Converter={StaticResource cvt}}">
                             <Button Width="48" Height="48" Click="night_Click" BorderThickness="0" Background="Transparent" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}">

@@ -61,12 +61,12 @@ namespace bilibili.Controls
             public double PullProgress { get; set; }
         }
 
-        /// <summary>
-        /// 当请求内容刷新时发生
-        /// </summary>
+       /// <summary>
+       /// 当请求内容刷新时发生
+       /// </summary>
         public event EventHandler RefreshRequested;
 
-        // 定义控件名称，配合模板标识使用以锚定特定元素
+        //  定义控件名称，配合模板标识使用以锚定特定元素
         private const string Root = "root";
         private const string Header = "header";
         private const string Contentpresenter = "content";
@@ -75,7 +75,7 @@ namespace bilibili.Controls
         private const string ContentTransform = "ContentTransform";
         private const string HeaderTransform = "HeaderTransform";
 
-        // 定义各可视元素及字段初始值
+        //  定义各可视元素及字段初始值
         private Border _root;
         private Grid _header;
         private ContentPresenter _content;
@@ -94,24 +94,24 @@ namespace bilibili.Controls
             _pullcontent = GetTemplateChild(PullContent) as ContentPresenter;
             _releasecontent = GetTemplateChild(ReleaseContent) as ContentPresenter;
 
-           // _root.ManipulationStarted += _root_ManipulationStarted;
+           //  _root.ManipulationStarted += _root_ManipulationStarted;
             _root.ManipulationCompleted += _root_ManipulationCompleted;
             _root.ManipulationDelta += _root_ManipulationDelta;
             _root.ManipulationMode = Windows.UI.Xaml.Input.ManipulationModes.TranslateY;
 
-            //CompositionTarget.Rendering += CompositionTarget_Rendering;
+            // CompositionTarget.Rendering += CompositionTarget_Rendering;
             DisplayContent();
             base.OnApplyTemplate();
         }
 
-        //private void _root_ManipulationStarted(object sender, Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
-        //{
-        //    DisplayContent();
-        //    //CompositionTarget.Rendering -= CompositionTarget_Rendering;
-        //    //CompositionTarget.Rendering += CompositionTarget_Rendering;
-        //}
+        // private void _root_ManipulationStarted(object sender, Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
+        // {
+        //     DisplayContent();
+        //     // CompositionTarget.Rendering -= CompositionTarget_Rendering;
+        //     // CompositionTarget.Rendering += CompositionTarget_Rendering;
+        // }
 
-        //为什么触控无法触发此事件？只有PC上能用这不科学啊
+        // 为什么触控无法触发此事件？只有PC上能用这不科学啊
         private void _root_ManipulationDelta(object sender, Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
         {
             if (e.Cumulative.Translation.Y < 0) return;
@@ -120,7 +120,7 @@ namespace bilibili.Controls
             double trans = Math.Abs(e.Cumulative.Translation.Y / 3);
             double delta = Math.Min(trans, MaxDrag) / MaxDrag;
             double f = delta - 1;
-            //Sin（傅里叶）
+            // Sin（傅里叶）
             double easing = 1 + (f * f * f * (1 - delta));
             double x = easing * 100;
             _contentTransform.TranslateY = x;
@@ -144,25 +144,25 @@ namespace bilibili.Controls
 
         private void CompositionTarget_Rendering(object sender, object e)
         {
-            //if (_scroller.VerticalOffset > 1)
-            //{
-            //CompositionTarget.Rendering -= CompositionTarget_Rendering;
-            //_headerTransform.TranslateY = -_header.ActualHeight;
-            //if (_contentTransform != null)
-            //{
-            //    _contentTransform.TranslateY = 0;
-            //}
-            //return;
-            //}
+            // if (_scroller.VerticalOffset > 1)
+            // {
+            // CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            // _headerTransform.TranslateY = -_header.ActualHeight;
+            // if (_contentTransform != null)
+            // {
+            //     _contentTransform.TranslateY = 0;
+            // }
+            // return;
+            // }
 
         }
 
-        /// <summary>
-        /// 结束后重置各值
-        /// </summary>
+       /// <summary>
+       /// 结束后重置各值
+       /// </summary>
         private void OnCompleted()
         {
-            //CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            // CompositionTarget.Rendering -= CompositionTarget_Rendering;
             double delta = _contentTransform.TranslateY;
             if (delta > 50)
             {

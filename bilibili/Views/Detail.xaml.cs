@@ -21,13 +21,13 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class Detail : Page
     {
         public delegate void TryLogin();
@@ -48,7 +48,7 @@ namespace bilibili.Views
             }
             if (!ApiHelper.IsLogin())
             {
-                trylogin?.Invoke();//这块可能要改
+                trylogin?.Invoke();// 这块可能要改
             }
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -61,19 +61,19 @@ namespace bilibili.Views
                 if (aa == null) return;
                 BitmapImage bmp = new BitmapImage();
                 Uri url = new Uri(aa.Cover);
-                //var streamReference = RandomAccessStreamReference.CreateFromUri(url);
-                //IRandomAccessStream stream = await streamReference.OpenReadAsync();
-                //MyImage myimage;
-                //if (stream != null)
-                //{
-                //    BitmapImage img = new BitmapImage(url);
-                //    WriteableBitmap bmp = new WriteableBitmap(480, 640);
-                //    await bmp.SetSourceAsync(stream);
-                //    myimage = new MyImage(bmp);
-                //    GaussianBlurFilter filter = new GaussianBlurFilter();
-                //    myimage = filter.process(myimage);
-                //    pic.Source = myimage.image;
-                //}
+                // var streamReference = RandomAccessStreamReference.CreateFromUri(url);
+                // IRandomAccessStream stream = await streamReference.OpenReadAsync();
+                // MyImage myimage;
+                // if (stream != null)
+                // {
+                //     BitmapImage img = new BitmapImage(url);
+                //     WriteableBitmap bmp = new WriteableBitmap(480, 640);
+                //     await bmp.SetSourceAsync(stream);
+                //     myimage = new MyImage(bmp);
+                //     GaussianBlurFilter filter = new GaussianBlurFilter();
+                //     myimage = filter.process(myimage);
+                //     pic.Source = myimage.image;
+                // }
                 bmp.UriSource = url;
                 pic.Source = bmp;
                 pic_blur.Source = bmp;
@@ -84,7 +84,7 @@ namespace bilibili.Views
                 mainitem.Header = aa.Title;
                 up.Text = aa.Copyright;
                 desc.Text = aa.Brief;
-                count.Text = "播放：" + aa.View + "\n" + "收藏：" + aa.Fav + "\n" + "弹幕：" + aa.Danmaku + "\n" + "硬币：" + aa.Coins;
+                count.Text = "播放：" + aa.View + "\n" + "订阅：" + aa.Fav + "\n" + "弹幕：" + aa.Danmaku + "\n" + "硬币：" + aa.Coins;
                 time.Text = aa.Time;
                 staff.Text = aa.Staff ?? string.Empty;
                 if (aa.CVlist.Count == 0)
@@ -129,7 +129,7 @@ namespace bilibili.Views
                             break;
                         }
                     }
-                    if (mylist.Items.Count == 0)    //合集
+                    if (mylist.Items.Count == 0)    // 合集
                     {
                         isCollection = true;
                         mylist.Items.Add(new Episodes { Title = aa.Title + "(合集)", ID = ep[0].ID, Cover = ep[0].Cover });
@@ -163,17 +163,17 @@ namespace bilibili.Views
                     }
                     txt_update.Text = day == string.Empty ? string.Empty : "每周" + day + "更新";
                 }
-                //HyperlinkButton btn = new HyperlinkButton();
-                //btn.Command=ne
-                //if (UserHelper.concernList.FindIndex(o => o.ID == sid) != -1)
-                //{
-                //    addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
-                //    addfav.Label = "取消订阅";
-                //}
+                // HyperlinkButton btn = new HyperlinkButton();
+                // btn.Command=ne
+                // if (UserHelper.concernList.FindIndex(o => o.ID == sid) != -1)
+                // {
+                //     addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
+                //     addfav.Label = "取消订阅";
+                // }
             }
             catch
             {
-                //通常的原因：网络连接超时
+                // 通常的原因：网络连接超时
                 await popup.Show("加载失败啦~");
             }
         }
@@ -198,11 +198,11 @@ namespace bilibili.Views
             var a = doc.GetElementsByTagName("d");
             foreach (XmlElement item in a)
             {
-                //comm.Items.Add(item.InnerText + item.GetAttribute("p"));
+                // comm.Items.Add(item.InnerText + item.GetAttribute("p"));
             }
         }
 
-        //保存封面
+        // 保存封面
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
             FileSavePicker picker = new FileSavePicker();
@@ -255,7 +255,7 @@ namespace bilibili.Views
             DataRequest request = args.Request;
             request.Data.Properties.Title = "来自哔哩哔哩的分享";
             request.Data.Properties.Description = "分享当前番剧";
-            //IRandomAccessStreamReference bitmapRef = await new BitmapImage(new Uri(details.Pic));
+            // IRandomAccessStreamReference bitmapRef = await new BitmapImage(new Uri(details.Pic));
             request.Data.SetText(string.Format("我在bilibili上正在追番【{0}】\n链接：http://bangumi.bilibili.com/anime/{1}", aa.Title, sid));
         }
 
@@ -324,7 +324,7 @@ namespace bilibili.Views
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //需要调
+            // 需要调
             if (this.ActualWidth < 640)
             {
                 width.Width = ActualWidth - 32;
@@ -352,11 +352,11 @@ namespace bilibili.Views
             {
                 string filename = sid + ".bmp";
                 StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
-                //using (IRandomAccessStream ss = await file.OpenAsync(FileAccessMode.ReadWrite))
-                //{
-                //    await RandomAccessStream.CopyAndCloseAsync(pic, ss);
-                //}
-                //((XmlElement)picNodes[0]).SetAttribute("src", "ms-appdata:///local/pic.bmp");
+                // using (IRandomAccessStream ss = await file.OpenAsync(FileAccessMode.ReadWrite))
+                // {
+                //     await RandomAccessStream.CopyAndCloseAsync(pic, ss);
+                // }
+                // ((XmlElement)picNodes[0]).SetAttribute("src", "ms-appdata:// /local/pic.bmp");
                 IBuffer buffer = await DownloadHelper.GetBuffer(aa.SquareCover);
                 CachedFileManager.DeferUpdates(file);
                 await FileIO.WriteBufferAsync(file, buffer);
@@ -364,7 +364,7 @@ namespace bilibili.Views
                 string tileID = "tile" + sid;
                 string displayName = aa.Title;
                 string args = "s" + sid;
-                Uri logoUri = new Uri("ms-appdata:///local/" + filename);
+                Uri logoUri = new Uri("ms-appdata:// /local/" + filename);
                 var size = TileSize.Square150x150;
                 SecondaryTile tile = new SecondaryTile(tileID, aa.Title, args, logoUri, size);
                 tile.VisualElements.ShowNameOnSquare150x150Logo = true;
@@ -391,7 +391,7 @@ namespace bilibili.Views
                         break;
                     }
                 }
-                //有趣了，这个“‘从开始屏幕取消固定’浮出控件”压根就没有浮出过
+                // 有趣了，这个“‘从开始屏幕取消固定’浮出控件”压根就没有浮出过
                 bool isDeleted = await tile.RequestDeleteAsync();
                 if (isDeleted)
                 {

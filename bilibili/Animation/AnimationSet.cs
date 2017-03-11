@@ -11,9 +11,9 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace bilibili.Animation
 {
-    /// <summary>
-    /// 定义一个用于存储和管理元素动画复合集的对象
-    /// </summary>
+   /// <summary>
+   /// 定义一个用于存储和管理元素动画复合集的对象
+   /// </summary>
     public class AnimationSet : IDisposable
     {
         private Dictionary<string, CompositionAnimation> _animations;
@@ -23,17 +23,17 @@ namespace bilibili.Animation
         private List<AnimationSet> _animationSets;
         private Storyboard _storyboard;
         private Dictionary<string, Timeline> _storyboardAnimations;
-        /// <summary>
-        /// 管理应用程序和系统复合器进程之间的会话
-        /// </summary>
+       /// <summary>
+       /// 管理应用程序和系统复合器进程之间的会话
+       /// </summary>
         private Compositor _compositor;
-        /// <summary>
-        /// 动态动画或效果，当所有成员都完成时触发
-        /// </summary>
+       /// <summary>
+       /// 动态动画或效果，当所有成员都完成时触发
+       /// </summary>
         private CompositionScopedBatch _batch;
-        /// <summary>
-        /// 通知一个或多个等待的线程已发生事件
-        /// </summary>
+       /// <summary>
+       /// 通知一个或多个等待的线程已发生事件
+       /// </summary>
         private ManualResetEvent _manualResetEvent;
         public static bool UseComposition { get; set; }
         public Visual Visual { get; private set; }
@@ -66,22 +66,22 @@ namespace bilibili.Animation
             _storyboardAnimations = new Dictionary<string, Timeline>();
         }
 
-        /// <summary>
-        /// 当所有动画完成时发生
-        /// </summary>
+       /// <summary>
+       /// 当所有动画完成时发生
+       /// </summary>
         public event EventHandler Completed;
 
-        /// <summary>
-        /// 开始所有动画（无需等待）
-        /// </summary>
+       /// <summary>
+       /// 开始所有动画（无需等待）
+       /// </summary>
         public async void Start()
         {
             await StartAsync();
         }
 
-        /// <summary>
-        /// 开始所有动画，并返回一个可等待的<see cref="Task"/>
-        /// </summary>
+       /// <summary>
+       /// 开始所有动画，并返回一个可等待的<see cref="Task"/>
+       /// </summary>
         public async Task StartAsync()
         {
             foreach (var set in _animationSets)
@@ -136,12 +136,12 @@ namespace bilibili.Animation
             Completed?.Invoke(this, new EventArgs());
         }
 
-        /// <summary>
-        /// 在运行新动画前等待现有动画完成
-        /// </summary>
+       /// <summary>
+       /// 在运行新动画前等待现有动画完成
+       /// </summary>
         public AnimationSet Then()
         {
-            //保存现有动画复合集
+            // 保存现有动画复合集
             var savedAnimationSet = new AnimationSet(Element);
             savedAnimationSet._animations = _animations;
             savedAnimationSet._effectAnimations = _effectAnimations;
@@ -150,7 +150,7 @@ namespace bilibili.Animation
             savedAnimationSet._storyboard = _storyboard;
             savedAnimationSet._storyboardAnimations = _storyboardAnimations;
             _animationSets.Add(savedAnimationSet);
-            //将现有动画复合集重置
+            // 将现有动画复合集重置
             _animations = new Dictionary<string, CompositionAnimation>();
             _effectAnimations = new List<EffectAnimationDefinition>();
             _directPropertyChanges = new Dictionary<string, object>();
@@ -160,9 +160,9 @@ namespace bilibili.Animation
             return this;
         }
 
-        /// <summary>
-        /// 设定所有动画的持续时间（毫秒）
-        /// </summary>
+       /// <summary>
+       /// 设定所有动画的持续时间（毫秒）
+       /// </summary>
         public AnimationSet SetDuration(double duration)
         {
             if (duration <= 0) duration = 1;
@@ -198,9 +198,9 @@ namespace bilibili.Animation
             return this;
         }
 
-        /// <summary>
-        /// 设定所有动画的延时时间（毫秒）
-        /// </summary>
+       /// <summary>
+       /// 设定所有动画的延时时间（毫秒）
+       /// </summary>
         public AnimationSet SetDelay(double delayTime)
         {
             if (delayTime < 0)
@@ -240,17 +240,17 @@ namespace bilibili.Animation
             return this;
         }
 
-        /// <summary>
-        /// 添加一个要运行于<see cref="StartAsync"/>的复合动画
-        /// </summary>
+       /// <summary>
+       /// 添加一个要运行于<see cref="StartAsync"/>的复合动画
+       /// </summary>
         public void AddCompositionAnimation(string propertyName, CompositionAnimation animation)
         {
             _animations[propertyName] = animation;
         }
 
-        /// <summary>
-        /// 移除一个将要作用于<see cref="Visual"/> 的复合动画
-        /// </summary>
+       /// <summary>
+       /// 移除一个将要作用于<see cref="Visual"/> 的复合动画
+       /// </summary>
         public void RemoveCompositionAnimation(string propertyName)
         {
             if (_animations.ContainsKey(propertyName))
@@ -259,9 +259,9 @@ namespace bilibili.Animation
             }
         }
 
-        /// <summary>
-        /// 添加一个要即刻变化的属性
-        /// </summary>
+       /// <summary>
+       /// 添加一个要即刻变化的属性
+       /// </summary>
         public void AddCompositionDirectPropertyChange(string propertyName, object value)
         {
             _directPropertyChanges[propertyName] = value;
@@ -272,11 +272,11 @@ namespace bilibili.Animation
             _manualResetEvent.Set();
         }
 
-        /// <summary>
-        /// 添加一个要运行的时间线动画
-        /// </summary>
-        /// <param name="propertyPath">在故事板上执行动画的属性</param>
-        /// <param name="timeline">要添加到故事板的时间线</param>
+       /// <summary>
+       /// 添加一个要运行的时间线动画
+       /// </summary>
+       /// <param name="propertyPath">在故事板上执行动画的属性</param>
+       /// <param name="timeline">要添加到故事板的时间线</param>
         public void AddStoryboardAnimation(string propertyPath, Timeline timeline)
         {
             if (_storyboardAnimations.ContainsKey(propertyPath))
@@ -291,9 +291,9 @@ namespace bilibili.Animation
             Storyboard.SetTargetProperty(timeline, propertyPath);
         }
 
-        /// <summary>
-        /// 释放资源
-        /// </summary>
+       /// <summary>
+       /// 释放资源
+       /// </summary>
         public void Dispose()
         {
             _manualResetEvent?.Dispose();
@@ -323,22 +323,22 @@ namespace bilibili.Animation
             _directEffectPropertyChanges.Add(definition);
         }
     }
-    /// <summary>
-    /// 用于将动画效果链接至可视元素的类，用于<see cref="AnimationSet"/>类
-    /// </summary>
+   /// <summary>
+   /// 用于将动画效果链接至可视元素的类，用于<see cref="AnimationSet"/>类
+   /// </summary>
     class EffectAnimationDefinition
     {
-        /// <summary>
-        /// 画刷
-        /// </summary>
+       /// <summary>
+       /// 画刷
+       /// </summary>
         public CompositionEffectBrush EffectBrush { get; set; }
-        /// <summary>
-        /// 动画
-        /// </summary>
+       /// <summary>
+       /// 动画
+       /// </summary>
         public CompositionAnimation Animation { get; set; }
-        /// <summary>
-        /// 属性名
-        /// </summary>
+       /// <summary>
+       /// 属性名
+       /// </summary>
         public string PropertyName { get; set; }
     }
 

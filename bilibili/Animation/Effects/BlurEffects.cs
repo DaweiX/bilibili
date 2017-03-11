@@ -8,14 +8,14 @@ namespace bilibili.Animation.Effects
     {
         private FrameworkElement _frameworkElement;
 
-        /// <summary>
-        /// 模糊值
-        /// </summary>
+       /// <summary>
+       /// 模糊值
+       /// </summary>
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(double), typeof(BlurEffects), new PropertyMetadata(0d, PropertyChangedCallback));
 
-        /// <summary>
-        /// 在效果联结在<see cref="Microsoft.Xaml.Interactivity.Behavior.AssociatedObject"/>之前调用
-        /// </summary>
+       /// <summary>
+       /// 在效果联结在<see cref="Microsoft.Xaml.Interactivity.Behavior.AssociatedObject"/>之前调用
+       /// </summary>
         protected override void OnAttached()
         {
             base.OnAttached();

@@ -14,17 +14,17 @@ using Windows.Web.Http.Filters;
 
 namespace BackgroundTask
 {
-    //别声明成public
+    // 别声明成public
     class Helper
     {
 
         public static string appkey = "422fd9d7289a1dd9";
         static ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
-        /// <summary>
-        /// 获取指定键的值
-        /// </summary>
-        /// <param name="key">键名称</param>
-        /// <returns></returns>
+       /// <summary>
+       /// 获取指定键的值
+       /// </summary>
+       /// <param name="key">键名称</param>
+       /// <returns></returns>
         public static object GetValue(string key)
         {
             if (container.Values[key] != null)
@@ -36,20 +36,20 @@ namespace BackgroundTask
                 return null;
             }
         }
-        /// <summary>
-        /// 设置指定键的值
-        /// </summary>
-        /// <param name="key">键名称</param>
-        /// <param name="value">值</param>
+       /// <summary>
+       /// 设置指定键的值
+       /// </summary>
+       /// <param name="key">键名称</param>
+       /// <param name="value">值</param>
         public static void SetValue(string key, object value)
         {
             container.Values[key] = value;
         }
-        /// <summary>
-        /// 指示应用容器内是否存在某键
-        /// </summary>
-        /// <param name="key">键名称</param>
-        /// <returns></returns>
+       /// <summary>
+       /// 指示应用容器内是否存在某键
+       /// </summary>
+       /// <param name="key">键名称</param>
+       /// <returns></returns>
         public static bool ContainsKey(string key)
         {
             if (container.Values[key] != null)
@@ -61,20 +61,20 @@ namespace BackgroundTask
                 return false;
             }
         }
-        /// <summary>
-        /// 获取Linux时间戳
-        /// </summary>
-        /// <returns>无符号整型时间戳</returns>
+       /// <summary>
+       /// 获取Linux时间戳
+       /// </summary>
+       /// <returns>无符号整型时间戳</returns>
         public static uint GetLinuxTS()
         {
             uint ts = Convert.ToUInt32((DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds);
             return ts;
         }
-        /// <summary>
-        /// 获取签名
-        /// </summary>
-        /// <param name="url">要请求的url</param>
-        /// <returns></returns>
+       /// <summary>
+       /// 获取签名
+       /// </summary>
+       /// <param name="url">要请求的url</param>
+       /// <returns></returns>
         public static string GetSign(string url)
         {
             string t = url.Substring(url.IndexOf('?', 6)).Remove(0, 1);
@@ -101,10 +101,10 @@ namespace BackgroundTask
             var result = CryptographicBuffer.EncodeToHexString(hashed);
             return result;
         }
-        /// <summary>
-        /// 是否登录
-        /// </summary>
-        /// <returns></returns>
+       /// <summary>
+       /// 是否登录
+       /// </summary>
+       /// <returns></returns>
         public static bool IsLogin()
         {
             HttpBaseProtocolFilter hb = new HttpBaseProtocolFilter();
@@ -123,9 +123,9 @@ namespace BackgroundTask
                 return true;
             }
         }
-        ///<summary>
-        ///发送Get请求
-        /// </summary>
+       ///<summary>
+       ///发送Get请求
+       /// </summary>
         public async static Task<string> SentGetAsync(string url)
         {
             HttpClient client = new HttpClient();
@@ -133,11 +133,11 @@ namespace BackgroundTask
             HttpResponseMessage msg = await client.GetAsync(uri);
             return await msg.Content.ReadAsStringAsync();
         }
-        /// <summary>
-        /// 获得Json数据
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 获得Json数据
+       /// </summary>
+       /// <param name="url"></param>
+       /// <returns></returns>
         public static async Task<JsonObject> GetJson(string url)
         {
             string json = await SentGetAsync(url);

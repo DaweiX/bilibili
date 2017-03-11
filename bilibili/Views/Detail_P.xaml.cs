@@ -23,13 +23,13 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class Detail_P : Page
     {
         public delegate void PageNavi(string text);
@@ -98,14 +98,15 @@ namespace bilibili.Views
                         bangumi.Click += Bangumi_Click;
                         stk_bangumi.Visibility = Visibility.Visible;
                     }
-                    //if (UserHelper.concernList.FindIndex(o => o.ID == cid) != -1)
-                    //{
-                    //    btn_addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
-                    //    btn_addfav.Label = "取消收藏";
-                    //}
+                    // if (UserHelper.concernList.FindIndex(o => o.ID == cid) != -1)
+                    // {
+                    //     btn_addfav.Icon = new SymbolIcon(Symbol.UnFavorite);
+                    //     btn_addfav.Label = "取消收藏";
+                    // }
                     if (SettingHelper.ContainsKey("_quality"))
                     {
                         (FindName("q" + SettingHelper.GetValue("_quality").ToString()) as RadioButton).IsChecked = true;
+                        quality = SettingHelper.GetValue("_quality").ToString();
                     }
                     if (SettingHelper.ContainsKey("_videoformat"))
                     {
@@ -196,7 +197,7 @@ namespace bilibili.Views
                 }
                 else
                 {
-                    //load(1,season_id)
+                    // load(1,season_id)
                 }
             }
             if (tag == "相关视频" && list_relates.Items.Count == 0)
@@ -207,7 +208,7 @@ namespace bilibili.Views
                 }
                 else
                 {
-                    //load(1,season_id)
+                    // load(1,season_id)
                 }
             }
         }
@@ -217,7 +218,7 @@ namespace bilibili.Views
             desc.MaxLines = desc.MaxLines == 3 ? 0 : 3;
             more.Content = desc.MaxLines == 3 ? "展开" : "收起";
         }
-        //保存封面
+        // 保存封面
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
             FileSavePicker picker = new FileSavePicker();
@@ -234,9 +235,9 @@ namespace bilibili.Views
                 await popup.Show("保存成功！");
             }
         }
-        /// <summary>
-        /// 投币
-        /// </summary>
+       /// <summary>
+       /// 投币
+       /// </summary>
         private async void coin_Click(object sender, RoutedEventArgs e)
         {
             MenuFlyoutItem btn = sender as MenuFlyoutItem;
@@ -262,9 +263,9 @@ namespace bilibili.Views
                 }
             }
         }
-        /// <summary>
-        /// 收藏
-        /// </summary>
+       /// <summary>
+       /// 收藏
+       /// </summary>
         private async void addfav_Click(object sender, RoutedEventArgs e)
         {
             if (ApiHelper.IsLogin())
@@ -320,9 +321,9 @@ namespace bilibili.Views
             }
         }
 
-        /// <summary>
-        /// 分享
-        /// </summary>
+       /// <summary>
+       /// 分享
+       /// </summary>
         #region 分享
         private async void Share_Click(object sender, RoutedEventArgs e)
         {
@@ -368,7 +369,7 @@ namespace bilibili.Views
             DataRequest request = args.Request;
             request.Data.Properties.Title = "来自哔哩哔哩的分享";
             request.Data.Properties.Description = "分享当前视频";
-            //IRandomAccessStreamReference bitmapRef = await new BitmapImage(new Uri(details.Pic));
+            // IRandomAccessStreamReference bitmapRef = await new BitmapImage(new Uri(details.Pic));
             request.Data.SetText(string.Format("我在bilibili上向你推荐视频【{0}】\n链接：http://www.bilibili.com/av{1}", title.Text, aid));
         }
         #endregion
@@ -378,7 +379,7 @@ namespace bilibili.Views
             {
                 try
                 {
-                    //发送新评论
+                    // 发送新评论
                     if (isRep == false)
                     {
                         Uri ReUri = new Uri("http://api.bilibili.com/x/reply/add");
@@ -399,7 +400,7 @@ namespace bilibili.Views
                             await popup.Show("评论失败:" + result);
                         }
                     }
-                    //回复评论
+                    // 回复评论
                     else
                     {
                         try
@@ -463,6 +464,9 @@ namespace bilibili.Views
             btn_all.Visibility = btn_ok.Visibility = btn_cal.Visibility = isDownload ? Visibility.Visible : Visibility.Collapsed;
         }
 
+       /// <summary>
+       /// 开始下载
+       /// </summary>
         private async void btn_ok_Click(object sender, RoutedEventArgs e)
         {
             int i = 0;
@@ -477,10 +481,19 @@ namespace bilibili.Views
                     string part = StringDeal.RemoveSpecial(item.Part);
                     StorageFolder folder = await DownloadHelper.GetMyFolderAsync();
                     StorageFolder f1 = await folder.CreateFolderAsync(name, CreationCollisionOption.OpenIfExists);
-                    var download = await DownloadHelper.Download(url.Ps[0].Url, part + ".mp4", f1);
-                    //如果await，那么执行完第一个StartAsync()后即退出循环.GetCurrentDownloadsAsync()方法同样会遇到此问题.(Download页)
-                    IAsyncOperationWithProgress<DownloadOperation, DownloadOperation> start = download.StartAsync();
+                    List<DownloadOperation> list = new List<DownloadOperation>();
+                    for (int j = 0; j < url.Ps.Count; j++)
+                    {
+                        list.Add(await DownloadHelper.Download(url.Ps[j].Url, $"{part}_{j}.{format.ToString()}", f1));
+                    }
+                    // 如果await，那么执行完第一个StartAsync()后即退出循环.GetCurrentDownloadsAsync()方法同样会遇到此问题.(Download页)
+                    IAsyncOperationWithProgress<DownloadOperation, DownloadOperation> start;
+                    for (int k = 0; k < list.Count; k++)
+                    {
+                        start = list[k].StartAsync();
+                    }
                     i++;
+                    await DownloadHelper.AddVideoInfo(part, cid, details.Sid);
                     await popup.Show(i.ToString() + "个视频已加入下载队列");
                     if (SettingHelper.ContainsKey("_downdanmu"))
                     {
@@ -571,7 +584,7 @@ namespace bilibili.Views
 
         private void reply_Click(object sender, RoutedEventArgs e)
         {
-            txt_reply.Text = "回复    " + reply.Uname + ":";
+            txt_reply.Text = "回复\t" + reply.Uname + ":";
             isReply = true;
             stk_reply.Visibility = Visibility.Visible;
         }
@@ -599,7 +612,7 @@ namespace bilibili.Views
             else if (arg == 1) format = VideoFormat.flv;
         }
 
-        //列表改成ItemClick后SelectedIndex恒为-1，故此处使用Tapped事件
+        // 列表改成ItemClick后SelectedIndex恒为-1，故此处使用Tapped事件
         private async void ReadyList_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (ReadyList.SelectionMode == ListViewSelectionMode.Single && ReadyList.SelectedIndex > -1) 
@@ -611,7 +624,7 @@ namespace bilibili.Views
                     var temp = item as Pages;
                     list.Add(new VideoInfo { Title = temp.Part, Cid = temp.Cid });
                 }
-                //添加播放历史
+                // 添加播放历史
                 string url_report = "http://api.bilibili.com/x/history/add?_device=wp&_ulv=10000&access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=411005&platform=android";
                 url_report += ApiHelper.GetSign(url_report);
                 await BaseService.SendPostAsync(url_report, "aid=" + aid);

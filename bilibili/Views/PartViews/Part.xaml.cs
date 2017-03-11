@@ -6,13 +6,13 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views.PartViews
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class Part : Page
     {
         byte mode;
@@ -74,7 +74,7 @@ namespace bilibili.Views.PartViews
                     break;
                 case 5:
                     {
-                        //http://www.bilibili.com/index/ding/155.json?rnd=8008
+                        // http://www.bilibili.com/index/ding/155.json?rnd=8008
                         KeyStringList.Add(new KeyValuePair<string, string>("精彩推荐", "155"));
                         KeyStringList.Add(new KeyValuePair<string, string>("美妆", "157"));
                         KeyStringList.Add(new KeyValuePair<string, string>("服饰", "158"));
@@ -234,11 +234,11 @@ namespace bilibili.Views.PartViews
             return _gridview;
         }
 
-        /// <summary>
-        /// 获取指定参数的PivotItem
-        /// </summary>
-        /// <param name="arglist">Key:题头，Value:Tid</param>
-        /// <returns></returns>
+       /// <summary>
+       /// 获取指定参数的PivotItem
+       /// </summary>
+       /// <param name="arglist">Key:题头，Value:Tid</param>
+       /// <returns></returns>
         private List<PivotItem> GetPivotItems(List<KeyValuePair<string,string>> arglist)
         {
             List<PivotItem> list = new List<PivotItem>();

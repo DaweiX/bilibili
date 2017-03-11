@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 
-// The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
+//  The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
 namespace bilibili.Controls
 {

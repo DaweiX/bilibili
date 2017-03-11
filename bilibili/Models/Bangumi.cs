@@ -81,7 +81,8 @@ namespace bilibili.Models
     {
         public string Part { get; set; }
         public string Folder { get; set; }
-        public string Cid { get; set; }
+        // public string Cid { get; set; }
+        public string Format { get; set; }
     }
     class VideoURL
     {
@@ -106,9 +107,9 @@ namespace bilibili.Models
         public string Link { get; set; }
         public string Title { get; set; }
     }
-    /// <summary>
-    /// 视频格式(其中,hdmp4的最高清晰度与mp4相同，弃用)
-    /// </summary>
+   /// <summary>
+   /// 视频格式(其中,hdmp4的最高清晰度与mp4相同，弃用)
+   /// </summary>
     public enum VideoFormat
     {
         flv,

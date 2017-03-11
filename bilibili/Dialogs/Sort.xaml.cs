@@ -3,7 +3,7 @@ using bilibili.Helpers;
 using System.Text;
 using System;
 
-// “内容对话框”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上进行了说明
+//  “内容对话框”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上进行了说明
 
 namespace bilibili.Dialogs
 {

@@ -7,13 +7,13 @@ using Windows.UI.Xaml.Navigation;
 using bilibili.Http;
 using bilibili.Models;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class Message : Page
     {
         bool IsChatLoaded = false;
@@ -41,7 +41,7 @@ namespace bilibili.Views
 
         private async Task loadStatus()
         {
-            //http://message.bilibili.com/api/notify/query.replyme.list.do?captcha=e91dd48f73e11db1cc7c3b729865e572&data_type=1
+            // http://message.bilibili.com/api/notify/query.replyme.list.do?captcha=e91dd48f73e11db1cc7c3b729865e572&data_type=1
             Count count = await ContentServ.GetCountAsync();
             if (count != null)
             {

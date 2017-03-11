@@ -11,7 +11,7 @@ namespace bilibili.FrameManager
 
     public class FrameDisplayTrigger : StateTriggerBase
     {
-        //400 + 600
+        // 400 + 600
         const int both_minwidth = 1000;
 
         readonly IframeManager _frameManager;

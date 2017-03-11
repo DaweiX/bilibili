@@ -9,8 +9,8 @@ namespace bilibili.FrameManager
 
         public FrameManagerBase()
         {
-            //FrameManager = this;
-            //SystemNavigationManager.GetForCurrentView().BackRequested += FrameManagerBase_BackRequested; ;
+            // FrameManager = this;
+            // SystemNavigationManager.GetForCurrentView().BackRequested += FrameManagerBase_BackRequested; ;
             FrameHelpers.action += () => 
             {
                 if (RightFrame == null) return false;

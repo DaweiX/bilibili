@@ -8,14 +8,14 @@ using Windows.Data.Json;
 
 namespace bilibili.Http.ContentService
 {
-    /// <summary>
-    /// 用户信息相关的数据服务类
-    /// </summary>
+   /// <summary>
+   /// 用户信息相关的数据服务类
+   /// </summary>
     class UserRelated
     {
-        /// <summary>
-        /// 获取基本信息
-        /// </summary>
+       /// <summary>
+       /// 获取基本信息
+       /// </summary>
         public static async Task<Site_UserInfo> GetBasicInfoAsync(string mid)
         {
             string url = "http://space.bilibili.com/ajax/member/GetInfo?rnd=" + new Random().Next(1000, 2000).ToString();
@@ -24,9 +24,9 @@ namespace bilibili.Http.ContentService
             return user;
         }
 
-        /// <summary>
-        /// 获取用户设置
-        /// </summary>
+       /// <summary>
+       /// 获取用户设置
+       /// </summary>
         public static async Task<Site_UserSettings> GetUserSettingAsync(string mid)
         {
             string url = "http://space.bilibili.com/ajax/settings/getSettings?mid=" + mid;
@@ -35,9 +35,9 @@ namespace bilibili.Http.ContentService
             return sets;
         }
 
-        /// <summary>
-        /// 获取投稿视频
-        /// </summary>
+       /// <summary>
+       /// 获取投稿视频
+       /// </summary>
         public static async Task<List<MyVideo>> GetMyVideoAsync(string mid, int page, int pagesize = 20)
         {
             string url = "http://space.bilibili.com/ajax/member/getSubmitVideos?mid=" + mid + "&pagesize=" + pagesize + "&page=" + page;
@@ -51,9 +51,9 @@ namespace bilibili.Http.ContentService
             return null;
         }
 
-        /// <summary>
-        /// 获取订阅番剧
-        /// </summary>
+       /// <summary>
+       /// 获取订阅番剧
+       /// </summary>
         public static async Task<Site_Concern> GetConcernBangumiAsync(string mid, int page, bool isself,int pagesize = 20)
         {
             Site_Concern site = new Site_Concern();
@@ -105,9 +105,9 @@ namespace bilibili.Http.ContentService
             }
         }
 
-        /// <summary>
-        /// 获取关注的人
-        /// </summary>
+       /// <summary>
+       /// 获取关注的人
+       /// </summary>
         public static async Task<List<Friend>> GetFriendsAsync(string mid, int page)
         {
             string url = "http://space.bilibili.com/ajax/friend/GetAttentionList?mid=" + mid + "&pagesize=30&page=" + page.ToString();

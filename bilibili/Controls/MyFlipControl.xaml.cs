@@ -8,13 +8,13 @@ using Windows.UI;
 using Windows.UI.Xaml.Data;
 using System;
 
-// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+//  The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace bilibili.Controls
 {
     public sealed partial class MyFlipControl : UserControl
     {
-        static double n = 0;//长宽比
+        static double n = 0;// 长宽比
         public delegate void NaviHandler(string arg);
         public event NaviHandler navi;
         List<FlipItem> myList;
@@ -30,11 +30,11 @@ namespace bilibili.Controls
             this.InitializeComponent();
         }
 
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        /// <param name="list">要显示的项</param>
-        /// <param name="value">单项长宽比</param>
+       /// <summary>
+       /// 初始化
+       /// </summary>
+       /// <param name="list">要显示的项</param>
+       /// <param name="value">单项长宽比</param>
         public void init(List<FlipItem> list, double value = 3.2)
         {
             n = value;
@@ -48,17 +48,17 @@ namespace bilibili.Controls
                 isListLoaded = true;
                 center.SelectedIndex = 1;
             }
-            //for (int i = 0; i < count; i++)
-            //{
-            //    round.Children.Add(new Ellipse
-            //    {
-            //        Name = "r" + i.ToString(),
-            //        Width = 10,
-            //        Height = 10,
-            //        Fill = new SolidColorBrush(Colors.Gray),
-            //        Margin = new Thickness(4, 0, 4, 0)
-            //    });
-            //}
+            // for (int i = 0; i < count; i++)
+            // {
+            //     round.Children.Add(new Ellipse
+            //     {
+            //         Name = "r" + i.ToString(),
+            //         Width = 10,
+            //         Height = 10,
+            //         Fill = new SolidColorBrush(Colors.Gray),
+            //         Margin = new Thickness(4, 0, 4, 0)
+            //     });
+            // }
         }
         bool isArrange;
 

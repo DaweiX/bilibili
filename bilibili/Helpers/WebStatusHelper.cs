@@ -12,9 +12,9 @@ namespace bilibili.Helpers
 
     class WebStatusHelper
     {
-        /// <summary>
-        /// 检查是否有网络连接
-        /// </summary>
+       /// <summary>
+       /// 检查是否有网络连接
+       /// </summary>
         public static bool IsOnline()
         {
             bool isConnection = false;
@@ -23,10 +23,10 @@ namespace bilibili.Helpers
                 isConnection = true;
             return isConnection;
         }
-        /// <summary>
-        /// 获取网络连接类型
-        /// </summary>
-        /// <returns></returns>
+       /// <summary>
+       /// 获取网络连接类型
+       /// </summary>
+       /// <returns></returns>
         public static ConnectionType GetConnType()
         {
             ConnectionProfile profile = NetworkInformation.GetInternetConnectionProfile();

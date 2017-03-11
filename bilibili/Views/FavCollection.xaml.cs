@@ -7,13 +7,13 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
+//  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
+   /// <summary>
+   /// 可用于自身或导航至 Frame 内部的空白页。
+   /// </summary>
     public sealed partial class FavCollection : Page
     {
         string name = string.Empty;
@@ -53,7 +53,7 @@ namespace bilibili.Views
             }
             catch { cb_folder.SelectedIndex = -1; }
         }
-        //0:公开
+        // 0:公开
         private async void cb_folder_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             folder = cb_folder.SelectedItem as Folder;
@@ -65,7 +65,7 @@ namespace bilibili.Views
                 togpublic.Toggled += togpublic_Toggled;
                 fid = folder.Fid;
                 txt_count.Text = folder.Count.ToString() + " / " + folder.MCount.ToString() + "\t创建时间:" + folder.Ctime;
-                //待加：增量加载
+                // 待加：增量加载
                 favlist.ItemsSource = await ContentServ.GetFavAsync(fid, 1, 20);
                 return;
             }
@@ -105,7 +105,7 @@ namespace bilibili.Views
             }
             catch
             {
-                //重命名失败
+                // 重命名失败
             }           
         }
 
@@ -136,7 +136,7 @@ namespace bilibili.Views
             txt_name.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
 
-        //Toggged事件会在不受用户控制的情况下调用,Tapped又用不了，233
+        // Toggged事件会在不受用户控制的情况下调用,Tapped又用不了，233
         private async void togpublic_Toggled(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(fid))
@@ -180,7 +180,7 @@ namespace bilibili.Views
             }
             catch
             {
-                //新建失败
+                // 新建失败
             }
         }
     }

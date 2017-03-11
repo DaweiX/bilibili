@@ -9,29 +9,29 @@ namespace bilibili.Models
     class Reply
     {
         private string baseon;
-        /// <summary>
-        /// 评论
-        /// </summary>
+       /// <summary>
+       /// 评论
+       /// </summary>
         public string Message { get; set; }
-        /// <summary>
-        /// 头像
-        /// </summary>
+       /// <summary>
+       /// 头像
+       /// </summary>
         public string Avatar { get; set; }
-        /// <summary>
-        /// 用户名
-        /// </summary>
+       /// <summary>
+       /// 用户名
+       /// </summary>
         public string Uname { get; set; }
-        /// <summary>
-        /// 回复
-        /// </summary>
+       /// <summary>
+       /// 回复
+       /// </summary>
         public List<Reply> Res { get; set; }
-        /// <summary>
-        /// 时间
-        /// </summary>
+       /// <summary>
+       /// 时间
+       /// </summary>
         public string Time { get; set; }
-        /// <summary>
-        /// 赞
-        /// </summary>
+       /// <summary>
+       /// 赞
+       /// </summary>
         public string Like { get; set; }
         public string Oid { get; set; }
         public string Parent { get; set; }

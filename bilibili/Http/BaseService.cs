@@ -5,14 +5,14 @@ using Windows.Web.Http;
 
 namespace bilibili.Http
 {
-    ///<summary>
-    ///访问HTTP的基础服务
-    /// </summary>
+   ///<summary>
+   ///访问HTTP的基础服务
+   /// </summary>
     class BaseService
     {
-        ///<summary>
-        ///发送Get请求
-        /// </summary>
+       ///<summary>
+       ///发送Get请求
+       /// </summary>
         public async static Task<string> SentGetAsync(string url)
         {
             HttpClient client = new HttpClient();
@@ -24,16 +24,16 @@ namespace bilibili.Http
             }
             catch
             {
-                //The host name in the certificate is invalid or does not match
+                // The host name in the certificate is invalid or does not match
                 return null;
             }
 
         }
-        /// <summary>
-        /// 获得Json数据
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 获得Json数据
+       /// </summary>
+       /// <param name="url"></param>
+       /// <returns></returns>
         public static async Task<JsonObject> GetJson(string url)
         {
             string json = await SentGetAsync(url);
@@ -42,12 +42,12 @@ namespace bilibili.Http
             else
                 return null;
         }
-        /// <summary>
-        /// 发送Post请求
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 发送Post请求
+       /// </summary>
+       /// <param name="url"></param>
+       /// <param name="message"></param>
+       /// <returns></returns>
         public static async Task<string> SendPostAsync(string url, string message,string refer= "http://www.bilibili.com/")
         {
             try
