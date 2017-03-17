@@ -39,45 +39,43 @@ namespace bilibili.Views
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            await ApiHelper.login(txt2.Password, txt1.Text);
-            if (ApiHelper.code == 0)
+            int code = await ApiHelper.login(txt2.Password, txt1.Text);
+            switch (code)
             {
-                await ShowMessageAsync("登录成功");
-                SettingHelper.SetValue("_autologin", (bool)autologin.IsChecked);
-                reportLogin();
-                Frame.GoBack();
-            }
-            else
-            {
-                switch (ApiHelper.code)
-                {
-                    case -1:
-                        {
-                            await ShowMessageAsync("233");
-                        }
-                        break;
-                    case -628:
-                        {
-                            await ShowMessageAsync("纳尼？未知错误");
-                        }
-                        break;
-                    case -627:
-                        {
-                            await ShowMessageAsync("密码错啦");
-                        }
-                        break;
-                    case -626:
-                        {
-                            await ShowMessageAsync("账号不存在哦");
-                        }
-                        break;
-                    case -625:
-                        {
-                            await ShowMessageAsync("手残多次了，233");
-                        }
-                        break;
-                }
-            }           
+                case 0:
+                    {
+                        await ShowMessageAsync("登录成功");
+                        SettingHelper.SetValue("_autologin", (bool)autologin.IsChecked);
+                        reportLogin();
+                        Frame.GoBack();
+                    }
+                    break;
+                case -1:
+                    {
+                        await ShowMessageAsync("233");
+                    }
+                    break;
+                case -628:
+                    {
+                        await ShowMessageAsync("纳尼？未知错误");
+                    }
+                    break;
+                case -627:
+                    {
+                        await ShowMessageAsync("密码错啦");
+                    }
+                    break;
+                case -626:
+                    {
+                        await ShowMessageAsync("账号不存在哦");
+                    }
+                    break;
+                case -625:
+                    {
+                        await ShowMessageAsync("手残多次了，233");
+                    }
+                    break;
+            }   
         }
 
         private void txt2_GotFocus(object sender, RoutedEventArgs e)

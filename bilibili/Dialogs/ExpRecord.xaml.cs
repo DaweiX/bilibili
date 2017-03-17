@@ -38,7 +38,7 @@ namespace bilibili.Dialogs
         {
             try
             {
-                string url = "https:// account.bilibili.com/site/GetExpLog";
+                string url = "https://account.bilibili.com/site/GetExpLog";
                 JsonObject json = await BaseService.GetJson(url);
                 if (json.ContainsKey("data"))
                 {

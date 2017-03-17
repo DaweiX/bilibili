@@ -84,7 +84,7 @@ namespace bilibili.Views
                         {
                             u = SettingHelper.GetValue("_username").ToString();
                         }
-                        await ApiHelper.login(p, u, false);
+                        await ApiHelper.login(p, u);
                     }
                 }
                 if (ApiHelper.IsLogin()) return true;

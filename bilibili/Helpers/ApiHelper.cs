@@ -20,12 +20,10 @@ namespace bilibili.Helpers
     {
         public const string appkey = "422fd9d7289a1dd9";
         public static string accesskey = string.Empty;
-        public static int code = 233;
         public static string Password, Username, e_password = string.Empty;
         public delegate void LoginReport(string message);
         public static event LoginReport Report;
         public static bool isfirst = true;
-        static bool isTryOnce = false;
        /// <summary>
        /// 获取Linux时间戳
        /// </summary>
@@ -43,14 +41,14 @@ namespace bilibili.Helpers
             {
                 // https:// secure.bilibili.com/login?act=getkey&rnd=4928
                 // https:// passport.bilibili.com/login?act=getkey&rnd=4928
-                string url = "https:// passport.bilibili.com/api/oauth2/getKey?appkey=" + appkey + "&ts=" + GetLinuxTS().ToString();
-                // url += GetSign(url);
+                string url = $"https://passport.bilibili.com/api/oauth2/getKey?appkey={ApiHelper.appkey}&build=411005&mobi_app=android&platform=wp&ts={GetLinuxTS().ToString()}";
+                url += GetSign(url);
                 Report("正在加密密码");
                 HttpBaseProtocolFilter httpBaseProtocolFilter = new HttpBaseProtocolFilter();
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
                 httpBaseProtocolFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
                 HttpClient httpClient = new HttpClient(httpBaseProtocolFilter);
-                string result = await BaseService.SendPostAsync(url, "http://passport.bilibili.com");
+                string result = await BaseService.SendPostAsync(url, string.Empty);
                 JsonObject json = JsonObject.Parse(result);
                 json = json["data"].GetObject();
                 string str = json["hash"].GetString();
@@ -65,9 +63,10 @@ namespace bilibili.Helpers
                 base64String = Convert.ToBase64String(WindowsRuntimeBufferExtensions.ToArray(buffer));
                 Report("完毕。正在登录");
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // throw;
+                string msg = e.Message;
                 base64String = password;
             }
             return base64String;
@@ -77,9 +76,9 @@ namespace bilibili.Helpers
        /// </summary>
        /// <param name="url">要请求的url</param>
        /// <returns></returns>
-        public static string GetSign(string url)
+        public static string GetSign(string url , int startindex = 6)
         {
-            string t = url.Substring(url.IndexOf('?', 6)).Remove(0, 1);
+            string t = url.Substring(url.IndexOf('?', startindex)).Remove(0, 1);
             string[] argss = t.Split('&');
             List<string> list = argss.ToList();
             list.Sort();
@@ -113,9 +112,10 @@ namespace bilibili.Helpers
        /// </summary>
        /// <param name="password"></param>
        /// <param name="username"></param>
-       /// <returns>成功返回true</returns>
-        public async static Task<bool> GetAccessKey(string pwd,string uname)
+       /// <returns>成功返回code = 0</returns>
+        public async static Task<int> GetAccessKey(string pwd,string uname)
         {
+            int code = 0;
             string accesskey1 = string.Empty;
             string mid = string.Empty;
             e_password = await GetEncryptedPassword(pwd, uname);
@@ -125,8 +125,9 @@ namespace bilibili.Helpers
             // dmkiFvBbaX91U%2Fv%2F7tr2xGSofxLR……
             // string url = "https:// passport.bilibili.com/api/oauth2/login?appkey=" + appkey + "&platform=uwp&password=" + WebUtility.UrlEncode(p) + "&username=" + WebUtility.UrlEncode(username) + "&ts=" + ApiHelper.GetLinuxTS().ToString();
             // url += GetSign(url);
-            string url = "https:// api.bilibili.com/login?appkey=422fd9d7289a1dd9&platform=wp&pwd=" + a + "&type=json&userid=" + WebUtility.UrlEncode(uname);
-            url += GetSign(url);
+            string url = "https://passport.bilibili.com/api/oauth2/login";
+            string args = $"appkey={appkey}&build=411005&mobi_app=android&password={WebUtility.UrlEncode(e_password)}&platform=wp&ts={GetLinuxTS().ToString()}&username={WebUtility.UrlEncode(uname)}";
+            args += GetSign($"?{args}", 0);
             // string result = await BaseService.SendPostAsync(url, "http://passport.bilibili.com");
             // JsonObject json = JsonObject.Parse(result);
             // if (json.ContainsKey("code"))
@@ -139,22 +140,24 @@ namespace bilibili.Helpers
             //     if (json.ContainsKey("mid"))
             //         mid = json["mid"].ToString();
             // }
-            JsonObject json = await BaseService.GetJson(url);
+            string result = await BaseService.SendPostAsync(url, args);
+            JsonObject json = JsonObject.Parse(result);
             if (json.ContainsKey("code"))
-                code = (int)json["code"].GetNumber();
-            if (code != 0)
-                return false;
-            if (json.ContainsKey("access_key"))
-                accesskey1 = json["access_key"].GetString();
-            if (json.ContainsKey("mid"))
-                mid = json["mid"].ToString();
-            if (accesskey1 != string.Empty)
             {
-                accesskey = accesskey1;
-                SettingHelper.SetValue("_accesskey", accesskey);
-                return true;
+                code = (int)json["code"].GetNumber();
+                if (json.ContainsKey("data"))
+                {
+                    json = json["data"].GetObject();
+                    if (json.ContainsKey("access_token"))
+                        accesskey = json["access_token"].GetString();
+                    if (json.ContainsKey("mid"))
+                        mid = json["mid"].ToString();
+                    if (json.ContainsKey("refresh_token"))
+                        SettingHelper.SetValue("_accesskey", json["refresh_token"].GetString());
+                }              
+                return code;
             }
-            return false;
+            return -1;
         }
        /// <summary>
        /// 是否登录
@@ -179,19 +182,20 @@ namespace bilibili.Helpers
                 return true;
             }
         }
-       /// <summary>
-       /// 登录
-       /// </summary>
-       /// <param name="password"></param>
-       /// <param name="username"></param>
-       /// <returns></returns>
-        public async static Task login(string pwd, string uname, bool isFirst = true)
+
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="username"></param>
+        /// <returns>code</returns>
+        public async static Task<int> login(string pwd, string uname)
         {
+            int code = -1;
             string url = string.Empty;
             Password = pwd;
             Username = uname;
-            if (IsLogin()) return;
-            isfirst = isFirst;
+            if (IsLogin()) return 0;
             // string url = "http://api.bilibili.com/login/sso?gourl=http%3A%2F%2Fwww.bilibili.com&access_key=" + accesskey + "&appkey=" + appkey + "&platform=android&scale=xhdpi";
             // "http://api.bilibili.com/login/sso?&access_key=" + model.access_key + "&appkey=422fd9d7289a1dd9&platform=wp"
             if (!string.IsNullOrEmpty(SettingHelper.GetValue("_accesskey").ToString()))
@@ -202,8 +206,8 @@ namespace bilibili.Helpers
             }
             else
             {
-                bool key = await GetAccessKey(pwd, uname);
-                if (key)
+                code = await GetAccessKey(pwd, uname);
+                if (code == 0)
                 {
                     url = "http://api.bilibili.com/login/sso?&access_key=" + accesskey + "&appkey=" + appkey + "&platform=wp";
                     await BaseService.SentGetAsync(url);
@@ -216,36 +220,15 @@ namespace bilibili.Helpers
             {
                 ls.Add(item.Name);
             }
-            if (!ls.Contains("DedeUserID") || !ls.Contains("DedeUserID__ckMd5"))
+            if (ls.Contains("DedeUserID") || ls.Contains("DedeUserID__ckMd5"))
             {
                 SettingHelper.SetValue("_accesskey", accesskey);
                 hb.CookieManager.GetCookies(new Uri("http://bilibili.com/"));
                 SettingHelper.SetValue("_accesskey", accesskey);
                 SettingHelper.SetValue("_username", uname);
                 SettingHelper.SetValue("_epassword", e_password);
-                code = 0;
-                return;
             }
-            else
-            {
-                try
-                {
-                    if (isTryOnce == false)
-                    {
-                        if (await GetAccessKey(pwd, uname))
-                        {
-                            isTryOnce = true;
-                            await login(pwd, uname);
-                            return;
-                        }
-                    }                 
-                }
-                catch(Exception e)
-                {
-                    string a = e.Message;
-                    return;
-                }
-            }
+            return code;
         }
        /// <summary>
        /// 登出
