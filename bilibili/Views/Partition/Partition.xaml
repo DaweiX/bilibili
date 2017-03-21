@@ -224,7 +224,7 @@
                 </ScrollViewer>
             </PivotItem>
             <PivotItem Header="关注" Margin="0" SizeChanged="Page_SizeChanged">
-                <GridView x:Name="list_pull" HorizontalAlignment="Center" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_pull_ItemClick" ContainerContentChanging="list_pull_ContainerContentChanging">
+                <GridView x:Name="list_pull" HorizontalAlignment="Center"  ItemContainerStyle="{StaticResource ShadowedGridViewItem}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="list_pull_ItemClick" ContainerContentChanging="list_pull_ContainerContentChanging">
                     <GridView.ItemTemplateSelector>
                         <local:PullTemplateSelector Pull_bangumi="{StaticResource pull_bangumi}" Pull_up="{StaticResource pull_up}"/>
                     </GridView.ItemTemplateSelector>

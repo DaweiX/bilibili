@@ -81,13 +81,15 @@ namespace bilibili.Views
             timer_repeat.Tick += Timer_repeat_Tick;
             timer_danmaku.Tick += Timer_danmaku_Tick;
             timer.Start();
-            DisplayInformation.AutoRotationPreferences = DisplayOrientations.Landscape; // 横向屏幕
+            // 横向屏幕
+            DisplayInformation.AutoRotationPreferences = DisplayOrientations.Landscape;
             if (!WebStatusHelper.IsOnline())
             {
                 txt_mydanmu.PlaceholderText = "没有联网哦，不能发弹幕";
                 txt_mydanmu.IsEnabled = false;
             }
-            displayRq.RequestActive();      // 保持屏幕常亮
+            // 保持屏幕常亮
+            displayRq.RequestActive();      
             if (SettingHelper.DeviceType == DeviceType.PC)
             {
                 menu_full.Visibility = Visibility.Visible;
@@ -328,7 +330,6 @@ namespace bilibili.Views
             {
                 FFmpegMSS.Dispose();
             }
-            GC.Collect();
             timer.Stop();
             // 撤销常亮请求  
             displayRq.RequestRelease();     
@@ -611,6 +612,7 @@ namespace bilibili.Views
                 : Visibility.Visible;
         }
 
+        // 媒体开始播放
         private async void media_MediaOpened(object sender, RoutedEventArgs e)
         {
             grid_status.Visibility = Visibility.Collapsed;

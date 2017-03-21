@@ -17,7 +17,7 @@
         <c:MyPopup x:Name="popup"/>
         <Pivot>
             <PivotItem Header="话题" Margin="0">
-                <GridView x:Name="list_topic" Tag="0" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
+                <GridView x:Name="list_topic" Tag="0" HorizontalAlignment="Center" ItemContainerStyle="{StaticResource ShadowedGridViewItem}" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid Width="{Binding ElementName=width,Path=Width}">
@@ -26,14 +26,19 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <Image Source="{Binding Pic}"/>
-                                <TextBlock  Grid.Row="1" Text="{Binding Name}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="15" FontWeight="Light"/>
+                                <TextBlock Grid.Row="1" Text="{Binding Name}" Margin="4,2,0,2" TextWrapping="Wrap" MaxLines="2" VerticalAlignment="Bottom" FontSize="15" FontWeight="Light"/>
                             </Grid>
                         </DataTemplate>
                     </GridView.ItemTemplate>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <c:WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
                 </GridView>
             </PivotItem>
             <PivotItem Header="活动" Margin="0">
-                <GridView x:Name="list_event" Tag="1" HorizontalAlignment="Center" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
+                <GridView x:Name="list_event" Tag="1" HorizontalAlignment="Center" ItemContainerStyle="{StaticResource ShadowedGridViewItem}" IsItemClickEnabled="True" ItemClick="list_topic_ItemClick" ContainerContentChanging="GridView_ContainerContentChanging">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Grid Width="{Binding ElementName=width,Path=Width}">

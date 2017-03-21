@@ -39,6 +39,10 @@ namespace bilibili.Views
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(txt2.Password) || string.IsNullOrEmpty(txt1.Text))
+            {
+                return;
+            }
             int code = await ApiHelper.login(txt2.Password, txt1.Text);
             switch (code)
             {

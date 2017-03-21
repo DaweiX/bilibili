@@ -39,7 +39,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="400" MaxWidth="600"/>
+            <ColumnDefinition Width="*" MinWidth="300" MaxWidth="600"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Frame x:Name="Lframe" Loaded="Lframe_Loaded">

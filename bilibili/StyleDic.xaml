@@ -817,7 +817,7 @@
                             <Thumb x:Name="VerticalThumb"
                         Grid.Row="2"
                         Template="{StaticResource VerticalThumbTemplate}"
-                        Width="12"
+                        Width="8"
                         MinHeight="12"
                         AutomationProperties.AccessibilityView="Raw" >
                                 <Thumb.Background>
@@ -2727,6 +2727,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style TargetType="GridViewItem" x:Key="ShadowedGridViewItem">
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>
+        <Setter Property="BorderThickness" Value="0,0,1.5,1.5"/>
     </Style>
     <Style TargetType="GridViewItem">
         <Setter Property="Background" Value="{ThemeResource bili_ListBackground}"/>

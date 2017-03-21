@@ -136,7 +136,6 @@ namespace bilibili.Controls
        /// <summary>
        /// 弹幕间距
        /// </summary>
-       /// <param name="value">0:单倍行距；1:1.2倍行距;2:1.5倍行距(好像并不是这样)</param>
         public void ChangeSpace(int value)
         {
             double h = 0;
@@ -144,11 +143,11 @@ namespace bilibili.Controls
             switch (value)
             {
                 case 0:
-                    h = 1.5 * actualHeight;break;
+                    h = 2;break;
                 case 1:
-                    h = 1.2 * actualHeight;break;
+                    h = 4;break;
                 case 2:
-                    h = actualHeight;break;
+                    h = 8;break;
             }
             space.Height = new GridLength(h, GridUnitType.Pixel);
         }

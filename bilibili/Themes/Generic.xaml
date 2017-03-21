@@ -216,26 +216,26 @@
                             <c:NegativeHalf x:Key="nh"/>
                         </Grid.Resources>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="32"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Grid Height="32" HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <ToggleButton x:Name="btn" Background="Transparent" Height="32" Width="48" Style="{StaticResource hamButtonStyle}"
-                                      IsChecked="{Binding IsOpen,RelativeSource={RelativeSource Mode=TemplatedParent},Mode=TwoWay}">
+                        <ToggleButton x:Name="btn" Background="Transparent" Height="32" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Style="{StaticResource hamButtonStyle}"
+                                      IsChecked="{Binding IsOpen,RelativeSource={RelativeSource Mode=TemplatedParent},Mode=TwoWay}" BorderBrush="{ThemeResource bili_Theme}" BorderThickness="0,0,0,1">
                                 <ToggleButton.Content>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
                                     <FontIcon x:Name="icon" FontFamily="Segoe MDL2 Assets" Width="20" Height="20" Glyph="&#xE099;">
                                         <FontIcon.RenderTransform>
                                             <RotateTransform x:Name="rotate" CenterX="10" CenterY="10"/>
                                         </FontIcon.RenderTransform>
                                     </FontIcon>
+                                    <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1" Text="{TemplateBinding Header}"/>
+                                </Grid>
                                 </ToggleButton.Content>
                             </ToggleButton>
-                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1" Text="{TemplateBinding Header}"/>
-                        </Grid>
                         <ContentPresenter x:Name="content" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                           Content="{TemplateBinding Content}" 
                                           Visibility="{Binding IsOpen,RelativeSource={RelativeSource Mode=TemplatedParent},Converter={StaticResource cvt},Mode=TwoWay}">
