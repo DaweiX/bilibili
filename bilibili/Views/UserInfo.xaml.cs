@@ -266,6 +266,36 @@ namespace bilibili.Views
             Frame.Navigate(typeof(QRcode));
         }
 
+        private async void ReFresh_Click(object sender, RoutedEventArgs e)
+        {
+            if (SettingHelper.GetValue("_accesskey").ToString().Length > 2)
+            {
+                string url = "http://account.bilibili.com/api/myinfo?access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&platform=wp&type=json";
+                url += ApiHelper.GetSign(url);
+                JsonObject json = await BaseService.GetJson(url);
+                if (json.ContainsKey("coins"))
+                    coins.Text = "硬币：" + json["coins"].ToString();
+                if (json.ContainsKey("level_info"))
+                {
+                    JsonObject json2 = JsonObject.Parse(json["level_info"].ToString());
+                    if (json2.ContainsKey("next_exp"))
+                    {
+                        exp_total.Text = json2["next_exp"].ToString();
+                        bar.Maximum = Convert.ToInt32(json2["next_exp"].ToString());
+                    }
+                    if (json2.ContainsKey("current_exp"))
+                    {
+                        exp_current.Text = json2["current_exp"].ToString();
+                        bar.Value = Convert.ToInt32(json2["current_exp"].ToString());
+                    }
+                    if (json2.ContainsKey("current_level"))
+                    {
+                        level.Source = new BitmapImage { UriSource = new Uri("ms-appx:///Assets//Others//lv" + json2["current_level"].ToString() + ".png", UriKind.Absolute) };
+                    }
+                }
+            }
+        }
+
         private void fav_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(FavCollection), null, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());

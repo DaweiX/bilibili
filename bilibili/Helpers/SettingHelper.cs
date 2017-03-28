@@ -40,14 +40,7 @@ namespace bilibili.Helpers
        /// </summary>
         public static bool ContainsKey(string key)
         {
-            if (container.Values[key] != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return container.Values[key] != null;
         }
      
        /// <summary>

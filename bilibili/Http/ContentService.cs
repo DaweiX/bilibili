@@ -685,7 +685,7 @@ namespace bilibili.Http
                 report("没有网络连接");
                 return null;
             }
-            string url = "http://bangumi.bilibili.com/api/season_v2?_device=wp&build=424000&platform=android&access_key=" + ApiHelper.accesskey + "&appkey=422fd9d7289a1dd9&ts=" + ApiHelper.GetLinuxTS().ToString() + "&type=bangumi&season_id=" + sid;
+            string url = $"http://bangumi.bilibili.com/api/season_v5?_device=wp&build=10301&platform=uwp_desktop&appkey={ApiHelper.appkey}&ts={ApiHelper.GetLinuxTS().ToString()}&type=bangumi&season_id={sid}&access_key={ApiHelper.accesskey}";
             url += ApiHelper.GetSign(url);
             JsonObject json = new JsonObject();
             Season season = new Season();
@@ -2104,7 +2104,7 @@ namespace bilibili.Http
         public static async Task<List<FlipItem>> GetBangumiBanners()
         {
             List<FlipItem> items = new List<FlipItem>();
-            string url = "https:// bangumi.bilibili.com/api/app_index_page_v4_2?access_key=" + ApiHelper.accesskey + "&appkey=" + ApiHelper.appkey + "&build=411005&mobi_app=android&platform=android&ts=" + ApiHelper.GetLinuxTS().ToString();
+            string url = "https://bangumi.bilibili.com/api/app_index_page_v4_2?" + "&appkey=" + ApiHelper.appkey + "&build=411005&mobi_app=android&platform=android&ts=" + ApiHelper.GetLinuxTS().ToString();
             url += ApiHelper.GetSign(url);
             JsonObject json = await BaseService.GetJson(url);
             if (json["code"].ToString() == "0")

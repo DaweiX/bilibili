@@ -114,9 +114,12 @@
                         </Grid>
                         <StackPanel Orientation="Horizontal" Margin="8">
                             <Image x:Name="level" Width="40"/>
-                            <TextBlock x:Name="exp_current" Margin="4,0,4,0"/>
+                            <TextBlock x:Name="exp_current" Margin="4,0,4,0" VerticalAlignment="Center"/>
                             <ProgressBar x:Name="bar" Width="160" Foreground="{ThemeResource bili_Theme}"/>
-                            <TextBlock x:Name="exp_total" Margin="4,0,0,0"/>
+                            <TextBlock x:Name="exp_total" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                            <Button Height="48" Width="48" BorderThickness="0" Background="Transparent" Click="ReFresh_Click">
+                                <SymbolIcon Symbol="Refresh"/>
+                            </Button>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="8 4">
                             <TextBlock x:Name="coins"/>

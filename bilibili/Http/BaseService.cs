@@ -1,7 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Data.Json;
+using Windows.Storage.Streams;
 using Windows.Web.Http;
+using Windows.Web.Http.Filters;
+using Windows.Web.Http.Headers;
 
 namespace bilibili.Http
 {
@@ -15,25 +19,21 @@ namespace bilibili.Http
        /// </summary>
         public async static Task<string> SentGetAsync(string url)
         {
-            HttpClient client = new HttpClient();
-            Uri uri = new Uri(url);
-            try
+            using (HttpClient client = new HttpClient())
             {
+                Uri uri = new Uri(url);
                 HttpResponseMessage msg = await client.GetAsync(uri);
-                return await msg.Content.ReadAsStringAsync();
+                IInputStream stream = await msg.Content.ReadAsInputStreamAsync();
+                var reader = new StreamReader(stream.AsStreamForRead(), System.Text.Encoding.UTF8);
+                string str = await reader.ReadToEndAsync();
+                return str;
             }
-            catch
-            {
-                // The host name in the certificate is invalid or does not match
-                return null;
-            }
-
         }
-       /// <summary>
-       /// 获得Json数据
-       /// </summary>
-       /// <param name="url"></param>
-       /// <returns></returns>
+        /// <summary>
+        /// 获得Json数据
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static async Task<JsonObject> GetJson(string url)
         {
             string json = await SentGetAsync(url);
