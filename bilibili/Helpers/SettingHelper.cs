@@ -21,10 +21,7 @@ namespace bilibili.Helpers
             {
                 return container.Values[key];
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
        /// <summary>
@@ -58,6 +55,18 @@ namespace bilibili.Helpers
                     case "Windows.Mobile": return DeviceType.Mobile;
                     default: return DeviceType.Unknown;
                 }
+            }
+        }
+
+        public static bool GetBoolSetting(string Key, bool DefaultValue)
+        {
+            if(ContainsKey(Key))
+            {
+                return (bool)GetValue(Key);
+            }
+            else
+            {
+                return DefaultValue;
             }
         }
     }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using bilibili.Helpers;
@@ -17,26 +15,31 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using System.IO;
-using Windows.Data.Json;
+using System.Collections.ObjectModel;
+using static bilibili.Helpers.DownloadHelper;
+using System.Linq;
+using System.Diagnostics;
 
 //  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace bilibili.Views
 {
-   /// <summary>
-   /// 可用于自身或导航至 Frame 内部的空白页。
-   /// </summary>
+    /// <summary>
+    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// </summary>
     public sealed partial class Download : Page, IDisposable
     {
         static bool Isdonelistloaded = false;
-        static bool Isnowlistloaded = false;
-        List<DownloadOperation> activeDownloads;
-        CancellationTokenSource cts;
+
+        // 用于取消下载操作
+        CancellationTokenSource cts = new CancellationTokenSource();
+
+        // 下载任务的集合
+        ObservableCollection<TransferModel> transfers = new ObservableCollection<TransferModel>();
+
         DisplayRequest displayRq = null;
         public Download()
         {
-            cts = new CancellationTokenSource();
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
             if (SettingHelper.DeviceType == DeviceType.PC)
@@ -51,7 +54,7 @@ namespace bilibili.Views
             {
                 try
                 {
-                    StorageFolder folder = await DownloadHelper.GetMyFolderAsync();
+                    StorageFolder folder = await GetMyFolderAsync();
                     foreach (StorageFolder folder1 in await folder.GetFoldersAsync())
                     {
                         try
@@ -69,10 +72,11 @@ namespace bilibili.Views
                 }
                 catch { }            
             }
-            if (!Isnowlistloaded)
+            if (list_now.ItemsSource == null)
             {
-                await DiscoverDownloadsAsync();
-            }        
+                list_now.ItemsSource = transfers;
+            }
+            await DiscoverDownloadsAsync();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -83,58 +87,56 @@ namespace bilibili.Views
             }
         }
 
+        /// <summary>
+        /// 加载下载任务
+        /// </summary>
         private async Task DiscoverDownloadsAsync()
         {
-            activeDownloads = new List<DownloadOperation>();
             IReadOnlyList<DownloadOperation> downloads = null;
             try
             {
+                // 不建议在下载中关闭应用.该操作
+                // 可能导致下面的语句删除之前已
+                // 部分下载的文件.
                 downloads = await BackgroundDownloader.GetCurrentDownloadsAsync();
                 if (downloads.Count > 0)
                 {
                     List<Task> tasks = new List<Task>();
                     foreach (DownloadOperation download in downloads)
                     {
-                        list_now.Items.Add(new DownloadHelper.DownloadHandler
-                        {
-                            Name = download.ResultFile.Name,
-                            DownOpration = download,
-                            Process = (double)((download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100),
-                            Size = download.Progress.BytesReceived.ToString(),
-                        });
+                        tasks.Add(HandleDownloadAsync(download, false));
                     }
-                    foreach (DownloadHelper.DownloadHandler model in list_now.Items)
-                    {
-                        tasks.Add(HandleDownloadAsync(model));
-                    }
-                    Isnowlistloaded = true;
                     await Task.WhenAll(tasks);
                 }
                 else
                 {
-                    txt.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    txt.Visibility = Visibility.Visible;
                 }
             }
             catch{ }
         }
 
-        private async Task HandleDownloadAsync(DownloadHelper.DownloadHandler model)
+        private async Task HandleDownloadAsync(DownloadOperation download, bool start)
         {
-            var download = model.DownOpration;
             try
             {
-                DownLoadProgress(download);
-                Progress<DownloadOperation> progressCallback = new Progress<DownloadOperation>(DownLoadProgress);
+                string name = download.ResultFile.Name.Split('.')[0];
+                TransferModel transfer = new TransferModel
+                {
+                    DownOpration = download,
+                    Size = download.Progress.BytesReceived.ToString(),
+                    TotalSize = download.Progress.TotalBytesToReceive.ToString(),
+                    Process = 0,
+                    Name = name.Remove(name.LastIndexOf('_'))
+                };
+                transfers.Add(transfer);
+                DownloadProgress(download);
+                Progress<DownloadOperation> progressCallback = new Progress<DownloadOperation>(DownloadProgress);
                 await download.AttachAsync().AsTask(cts.Token, progressCallback);
             }
             catch (TaskCanceledException)
             {
                 messagepop.Show("取消： " + download.Guid);
-            }
-            catch (Exception)
-            {
-
-                throw;
             }
         }
 
@@ -148,60 +150,33 @@ namespace bilibili.Views
             GC.SuppressFinalize(this);
         }
 
-        private void DownLoadProgress(DownloadOperation download)
+        /// <summary>
+        /// 监视下载进度
+        /// </summary>
+        private void DownloadProgress(DownloadOperation download)
         {
             try
             {
-                DownloadHelper.DownloadHandler test = null;
-                foreach (DownloadHelper.DownloadHandler item in list_now.Items)
+                TransferModel transfer = transfers.First(p => p.DownOpration == download);
+                transfer.Size = download.Progress.BytesReceived.ToString();
+                transfer.TotalSize = download.Progress.TotalBytesToReceive.ToString();
+                transfer.Process = ((double)download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100;
+                transfer.Status = download.Progress.Status.ToString();
+                if (download.Progress.BytesReceived == download.Progress.TotalBytesToReceive && download.Progress.BytesReceived > 0)
                 {
-                    if (item.DownOpration.Guid == download.Guid)
-                    {
-                        test = item;
-                    }
-                }
-                if (list_now.Items.Contains(test))
-                {
-                    ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Size = download.Progress.BytesReceived.ToString();
-                    ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Status = download.Progress.Status.ToString();
-                    ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Process = (double)(download.Progress.BytesReceived / download.Progress.TotalBytesToReceive) * 100;
-                    if (download.Progress.BytesReceived == download.Progress.TotalBytesToReceive && download.Progress.BytesReceived > 0) 
-                    {
-                        Sendtoast("下载完成", ((DownloadHelper.DownloadHandler)list_now.Items[list_now.Items.IndexOf(test)]).Name);
-                        list_now.Items.Remove(test);
-                    }
+                    var a = list_now.Items.ToList();
+                    var item = a.Find((p => ((TransferModel)p).DownOpration == download)) as TransferModel;
+                    Sendtoast("下载完成", item.Name);
+                    transfers.Remove(item);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return;
+                Debug.WriteLine(e.Message);
             }
         }
 
-        public class MyProgress: INotifyPropertyChanged
-        {
-            private int progress;
-            public string Name { get; set; }
-            public int Progress
-            {
-                get
-                {
-                    return progress;
-                }
-                set
-                {
-                    progress = value;
-                    OnPropertyChanged("Progress");
-                }
-            }
-            public event PropertyChangedEventHandler PropertyChanged;
-            protected void OnPropertyChanged(string name)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        private void AppBarButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
             if (list_now.SelectionMode == ListViewSelectionMode.None)
             {
@@ -220,6 +195,7 @@ namespace bilibili.Views
 
         private void Sendtoast(string title, string content)
         {
+            // BackgroundTransfer貌似自带成功和失败发送的Toast，也可以用那个
             var tmp = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
             var txtNodes = tmp.GetElementsByTagName("text");
             if (!(txtNodes == null || txtNodes.Length == 0))
@@ -231,84 +207,55 @@ namespace bilibili.Views
             }
         }
 
-        private void pause_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void Pause_Click(object sender, RoutedEventArgs e)
+        {
+            TransferModel model = (sender as Windows.UI.Xaml.Controls.Primitives.ToggleButton).DataContext as TransferModel;
+            if (model.DownOpration.Progress.Status == BackgroundTransferStatus.Running)
+            {
+                model.DownOpration.Pause();
+            }
+            else if (model.DownOpration.Progress.Status == BackgroundTransferStatus.PausedByApplication)
+            {
+                model.DownOpration.Resume();
+            }
+        }
+
+        private async void Del_Click(object sender, RoutedEventArgs e)
+        {
+            TransferModel model = (sender as Button).DataContext as TransferModel;
+            model.CTS.Cancel(false);
+            model.CTS.Dispose();
+            try
+            {
+                // 删除目标文件
+                await model.DownOpration.ResultFile.DeleteAsync();
+                model.CTS.Dispose();
+                transfers.Remove(model);
+            }
+            catch (Exception err)
+            {
+                Debug.WriteLine(err.Message);
+            }
+        }
+
+        private void High_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (list_now.SelectedItems.Count > 0)
-                {
-                    foreach (DownloadHelper.DownloadHandler item in list_now.SelectedItems)
-                    {
-                        item.DownOpration.Pause();
-                    }
-                }
+                TransferModel model = (sender as Button).DataContext as TransferModel;
+                model.DownOpration.Priority = model.DownOpration.Priority == BackgroundTransferPriority.High ?
+                    BackgroundTransferPriority.Default : BackgroundTransferPriority.High;
             }
             catch { }
         }
 
-        private void play_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void Local_Click(object sender, RoutedEventArgs e)
         {
-            try
+            FileOpenPicker picker = new FileOpenPicker()
             {
-                if (list_now.SelectedItems.Count > 0)
-                {
-                    foreach (DownloadHelper.DownloadHandler item in list_now.SelectedItems)
-                    {
-                        item.DownOpration.Resume();
-                    }
-                }
-            }
-            catch { }
-        }
-
-        private async void del_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            if (list_now.SelectedItems.Count != 0)
-            {
-                foreach (DownloadHelper.DownloadHandler item in list_now.SelectedItems)
-                {
-                    item.cts.Cancel(false);
-                    item.cts.Dispose();
-                    try
-                    {
-
-                        StorageFolder DowFolder = await DownloadHelper.GetMyFolderAsync();
-                        StorageFile file0 = item.DownOpration.ResultFile as StorageFile;
-                        StorageFolder folder = await DowFolder.GetFolderAsync(file0.DisplayName);
-                        await folder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                        list_now.Items.Remove(item);
-                    }
-                    catch (Exception err)
-                    {
-                        string a = err.Message;
-                    }
-                }
-            }
-        }
-
-        private void high_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            try
-            {
-                if (list_now.SelectedItems.Count > 0)
-                {
-                    foreach (DownloadHelper.DownloadHandler item in list_now.SelectedItems)
-                    {
-                        item.DownOpration.Priority = BackgroundTransferPriority.High;
-                        // ListViewItem list = list_now.Items[list_now.Items.IndexOf(item)] as ListViewItem;
-                        // list.BorderBrush = new SolidColorBrush(Colors.Pink);
-                        // list.BorderThickness = new Windows.UI.Xaml.Thickness(4);
-                    }
-                }
-            }
-            catch { }
-        }
-
-        private async void local_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            FileOpenPicker picker = new FileOpenPicker();
-            picker.SuggestedStartLocation = PickerLocationId.VideosLibrary;
-            picker.FileTypeFilter.Add(".mp4");
+                SuggestedStartLocation = PickerLocationId.VideosLibrary
+            };
+            picker.FileTypeFilter.Add("");
             StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
@@ -317,17 +264,16 @@ namespace bilibili.Views
             else return;
         }
 
-        private void donelist_ItemClick(object sender, ItemClickEventArgs e)
+        private void Donelist_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (donelist.SelectionMode == ListViewSelectionMode.Multiple) return;
-            LocalVideo mv = e.ClickedItem as LocalVideo;
-            if (mv != null)
+            if (e.ClickedItem is LocalVideo mv)
             {
                 Frame.Navigate(typeof(Video), mv);
             }
         }
 
-        private void display_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void Display_Click(object sender, RoutedEventArgs e)
         {
             if ((bool)display.IsChecked)
             {
@@ -346,7 +292,7 @@ namespace bilibili.Views
         }
 
         // 拖动进入目标区域时发生
-        private async void draggrid_DragEnter(object sender, DragEventArgs e)
+        private async void Draggrid_DragEnter(object sender, DragEventArgs e)
         {
             var deferral = e.GetDeferral();
             DataPackageView dataview = e.DataView;
@@ -365,8 +311,10 @@ namespace bilibili.Views
                         {
                             if (img != null)
                             {
-                                BitmapImage bmp = new BitmapImage();
-                                bmp.DecodePixelWidth = 150;
+                                BitmapImage bmp = new BitmapImage()
+                                {
+                                    DecodePixelWidth = 150
+                                };
                                 bmp.SetSource(img);
                                 e.DragUIOverride.SetContentFromBitmapImage(bmp);
                             }
@@ -396,7 +344,7 @@ namespace bilibili.Views
         }
 
         // 拖动离开目标区域时发生
-        private void draggrid_DragLeave(object sender, DragEventArgs e)
+        private void Draggrid_DragLeave(object sender, DragEventArgs e)
         {
             // AccessViolationException
             var deferral = e.GetDeferral();
@@ -407,7 +355,7 @@ namespace bilibili.Views
         StorageFile dragfile;
 
         // 拖动操作降落时发生
-        private void draggrid_Drop(object sender, DragEventArgs e)
+        private void Draggrid_Drop(object sender, DragEventArgs e)
         {
             var deferral = e.GetDeferral();
             if (dragfile != null)

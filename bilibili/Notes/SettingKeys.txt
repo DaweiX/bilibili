@@ -9,6 +9,7 @@
 首页加载头部	 _banner				bool
 应用主题		 _Theme					string
 栏目顺序		 _sort					string
+模糊效果		 _blur					bool
 
 弹幕////////////////////// 
 

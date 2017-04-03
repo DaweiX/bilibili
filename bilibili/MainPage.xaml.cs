@@ -61,14 +61,44 @@ namespace bilibili
                 // txt.Text = "夜间模式";
             }
             ChangeTheme();
+            if (SettingHelper.DeviceType == DeviceType.PC)
+            {
+                CoreWindow.GetForCurrentThread().KeyDown += MainPage_KeyDown;
+            }
+        }
+
+        private async void MainPage_KeyDown(CoreWindow sender, KeyEventArgs args)
+        {
+            args.Handled = true;
+            if (args.VirtualKey != Windows.System.VirtualKey.Back && args.VirtualKey != Windows.System.VirtualKey.Escape) return;
+            if (FrameManager.FrameHelpers.action())
+                return;
+            if (mainframe == null)
+                return;
+            if (mainframe.CanGoBack)
+            {
+                mainframe.GoBack();
+            }
+            else
+            {
+                if (isExit)
+                {
+                    Application.Current.Exit();
+                }
+                else
+                {
+                    isExit = true;
+                    await popup.Show("再次点击后退键退出");
+                    await Task.Delay(2000);
+                    isExit = false;
+                }
+            }
         }
 
         private async void MainPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             if (FrameManager.FrameHelpers.action())
-            {
                 return;
-            }
             if (mainframe == null)
                 return;
             if (e.Handled == false)

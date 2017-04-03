@@ -76,10 +76,13 @@ namespace bilibili.Views
                 // }
                 bmp.UriSource = url;
                 pic.Source = bmp;
-                pic_blur.Source = bmp;
-                if (AnimationExtensions.IsBlurSupported)
+                if (SettingHelper.GetBoolSetting("_blur", true))
                 {
-                    pic_blur.Blur(duration: 3000, value: 20).Start();
+                    pic_blur.Source = bmp;
+                    if (AnimationExtensions.IsBlurSupported)
+                    {
+                        pic_blur.Blur(duration: 3000, value: 20).Start();
+                    }
                 }
                 mainitem.Header = aa.Title;
                 up.Text = aa.Copyright;

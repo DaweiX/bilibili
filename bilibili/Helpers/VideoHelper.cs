@@ -6,7 +6,7 @@ namespace bilibili.Helpers
     {
        /// <summary>
        /// 系统原生支持的视频格式
-       /// 引用自https:// support.microsoft.com/zh-cn/instantanswers/6ee34367-6814-47bc-823a-49d6abbc4823/file-formats-for-the-movies-tv-app
+       /// 引用自https://support.microsoft.com/zh-cn/instantanswers/6ee34367-6814-47bc-823a-49d6abbc4823/file-formats-for-the-movies-tv-app
        /// </summary>
         public static List<string> videoExtensions_sys => new List<string>
         {

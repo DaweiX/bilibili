@@ -61,13 +61,18 @@ namespace bilibili.Views
                 if (details != null)
                 {
                     pageNavi("AV" + details.Aid);
-                    BitmapImage bmp = new BitmapImage();
-                    bmp.UriSource = new Uri(details.Pic);
-                    pic.Source = bmp;
-                    pic_blur.Source = bmp;
-                    if (AnimationExtensions.IsBlurSupported)
+                    BitmapImage bmp = new BitmapImage()
                     {
-                        pic_blur.Blur(duration: 3000, value: 20).Start();
+                        UriSource = new Uri(details.Pic)
+                    };
+                    pic.Source = bmp;
+                    if (SettingHelper.GetBoolSetting("_blur", true))
+                    {
+                        pic_blur.Source = bmp;
+                        if (AnimationExtensions.IsBlurSupported)
+                        {
+                            pic_blur.Blur(duration: 3000, value: 20).Start();
+                        }
                     }
                     title.Text = details.Title;
                     up.Content = details.Upzhu;
@@ -146,7 +151,7 @@ namespace bilibili.Views
             return false;
         }
         bool isLoading = false;
-        private void listview_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        private void Listview_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
             var scroll = Load.FindChildOfType<ScrollViewer>(listview);
             var text = Load.FindChildOfType<TextBlock>(listview);
@@ -218,13 +223,16 @@ namespace bilibili.Views
             desc.MaxLines = desc.MaxLines == 3 ? 0 : 3;
             more.Content = desc.MaxLines == 3 ? "展开" : "收起";
         }
+
         // 保存封面
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
-            FileSavePicker picker = new FileSavePicker();
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            FileSavePicker picker = new FileSavePicker()
+            {
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                SuggestedFileName = title.Text,
+            };
             picker.FileTypeChoices.Add("图片", new List<string>() { ".jpg" });
-            picker.SuggestedFileName = title.Text;
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {
@@ -238,7 +246,7 @@ namespace bilibili.Views
        /// <summary>
        /// 投币
        /// </summary>
-        private async void coin_Click(object sender, RoutedEventArgs e)
+        private async void Coin_Click(object sender, RoutedEventArgs e)
         {
             MenuFlyoutItem btn = sender as MenuFlyoutItem;
             if (ApiHelper.accesskey.Length > 2 && ApiHelper.IsLogin())  
@@ -266,7 +274,7 @@ namespace bilibili.Views
        /// <summary>
        /// 收藏
        /// </summary>
-        private async void addfav_Click(object sender, RoutedEventArgs e)
+        private async void Addfav_Click(object sender, RoutedEventArgs e)
         {
             if (ApiHelper.IsLogin())
             {
@@ -467,7 +475,7 @@ namespace bilibili.Views
        /// <summary>
        /// 开始下载
        /// </summary>
-        private async void btn_ok_Click(object sender, RoutedEventArgs e)
+        private async void Btn_ok_Click(object sender, RoutedEventArgs e)
         {
             int i = 0;
             flyout_download.Hide();

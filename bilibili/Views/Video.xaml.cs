@@ -329,6 +329,7 @@ namespace bilibili.Views
             if (FFmpegMSS != null)
             {
                 FFmpegMSS.Dispose();
+                FFmpegMSS = null;
             }
             timer.Stop();
             // 撤销常亮请求  

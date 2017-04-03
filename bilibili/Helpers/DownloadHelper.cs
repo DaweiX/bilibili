@@ -18,7 +18,6 @@ namespace bilibili.Helpers
        /// 将网址result转换为字节流
        /// </summary>
        /// <param name="url"></param>
-       /// <returns></returns>
         static public async Task<IBuffer> GetBuffer(string url)
         {
             using (HttpClient client = new HttpClient())
@@ -29,12 +28,12 @@ namespace bilibili.Helpers
                 return buff;
             }
         }
+
        /// <summary>
        /// 返回指定参数的下载操作
        /// </summary>
        /// <param name="url">请求到的下载地址</param>
        /// <param name="name">要下载的文件名</param>
-       /// <returns></returns>
         static public async Task<DownloadOperation> Download(string url, string name, StorageFolder folder)
         {
             try
@@ -62,47 +61,59 @@ namespace bilibili.Helpers
                 // await md.ShowAsync();
             }
         }
+
        /// <summary>
        /// Handler
        /// </summary>
-        public class DownloadHandler:INotifyPropertyChanged
+        public class TransferModel:INotifyPropertyChanged
         {
-            public CancellationTokenSource cts = new CancellationTokenSource();
-            public event PropertyChangedEventHandler PropertyChanged;
-            void MyPropertyChanged(string name)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-            DownloadOperation mydownload;
+            public CancellationTokenSource CTS = new CancellationTokenSource();
+            // 操作对象
+            DownloadOperation down;
             public DownloadOperation DownOpration
             {
-                get { return mydownload; }
-                set { mydownload = value; }
+                get { return down; }
+                set { down = value; }
             }
-            public double Process { get; set; }
-            string size;
-            public string Size
+
+            // 进度
+            double process;
+            public double Process
             {
-                get { return size; }
+                get { return double.Parse(process.ToString("0.0")); }
                 set
                 {
-                    size = (Convert.ToDouble(value) / Math.Pow(1024, 2)).ToString("0.0") + "M";
-                    MyPropertyChanged("Size");
+                    process = value;
+                    OnPropertyChanged(nameof(Process));
                 }
             }
-            public string Name { get; set; }
+
+            // 总大小
+            string totalSize;
             public string TotalSize
             {
-                get { return (mydownload.Progress.TotalBytesToReceive / Math.Pow(1024, 2)).ToString("0.0") + "M"; }
+                get
+                {
+                    return $"{(ulong.Parse(totalSize) / 1024 / 1024).ToString("0.0")}M";
+                }
+                set
+                {
+                    totalSize = value;
+                    OnPropertyChanged(nameof(TotalSize));
+                }
             }
-            public string Guid { get { return mydownload.Guid.ToString(); } }
+
+            // GUID
+            public string Guid { get { return down.Guid.ToString(); } }
+
+            // 状态
             string status;
             public string Status
             {
                 get { return status; }
                 set
                 {
-                    switch(mydownload.Progress.Status)
+                    switch(down.Progress.Status)
                     {
                         case BackgroundTransferStatus.Idle:
                             status = "空闲中";
@@ -111,7 +122,7 @@ namespace bilibili.Helpers
                             status = "下载中";
                             break;
                         case BackgroundTransferStatus.PausedByApplication:
-                            status = "暂停中";
+                            status = "已暂停";
                             break;
                         case BackgroundTransferStatus.PausedCostedNetwork:
                             status = "因网络暂停";
@@ -132,13 +143,37 @@ namespace bilibili.Helpers
                             status = "因系统问题暂停";
                             break;
                         default:
-                            status = "等待...";
+                            status = "未知";
                             break;
                     }
-                    MyPropertyChanged("Status");
+                    OnPropertyChanged(nameof(Status));
                 }
             }
+
+            // 已下载大小
+            string size;
+            public string Size
+            {
+                get
+                {
+                    return $"{(ulong.Parse(size) / 1024 / 1024).ToString("0.0")}M";
+                }
+                set
+                {
+                    size = value;
+                    OnPropertyChanged(nameof(Size));
+                }
+            }
+        
+            // 名称
+            public string Name { get; set; }
+            public event PropertyChangedEventHandler PropertyChanged;
+            void OnPropertyChanged(string name)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
+
        /// <summary>
        /// 获取存储文件夹
        /// </summary>
@@ -185,6 +220,9 @@ namespace bilibili.Helpers
             }
         }
 
+        /// <summary>
+        /// 在Json文档中添加信息
+        /// </summary>
         public async static Task AddVideoInfo(string title, string cid, string sid = null)
         {
             JsonObject json = new JsonObject();
@@ -217,6 +255,7 @@ namespace bilibili.Helpers
                     json = JsonObject.Parse(txt);
                 }
                 JsonArray array = json["data"].GetArray();
+                if (array.Contains(jsonAppend)) return;
                 array.Add(jsonAppend);
                 json["count"] = JsonValue.CreateNumberValue(json["count"].GetNumber() + 1);
             }

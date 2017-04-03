@@ -96,4 +96,30 @@ namespace bilibili.Converters
             return null;
         }
     }
+
+    public class BoolToIcon : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return (bool)value ? Symbol.Play : Symbol.Pause;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
+    }
+
+    public class PriorityToThickness : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return (bool)value
+                ? new Thickness(1)
+                : new Thickness(0);
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return null;
+        }
+    }
 }

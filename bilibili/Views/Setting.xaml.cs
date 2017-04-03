@@ -8,7 +8,6 @@ using Windows.UI;
 using Windows.UI.Notifications;
 using Windows.System;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml.Data;
 
 //  “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -71,22 +70,15 @@ namespace bilibili.Views
             {
                 quality.SelectedIndex = 1;
             }
-            if (SettingHelper.ContainsKey("_pull"))
-            {
-                background.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_pull"));
-            }
-            else
-            {
-                background.IsOn = true;
-            }          
-            if (SettingHelper.ContainsKey("_toast"))
-            {
-                toast.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_toast"));
-            }
-            else
-            {
-                toast.IsOn = true;
-            }
+            blur.IsOn = SettingHelper.ContainsKey("_blur")
+                ? Convert.ToBoolean(SettingHelper.GetValue("_blur"))
+                :true;
+            background.IsOn = SettingHelper.ContainsKey("_pull")
+                 ? Convert.ToBoolean(SettingHelper.GetValue("_pull"))
+                 : true;
+            toast.IsOn = SettingHelper.ContainsKey("_toast")
+               ? Convert.ToBoolean(SettingHelper.GetValue("_toast"))
+               : true;
             if (toast.IsOn)
             {
                 if (SettingHelper.ContainsKey("_toast_m"))
@@ -106,14 +98,9 @@ namespace bilibili.Views
                     t_bangumi.IsOn = true;
                 }
             }
-            if (SettingHelper.ContainsKey("_autokill"))
-            {
-                autokill.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_autokill"));
-            }
-            else
-            {
-                autokill.IsOn = true;
-            }
+            autokill.IsOn = SettingHelper.ContainsKey("_autokill")
+             ? Convert.ToBoolean(SettingHelper.GetValue("_autokill"))
+             : true;
             if (SettingHelper.ContainsKey("_isdanmaku"))
             {
                 danmakuinit.IsOn = Convert.ToBoolean(SettingHelper.GetValue("_isdanmaku"));
@@ -380,6 +367,7 @@ namespace bilibili.Views
         private async void ClearCache_Click(object sender, RoutedEventArgs e)
         {
             int size = 0;
+            //var c =await ApplicationData.Current.LocalFolder.
             var b = await ApplicationData.Current.TemporaryFolder.GetBasicPropertiesAsync();
             size = (int)(b.Size / 1024);
             cache.Text = "清理缓存" + "[" + size.ToString() + "MB" + "]";
@@ -591,6 +579,11 @@ namespace bilibili.Views
         private void help_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(Instruction));
+        }
+
+        private void blur_Toggled(object sender, RoutedEventArgs e)
+        {
+            SettingHelper.SetValue("_blur", blur.IsOn);
         }
     }
 }

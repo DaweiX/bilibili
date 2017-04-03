@@ -328,8 +328,10 @@ namespace bilibili.Http
                 report("没有网络连接");
                 return null;
             }
-            Details details = new Details();
-            details.Tags = new List<string>();
+            Details details = new Details()
+            {
+                Tags = new List<string>()
+            };
             JsonObject json = await BaseService.GetJson(url);
             if (json.ContainsKey("code"))
                 if (json["code"].ToString() == "-404")

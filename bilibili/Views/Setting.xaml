@@ -18,6 +18,7 @@
                     <StackPanel Margin="0 8">
                         <ToggleSwitch x:Name="night" Toggled="night_Toggled" Header="夜间模式"/>
                         <ToggleSwitch x:Name="m_top" Toggled="top_Toggled" Header="隐藏状态栏"/>
+                        <ToggleSwitch x:Name="blur" Toggled="blur_Toggled" Header="使用高斯模糊"/>
                         <ComboBox x:Name="cb_Theme" Width="150" Header="主题色选择" Foreground="{Binding SelectedItem.Foreground, ElementName=cb_Theme}" SelectionChanged="cb_Theme_SelectionChanged">
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal">
@@ -115,7 +116,7 @@
                         <ToggleSwitch x:Name="path" Header="自定义存储位置" Toggled="path_Toggled"/>
                         <TextBlock x:Name="txt_path" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="Gray"/>
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                            <TextBlock x:Name="cache" Text="清理缓存(施工中)" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="cache" Text="清理缓存" VerticalAlignment="Center"/>
                             <Button Content="清理" Width="60" Margin="100,0,0,0" Click="ClearCache_Click"/>
                         </StackPanel>
                     </StackPanel>

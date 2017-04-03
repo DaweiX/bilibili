@@ -235,13 +235,15 @@ namespace bilibili.Helpers
        /// </summary>
         public static void logout()
         {
-            List<HttpCookie> listCookies = new List<HttpCookie>();
-            listCookies.Add(new HttpCookie("sid", ".bilibili.com", "/"));
-            listCookies.Add(new HttpCookie("DedeUserID", ".bilibili.com", "/"));
-            listCookies.Add(new HttpCookie("DedeUserID__ckMd5", ".bilibili.com", "/"));
-            listCookies.Add(new HttpCookie("SESSDATA", ".bilibili.com", "/"));
-            listCookies.Add(new HttpCookie("LIVE_LOGIN_DATA", ".bilibili.com", "/"));
-            listCookies.Add(new HttpCookie("LIVE_LOGIN_DATA__ckMd5", ".bilibili.com", "/"));
+            List<HttpCookie> listCookies = new List<HttpCookie>
+            {
+                new HttpCookie("sid", ".bilibili.com", "/"),
+                new HttpCookie("DedeUserID", ".bilibili.com", "/"),
+                new HttpCookie("DedeUserID__ckMd5", ".bilibili.com", "/"),
+                new HttpCookie("SESSDATA", ".bilibili.com", "/"),
+                new HttpCookie("LIVE_LOGIN_DATA", ".bilibili.com", "/"),
+                new HttpCookie("LIVE_LOGIN_DATA__ckMd5", ".bilibili.com", "/")
+            };
             HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter();
             foreach (HttpCookie cookie in listCookies)
             {

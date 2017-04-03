@@ -4,14 +4,12 @@ using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
-using Windows.Web.Http.Filters;
-using Windows.Web.Http.Headers;
 
 namespace bilibili.Http
 {
-   ///<summary>
-   ///访问HTTP的基础服务
-   /// </summary>
+    ///<summary>
+    ///访问HTTP的基础服务
+    /// </summary>
     class BaseService
     {
        ///<summary>
@@ -60,7 +58,7 @@ namespace bilibili.Http
                     return await response.Content.ReadAsStringAsync();
                 }
             }
-           catch(Exception)
+            catch(Exception)
             {
                 return string.Empty;
             }

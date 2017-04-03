@@ -168,7 +168,7 @@
                                             <RadioButton x:Name="q2" GroupName="quality" Tag="2" Click="quality_Checked">高清</RadioButton>
                                             <RadioButton x:Name="q3" GroupName="quality" Tag="3" Click="quality_Checked">原画</RadioButton>
                                         </StackPanel>
-                                        <Button Content="确定" Click="btn_ok_Click"/>
+                                        <Button Content="确定" Click="Btn_ok_Click"/>
                                     </StackPanel>
                                 </Flyout>
                             </AppBarButton.Flyout>
@@ -184,12 +184,12 @@
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
                         </AppBarButton>
-                        <AppBarButton x:Name="btn_addfav" Icon="Add" Label="收藏" Click="addfav_Click"/>
+                        <AppBarButton x:Name="btn_addfav" Icon="Add" Label="收藏" Click="Addfav_Click"/>
                         <AppBarButton x:Name="btn_like" Icon="Like" Label="投币">
                             <AppBarButton.Flyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="投1个硬币" Tag="1" Click="coin_Click"/>
-                                    <MenuFlyoutItem Text="投2个硬币" Tag="2" Click="coin_Click"/>
+                                    <MenuFlyoutItem Text="投1个硬币" Tag="1" Click="Coin_Click"/>
+                                    <MenuFlyoutItem Text="投2个硬币" Tag="2" Click="Coin_Click"/>
                                     <MenuFlyoutItem Text="算了，不投了"/>
                                 </MenuFlyout>
                             </AppBarButton.Flyout>
@@ -204,7 +204,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <ListView x:Name="listview" SelectionMode="None" Margin="0,4,0,0"
-                              ContainerContentChanging="listview_ContainerContentChanging" Template="{StaticResource myControlTemplete}">
+                              ContainerContentChanging="Listview_ContainerContentChanging" Template="{StaticResource myControlTemplete}">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
